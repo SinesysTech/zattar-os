@@ -191,7 +191,7 @@ export function ProcessoHeader({
 
   return (
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+      <div className={cn("flex items-start justify-between inline-default")}>
         <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "min-w-0 space-y-1.5")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             {onVoltar && (
@@ -206,8 +206,8 @@ export function ProcessoHeader({
               </Button>
             )}
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 space-y-2")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+            <div className={cn("min-w-0 stack-tight")}>
+              <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <Heading level="page" className="min-w-0 sm:text-[2rem]">
                   <span className="block truncate">{tituloPartes}</span>
                 </Heading>
@@ -247,7 +247,7 @@ export function ProcessoHeader({
 
                 <span className="truncate text-muted-foreground">{orgaoJulgador}</span>
 
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-0 flex items-center gap-2 sm:ml-auto")}>
+                <div className={cn("ml-0 flex items-center inline-tight sm:ml-auto")}>
                   <Text variant="meta-label">
                     Responsável
                   </Text>
@@ -292,7 +292,7 @@ export function ProcessoHeader({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap text-body-sm sm:hidden")}>
+      <div className={cn("flex items-center inline-tight flex-wrap text-body-sm sm:hidden")}>
         {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
         {instancias && instancias.length > 1 && (
           <Text variant="caption" className="inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2.5 py-1">
@@ -303,7 +303,7 @@ export function ProcessoHeader({
       </div>
 
       {instancias && instancias.length > 1 && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap text-body-sm")}>
+        <div className={cn("flex items-center inline-tight flex-wrap text-body-sm")}>
           {instancias.map((inst) => (
             <div key={inst.id} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1")}>
               <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">

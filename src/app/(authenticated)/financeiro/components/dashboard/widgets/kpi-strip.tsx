@@ -49,7 +49,7 @@ interface KpiStripProps {
 export function KpiStrip({ data, isLoading }: KpiStripProps) {
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6")}>
+      <div className={cn("grid grid-cols-2 inline-default md:grid-cols-3 xl:grid-cols-6")}>
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS; space-y-3 sem token DS */ "rounded-xl border bg-card p-4 sm:p-6 space-y-3")}>
             <Skeleton className="h-4 w-20" />
@@ -132,7 +132,7 @@ export function KpiStrip({ data, isLoading }: KpiStripProps) {
   ];
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6")}>
+    <div className={cn("grid grid-cols-2 inline-default md:grid-cols-3 xl:grid-cols-6")}>
       {kpis.map((kpi) => (
         <StatCard
           key={kpi.title}

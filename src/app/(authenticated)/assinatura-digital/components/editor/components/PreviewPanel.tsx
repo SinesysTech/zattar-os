@@ -73,7 +73,7 @@ export default function PreviewPanel({
             />
           ) : (
             <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex-1 min-h-0 flex items-center justify-center p-8")}>
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "text-center space-y-4 max-w-md")}>
+              <div className={cn("text-center stack-default max-w-md")}>
                 <FileX2 className="mx-auto h-12 w-12 text-muted-foreground" />
                 <div>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
@@ -84,7 +84,7 @@ export default function PreviewPanel({
                     de segurança (CORS/CSP). Use os botões abaixo para visualizar.
                   </p>
                 </div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 sm:flex-row sm:justify-center")}>
+                <div className={cn("flex flex-col inline-tight sm:flex-row sm:justify-center")}>
                   <Button variant="outline" onClick={handleDownload}>
                     <Download className="mr-2 h-4 w-4" />
                     Baixar PDF

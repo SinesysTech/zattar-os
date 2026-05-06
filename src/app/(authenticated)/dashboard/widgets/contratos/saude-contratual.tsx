@@ -74,7 +74,7 @@ export function WidgetSaudeContratual() {
       depth={2}
       className="md:col-span-2"
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4 mt-1")}>
+      <div className={cn("flex flex-col items-center inline-default mt-1")}>
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>
           <GaugeMeter
             value={score}
@@ -85,7 +85,7 @@ export function WidgetSaudeContratual() {
           />
         </div>
 
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "grid grid-cols-3 gap-4 w-full pt-3 border-t border-border/10")}>
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "grid grid-cols-3 inline-default w-full pt-3 border-t border-border/10")}>
           {[
             { label: 'Contratos Ativos', value: fmtNum(ativos) },
             { label: 'Novos no Mês', value: fmtNum(novosMes) },

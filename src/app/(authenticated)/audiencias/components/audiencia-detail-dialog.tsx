@@ -73,7 +73,7 @@ function SectionHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-2.5 flex items-center gap-2")}>
+    <div className={cn("mb-2.5 flex items-center inline-tight")}>
       <Icon className="size-3.5 text-primary" />
       <Text variant="overline" className="text-muted-foreground">
         {label}
@@ -579,7 +579,7 @@ export function AudienciaDetailDialog({
           content: (
             <>
               <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-2 text-label font-semibold")}>
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center inline-tight text-label font-semibold")}>
                   <FileText className="size-3.5 text-success" />
                   Ata{' '}
                   {dataInicio && (
@@ -658,7 +658,7 @@ export function AudienciaDetailDialog({
               </div>
             )}
             {error && !isLoading && (
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center gap-2 py-10 text-center")}>
+              <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center inline-tight py-10 text-center")}>
                 <AlertCircle className="size-6 text-destructive" />
                 <Text variant="caption" className="text-destructive">{error}</Text>
               </div>
@@ -730,7 +730,7 @@ export function AudienciaDetailDialog({
                           )}
                         </div>
                         {editingUrl ? (
-                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                          <div className={cn("flex items-center inline-tight")}>
                             <Input
                               type="url"
                               placeholder="https://..."
@@ -762,7 +762,7 @@ export function AudienciaDetailDialog({
                             </Button>
                           </div>
                         ) : audiencia.urlAudienciaVirtual ? (
-                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+                          <div className={cn("flex items-center inline-tight min-w-0")}>
                             <Video className="size-3.5 text-muted-foreground/75 shrink-0" />
                             <a
                               href={audiencia.urlAudienciaVirtual}
@@ -823,8 +823,8 @@ export function AudienciaDetailDialog({
                           )}
                         </div>
                         {editingEndereco ? (
-                          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_80px] gap-2")}>
+                          <div className={cn("stack-tight")}>
+                            <div className={cn("grid grid-cols-[1fr_80px] inline-tight")}>
                               <Input
                                 placeholder="Logradouro"
                                 value={enderecoDraft.logradouro}
@@ -843,7 +843,7 @@ export function AudienciaDetailDialog({
                                 className={cn("h-8 text-caption")}
                               />
                             </div>
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
+                            <div className={cn("grid grid-cols-2 inline-tight")}>
                               <Input
                                 placeholder="Complemento"
                                 value={enderecoDraft.complemento || ''}
@@ -861,7 +861,7 @@ export function AudienciaDetailDialog({
                                 className={cn("h-8 text-caption")}
                               />
                             </div>
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_60px_100px] gap-2")}>
+                            <div className={cn("grid grid-cols-[1fr_60px_100px] inline-tight")}>
                               <Input
                                 placeholder="Cidade"
                                 value={enderecoDraft.cidade}
@@ -1012,7 +1012,7 @@ export function AudienciaDetailDialog({
                   />
                   <SectionCard>
                     {editingObs ? (
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         <Textarea
                           placeholder="Anotações sobre a audiência..."
                           value={obsDraft}

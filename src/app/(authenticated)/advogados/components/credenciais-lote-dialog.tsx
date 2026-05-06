@@ -142,7 +142,7 @@ export function CredenciaisLoteDialog({
           <DialogDescription className="sr-only">Selecione tribunais, graus e configure a senha para criar credenciais em lote</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "px-6 py-4 space-y-6")}>
+      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-6 py-4 stack-loose")}>
         <p className={cn("text-body-sm text-muted-foreground")}>
           Advogado: {advogado.nome_completo} (CPF: {formatCpf(advogado.cpf)})
         </p>
@@ -153,12 +153,12 @@ export function CredenciaisLoteDialog({
           // Formulário
           <>
             {/* Tribunais */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <div className="flex items-center justify-between">
                 <Label>
                   Tribunais <span className="text-destructive">*</span>
                 </Label>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+                <div className={cn("flex inline-tight")}>
                   <Button
                     type="button"
                     variant="ghost"
@@ -180,7 +180,7 @@ export function CredenciaisLoteDialog({
                 </div>
               </div>
               <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2")}>
+                <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 inline-tight")}>
                   {TRIBUNAIS_ATIVOS.map((trt) => (
                     <div key={trt} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                       <Checkbox
@@ -206,15 +206,15 @@ export function CredenciaisLoteDialog({
             </div>
 
             {/* Graus */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label>
                 Graus <span className="text-destructive">*</span>
               </Label>
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+              <div className={cn("flex inline-default")}>
                 {(["1", "2"] as GrauCredencial[]).map((grau) => (
                   <label
                     key={grau}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}
+                    className={cn("flex items-center inline-tight cursor-pointer")}
                   >
                     <Checkbox
                       id={`grau-${grau}`}
@@ -229,7 +229,7 @@ export function CredenciaisLoteDialog({
             </div>
 
             {/* Senha */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="senha">
                 Senha <span className="text-destructive">*</span>
               </Label>
@@ -248,12 +248,12 @@ export function CredenciaisLoteDialog({
             </div>
 
             {/* Modo duplicata */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label>Credenciais existentes</Label>
               <RadioGroup
                 value={modoDuplicata}
                 onValueChange={(v) => setModoDuplicata(v as ModoDuplicata)}
-                className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}
+                className={cn("flex inline-default")}
                 disabled={isSaving}
               >
                 <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
@@ -300,7 +300,7 @@ export function CredenciaisLoteDialog({
             )}
 
             {/* Botões */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex items-center gap-2 pt-4 border-t")}>
+            <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex items-center inline-tight pt-4 border-t")}>
               <Button
                 type="button"
                 variant="outline"
@@ -339,7 +339,7 @@ function ResultadoView({
   const hasErrors = resultado.erros > 0;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <Alert variant={hasErrors ? "destructive" : "default"}>
         <CheckCircle className="h-4 w-4" />
         <AlertTitle>Operação concluída</AlertTitle>

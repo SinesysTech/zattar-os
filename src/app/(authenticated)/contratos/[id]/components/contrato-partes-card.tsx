@@ -126,7 +126,7 @@ export function ContratoPartesCard({
             Nenhuma parte registrada
           </Text>
         ) : (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+          <div className={cn("flex flex-col inline-tight")}>
             {todasPartes.map((parte) => {
               const nome =
                 parte.nomeSnapshot ||

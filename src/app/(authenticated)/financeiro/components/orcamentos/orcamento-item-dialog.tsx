@@ -167,9 +167,9 @@ export function OrcamentoItemDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
             {/* Conta Contábil */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="contaContabilId">Conta Contábil *</Label>
               <PlanoContaSelect
                 value={formData.contaContabilId}
@@ -180,7 +180,7 @@ export function OrcamentoItemDialog({
             </div>
 
             {/* Descrição */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Input
                 id="descricao"
@@ -193,7 +193,7 @@ export function OrcamentoItemDialog({
             </div>
 
             {/* Valor Previsto */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="valorPrevisto">Valor Previsto *</Label>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -215,7 +215,7 @@ export function OrcamentoItemDialog({
             </div>
 
             {/* Observações */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"

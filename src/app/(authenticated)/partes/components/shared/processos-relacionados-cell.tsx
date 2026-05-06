@@ -138,7 +138,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
         <HoverCardContent align="start" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-80 p-3")}>
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             {/* Header: Grau e Status */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+            <div className={cn("flex items-center justify-between inline-tight")}>
               <SemanticBadge category="grau" value={processo.grau} className={cn("text-caption")}>
                 {formatarGrau(processo.grau)}
               </SemanticBadge>

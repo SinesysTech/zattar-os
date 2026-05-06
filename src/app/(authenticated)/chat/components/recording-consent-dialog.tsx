@@ -40,7 +40,7 @@ export function RecordingConsentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <AlertCircle className="h-5 w-5 text-warning" />
             Consentimento para Gravação
           </DialogTitle>
@@ -66,7 +66,7 @@ export function RecordingConsentDialog({
               automaticamente excluída.
             </p>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-start gap-2 pt-2")}>
+            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-start inline-tight pt-2")}>
               <Checkbox
                 id="consent"
                 checked={agreed}
@@ -83,7 +83,7 @@ export function RecordingConsentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; sm:gap-0 sem equivalente DS */ "gap-2 sm:gap-0")}>
+        <DialogFooter className={cn(/* design-system-escape: sm:gap-0 sem equivalente DS */ "inline-tight sm:gap-0")}>
           <Button
             variant="outline"
             onClick={() => {

@@ -111,7 +111,7 @@ function SectionHeader({
   label: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2.5")}>
+    <div className={cn("flex items-center inline-tight mb-2.5")}>
       <Icon className="size-3.5 text-primary" />
       <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
         {label}
@@ -199,7 +199,7 @@ export function DocumentoDetailDialog({
         {/* ── Hero preview ───────────────────────────────────── */}
         <div
           className={cn(
-            /* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ 'relative flex flex-col items-center justify-center gap-4 px-6 py-8',
+            /* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ 'relative flex flex-col items-center justify-center inline-default px-6 py-8',
             'border-b border-border/30',
             accentClasses.bg,
           )}

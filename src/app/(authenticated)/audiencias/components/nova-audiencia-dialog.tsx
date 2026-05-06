@@ -86,7 +86,7 @@ function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.R
 
 function InlineLoader({ label }: { label: string }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2.5 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
       <LoadingSpinner size="sm" className="shrink-0" />
       <span className={cn("text-body-sm")}>{label}</span>
     </div>
@@ -457,7 +457,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
           {/* ── Seção 1: Jurisdição + Processo ───────────────────────────── */}
         <SectionCard>
           <SectionHeader icon={Landmark} label="Jurisdição e Processo" />
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
               <div>
                 <FieldLabel htmlFor="trt">Tribunal (TRT) *</FieldLabel>
@@ -494,7 +494,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             <div>
               <FieldLabel htmlFor="processo">Processo *</FieldLabel>
               {!trt || !grau ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/70 text-body-sm")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/70 text-body-sm")}>
                   Selecione o TRT e Grau para listar os processos
                 </div>
               ) : loadingProcessos ? (

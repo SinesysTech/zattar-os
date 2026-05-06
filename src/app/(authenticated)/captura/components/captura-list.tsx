@@ -472,7 +472,7 @@ function criarColunas(
       cell: ({ row }) => {
         const captura = row.original;
         return (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Button
               variant="ghost"
               size="icon" aria-label="Visualizar"
@@ -638,14 +638,14 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
                 : undefined
             }
             actionSlot={
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 {selectedCount > 0 && (
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
                         variant="outline"
                         size="sm"
-                        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "h-9 gap-2 bg-card text-destructive hover:text-destructive")}
+                        className={cn("h-9 inline-tight bg-card text-destructive hover:text-destructive")}
                         disabled={isDeletingBulk}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -741,7 +741,7 @@ export function CapturaList({ onNewClick }: CapturaListProps = {}) {
             }
           />
         ) : (
-          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
+          <div className={cn("inset-dialog")} />
         )
       }
       footer={

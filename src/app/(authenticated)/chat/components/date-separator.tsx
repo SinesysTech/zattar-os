@@ -35,7 +35,7 @@ export function DateSeparator({ date }: DateSeparatorProps) {
     <div
       role="separator"
       aria-label={label}
-      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; my-4 margin sem primitiva DS */ "flex items-center gap-4 my-4 w-full")}
+      className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "flex items-center inline-default my-4 w-full")}
     >
       <span className="flex-1 h-px bg-foreground/4" />
       <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.625rem] font-semibold uppercase tracking-[0.08em] text-muted-foreground/55 whitespace-nowrap")}>

@@ -11,7 +11,7 @@ export const revalidate = 0;
 function AudienciasLoading() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <Skeleton className="h-9 w-40" />
         <Skeleton className="h-9 w-9 rounded-lg" />
       </div>

@@ -74,7 +74,7 @@ function formatDate(dateStr: string) {
 
 function ConfidenceLegend() {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+    <div className={cn("flex items-center inline-default")}>
       <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
         <span className="size-2 rounded-full bg-success" aria-hidden />
         <Text variant="micro-caption">Alta (&gt;85%)</Text>
@@ -122,9 +122,9 @@ function ProgressSegment({
 
 function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
   return (
-    <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <ul className={cn("stack-tight")}>
       {criterios.map((c, i) => (
-        <li key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+        <li key={i} className={cn("flex items-start inline-tight")}>
           {c.match ? (
             <Check className="mt-0.5 size-3.5 shrink-0 text-success" />
           ) : (
@@ -152,7 +152,7 @@ function NoMatchState({
   onIgnorar: () => void;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center")}>
+    <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center inline-default p-8 text-center")}>
       <div className="flex size-14 items-center justify-center rounded-full bg-muted/40">
         <AlertCircle className="size-6 text-muted-foreground" />
       </div>
@@ -162,10 +162,10 @@ function NoMatchState({
           Não encontramos um expediente compatível
         </Text>
       </div>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full max-w-60 flex-col items-center gap-2")}>
+      <div className={cn("flex w-full max-w-60 flex-col items-center inline-tight")}>
         <Button
           variant="outline"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
+          className={cn("w-full inline-tight text-caption")}
           onClick={onBuscarManualmente}
         >
           <Search className="size-3.5" aria-hidden />
@@ -173,7 +173,7 @@ function NoMatchState({
         </Button>
         <Button
           variant="outline"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
+          className={cn("w-full inline-tight text-caption")}
           onClick={onCriarNovo}
         >
           <Plus className="size-3.5" aria-hidden />
@@ -193,7 +193,7 @@ function NoMatchState({
 
 function AllResolvedState() {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-12 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center gap-4 p-12 text-center")}>
+    <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "flex flex-1 flex-col items-center justify-center inline-default p-12 text-center")}>
       <div className="flex size-16 items-center justify-center rounded-full bg-success/10">
         <CheckCircle2 className="size-8 text-success" />
       </div>
@@ -411,7 +411,7 @@ export function GazetteOrphanResolver() {
               {orphans.length}
             </Text>
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             {highConfidenceCount > 0 && (
               <Button
                 variant="outline"
@@ -443,7 +443,7 @@ export function GazetteOrphanResolver() {
 
       {/* ── Navigation Bar ── */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between border-b border-border/30 px-4 py-2")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Button
             variant="ghost"
             size="sm"
@@ -482,7 +482,7 @@ export function GazetteOrphanResolver() {
           </span>
 
           {/* Badges */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex flex-wrap items-center gap-2")}>
+          <div className={cn("mt-3 flex flex-wrap items-center inline-tight")}>
             {current.tipoComunicacao && (
               <Text
                 variant="micro-badge"
@@ -569,7 +569,7 @@ export function GazetteOrphanResolver() {
                 <Text variant="overline" className="text-muted-foreground/70">
                   Match Sugerido
                 </Text>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <div className="h-1.5 w-16 overflow-hidden rounded-full bg-border/20">
                     <div
                       className={cn(
@@ -608,7 +608,7 @@ export function GazetteOrphanResolver() {
                   <Text variant="micro-caption">Partes</Text>
                   <Text variant="caption" className="text-foreground">{match.partes}</Text>
                 </div>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+                <div className={cn("flex inline-default")}>
                   <div>
                     <Text variant="micro-caption">Vara</Text>
                     <Text variant="caption" className="text-foreground">{match.vara}</Text>
@@ -625,7 +625,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Criteria */}
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-4 space-y-2")}>
+              <div className={cn("mt-4 stack-tight")}>
                 <Text variant="overline" className="text-muted-foreground/70">
                   Critérios de Match
                 </Text>
@@ -633,7 +633,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Action buttons */}
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-6 space-y-2")}>
+              <div className={cn("mt-6 stack-tight")}>
                 <button
                   type="button"
                   className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-caption font-medium text-success transition-colors hover:bg-success/15")}
@@ -641,7 +641,7 @@ export function GazetteOrphanResolver() {
                 >
                   Vincular a Este Expediente
                 </button>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
+                <div className={cn("grid grid-cols-2 inline-tight")}>
                   <Button
                     variant="outline"
                     size="sm"

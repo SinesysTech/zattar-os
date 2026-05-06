@@ -88,7 +88,7 @@ export function PermissoesMatriz({
 
   if (isLoading) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "p-5 space-y-4")}>
+      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 stack-default")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-96 w-full" />
@@ -102,7 +102,7 @@ export function PermissoesMatriz({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <Shield className="size-4 text-muted-foreground/50" />
               <Heading level="card">Permissões do Usuário</Heading>
             </div>
@@ -114,7 +114,7 @@ export function PermissoesMatriz({
           </div>
 
           {canEdit && !isSuperAdmin && hasChanges && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <Button
                 type="button"
                 variant="outline"
@@ -176,7 +176,7 @@ export function PermissoesMatriz({
             )}
 
             {/* Module groups — flat layout, always expanded */}
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               {gruposModulo.map((grupo) => {
                 const permissoesAtivasModulo = grupo.itens.reduce((acc, item) => {
                   return acc + Object.values(item.operacoes).filter(Boolean).length;
@@ -209,7 +209,7 @@ export function PermissoesMatriz({
                     </div>
 
                     {/* Permissions grid — all resources within group, flat */}
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       {grupo.itens.map((item) => {
                         const permissoesAtivas = Object.values(item.operacoes).filter(Boolean).length;
                         const totalOperacoes = Object.keys(item.operacoes).length;
@@ -224,7 +224,7 @@ export function PermissoesMatriz({
 
                         return (
                           <div key={item.recurso} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                            <div className={cn("flex items-center inline-tight")}>
                               <Text variant="caption" className="font-medium">
                                 {formatarNomeRecurso(item.recurso)}
                               </Text>

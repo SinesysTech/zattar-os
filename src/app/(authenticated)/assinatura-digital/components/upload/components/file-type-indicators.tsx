@@ -41,8 +41,8 @@ export function FileTypeIndicators({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ 'flex items-center justify-center gap-4',
-        compact ? /* design-system-escape: gap-3 gap sem token DS */ 'gap-3' : /* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ 'gap-6',
+        'flex items-center justify-center inline-default',
+        compact ? /* design-system-escape: gap-3 gap sem token DS */ 'gap-3' : 'inline-loose',
         className
       )}
     >
@@ -51,10 +51,10 @@ export function FileTypeIndicators({
         const isLast = index === FILE_TYPES.length - 1;
 
         return (
-          <div key={fileType.type} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+          <div key={fileType.type} className={cn("flex items-center inline-default")}>
             <div
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'group/type flex items-center gap-2 transition-all duration-300',
+                'group/type flex items-center inline-tight transition-all duration-300',
                 'opacity-80 hover:opacity-100',
                 'cursor-default'
               )}

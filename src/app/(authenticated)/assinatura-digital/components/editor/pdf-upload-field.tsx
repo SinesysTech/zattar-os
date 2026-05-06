@@ -126,13 +126,13 @@ export function PdfUploadField({
   const displayError = error || uploadError;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       <Label>
         {label} {required && <span className="text-destructive">*</span>}
       </Label>
 
       {!hasValidFile ? (
-        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center hover:border-muted-foreground/50 transition-colors")}>
+        <div className={cn("border-2 border-dashed border-muted-foreground/25 rounded-lg inset-dialog text-center hover:border-muted-foreground/50 transition-colors")}>
           <input
             ref={fileInputRef}
             type="file"
@@ -144,7 +144,7 @@ export function PdfUploadField({
           />
           <label
             htmlFor="pdf-upload-field"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "cursor-pointer flex flex-col items-center gap-2")}
+            className={cn("cursor-pointer flex flex-col items-center inline-tight")}
           >
             {isUploading ? (
               <>

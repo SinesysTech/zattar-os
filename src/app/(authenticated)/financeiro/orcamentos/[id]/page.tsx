@@ -365,22 +365,22 @@ export default function OrcamentoDetalhesPage() {
   // Loading
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("stack-loose")}>
+        <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-3")}>
           {[...Array(3)].map((_, i) => (
             <Card key={i}>
-              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+              <CardContent className={cn("inset-dialog")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>
           ))}
         </div>
         <Card>
-          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+          <CardContent className={cn("inset-dialog")}>
             <Skeleton className="h-64" />
           </CardContent>
         </Card>
@@ -391,7 +391,7 @@ export default function OrcamentoDetalhesPage() {
   // Erro
   if (error || !orcamento) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -407,10 +407,10 @@ export default function OrcamentoDetalhesPage() {
   const statusConfig = STATUS_CONFIG[orcamento.status];
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+        <div className={cn("flex items-center inline-default")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -419,7 +419,7 @@ export default function OrcamentoDetalhesPage() {
           </Badge>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+        <div className={cn("flex flex-wrap inline-tight")}>
           {(isEmExecucao || orcamento.status === 'encerrado') && (
             <Button variant="outline" onClick={handleVerAnalise}>
               <BarChart3 className="mr-2 h-4 w-4" />
@@ -462,7 +462,7 @@ export default function OrcamentoDetalhesPage() {
       </div>
 
       {/* Cards de Informações */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+      <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Ano</CardDescription>

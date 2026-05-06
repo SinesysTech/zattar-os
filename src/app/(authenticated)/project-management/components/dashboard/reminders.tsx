@@ -68,7 +68,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
           </button>
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <CardContent className={cn("stack-default")}>
         <div className={cn("text-muted-foreground text-body-sm")}>{dataFormatada}</div>
         <div className={cn("text-body-sm")}>{lembrete.texto}</div>
         {lembrete.projetoNome && (
@@ -97,7 +97,7 @@ export function Reminders({ lembretes }: RemindersProps) {
             Nenhum lembrete pendente.
           </Text>
         ) : (
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2 lg:grid-cols-3")}>
+          <div className={cn("grid inline-default sm:grid-cols-2 lg:grid-cols-3")}>
             {lembretes.map((lembrete) => (
               <ReminderCard key={lembrete.id} lembrete={lembrete} />
             ))}

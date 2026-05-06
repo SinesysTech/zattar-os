@@ -71,7 +71,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           {label.icon && <label.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
           <span>{label.label}</span>
         </div>
@@ -91,7 +91,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       const url = row.original.url;
 
       return (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           {url ? (
             <a
               href={url}
@@ -127,7 +127,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-25 items-center gap-2")}>
+        <div className={cn("flex w-25 items-center inline-tight")}>
           {status.icon && <status.icon className="text-muted-foreground size-4" />}
           <span>{status.label}</span>
         </div>
@@ -151,7 +151,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
       }
 
       return (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           {priority.icon && <priority.icon className="text-muted-foreground size-4" />}
           <span>{priority.label}</span>
         </div>

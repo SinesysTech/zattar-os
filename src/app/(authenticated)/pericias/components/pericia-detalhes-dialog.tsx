@@ -88,8 +88,8 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-      <header className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+    <section className={cn("stack-tight")}>
+      <header className={cn("flex items-center inline-tight")}>
         {icon}
         <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70")}>
           {title}
@@ -151,7 +151,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-0")}>
+        <TabsContent value="detalhes" className={cn("stack-default mt-0")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className="min-w-0">
               <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
@@ -242,7 +242,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
     ?.avatarUrl;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; pb-6 padding direcional sem Inset equiv. */ "space-y-6 pb-6")}>
+    <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "stack-loose pb-6")}>
       {/* Meta Grid */}
       <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/20")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
@@ -344,7 +344,7 @@ export function PericiaDetalhesDialog({
               <ClipboardList className="size-4.5 text-primary" />
             </div>
             <div className="flex-1 min-w-0">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+              <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <DialogTitle>
                   {titulo ||
                     (exibirLista ? 'Perícias do Dia' : 'Detalhes da Perícia')}

@@ -37,8 +37,8 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
   }, [metricas.cacheHitRate]);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
+    <div className={cn("stack-default")}>
+      <div className={cn("flex items-center justify-end inline-tight")}>
         <Button
           variant="secondary"
           onClick={() => router.push("/app/admin/metricas-db/avaliar-upgrade")}
@@ -52,13 +52,13 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
 
       <DiskIOCard diskIO={metricas.diskIO} diskIOStatus={metricas.diskIOStatus} diskIOMessage={metricas.diskIOMessage} />
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
+      <div className={cn("grid inline-default md:grid-cols-2")}>
         <Card>
           <CardHeader>
             <CardTitle>Cache Hit Rate</CardTitle>
             <CardDescription>Cache de índices e tabelas</CardDescription>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <CardContent className={cn("stack-default")}>
             <div>
               <div className="flex items-center justify-between">
                 <span className={cn("text-body-sm text-muted-foreground")}>Index hit rate</span>
@@ -153,7 +153,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
         </CardContent>
       </Card>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-2")}>
+      <div className={cn("grid inline-default lg:grid-cols-2")}>
         <Card>
           <CardHeader>
             <CardTitle>Sequential Scans</CardTitle>

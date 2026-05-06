@@ -33,7 +33,7 @@ export function DiarioOficialPageNav({
 }: DiarioOficialPageNavProps) {
   return (
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Diário Oficial</Heading>
           {subtitle && (

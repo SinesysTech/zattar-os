@@ -67,7 +67,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
       </Tooltip>
       <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-72 p-4")} align="start">
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-success" />
             <Heading level="subsection" className={cn("text-body-sm")}>Ata de Audiência</Heading>
           </div>
@@ -199,7 +199,7 @@ function ObservacoesCell({
       </PopoverTrigger>
       <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <MessageSquareText className="h-4 w-4 text-primary" />
             <Heading level="subsection" className={cn("text-body-sm")}>Observações</Heading>
           </div>
@@ -211,7 +211,7 @@ function ObservacoesCell({
             disabled={isSaving}
             autoFocus
           />
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+          <div className={cn("flex justify-end inline-tight")}>
             <Button
               variant="ghost"
               size="sm"
@@ -336,14 +336,14 @@ function ModalidadeCell({
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {/* Seção Virtual */}
           {isVirtual && (
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Heading level="subsection" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm flex items-center gap-2")}>
+            <div className={cn("stack-tight")}>
+              <Heading level="subsection" className={cn("text-body-sm flex items-center inline-tight")}>
                 <ExternalLink className="h-4 w-4 text-primary" />
                 Link da Audiência Virtual
               </Heading>
               {audiencia.urlAudienciaVirtual ? (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("stack-tight")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <a
                       href={audiencia.urlAudienciaVirtual}
                       target="_blank"
@@ -376,7 +376,7 @@ function ModalidadeCell({
                 className={cn("h-8 text-caption")}
                 disabled={isSaving}
               />
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+              <div className={cn("flex justify-end inline-tight")}>
                 <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} disabled={isSaving}>
                   Cancelar
                 </Button>
@@ -390,14 +390,14 @@ function ModalidadeCell({
 
           {/* Seção Presencial */}
           {isPresencial && (
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               {isVirtual && <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t pt-3")} />}
-              <Heading level="subsection" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm flex items-center gap-2")}>
+              <Heading level="subsection" className={cn("text-body-sm flex items-center inline-tight")}>
                 <MapPin className="h-4 w-4 text-primary" />
                 Endereço Presencial
               </Heading>
               {audiencia.enderecoPresencial ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+                <div className={cn("flex items-start inline-tight")}>
                   <Text variant="caption" className="flex-1">
                     {formatEndereco(audiencia.enderecoPresencial)}
                   </Text>
@@ -423,7 +423,7 @@ function ModalidadeCell({
                 className={cn("min-h-16 resize-y text-caption")}
                 disabled={isSaving}
               />
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+              <div className={cn("flex justify-end inline-tight")}>
                 <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} disabled={isSaving}>
                   Cancelar
                 </Button>
@@ -545,7 +545,7 @@ export function getAudienciasColumns(
           (audiencia.ataAudienciaId || audiencia.urlAtaAudiencia);
 
         return (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-start gap-2 py-2")}>
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-start inline-tight py-2")}>
             {/* Botão de Ata (aparece apenas se disponível) */}
             {hasAta && <AtaAudienciaButton audiencia={audiencia} />}
 

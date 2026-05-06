@@ -155,12 +155,12 @@ export function UsuariosClient() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Header */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+      <div className={cn("flex items-start justify-between inline-default")}>
         <div className="min-w-0">
           <Heading level="page">Usuários</Heading>
           <Text variant="body-sm" className="text-muted-foreground/50 mt-0.5">{subtitle}</Text>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
+        <div className={cn("flex items-center inline-tight shrink-0")}>
           <Button
             type="button"
             variant="outline"

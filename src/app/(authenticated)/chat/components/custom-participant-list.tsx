@@ -84,7 +84,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
                 </div>
 
                 {/* Status Icons */}
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+                <div className={cn("flex inline-tight")}>
                   {p.audioEnabled ? (
                     <Mic className="w-3 h-3 text-success" />
                   ) : (

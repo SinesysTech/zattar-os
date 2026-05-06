@@ -431,7 +431,7 @@ export function RepresentanteFormDialog({
   // Renderizar Step 1 - Identificação
   const renderStep1 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="nome">
           Nome Completo <span className="text-destructive">*</span>
         </Label>
@@ -445,8 +445,8 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="cpf">
             CPF <span className="text-destructive">*</span>
           </Label>
@@ -460,7 +460,7 @@ export function RepresentanteFormDialog({
           />
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="sexo">Sexo</Label>
           {mounted ? (
             <Select
@@ -483,7 +483,7 @@ export function RepresentanteFormDialog({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="tipo">Tipo de Representante</Label>
         {mounted ? (
           <Select
@@ -507,10 +507,10 @@ export function RepresentanteFormDialog({
         <input type="hidden" name="tipo" value={formData.tipo} />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Inscrições OAB</Label>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "grid gap-2 border rounded-lg p-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 md:grid-cols-3 gap-2")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "grid inline-tight border rounded-lg p-4")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-3 inline-tight")}>
             <Input
               placeholder="Número OAB"
               value={novaOAB.numero}
@@ -568,7 +568,7 @@ export function RepresentanteFormDialog({
           </Button>
         </div>
         {formData.oabs.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
+          <div className={cn("flex flex-wrap inline-tight mt-2")}>
             {formData.oabs.map((oab, index) => (
               <Badge
                 key={index}
@@ -596,9 +596,9 @@ export function RepresentanteFormDialog({
   // Renderizar Step 2 - Contato
   const renderStep2 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="novo-email-representante">E-mails</Label>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+        <div className={cn("flex inline-tight")}>
           <Input
             id="novo-email-representante"
             type="email"
@@ -629,7 +629,7 @@ export function RepresentanteFormDialog({
           Pressione Enter ou clique em + para adicionar múltiplos e-mails
         </p>
         {formData.emails.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
+          <div className={cn("flex flex-wrap inline-tight mt-2")}>
             {formData.emails.map((email, index) => (
               <Badge
                 key={index}
@@ -652,7 +652,7 @@ export function RepresentanteFormDialog({
         )}
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Celular</Label>
         <InputTelefone
           mode="cell"
@@ -669,7 +669,7 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Telefone Residencial</Label>
         <InputTelefone
           mode="landline"
@@ -686,7 +686,7 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Telefone Comercial</Label>
         <InputTelefone
           mode="landline"
@@ -708,7 +708,7 @@ export function RepresentanteFormDialog({
   // Renderizar Step 3 - Endereço
   const renderStep3 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>CEP</Label>
         <InputCEP
           value={formData.cep}
@@ -718,7 +718,7 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="logradouro">Logradouro</Label>
         <Input
           id="logradouro"
@@ -728,8 +728,8 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid grid-cols-2 inline-default")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="numero">Número</Label>
           <Input
             id="numero"
@@ -738,7 +738,7 @@ export function RepresentanteFormDialog({
             placeholder="Nº"
           />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="complemento">Complemento</Label>
           <Input
             id="complemento"
@@ -749,7 +749,7 @@ export function RepresentanteFormDialog({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="bairro">Bairro</Label>
         <Input
           id="bairro"
@@ -759,8 +759,8 @@ export function RepresentanteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid grid-cols-2 inline-default")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="municipio">Cidade</Label>
           <Input
             id="municipio"
@@ -769,7 +769,7 @@ export function RepresentanteFormDialog({
             placeholder="Nome da cidade"
           />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="estado_sigla">Estado</Label>
           {mounted ? (
             <Select
@@ -887,7 +887,7 @@ export function RepresentanteFormDialog({
         </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <DialogNavPrevious
               onClick={handlePrevious}
               disabled={isFirstStep || isPending}

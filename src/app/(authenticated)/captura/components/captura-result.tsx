@@ -111,7 +111,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
   const hasPeriodo = data?.dataInicio && data?.dataFim;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Banner de status */}
       <div className={`flex items-start gap-3 rounded-lg border p-4 ${
         isAsync
@@ -138,7 +138,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
       {/* Grade de métricas — processos */}
       {hasProcessStats && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4")}>
+        <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-3 lg:grid-cols-4")}>
           {data?.total !== undefined && (
             <StatCard
               icon={<Database className="h-4 w-4" />}
@@ -214,7 +214,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
       {/* Grade de métricas — partes */}
       {hasParteStats && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4")}>
+        <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-3 lg:grid-cols-4")}>
           {data?.total_partes !== undefined && (
             <StatCard icon={<Users className="h-4 w-4" />} label="Total de partes" value={data.total_partes} variant="info" />
           )}
@@ -238,7 +238,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
       {/* Grade de métricas — timeline/documentos */}
       {hasTimelineStats && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4")}>
+        <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-3 lg:grid-cols-4")}>
           {data?.totalDocumentos !== undefined && (
             <StatCard icon={<FileText className="h-4 w-4" />} label="Documentos" value={data.totalDocumentos} variant="info" />
           )}
@@ -256,7 +256,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
       {/* Período de referência */}
       {hasPeriodo && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2.5")}>
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg border bg-muted/30 px-3 py-2.5")}>
           <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <Text variant="caption">
             Período: {new Date(data!.dataInicio!).toLocaleDateString('pt-BR')} até{' '}
@@ -278,7 +278,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
           </p>
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {data.erros.slice(0, 5).map((e, i) => (
-              <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-caption")}>
+              <div key={i} className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-caption")}>
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <span className="font-mono text-foreground/80">{e.numero_processo}</span>

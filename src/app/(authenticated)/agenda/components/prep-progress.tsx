@@ -49,7 +49,7 @@ export function PrepProgress({
       )}
 
       {/* Bar */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         {!label && size === "sm" && (
           <span className="text-[9px] text-muted-foreground/50">Preparo:</span>
         )}

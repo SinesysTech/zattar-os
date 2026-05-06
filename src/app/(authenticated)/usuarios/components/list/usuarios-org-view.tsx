@@ -57,7 +57,7 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
       onClick={() => onClick(usuario)}
       onKeyDown={handleKeyDown}
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ 'flex flex-col items-center gap-2 p-3 rounded-2xl border cursor-pointer',
+        /* design-system-escape: p-3 → usar <Inset> */ 'flex flex-col items-center inline-tight p-3 rounded-2xl border cursor-pointer',
         'transition-all duration-200 select-none',
         'hover:-translate-y-0.5 hover:shadow-md',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
@@ -143,7 +143,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
   }
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 overflow-x-auto relative")}>
+    <GlassPanel depth={1} className={cn("inset-dialog overflow-x-auto relative")}>
       {/* Zoom controls */}
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "absolute top-4 right-4 flex items-center gap-1 z-10")}>
         <Button
@@ -195,14 +195,14 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
                 )}
 
                 {/* Level */}
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
+                <div className={cn("flex flex-col items-center inline-tight")}>
                   {/* Level label */}
                   <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/40")}>
                     {cargoNome}
                   </span>
 
                   {/* Members row */}
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-row flex-wrap justify-center gap-2")}>
+                  <div className={cn("flex flex-row flex-wrap justify-center inline-tight")}>
                     {members.map((usuario) => (
                       <OrgNode
                         key={usuario.id}

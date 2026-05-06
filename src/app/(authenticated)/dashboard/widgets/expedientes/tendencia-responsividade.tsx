@@ -79,7 +79,7 @@ export function TendenciaResponsividade() {
       depth={1}
       className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "mt-2 grid grid-cols-2 gap-4")}>
+      <div className={cn("mt-2 grid grid-cols-2 inline-default")}>
         {tempoResposta !== undefined && (
           <ComparisonStat
             label="Tempo Resposta"

@@ -104,7 +104,7 @@ export function TipoExpedienteForm({
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
                         <FormField
                             control={form.control}
                             name="tipoExpediente"

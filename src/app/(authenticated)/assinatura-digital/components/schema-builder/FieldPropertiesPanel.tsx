@@ -268,7 +268,7 @@ export default function FieldPropertiesPanel({
   if (!field) {
     return (
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv. */ "text-center space-y-2 px-6")}>
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv. */ "text-center stack-tight px-6")}>
           <Info className="size-8 text-muted-foreground/60 mx-auto" />
           <Text variant="caption" className="font-medium">Nenhum campo selecionado</Text>
           <p className="text-[11px] text-muted-foreground/70">
@@ -301,7 +301,7 @@ export default function FieldPropertiesPanel({
               open={expandedSections.has('basico')}
               onOpenChange={() => toggleSection('basico')}
             >
-              <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
+              <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
                 <Text variant="caption" className="font-semibold flex-1 text-left">Básico</Text>
                 <ChevronDown
                   className={cn(
@@ -507,7 +507,7 @@ export default function FieldPropertiesPanel({
               open={expandedSections.has('validacao')}
               onOpenChange={() => toggleSection('validacao')}
             >
-              <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
+              <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
                 <Text variant="caption" className="font-semibold flex-1 text-left">Validação</Text>
                 <ChevronDown
                   className={cn(
@@ -652,7 +652,7 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('condicional')}
                   onOpenChange={() => toggleSection('condicional')}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
                     <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1 text-left")}>Condicional</span>
                     <ChevronDown
                       className={cn(
@@ -759,7 +759,7 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('opcoes')}
                   onOpenChange={() => toggleSection('opcoes')}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
                     <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1 text-left")}>
                       Opções {options.length > 0 && `(${options.length})`}
                     </span>
@@ -770,9 +770,9 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "pt-2 space-y-2")}>
+                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-tight")}>
                     {options.map((option, index) => (
-                      <div key={index} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-start gap-2 p-2 border rounded-lg")}>
+                      <div key={index} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 border rounded-lg")}>
                         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1 shrink-0")}>
                           <Button
                             type="button"
@@ -797,7 +797,7 @@ export default function FieldPropertiesPanel({
                             <ChevronDown className="w-3 h-3" />
                           </Button>
                         </div>
-                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+                        <div className={cn("flex-1 stack-tight")}>
                           <Input
                             value={option.label}
                             onChange={e => updateOption(index, 'label', e.target.value)}
@@ -854,7 +854,7 @@ export default function FieldPropertiesPanel({
                   open={expandedSections.has('entitySearch')}
                   onOpenChange={() => toggleSection('entitySearch')}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
                     <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1 text-left")}>Busca de Entidade</span>
                     <ChevronDown
                       className={cn(
@@ -864,9 +864,9 @@ export default function FieldPropertiesPanel({
                     />
                   </CollapsibleTrigger>
                   <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       <Label className={cn("text-caption text-muted-foreground")}>Buscar por</Label>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         {(['cpf', 'cnpj', 'nome'] as const).map((searchType) => {
                           const isRelevant = 
                             (fieldType === FormFieldType.CLIENT_SEARCH && searchType === 'cpf') ||
@@ -895,7 +895,7 @@ export default function FieldPropertiesPanel({
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       <div className="flex items-center justify-between">
                         <Label className={cn("text-caption text-muted-foreground")}>Mapeamento Auto-fill</Label>
                         <Button
@@ -912,9 +912,9 @@ export default function FieldPropertiesPanel({
                           Adicionar
                         </Button>
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         {Object.entries(autoFillMappings).map(([entityField, formFieldId], index) => (
-                          <div key={index} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 items-center")}>
+                          <div key={index} className={cn("flex inline-tight items-center")}>
                             <Input
                               value={entityField}
                               onChange={(e) => {
@@ -979,7 +979,7 @@ export default function FieldPropertiesPanel({
           </div>
           </ScrollArea>
 
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "shrink-0 border-t px-3 py-2.5 flex gap-2")}>
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "shrink-0 border-t px-3 py-2.5 flex inline-tight")}>
             <Button
               type="submit"
               size="sm"

@@ -136,7 +136,7 @@ export function TemplateTextoEditor({
           Digite <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}>@</kbd> no editor para inserir variáveis dinâmicas.
         </Text>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           {Array.from(variablesByCategory.entries()).map(([category, variables]) => (
             <div key={category}>
               <Text variant="caption" className="font-medium">

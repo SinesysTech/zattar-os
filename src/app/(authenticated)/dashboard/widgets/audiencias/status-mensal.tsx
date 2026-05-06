@@ -50,7 +50,7 @@ export function StatusMensal() {
         icon={BarChart3}
         subtitle="Marcadas vs realizadas vs canceladas"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
           <BarChart3 className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de status mensal indisponiveis
@@ -81,7 +81,7 @@ export function StatusMensal() {
       icon={BarChart3}
       subtitle="Marcadas vs realizadas vs canceladas"
     >
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <MiniBar
           data={barData}
           height={56}
@@ -90,7 +90,7 @@ export function StatusMensal() {
         />
 
         {/* Canceladas mini-bar below */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end gap-2 w-full")} style={{ height: 24 }}>
+        <div className={cn("flex items-end inline-tight w-full")} style={{ height: 24 }}>
           {statusMensal.map((item) => {
             const maxCanc = Math.max(...statusMensal.map((s) => s.canceladas), 1);
             return (
@@ -107,7 +107,7 @@ export function StatusMensal() {
         </div>
 
         {/* Legend */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 justify-center")}>
+        <div className={cn("flex items-center inline-default justify-center")}>
           {LEGEND_ITEMS.map((item) => (
             <div key={item.label} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <div className={`size-2 rounded-sm ${item.color}`} />

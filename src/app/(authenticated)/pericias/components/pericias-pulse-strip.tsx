@@ -39,7 +39,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* ── Ativas ─────────────────────────────────────────────────── */}
       <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Perícias Ativas
@@ -55,7 +55,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           {stats.trendMensal.length >= 2 ? (
             <Sparkline data={stats.trendMensal} width={80} height={16} />
           ) : (
@@ -69,7 +69,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
 
       {/* ── Aguardando Laudo ───────────────────────────────────────── */}
       <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Aguardando Laudo
@@ -85,7 +85,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-info/25 transition-all duration-700"
@@ -106,7 +106,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           stats.prazosCriticos7d > 0 && 'border-destructive/15',
         )}
       >
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Prazos em 7d
@@ -133,7 +133,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-destructive/25 transition-all duration-700"
@@ -154,7 +154,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           stats.semResponsavel > 0 && 'border-warning/15',
         )}
       >
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Sem Responsável
@@ -175,7 +175,7 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
           </IconContainer>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-warning/25 transition-all duration-700"

@@ -41,7 +41,7 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
               </Text>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+            <div className={cn("flex flex-wrap inline-tight")}>
               <Badge variant="outline">{credencial.tribunal}</Badge>
               <Badge variant="outline">{credencial.grau}</Badge>
               {credencial.active ? <Badge variant="success">Ativa</Badge> : <Badge variant="neutral">Inativa</Badge>}

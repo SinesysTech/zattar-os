@@ -32,13 +32,13 @@ export class MeetingErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex flex-col items-center justify-center h-full w-full bg-video-bg text-video-text p-6 text-center")}>
+        <div className={cn("flex flex-col items-center justify-center h-full w-full bg-video-bg text-video-text inset-dialog text-center")}>
           <AlertCircle className="w-12 h-12 text-destructive mb-4" />
           <Heading level="section" className="mb-2">Algo deu errado na chamada</Heading>
           <p className="text-video-muted mb-6 max-w-md">
             Ocorreu um erro inesperado ao renderizar a interface da chamada. Tente recarregar.
           </p>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+          <div className={cn("flex inline-default")}>
             <Button
               variant="outline"
               onClick={() => window.location.reload()}

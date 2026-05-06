@@ -61,7 +61,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
         )}
       >
         <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+          <div className={cn("flex items-start inline-tight")}>
             <button
               className="text-muted-foreground mt-0.5 shrink-0 cursor-grab hover:text-foreground"
               {...(isDragOverlay ? {} : listeners)}
@@ -69,12 +69,12 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
               <GripVertical className="size-4" />
             </button>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 flex-1 space-y-2")}>
+            <div className={cn("min-w-0 flex-1 stack-tight")}>
               <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
                 {tarefa.titulo}
               </Text>
 
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+              <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <PriorityIndicator
                   prioridade={tarefa.prioridade}
                   showLabel={false}

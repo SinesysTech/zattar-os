@@ -105,7 +105,7 @@ function AudienciaContent({
       </div>
 
       {/* ── Badges + meta inline ── */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap mb-5")}>
+      <div className={cn("flex items-center inline-tight flex-wrap mb-5")}>
         <SemanticBadge category="tribunal" value={audiencia.trt} className="text-micro-badge">
           {audiencia.trt}
         </SemanticBadge>

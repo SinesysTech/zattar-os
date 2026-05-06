@@ -152,7 +152,7 @@ export default function PropertiesPopover({
           {/* Informacoes Gerais */}
           <Collapsible defaultOpen>
             <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Info className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                 <span>Informações gerais</span>
               </div>
@@ -240,14 +240,14 @@ export default function PropertiesPopover({
           {/* Posicionamento */}
           <Collapsible defaultOpen>
             <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Move className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                 <span>Posicionamento</span>
               </div>
               <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
             <CollapsibleContent className={cn(/* design-system-escape: space-y-3 sem token DS; px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "space-y-3 px-2 pt-2")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
+              <div className={cn("grid grid-cols-2 inline-tight")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label htmlFor="field-pos-x" className={cn("text-caption text-muted-foreground")}>Posição X</Label>
                   <Input
@@ -283,7 +283,7 @@ export default function PropertiesPopover({
                   />
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
+              <div className={cn("grid grid-cols-2 inline-tight")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label htmlFor="field-width" className={cn("text-caption text-muted-foreground")}>Largura</Label>
                   <Input
@@ -326,7 +326,7 @@ export default function PropertiesPopover({
           {(selectedField.tipo === 'texto' || selectedField.tipo === 'texto_composto') && (
             <Collapsible>
               <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <Palette className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                   <span>Estilo</span>
                 </div>
@@ -391,7 +391,7 @@ export default function PropertiesPopover({
             <Button
               variant="outline"
               size="sm"
-              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
+              className={cn("w-full inline-tight text-caption")}
               onClick={() => {
                 onEditRichText(selectedField.id);
                 onOpenChange(false);
@@ -406,7 +406,7 @@ export default function PropertiesPopover({
           <Button
             variant="destructive"
             size="sm"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
+            className={cn("w-full inline-tight text-caption")}
             onClick={() => onDeleteField(selectedField.id)}
           >
             <Trash2 className="h-3.5 w-3.5" />

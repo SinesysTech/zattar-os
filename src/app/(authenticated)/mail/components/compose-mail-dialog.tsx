@@ -104,7 +104,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
         </DialogHeader>
 
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "grid gap-3 py-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <div className="flex items-center justify-between">
               <Label htmlFor="compose-to">Para</Label>
               {!showCcBcc && (
@@ -127,7 +127,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
 
           {showCcBcc && (
             <>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn("grid inline-tight")}>
                 <Label htmlFor="compose-cc">Cc</Label>
                 <Input
                   id="compose-cc"
@@ -137,7 +137,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
                   onChange={(e) => setCc(e.target.value)}
                 />
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn("grid inline-tight")}>
                 <Label htmlFor="compose-bcc">Cco</Label>
                 <Input
                   id="compose-bcc"
@@ -150,7 +150,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
             </>
           )}
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="compose-subject">Assunto</Label>
             <Input
               id="compose-subject"
@@ -161,7 +161,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label>Mensagem</Label>
             <MailEditor editorRef={editorRef} placeholder="Escreva sua mensagem..." />
           </div>

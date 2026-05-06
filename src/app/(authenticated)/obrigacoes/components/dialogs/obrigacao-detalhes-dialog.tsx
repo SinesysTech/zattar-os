@@ -125,7 +125,7 @@ function SectionHeader({
   label: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2.5")}>
+    <div className={cn("flex items-center inline-tight mb-2.5")}>
       <Icon className="size-3.5 text-primary" />
       <Text variant="overline" className="text-muted-foreground">
         {label}
@@ -366,7 +366,7 @@ export function ObrigacaoDetalhesDialog({
 
         {/* ══════════ HEADER · Capa do processo ══════════ */}
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/50")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4 mb-1.5")}>
+          <div className={cn("flex items-center justify-between inline-default mb-1.5")}>
             <DialogTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate")}>
               {tituloPartes}
             </DialogTitle>
@@ -453,7 +453,7 @@ export function ObrigacaoDetalhesDialog({
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS; pb-3.5 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-5 pb-3.5 mb-3.5 border-b border-border/40")}>
             {/* ──────── Valor (editável) ──────── */}
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+              <div className={cn("flex items-center justify-between inline-tight")}>
                 <Text variant="label" className="text-muted-foreground/80">
                   Valor
                 </Text>
@@ -526,7 +526,7 @@ export function ObrigacaoDetalhesDialog({
 
             {/* ──────── Vencimento (editável) ──────── */}
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+              <div className={cn("flex items-center justify-between inline-tight")}>
                 <Text variant="label" className="text-muted-foreground/80">
                   Vencimento
                 </Text>
@@ -669,7 +669,7 @@ export function ObrigacaoDetalhesDialog({
 
         {/* ══════════ BODY scrollável ══════════ */}
         <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]")}>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             {/* Registrar recebimento — parcelas pendentes/vencidas */}
             {podeMarcarRecebida && (
               <div>
@@ -683,7 +683,7 @@ export function ObrigacaoDetalhesDialog({
                 />
                 <SectionCard className="bg-success/5 border-success/25">
                   {efetivando ? (
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       <div>
                         <Text variant="label" className="mb-1 block">
                           {isRecebimento
@@ -757,7 +757,7 @@ export function ObrigacaoDetalhesDialog({
             <div>
               <SectionHeader icon={RefreshCw} label="Sincronização" />
               <SectionCard>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <SincIcon
                     className={cn(
                       'size-4 shrink-0',

@@ -101,7 +101,7 @@ export function CustomCallControls({
 
   return (
     <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "fixed bottom-0 left-0 right-0 z-40 bg-video-surface/95 backdrop-blur-md border-t border-video-border p-4 md:p-6")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; md:gap-4 sem equivalente DS */ "relative flex items-center justify-center gap-2 md:gap-4 max-w-7xl mx-auto")}>
+      <div className={cn(/* design-system-escape: md:gap-4 sem equivalente DS */ "relative flex items-center justify-center inline-tight md:gap-4 max-w-7xl mx-auto")}>
 
         {/* Network Indicator (Absolute Left) */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 hidden md:block">
@@ -185,8 +185,8 @@ export function CustomCallControls({
               <TooltipContent><p>Efeitos de Vídeo</p></TooltipContent>
             </Tooltip>
             <PopoverContent className="w-72 bg-video-surface border-video-border text-video-text" side="top">
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("grid inline-default")}>
+                <div className={cn("stack-tight")}>
                   <Heading level="subsection" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>Efeitos de Vídeo</Heading>
                   <Text variant="caption">
                     Escolha um efeito para sua câmera

@@ -68,11 +68,11 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
       <Tabs defaultValue={resumo ? "resumo" : "transcricao"} className="flex flex-col h-full">
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b bg-muted/30")}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="resumo" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
+            <TabsTrigger value="resumo" className={cn("inline-tight")}>
               <ListVideo className="w-4 h-4" />
               Resumo IA
             </TabsTrigger>
-            <TabsTrigger value="transcricao" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
+            <TabsTrigger value="transcricao" className={cn("inline-tight")}>
               <FileText className="w-4 h-4" />
               Transcrição Completa
             </TabsTrigger>
@@ -82,7 +82,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
         <div className="flex-1 overflow-hidden relative">
           <TabsContent value="resumo" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 p-0")}>
             <div className="h-full flex flex-col">
-              <ScrollArea className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 p-6")}>
+              <ScrollArea className={cn("flex-1 inset-dialog")}>
                 {resumo ? (
                   <div className="prose dark:prose-invert prose-sm max-w-none">
                     <ReactMarkdown>{resumo}</ReactMarkdown>
@@ -100,7 +100,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                   disabled={isGenerating}
                   variant={resumo ? "outline" : "default"}
                   size="sm"
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+                  className={cn("inline-tight")}
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isGenerating ? 'animate-spin' : ''}`} />
                   {resumo ? "Regenerar Resumo" : "Gerar Resumo com IA"}

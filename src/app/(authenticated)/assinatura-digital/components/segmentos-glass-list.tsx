@@ -217,7 +217,7 @@ function GlassRow({
         isAlt && 'bg-muted/20',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-[auto_1fr_auto_90px_120px] gap-4 items-center")}>
+      <div className={cn("grid grid-cols-[auto_1fr_auto_90px_120px] inline-default items-center")}>
         {/* Status dot */}
         <div className="flex items-center w-4">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getAtivoDotColor(segmento.ativo))} />
@@ -328,7 +328,7 @@ function GlassCard({
         'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div
           className="w-10 h-10 rounded-[0.625rem] flex items-center justify-center"
           style={{ background: `color-mix(in oklch, var(${token}) 14%, transparent)` }}
@@ -363,7 +363,7 @@ function GlassCard({
         <Text variant="caption" className="text-muted-foreground/65 italic flex-1">Sem descrição</Text>
       )}
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/40")}>
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
         <span className="text-[10px] text-muted-foreground">
           <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums text-foreground/80")}>
             {segmento.formularios_count ?? 0}
@@ -393,7 +393,7 @@ function GlassCard({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div key={i} className="h-20 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -457,7 +457,7 @@ export function SegmentosGlassList({
           ))}
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           {segmentos.map((s, i) => (
             <GlassRow
               key={s.id}

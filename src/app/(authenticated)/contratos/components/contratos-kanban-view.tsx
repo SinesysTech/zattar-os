@@ -107,9 +107,9 @@ function KanbanColumnContent({
       value={estagioId}
       className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 min-h-28")}>
+      <div className={cn("flex flex-col inline-tight min-h-28")}>
         <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+          <div className={cn("flex items-center inline-tight min-w-0")}>
             <span
               className="inline-block w-2 h-2 rounded-full shrink-0"
               style={{ backgroundColor: cor, boxShadow: `0 0 10px ${cor}55` }}
@@ -166,7 +166,7 @@ function KanbanBoardSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 min-w-60 max-w-60 sm:min-w-70 sm:max-w-70")}
+          className={cn("flex flex-col inline-tight min-w-60 max-w-60 sm:min-w-70 sm:max-w-70")}
         >
           <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2")}>
             <Skeleton className="h-3.5 w-28" />

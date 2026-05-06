@@ -98,7 +98,7 @@ export function SegmentoSelect({
           ) : (
             segmentos.map((segmento) => (
               <SelectItem key={segmento.id} value={String(segmento.id)}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <span>{segmento.nome}</span>
                   {!segmento.ativo && (
                     <Text variant="caption">(Inativo)</Text>

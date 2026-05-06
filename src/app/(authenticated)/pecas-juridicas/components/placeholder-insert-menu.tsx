@@ -134,7 +134,7 @@ export function PlaceholderInsertMenu({
                       {index > 0 && <CommandSeparator />}
                       <CommandGroup
                         heading={
-                          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                          <div className={cn("flex items-center inline-tight")}>
                             {CATEGORY_ICONS[category]}
                             <span>{PLACEHOLDER_CATEGORIES[category]}</span>
                           </div>
@@ -147,7 +147,7 @@ export function PlaceholderInsertMenu({
                             onSelect={() => handleSelect(placeholder)}
                             className={cn(/* design-system-escape: gap-1 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start gap-1 py-2")}
                           >
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
+                            <div className={cn("flex items-center inline-tight w-full")}>
                               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{placeholder.label}</span>
                               <AppBadge variant="secondary" className={cn("ml-auto text-caption font-mono")}>
                                 {`{{${placeholder.key}}}`}

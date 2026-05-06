@@ -53,7 +53,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
 
       {/* UI visual (avatares) */}
       {allParticipants.map((p: DyteParticipant) => (
-        <div key={p.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4 group")}>
+        <div key={p.id} className={cn("flex flex-col items-center inline-default group")}>
           <div className={cn(
             /* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "relative w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-video-text shadow-lg transition-transform",
             "bg-linear-to-br from-info to-primary",

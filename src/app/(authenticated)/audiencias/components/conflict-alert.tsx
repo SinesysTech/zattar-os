@@ -116,7 +116,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
       <div className="h-px bg-linear-to-r from-transparent via-destructive/25 to-transparent" />
 
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+        <div className={cn("flex items-center inline-tight mb-3")}>
           <AlertTriangle className="size-3 text-destructive/50" />
           <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/75")}>
             {conflicts.length} {conflicts.length === 1 ? "alerta" : "alertas"}
@@ -135,7 +135,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
 
             return (
               <div key={i} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   {conflict.type === "overlap" ? (
                     <Clock className="size-2.5 text-destructive/40" />
                   ) : (

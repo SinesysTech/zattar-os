@@ -115,7 +115,7 @@ export function FormularioSelect({
           ) : (
             formularios.map((formulario) => (
               <SelectItem key={formulario.id} value={String(formulario.id)}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <span>{formulario.nome}</span>
                   {formulario.descricao && (
                     <Text variant="caption" className="truncate max-w-50">

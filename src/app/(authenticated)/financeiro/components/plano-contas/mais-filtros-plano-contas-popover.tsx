@@ -86,7 +86,7 @@ export function MaisFiltrosPlanoContasPopover({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <div className="flex items-center justify-between">
             <Heading level="subsection">Filtros Avançados</Heading>
             {hasActiveFilters && (

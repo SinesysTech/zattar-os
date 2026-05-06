@@ -185,7 +185,7 @@ export function FileUploadDialogUnified({
                                     className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; leading-6 sem token DS */ /* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; leading-6 sem token DS */ "flex items-center justify-between py-2 pl-4 pr-2 text-body-sm leading-6")}
                                 >
                                     <div className="flex min-w-0 flex-1 items-center">
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 flex-1 gap-2")}>
+                                        <div className={cn("flex min-w-0 flex-1 inline-tight")}>
                                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>{file.name}</span>
                                             <span className="shrink-0 text-muted-foreground">
                                                 {(file.size / 1024).toFixed(1)} KB

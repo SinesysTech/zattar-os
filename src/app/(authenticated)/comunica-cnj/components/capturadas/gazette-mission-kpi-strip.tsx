@@ -98,7 +98,7 @@ export function GazetteMissionKpiStrip({
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Publicações hoje ───────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Publicações hoje
@@ -117,7 +117,7 @@ export function GazetteMissionKpiStrip({
           </IconContainer>
         </div>
         {/* Sparkline 7 dias */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <Sparkline
             data={stats.trend.length >= 2 ? stats.trend : [0, 0]}
             width={80}
@@ -143,7 +143,7 @@ export function GazetteMissionKpiStrip({
 
       {/* ── Próximo prazo ──────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Próximo prazo
@@ -167,7 +167,7 @@ export function GazetteMissionKpiStrip({
 
       {/* ── Vinculação ─────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Vinculadas
@@ -186,7 +186,7 @@ export function GazetteMissionKpiStrip({
           </IconContainer>
         </div>
         {/* Barra de taxa de vinculação */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -201,7 +201,7 @@ export function GazetteMissionKpiStrip({
 
       {/* ── Prazos críticos ────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Prazos críticos
@@ -220,7 +220,7 @@ export function GazetteMissionKpiStrip({
           </IconContainer>
         </div>
         {/* Barra dos prazos críticos no universo de órfãos */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-destructive/30 transition-all duration-500"

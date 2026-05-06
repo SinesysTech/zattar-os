@@ -93,7 +93,7 @@ function StatCard({
 }) {
   return (
     <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2")}>
+      <div className={cn("flex items-center inline-tight mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn('size-3.5', iconColor)} />
         </IconContainer>
@@ -231,13 +231,13 @@ function ExpedientesDayDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-2 padding direcional sem Inset equiv. */ "space-y-2 pr-2")}>
+          <div className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "stack-tight pr-2")}>
             {expedientes.map((exp) => (
               <div
                 key={exp.id}
                 className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5")}
               >
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <IconContainer size="sm" className="bg-primary/15">
                     <FileText className="size-3.5 text-primary" />
                   </IconContainer>
@@ -245,7 +245,7 @@ function ExpedientesDayDialog({
                     {exp.numeroProcesso}
                   </Text>
                 </div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+                <div className={cn("flex items-center inline-tight flex-wrap")}>
                   <SemanticBadge category="tribunal" value={exp.trt} toneOverride="soft">
                     {exp.trt}
                   </SemanticBadge>
@@ -395,7 +395,7 @@ export function ExpedientesYearHeatmap({
     <TooltipProvider delayDuration={100}>
       <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5")}>
         {/* Year Navigator */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Button
             variant="ghost"
             size="icon"
@@ -527,7 +527,7 @@ export function ExpedientesYearHeatmap({
                 </span>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
                   {topMonths.map((m, i) => (
-                    <div key={m.idx} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <div key={m.idx} className={cn("flex items-center inline-tight")}>
                       <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/65 w-3 text-right")}>
                         {i + 1}
                       </span>
@@ -555,7 +555,7 @@ export function ExpedientesYearHeatmap({
           </GlassPanel>
 
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 min-w-0 p-6")}>
+          <GlassPanel depth={1} className={cn("flex-1 min-w-0 inset-dialog")}>
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <MonthGrid

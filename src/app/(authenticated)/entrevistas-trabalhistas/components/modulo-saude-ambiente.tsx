@@ -27,7 +27,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">O Corpo e o Ambiente</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -47,11 +47,11 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
           value={data.exposicao_riscos === undefined ? '' : data.exposicao_riscos ? 'sim' : 'nao'}
           onValueChange={(v) => onChange({ ...data, exposicao_riscos: v === 'sim' })}
         >
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <RadioGroupItem value="sim" id="risco-sim" />
             <Label htmlFor="risco-sim" className="cursor-pointer font-normal">Sim</Label>
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <RadioGroupItem value="nao" id="risco-nao" />
             <Label htmlFor="risco-nao" className="cursor-pointer font-normal">Não</Label>
           </div>
@@ -63,9 +63,9 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
         <>
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <Label>Tipo de risco (selecione todos aplicáveis)</Label>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-3")}>
+            <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-3")}>
               {TIPO_RISCO_OPTIONS.map((opt) => (
-                <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div key={opt.value} className={cn("flex items-center inline-tight")}>
                   <Checkbox
                     id={`risco-${opt.value}`}
                     checked={tiposRisco.includes(opt.value)}
@@ -79,7 +79,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="desc-risco">Descreva detalhadamente a exposição ao risco</Label>
             <Textarea
               id="desc-risco"
@@ -101,11 +101,11 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
           value={data.assedio_moral === undefined ? '' : data.assedio_moral ? 'sim' : 'nao'}
           onValueChange={(v) => onChange({ ...data, assedio_moral: v === 'sim' })}
         >
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <RadioGroupItem value="sim" id="assedio-sim" />
             <Label htmlFor="assedio-sim" className="cursor-pointer font-normal">Sim</Label>
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <RadioGroupItem value="nao" id="assedio-nao" />
             <Label htmlFor="assedio-nao" className="cursor-pointer font-normal">Não</Label>
           </div>
@@ -115,7 +115,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       {/* Condicional: Detalhamento do assédio */}
       {data.assedio_moral && (
         <>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="relato-assedio">Relato detalhado do(s) evento(s)</Label>
             <Textarea
               id="relato-assedio"
@@ -126,7 +126,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
             />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="testemunhas-assedio">
               Existem testemunhas ou gravações de áudio/vídeo?
             </Label>

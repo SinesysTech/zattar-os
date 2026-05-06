@@ -55,7 +55,7 @@ export function WidgetObrigacoesTreemap() {
       subtitle="Distribuição de valores em aberto"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 mt-1")}>
+      <div className={cn("flex flex-col inline-default mt-1")}>
         {data.length === 0 ? (
           <div
             className="rounded-lg border border-border/10 bg-border/5 flex items-center justify-center"
@@ -91,7 +91,7 @@ export function WidgetObrigacoesTreemap() {
             {/* Legenda com valores reais */}
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
               {data.map((item) => (
-                <div key={item.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div key={item.label} className={cn("flex items-center inline-tight")}>
                   <div
                     className="size-2.5 rounded-[3px] shrink-0"
                     style={{ backgroundColor: item.color }}

@@ -186,7 +186,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
         <div className="flex h-full flex-col">
           <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center p-2")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <Button
                 variant="ghost"
                 size="icon"
@@ -227,7 +227,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
               </Button>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex items-center gap-2")}>
+            <div className={cn("ml-auto flex items-center inline-tight")}>
               <Button
                 variant="ghost"
                 size="icon"
@@ -277,7 +277,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
           {mail && (
             <div className="flex flex-1 flex-col overflow-hidden">
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-wrap items-start gap-3 p-4")}>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex min-w-0 flex-1 items-start gap-4 text-body-sm")}>
+                <div className={cn("flex min-w-0 flex-1 items-start inline-default text-body-sm")}>
                   <Avatar>
                     <AvatarFallback>{participantInitials}</AvatarFallback>
                   </Avatar>
@@ -319,7 +319,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                         editorRef={editorRef}
                         placeholder="Escreva sua resposta..."
                       />
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 justify-end")}>
+                      <div className={cn("flex items-center inline-tight justify-end")}>
                         <Button
                           type="button"
                           variant="ghost"
@@ -344,7 +344,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 </div>
               ) : (
                 <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <Button
                       variant="outline"
                       size="sm"

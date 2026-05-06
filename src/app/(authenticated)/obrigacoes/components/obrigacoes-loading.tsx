@@ -7,7 +7,7 @@ function TableSkeleton({ rows = 8 }: { rows?: number }) {
   return (
     <div className="rounded-xl border border-border/30 bg-card/30 overflow-hidden">
       {/* Header */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 px-4 py-3 border-b border-border/30 bg-muted/20")}>
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center inline-default px-4 py-3 border-b border-border/30 bg-muted/20")}>
         <Skeleton className="h-3 w-24" />
         <Skeleton className="h-3 w-32" />
         <Skeleton className="h-3 w-20" />
@@ -17,9 +17,9 @@ function TableSkeleton({ rows = 8 }: { rows?: number }) {
       {/* Rows */}
       <div className="divide-y divide-border/20">
         {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 px-4 py-3")}>
+          <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center inline-default px-4 py-3")}>
             <Skeleton className="size-8 rounded-lg" />
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2 min-w-0")}>
+            <div className={cn("flex-1 stack-tight min-w-0")}>
               <Skeleton className="h-3.5 w-2/3" />
               <Skeleton className="h-2.5 w-1/3" />
             </div>
@@ -37,13 +37,13 @@ function MonthCalendarSkeleton() {
   return (
     <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/30 bg-card/30 p-4")}>
       {/* Weekday headers */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-7 gap-2 mb-3")}>
+      <div className={cn("grid grid-cols-7 inline-tight mb-3")}>
         {Array.from({ length: 7 }).map((_, i) => (
           <Skeleton key={i} className="h-3 w-full" />
         ))}
       </div>
       {/* Day cells */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-7 gap-2")}>
+      <div className={cn("grid grid-cols-7 inline-tight")}>
         {Array.from({ length: 35 }).map((_, i) => (
           <Skeleton key={i} className="aspect-square rounded-lg" />
         ))}
@@ -54,7 +54,7 @@ function MonthCalendarSkeleton() {
 
 function YearGridSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>
+    <div className={cn("grid inline-default sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>
       {Array.from({ length: 12 }).map((_, i) => (
         <div
           key={i}
@@ -74,10 +74,10 @@ function YearGridSkeleton() {
 
 export function ObrigacoesLoading({ view = 'lista' }: { view?: ObrigacoesView }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header: título + botão "Nova" */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("flex items-center justify-between inline-default")}>
+        <div className={cn("stack-tight")}>
           <Skeleton className="h-7 w-48" />
           <Skeleton className="h-3.5 w-72" />
         </div>

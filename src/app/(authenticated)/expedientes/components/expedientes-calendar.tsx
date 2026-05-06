@@ -219,7 +219,7 @@ export function ExpedientesCalendar() {
     const vencidosCount = tableData.filter(e => e.prazoVencido && !e.baixadoEm).length;
 
     return (
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col h-full space-y-4")}>
+        <div className={cn("flex flex-col h-full stack-default")}>
             {/* Header / Week Navigation + Days Carousel (integrado) */}
             <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-card rounded-lg border shadow-sm")}>
                 <WeekDaysCarousel
@@ -274,7 +274,7 @@ export function ExpedientesCalendar() {
                                 </>
                             }
                             actionSlot={
-                                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                <div className={cn("flex items-center inline-tight")}>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <Button
@@ -308,7 +308,7 @@ export function ExpedientesCalendar() {
             >
                 <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/10 border-b")}>
                     <div className="flex items-center justify-between">
-                        <Heading level="card" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <Heading level="card" className={cn("flex items-center inline-tight")}>
                             <CalendarIcon className="h-4 w-4" />
                             Expedientes de {format(selectedDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
                             <AppBadge variant="secondary" className="ml-2">
@@ -316,7 +316,7 @@ export function ExpedientesCalendar() {
                             </AppBadge>
                         </Heading>
                         {(semDataCount > 0 || vencidosCount > 0) && (
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                            <div className={cn("flex items-center inline-tight")}>
                                 {semDataCount > 0 && (
                                     <AppBadge variant="warning">
                                         <AlertTriangle className="h-3 w-3 mr-1" />

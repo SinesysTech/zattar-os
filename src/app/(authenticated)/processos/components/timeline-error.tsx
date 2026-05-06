@@ -72,12 +72,12 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
   const { title, description, canRetry } = getErrorDetails(error);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-      <Card className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+    <div className={cn("stack-loose")}>
+      <Card className={cn("inset-dialog")}>
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>{title}</AlertTitle>
-          <AlertDescription className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-2 space-y-2")}>
+          <AlertDescription className={cn("mt-2 stack-tight")}>
             {message && <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{message}</p>}
             <p>{description}</p>
 
@@ -96,7 +96,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
         {/* Ações */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3 mt-6")}>
           {canRetry && (
-            <Button onClick={onRetry} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
+            <Button onClick={onRetry} className={cn("inline-tight")}>
               <RotateCw className="h-4 w-4" />
               Tentar Novamente
             </Button>
@@ -104,7 +104,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
           <Button
             variant="outline"
             onClick={() => router.push('/processos')}
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+            className={cn("inline-tight")}
           >
             <ArrowLeft className="h-4 w-4" />
             Voltar para Processos

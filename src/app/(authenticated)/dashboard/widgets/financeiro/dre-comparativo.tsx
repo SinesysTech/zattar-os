@@ -59,9 +59,9 @@ export function WidgetDREComparativo() {
         </div>
       }
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-3 gap-4")}>
+      <div className={cn("grid grid-cols-3 inline-default")}>
         {/* Receita */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           <Stat
             label="Receita"
             value={fmtMoeda(receitaAtual)}
@@ -73,7 +73,7 @@ export function WidgetDREComparativo() {
         </div>
 
         {/* Despesa */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           <Stat
             label="Despesa"
             value={fmtMoeda(despesaAtual)}
@@ -85,7 +85,7 @@ export function WidgetDREComparativo() {
         </div>
 
         {/* Resultado */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           <Stat
             label="Resultado"
             value={fmtMoeda(resultadoAtual)}

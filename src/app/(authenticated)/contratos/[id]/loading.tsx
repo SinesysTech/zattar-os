@@ -4,18 +4,18 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 
 export default function ContratoDetalhesLoading() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Header skeleton */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-start justify-between inline-default")}>
+        <div className={cn("stack-tight")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Skeleton className="h-10 w-10" />
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-6 w-24" />
           </div>
           <Skeleton className="h-4 w-32 ml-10" />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Skeleton className="h-10 w-24" />
           <Skeleton className="h-10 w-10" />
         </div>
@@ -25,20 +25,20 @@ export default function ContratoDetalhesLoading() {
       <Skeleton className="h-10 w-96" />
 
       {/* Content skeleton */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 xl:grid-cols-3")}>
+      <div className={cn("grid inline-default xl:grid-cols-3")}>
         {/* Left column */}
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 xl:col-span-1")}>
+        <div className={cn("stack-default xl:col-span-1")}>
           {/* Resumo card */}
-          <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
-            <div className={cn(/* design-system-escape: space-y-8 → migrar para <Stack gap="section"> */ "space-y-8")}>
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center space-y-4")}>
+          <GlassPanel className={cn("inset-dialog")}>
+            <div className={cn("stack-section")}>
+              <div className={cn("flex flex-col items-center stack-default")}>
                 <Skeleton className="size-20 rounded-full" />
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+                <div className={cn("text-center stack-tight")}>
                   <Skeleton className="h-6 w-48 mx-auto" />
                   <Skeleton className="h-6 w-24 mx-auto" />
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-3 gap-4")}>
+              <div className={cn("grid grid-cols-3 inline-default")}>
                 <Skeleton className="h-16" />
                 <Skeleton className="h-16" />
                 <Skeleton className="h-16" />
@@ -52,9 +52,9 @@ export default function ContratoDetalhesLoading() {
           </GlassPanel>
 
           {/* Progress card */}
-          <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+          <GlassPanel className={cn("inset-dialog")}>
             <Skeleton className="h-5 w-40 mb-4" />
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               <Skeleton className="h-2 w-full" />
               <div className="flex justify-between">
                 <Skeleton className="h-8 w-16" />
@@ -65,9 +65,9 @@ export default function ContratoDetalhesLoading() {
           </GlassPanel>
 
           {/* Tags card */}
-          <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+          <GlassPanel className={cn("inset-dialog")}>
             <Skeleton className="h-5 w-32 mb-4" />
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+            <div className={cn("flex flex-wrap inline-tight")}>
               <Skeleton className="h-6 w-24" />
               <Skeleton className="h-6 w-20" />
               <Skeleton className="h-6 w-28" />
@@ -76,15 +76,15 @@ export default function ContratoDetalhesLoading() {
         </div>
 
         {/* Right column */}
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 xl:col-span-2")}>
+        <div className={cn("stack-default xl:col-span-2")}>
           {/* Partes card */}
-          <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+          <GlassPanel className={cn("inset-dialog")}>
             <Skeleton className="h-5 w-40 mb-4" />
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               {[1, 2, 3].map((i) => (
-                <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+                <div key={i} className={cn("flex items-center inline-default")}>
                   <Skeleton className="size-10 rounded-full" />
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 flex-1")}>
+                  <div className={cn("stack-tight flex-1")}>
                     <Skeleton className="h-4 w-48" />
                     <Skeleton className="h-3 w-32" />
                   </div>
@@ -95,7 +95,7 @@ export default function ContratoDetalhesLoading() {
           </GlassPanel>
 
           {/* Processos card */}
-          <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+          <GlassPanel className={cn("inset-dialog")}>
             <Skeleton className="h-5 w-48 mb-4" />
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               {[1, 2].map((i) => (

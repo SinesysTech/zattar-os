@@ -204,9 +204,9 @@ function ComparacaoCards({
   const mediaValor = dadosComparacao.reduce((sum, d) => sum + d.totalOrcado, 0) / dadosComparacao.length;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Cards de resumo */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+      <div className={cn("grid inline-default md:grid-cols-3")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Maior Orçamento</CardDescription>
@@ -309,7 +309,7 @@ function ComparacaoCards({
           <CardTitle>Visualização Comparativa</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             {dadosComparacao.map((dados) => {
               const percentual = (dados.totalOrcado / maiorValor) * 100;
               return (
@@ -489,15 +489,15 @@ function CompararOrcamentosContent() {
   // Loading
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("stack-loose")}>
+        <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-3")}>
           {[...Array(3)].map((_, i) => (
             <Card key={i}>
-              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+              <CardContent className={cn("inset-dialog")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>
@@ -510,7 +510,7 @@ function CompararOrcamentosContent() {
   // Erro
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -524,14 +524,14 @@ function CompararOrcamentosContent() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+        <div className={cn("flex inline-tight")}>
           <Button variant="outline" onClick={() => refetch()}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Atualizar
@@ -569,7 +569,7 @@ function CompararOrcamentosContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5")}>
+          <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5")}>
             {selectedIds.map((id, index) => (
               <OrcamentoSelector
                 key={index}
@@ -608,15 +608,15 @@ function CompararOrcamentosContent() {
 export default function CompararOrcamentosPage() {
   return (
     <React.Suspense fallback={
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("stack-loose")}>
+        <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-3")}>
           {[...Array(3)].map((_, i) => (
             <Card key={i}>
-              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+              <CardContent className={cn("inset-dialog")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>

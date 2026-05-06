@@ -53,7 +53,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
 
   return (
     <GlassPanel className={cn("overflow-hidden", className)}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[minmax(180px,1.5fr)_minmax(140px,2fr)_100px_100px_90px_40px] gap-4 px-4 py-3 border-b border-border/10")}>
+      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[minmax(180px,1.5fr)_minmax(140px,2fr)_100px_100px_90px_40px] inline-default px-4 py-3 border-b border-border/10")}>
         {["Evento", "Processo / Partes", "Data", "Horário", "Tipo", ""].map((h) => (
           <span key={h} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10.5px] font-semibold text-muted-foreground/30 uppercase tracking-wider")}>{h}</span>
         ))}
@@ -62,7 +62,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
         {paged.map((evt) => {
           const colors = sourceColors(evt.source);
           return (
-            <button key={evt.id} onClick={() => onEventClick?.(evt)} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "w-full grid grid-cols-[minmax(180px,1.5fr)_minmax(140px,2fr)_100px_100px_90px_40px] gap-4 items-center px-4 py-3.5 text-left border-b border-border/6 transition-all cursor-pointer hover:bg-muted/6")}>
+            <button key={evt.id} onClick={() => onEventClick?.(evt)} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "w-full grid grid-cols-[minmax(180px,1.5fr)_minmax(140px,2fr)_100px_100px_90px_40px] inline-default items-center px-4 py-3.5 text-left border-b border-border/6 transition-all cursor-pointer hover:bg-muted/6")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
                 <div className={cn("w-1 h-10 rounded-full shrink-0", colors.dot)} />
                 <div className="min-w-0">

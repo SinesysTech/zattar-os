@@ -145,7 +145,7 @@ export function SearchQuickFilters() {
       : undefined;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center justify-center gap-2")}>
+    <div className={cn("flex flex-wrap items-center justify-center inline-tight")}>
       {/* Tribunal */}
       <Popover>
         <PopoverTrigger asChild>

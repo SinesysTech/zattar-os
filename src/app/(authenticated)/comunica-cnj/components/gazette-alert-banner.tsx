@@ -35,7 +35,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
       </div>
 
       {/* Actions */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex shrink-0 items-center gap-2")}>
+      <div className={cn("flex shrink-0 items-center inline-tight")}>
         <Button
           variant="outline"
           size="sm"

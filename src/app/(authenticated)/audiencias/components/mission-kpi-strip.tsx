@@ -131,7 +131,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Semana ─────────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Semana</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
@@ -146,7 +146,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
           </IconContainer>
         </div>
         {/* Sparkline de tendência 6m */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <Sparkline data={stats.trend.length >= 2 ? stats.trend : [0, 0]} width={80} height={16} />
           {stats.trend.length >= 2 && stats.trend[0] > 0 && (
             <span className={`text-micro-caption font-medium tabular-nums ${
@@ -160,7 +160,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
 
       {/* ── Próxima ────────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Próxima</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
@@ -187,7 +187,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
 
       {/* ── Realizadas ─────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Realizadas</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
@@ -202,7 +202,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
           </IconContainer>
         </div>
         {/* Barra de taxa de realização */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -217,7 +217,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
 
       {/* ── Preparo ────────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Preparo</p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
@@ -232,7 +232,7 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
           </IconContainer>
         </div>
         {/* Barra de preparo com cor dinâmica */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500"

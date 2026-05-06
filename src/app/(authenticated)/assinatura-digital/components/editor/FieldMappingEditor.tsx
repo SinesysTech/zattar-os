@@ -583,7 +583,7 @@ export default function FieldMappingEditor({
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 text-center")}>
+        <div className={cn("stack-default text-center")}>
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Carregando {template.nome}...</p>
           <p className={cn("text-body-sm text-muted-foreground/80")}>Preparando editor de campos.</p>
@@ -724,7 +724,7 @@ export default function FieldMappingEditor({
               Você tem alterações não salvas. Deseja sair sem salvar?
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 sm:flex-row sm:justify-end")}>
+          <DialogFooter className={cn("flex flex-col inline-tight sm:flex-row sm:justify-end")}>
             <Button variant="outline" onClick={() => setShowExitConfirmation(false)}>
               Continuar editando
             </Button>

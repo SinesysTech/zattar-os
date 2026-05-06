@@ -81,7 +81,7 @@ export function AttentionStrip({
           const countdown = formatCountdown(proximaAudiencia.dataInicio);
           return (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-50 px-4 py-3")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
+              <div className={cn("flex items-center inline-tight mb-1.5")}>
                 <Calendar className="size-3.5 text-primary/65" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                   Próxima Audiência
@@ -116,7 +116,7 @@ export function AttentionStrip({
 
         {expedientesUrgentes.total > 0 && (
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-45 px-4 py-3")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
+            <div className={cn("flex items-center inline-tight mb-1.5")}>
               <FileText className="size-3.5 text-warning/65" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                 Prazos
@@ -147,7 +147,7 @@ export function AttentionStrip({
 
         {periciasPendentes.length > 0 && (
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-40 px-4 py-3")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1.5")}>
+            <div className={cn("flex items-center inline-tight mb-1.5")}>
               <Microscope className="size-3.5 text-info/65" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                 Perícias

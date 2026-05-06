@@ -209,9 +209,9 @@ function SidebarContent(props: FloatingSidebarProps) {
             }
           />
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             {signers.length === 0 ? (
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-5 → usar <Inset> */ "flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center")}>
+              <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col items-center justify-center inline-tight p-5 border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center")}>
                 <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
                   <Settings className="size-4 text-muted-foreground" />
                 </span>
@@ -270,7 +270,7 @@ function SidebarContent(props: FloatingSidebarProps) {
             </p>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
+          <div className={cn("grid grid-cols-2 inline-tight")}>
             {FIELD_TYPES.map((ft) => (
               <FieldPaletteCard
                 key={ft.type}
@@ -289,7 +289,7 @@ function SidebarContent(props: FloatingSidebarProps) {
       {/* ── Footer CTA ─────────────────────────────── */}
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 border-t border-border/30 p-4 bg-background/50 backdrop-blur-md")}>
         <Button
-          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "w-full h-11 text-body-sm font-semibold shadow-sm gap-2")}
+          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "w-full h-11 text-body-sm font-semibold shadow-sm inline-tight")}
           onClick={onReviewAndSend}
           disabled={!hasFieldsAndSigners}
         >

@@ -131,7 +131,7 @@ export function MiniBar({
   const maxVal = Math.max(...data.flatMap((d) => [d.value, d.value2 || 0]));
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end gap-2 w-full")} style={{ height }}>
+    <div className={cn("flex items-end inline-tight w-full")} style={{ height }}>
       {data.map((d, i) => (
         <div key={`${i}-${d.label}`} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex-1 flex flex-col items-center gap-0.5")}>
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex gap-0.5 items-end w-full")} style={{ height: height - 14 }}>
@@ -348,7 +348,7 @@ export function GallerySection({
         <h2 className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-card-title tracking-tight")}>{title}</h2>
         {description && <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{description}</p>}
       </div>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto")}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 inline-default auto-rows-auto")}>
         {children}
       </div>
     </section>
@@ -670,7 +670,7 @@ export function ComparisonStat({
   return (
     <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
       <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+      <div className={cn("flex items-baseline inline-tight")}>
         <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmt(current)}</span>
         <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
           {isPositive ? '+' : ''}{pctChange.toFixed(1)}%

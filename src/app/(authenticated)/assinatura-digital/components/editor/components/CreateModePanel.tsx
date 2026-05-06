@@ -40,8 +40,8 @@ export function CreateModePanelUpload({ onFileUpload }: CreateModePanelUploadPro
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose">; px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "flex-1 flex flex-col gap-6 items-center justify-center min-h-0 overflow-auto px-6 py-8")}>
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "max-w-2xl w-full space-y-6")}>
+      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "flex-1 flex flex-col inline-loose items-center justify-center min-h-0 overflow-auto px-6 py-8")}>
+        <div className={cn("max-w-2xl w-full stack-loose")}>
           {/* Dropzone compacto */}
           <div
             {...getRootProps()}
@@ -77,10 +77,10 @@ export function CreateModePanelForm({
 }: CreateModePanelFormProps) {
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose">; px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "flex-1 flex flex-col gap-6 items-center justify-center min-h-0 overflow-auto px-6 py-8")}>
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "max-w-2xl w-full space-y-6")}>
+      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "flex-1 flex flex-col inline-loose items-center justify-center min-h-0 overflow-auto px-6 py-8")}>
+        <div className={cn("max-w-2xl w-full stack-loose")}>
           {/* Dropzone with preview */}
-          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-2 border-primary/50 rounded-lg p-6 text-center bg-primary/5")}>
+          <div className={cn("border-2 border-primary/50 rounded-lg inset-dialog text-center bg-primary/5")}>
             <Upload className="mx-auto h-10 w-10 text-primary mb-2" />
             <Heading level="card" className={cn("text-body-sm mb-1")}>PDF carregado com sucesso!</Heading>
             <Text variant="caption">

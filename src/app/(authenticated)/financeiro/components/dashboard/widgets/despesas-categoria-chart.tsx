@@ -48,9 +48,9 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}>
+          <div className={cn("flex flex-col items-center inline-default")}>
             <Skeleton className="h-40 w-40 rounded-full" />
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 w-full")}>
+            <div className={cn("stack-tight w-full")}>
               {Array.from({ length: 4 }).map((_, i) => (
                 <Skeleton key={i} className="h-6 w-full" />
               ))}
@@ -72,12 +72,12 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
+        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
           <PieIcon className="h-4 w-4 text-muted-foreground" />
           Despesas por Categoria
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex-1 flex flex-col gap-4")}>
+      <CardContent className={cn("flex-1 flex flex-col inline-default")}>
         {data.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <p className={cn("text-body-sm text-muted-foreground")}>Sem dados disponíveis</p>
@@ -101,9 +101,9 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                 return (
                   <div
                     key={item.name}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
                   >
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
+                    <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
                       <span
                         className="h-2.5 w-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: item.color }}

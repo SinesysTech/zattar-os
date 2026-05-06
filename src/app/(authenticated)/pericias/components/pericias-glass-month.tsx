@@ -248,7 +248,7 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
       )}
     >
       {/* Linha principal: prazo + processo + badge */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+      <div className={cn("flex items-center justify-between inline-tight")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
           {overdue ? (
             <AlertTriangle className="w-3 h-3 text-destructive shrink-0" />
@@ -359,10 +359,10 @@ export function PericiasGlassMonth({
 
   return (
     <>
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex flex-col")}>
+      <GlassPanel depth={1} className={cn("inset-dialog flex flex-col")}>
         {/* ── Month Navigator ───────────────────────────────── */}
         <div className="flex items-center justify-between mb-6">
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
+          <div className={cn("flex items-center inline-tight flex-1")}>
             <Button
               variant="ghost"
               size="icon"
@@ -398,7 +398,7 @@ export function PericiasGlassMonth({
         </div>
 
         {/* ── Legend ────────────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-1 padding direcional sem Inset equiv. */ "flex items-center gap-4 mb-4 px-1 flex-wrap")}>
+        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center inline-default mb-4 px-1 flex-wrap")}>
           {[
             { color: 'bg-primary', label: 'Aguardando Laudo' },
             { color: 'bg-warning', label: 'Esclarecimentos' },
@@ -486,7 +486,7 @@ export function PericiasGlassMonth({
                           <X className="w-3.5 h-3.5 text-foreground/50" />
                         </button>
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-0.5 padding direcional sem Inset equiv. */ "space-y-2 max-h-72 overflow-y-auto pr-0.5")}>
+                      <div className={cn(/* design-system-escape: pr-0.5 padding direcional sem Inset equiv. */ "stack-tight max-h-72 overflow-y-auto pr-0.5")}>
                         {popoverPericias.map((p) => (
                           <button
                             key={p.id}

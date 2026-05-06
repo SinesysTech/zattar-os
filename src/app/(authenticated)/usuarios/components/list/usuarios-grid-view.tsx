@@ -80,7 +80,7 @@ export function UsuariosGridView({
   });
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {sortedKeys.map((cargoNome) => {
         const members = groups.get(cargoNome)!;
         return (

@@ -64,8 +64,8 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
   };
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 p-4")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-default p-4")}>
+      <div className={cn("flex items-start inline-tight")}>
         <Paperclip className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div>
           <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Anexos de apoio da etapa</h4>
@@ -76,7 +76,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
       </div>
 
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 sm:grid-cols-2")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor={`tipo-anexo-${modulo}`}>Tipo de anexo</Label>
           <Select value={tipoAnexo} onValueChange={setTipoAnexo}>
             <SelectTrigger id={`tipo-anexo-${modulo}`}>
@@ -92,7 +92,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
           </Select>
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor={`arquivo-anexo-${modulo}`}>Arquivo</Label>
           <Input
             id={`arquivo-anexo-${modulo}`}
@@ -103,7 +103,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor={`descricao-anexo-${modulo}`}>Descricao (opcional)</Label>
         <Textarea
           id={`descricao-anexo-${modulo}`}

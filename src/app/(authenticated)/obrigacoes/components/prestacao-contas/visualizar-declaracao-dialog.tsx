@@ -29,7 +29,7 @@ export function VisualizarDeclaracaoDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden")}>
-        <DialogHeader className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; pb-3 padding direcional sem Inset equiv. */ "p-6 pb-3 shrink-0")}>
+        <DialogHeader className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "inset-dialog pb-3 shrink-0")}>
           <DialogTitle>Declaração de prestação de contas assinada</DialogTitle>
           <DialogDescription>
             {tituloProcesso
@@ -46,7 +46,7 @@ export function VisualizarDeclaracaoDialog({
           />
         </div>
 
-        <DialogFooter className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; pt-3 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "p-6 pt-3 shrink-0 gap-2")}>
+        <DialogFooter className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "inset-dialog pt-3 shrink-0 inline-tight")}>
           <Button
             variant="outline"
             size="sm"

@@ -109,23 +109,23 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
   }, [data.resultados, aggsByOrgao]);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <Card>
         <CardHeader>
           <CardTitle>Resumo</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <CardContent className={cn("stack-default")}>
           <div>
             <p className="text-sm text-muted-foreground">Total</p>
             <Heading level="card">{total}</Heading>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Por tribunal</p>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2 flex flex-wrap gap-2")}>
+            <div className={cn("mt-2 flex flex-wrap inline-tight")}>
               {grouped.slice(0, 16).map((g) => {
                 const badgeCode = toBadgeTribunalCode(g.orgao);
                 return (
-                  <AppBadge key={`org-${g.orgao}`} variant="neutral" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <AppBadge key={`org-${g.orgao}`} variant="neutral" className={cn("flex items-center inline-tight")}>
                     <TribunalBadge codigo={badgeCode} />
                     <span>{g.total}</span>
                   </AppBadge>
@@ -153,7 +153,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                 return (
                   <AccordionItem key={g.orgao} value={g.orgao}>
                     <AccordionTrigger className="hover:no-underline">
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
+                      <div className={cn("flex items-center inline-tight w-full")}>
                         <TribunalBadge codigo={badgeCode} />
                         <span className={cn("text-body-sm text-muted-foreground")}>{g.orgao}</span>
                         <AppBadge variant="neutral" className="ml-auto">
@@ -168,8 +168,8 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
 
                           return (
                             <Card key={r.id}>
-                              <CardHeader className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+                              <CardHeader className={cn("stack-tight")}>
+                                <div className={cn("flex flex-wrap items-center inline-tight")}>
                                   <AppBadge variant="info">{r.tipo}</AppBadge>
                                   {typeof r.nr === 'number' && <AppBadge variant="secondary">nr {r.nr}</AppBadge>}
                                   {r.situacao && <AppBadge variant="neutral">{r.situacao}</AppBadge>}
@@ -179,7 +179,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                   {r.possuiDecisoes && <AppBadge variant="success">Com decisões</AppBadge>}
                                   {r.alertaSituacao && <AppBadge variant="warning">{r.alertaSituacao}</AppBadge>}
                                 </div>
-                                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                                <div className={cn("stack-tight")}>
                                   <Heading level="card" className={cn(/* design-system-escape: leading-6 sem token DS */ "text-body leading-6")}>{titulo}</Heading>
                                   {subtitulo && (
                                     <p className={cn(/* design-system-escape: leading-6 sem token DS */ "text-sm text-muted-foreground leading-6")}>{subtitulo}</p>

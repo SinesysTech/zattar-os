@@ -206,7 +206,7 @@ export function ProfileSidebar({
           variant="outline"
           size="sm"
           onClick={onEdit}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2 bg-primary/8 border-primary/20 text-primary hover:bg-primary/12")}
+          className={cn("w-full justify-start inline-tight bg-primary/8 border-primary/20 text-primary hover:bg-primary/12")}
         >
           <Pencil className="size-3.5" />
           Editar Perfil
@@ -215,7 +215,7 @@ export function ProfileSidebar({
           variant="outline"
           size="sm"
           onClick={onResetPassword}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2")}
+          className={cn("w-full justify-start inline-tight")}
         >
           <KeyRound className="size-3.5" />
           Redefinir Senha
@@ -225,7 +225,7 @@ export function ProfileSidebar({
             variant="outline"
             size="sm"
             onClick={onDeactivate}
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full justify-start gap-2 border-destructive/15 text-destructive hover:bg-destructive/5 hover:border-destructive/30")}
+            className={cn("w-full justify-start inline-tight border-destructive/15 text-destructive hover:bg-destructive/5 hover:border-destructive/30")}
           >
             <Power className="size-3.5" />
             Desativar Usuário

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 function DocumentosLoading() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Skeleton className="h-8 w-56" />
           <Skeleton className="h-4 w-72 mt-2" />
@@ -25,7 +25,7 @@ function DocumentosLoading() {
       </div>
       <Skeleton className="h-14 w-full rounded-2xl" />
       <Skeleton className="h-28 w-full rounded-2xl" />
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+      <div className={cn("flex inline-tight")}>
         <Skeleton className="h-9 w-64" />
         <Skeleton className="h-9 w-48 ml-auto" />
       </div>

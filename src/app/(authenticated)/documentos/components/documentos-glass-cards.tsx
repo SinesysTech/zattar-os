@@ -181,7 +181,7 @@ function GlassCard({
       />
 
       {/* Header: ícone + menu */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "relative flex items-start justify-between gap-2")}>
+      <div className={cn("relative flex items-start justify-between inline-tight")}>
         <IconContainer size="lg" className={cn('rounded-2xl', ACCENT_BG[accent])}>
           <Icon className={cn('size-5', ACCENT_TEXT[accent])} />
         </IconContainer>
@@ -201,7 +201,7 @@ function GlassCard({
               {item.tipo === 'arquivo' && (
                 <DropdownMenuItem
                   onClick={(e) => onOpen(item, e)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2 text-caption cursor-pointer")}
+                  className={cn("inline-tight text-caption cursor-pointer")}
                 >
                   <ExternalLink className="size-3.5" />
                   Abrir
@@ -209,7 +209,7 @@ function GlassCard({
               )}
               <DropdownMenuItem
                 onClick={(e) => onShare(item, e)}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2 text-caption cursor-pointer")}
+                className={cn("inline-tight text-caption cursor-pointer")}
               >
                 <Share2 className="size-3.5" />
                 Compartilhar
@@ -217,7 +217,7 @@ function GlassCard({
               {item.tipo !== 'pasta' && (
                 <DropdownMenuItem
                   onClick={(e) => onDelete(item, e)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2 text-caption cursor-pointer text-destructive focus:text-destructive")}
+                  className={cn("inline-tight text-caption cursor-pointer text-destructive focus:text-destructive")}
                 >
                   <Trash2 className="size-3.5" />
                   Excluir
@@ -239,7 +239,7 @@ function GlassCard({
       </div>
 
       {/* Footer: criador + data */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between gap-2")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between inline-tight")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
           <Avatar className="size-5">
             {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criador.nome} />}

@@ -102,7 +102,7 @@ function getPecasModelosColumns(
       cell: ({ row }) => {
         const modelo = row.original;
         return (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
@@ -437,7 +437,7 @@ export function PecasModelosTableWrapper({
           isLoading={isLoading}
           emptyMessage="Nenhum modelo encontrado"
           emptyComponent={
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-2 py-8")}>
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-tight py-8")}>
               <FileText className="h-12 w-12 text-muted-foreground" />
               <span className="text-muted-foreground">Nenhum modelo encontrado</span>
             </div>

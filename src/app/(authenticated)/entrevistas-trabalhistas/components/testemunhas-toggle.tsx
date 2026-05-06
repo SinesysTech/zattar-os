@@ -15,7 +15,7 @@ export function TestemunhasToggle({ checked, onCheckedChange }: TestemunhasToggl
   return (
     <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 p-4")}>
       <Users className="h-5 w-5 text-muted-foreground" />
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-1 items-center gap-2")}>
+      <div className={cn("flex flex-1 items-center inline-tight")}>
         <Checkbox
           id="testemunhas"
           checked={checked}

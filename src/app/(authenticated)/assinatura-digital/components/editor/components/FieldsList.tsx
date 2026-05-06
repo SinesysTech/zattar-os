@@ -70,7 +70,7 @@ const FieldsListItem = memo(function FieldsListItem({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ 'group flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors',
+        /* design-system-escape: p-2 → usar <Inset> */ 'group flex items-center inline-tight p-2 rounded-md cursor-pointer transition-colors',
         isSelected
           ? 'bg-primary/10 border border-primary/20'
           : 'hover:bg-muted/50 border border-transparent',
@@ -188,7 +188,7 @@ export default function FieldsList({
 
   return (
     <ScrollArea className="h-full">
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "p-3 space-y-4")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 stack-default")}>
         {pages.map((page) => (
           <div key={page}>
             <Heading level="subsection" className={cn(/* design-system-escape: tracking-wider sem token DS; px-1 padding direcional sem Inset equiv. */ "text-caption text-muted-foreground uppercase tracking-wider mb-2 px-1")}>

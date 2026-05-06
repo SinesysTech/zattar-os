@@ -150,7 +150,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Documento sem Backblaze (não capturado)
   if (!item.backblaze) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-4 p-8")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-default p-8")}>
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4")}>
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
@@ -169,7 +169,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
             size="sm"
             onClick={onRecapture}
             disabled={isCapturing}
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+            className={cn("inline-tight")}
           >
             {isCapturing ? (
               <LoadingSpinner size="sm" />
@@ -195,8 +195,8 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
     <div className="flex flex-col h-full">
       {/* Header do documento */}
       <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "flex-none border-b p-3 space-y-1.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
+        <div className={cn("flex items-center justify-between inline-tight")}>
+          <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
             {item.grauOrigem && (
               <SemanticBadge
                 category="grau"

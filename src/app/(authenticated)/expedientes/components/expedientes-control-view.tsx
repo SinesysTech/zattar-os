@@ -121,7 +121,7 @@ function SectionHeader({
   accentClass: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+    <div className={cn("flex items-center inline-tight mb-3")}>
       <Icon className={cn('size-3.5', accentClass)} />
       <h3 className="text-overline">{label}</h3>
       <span className="text-mono-num text-muted-foreground/65">{count}</span>
@@ -253,10 +253,10 @@ function DetailPanel({
       </div>
 
       {/* Actions */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-5 flex flex-col gap-2")}>
+      <div className={cn("mt-5 flex flex-col inline-tight")}>
         {onBaixar && (
           <Button
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "h-9 w-full gap-2 text-caption")}
+            className={cn("h-9 w-full inline-tight text-caption")}
             onClick={() => onBaixar(expediente)}
           >
             <CheckCircle2 className="size-3.5" />
@@ -266,7 +266,7 @@ function DetailPanel({
         {onViewDetail && (
           <Button
             variant="outline"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "h-9 w-full gap-2 text-caption")}
+            className={cn("h-9 w-full inline-tight text-caption")}
             onClick={() => onViewDetail(expediente)}
           >
             <ExternalLink className="size-3.5" />
@@ -402,7 +402,7 @@ export function ExpedientesControlView({
   }
 
   const mainContent = (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {sections.map(({ key, label, icon, items, accentClass }) => (
         <section key={key}>
           <SectionHeader

@@ -100,7 +100,7 @@ export function PecaModeloViewSheet({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] p-0 flex flex-col")}>
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <Eye className="h-5 w-5" />
             Visualizar Modelo
           </DialogTitle>
@@ -110,7 +110,7 @@ export function PecaModeloViewSheet({
         </DialogHeader>
 
         <ScrollArea className="flex-1">
-          <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-6 p-6")}>
+          <div className={cn("stack-loose inset-dialog")}>
             {/* Cabeçalho do Modelo */}
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
@@ -125,7 +125,7 @@ export function PecaModeloViewSheet({
                 </div>
               </div>
 
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+              <div className={cn("flex flex-wrap inline-tight")}>
                 <AppBadge variant="secondary">
                   <Tag className="h-3 w-3 mr-1" />
                   {TIPO_PECA_LABELS[modelo.tipoPeca] || modelo.tipoPeca}
@@ -142,7 +142,7 @@ export function PecaModeloViewSheet({
             </div>
 
             {/* Metadados */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-muted-foreground")}>
+            <div className={cn("flex items-center inline-tight text-body-sm text-muted-foreground")}>
               <Calendar className="h-4 w-4" />
               <span>
                 Criado em{' '}
@@ -161,7 +161,7 @@ export function PecaModeloViewSheet({
               </Text>
 
               {loading ? (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <Skeleton className="h-4 w-full" />
                   <Skeleton className="h-4 w-5/6" />
                   <Skeleton className="h-4 w-4/6" />

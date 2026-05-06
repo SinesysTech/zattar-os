@@ -152,7 +152,7 @@ function StatusFilter({
                   setOpen(false);
                 }}
                 className={cn(
-                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                   isSelected
                     ? 'bg-primary/8 text-primary'
                     : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -230,7 +230,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'meus'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -246,7 +246,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'sem_responsavel'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -273,7 +273,7 @@ function ResponsavelFilter({
                     onChange(selected === usuario.id ? null : usuario.id);
                     setOpen(false);
                   }}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-4">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
@@ -353,7 +353,7 @@ function TRTFilter({
                   key={trt}
                   value={trt}
                   onSelect={() => handleToggle(trt)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',
@@ -418,7 +418,7 @@ function ModalidadeFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -486,7 +486,7 @@ function GrauFilter({
               type="button"
               onClick={() => handleToggle(opt.value)}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected.includes(opt.value)
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -562,7 +562,7 @@ function TipoAudienciaFilter({
                   key={tipo.id}
                   value={tipo.descricao}
                   onSelect={() => handleToggle(tipo.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',
@@ -592,7 +592,7 @@ export function AudienciasFilterBar({
   counts,
 }: AudienciasFilterBarProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+    <div className={cn("flex items-center inline-tight flex-wrap")}>
       <StatusFilter
         selected={filters.status}
         onChange={(status) => onChange({ ...filters, status })}

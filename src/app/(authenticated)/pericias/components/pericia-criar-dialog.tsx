@@ -132,7 +132,7 @@ function SearchableCombobox({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
+                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
                   >
                     <span className="truncate flex-1">{opt.label}</span>
                     {isSelected && (
@@ -289,7 +289,7 @@ export function PericiaCriarDialog({
           <DialogDescription>Cadastre uma perícia manual — complemente os campos obrigatórios para registrar.</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
         {/* Número do Processo (col span 2) */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "md:col-span-2 grid gap-1.5")}>
           <FieldLabel required>Número do Processo</FieldLabel>
@@ -420,7 +420,7 @@ export function PericiaCriarDialog({
 
         {/* Error banner */}
         {error && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "md:col-span-2 flex items-start gap-2 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive")}>
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "md:col-span-2 flex items-start inline-tight px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive")}>
             <AlertCircle className="size-4 shrink-0 mt-0.5" />
             <Text variant="caption">{error}</Text>
           </div>

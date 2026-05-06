@@ -238,7 +238,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
       {/* File Preview Area */}
       {uploadedFile && (
         <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mb-2 p-2 bg-muted rounded-md flex items-center justify-between")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
+          <div className={cn("flex items-center inline-tight overflow-hidden")}>
             <FileIcon className="h-5 w-5 text-info dark:text-info shrink-0" />
             <span className={cn("text-body-sm truncate max-w-50")}>{uploadedFile.fileName}</span>
           </div>
@@ -248,7 +248,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
         </div>
       )}
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end gap-2")}>
+      <div className={cn("flex items-end inline-tight")}>
         {/* Glass input wrapper */}
         <div
           className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ "flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-foreground/8 bg-foreground/2 dark:bg-foreground/4")}
@@ -265,7 +265,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                 <Text variant="caption" className="text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</Text>
               </div>
 
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Button variant="ghost" size="sm" onClick={cancelRecording} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4")}>
                   Cancelar
                 </Button>

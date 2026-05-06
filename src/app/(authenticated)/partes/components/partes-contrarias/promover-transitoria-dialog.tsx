@@ -265,7 +265,7 @@ export function PromoverTransitoriaDialog({
           )}
 
           {sugestoes.length > 0 && (
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Heading level="card">Partes similares encontradas</Heading>
               <Text variant="caption" className="text-muted-foreground">
                 Selecione uma abaixo para vincular em vez de criar duplicata.
@@ -343,7 +343,7 @@ export function PromoverTransitoriaDialog({
                 {sugestoes.length > 0 ? 'Ou criar uma nova parte contrária' : 'Dados da parte contrária'}
               </Heading>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="promover-nome">Nome / Razão social</Label>
                 <Input
                   id="promover-nome"
@@ -356,7 +356,7 @@ export function PromoverTransitoriaDialog({
               </div>
 
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <Label htmlFor="promover-tipo-pessoa">Tipo</Label>
                   <Select
                     value={tipoPessoa}
@@ -372,7 +372,7 @@ export function PromoverTransitoriaDialog({
                     </SelectContent>
                   </Select>
                 </div>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <Label htmlFor="promover-doc">{tipoPessoa === 'pf' ? 'CPF' : 'CNPJ'}</Label>
                   <Input
                     id="promover-doc"
@@ -386,7 +386,7 @@ export function PromoverTransitoriaDialog({
               </div>
 
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3")}>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <Label htmlFor="promover-email">Email</Label>
                   <Input
                     id="promover-email"
@@ -397,7 +397,7 @@ export function PromoverTransitoriaDialog({
                     disabled={isBusy}
                   />
                 </div>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <Label htmlFor="promover-telefone">Telefone</Label>
                   <Input
                     id="promover-telefone"
@@ -416,7 +416,7 @@ export function PromoverTransitoriaDialog({
         </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             {mode === 'merge' && (
               <Button variant="ghost" onClick={handleSwitchToCriar} disabled={isBusy}>
                 Criar nova em vez disso

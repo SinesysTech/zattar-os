@@ -72,7 +72,7 @@ export function PrazoMedio() {
       depth={1}
       className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4 mt-1")}>
+      <div className={cn("flex items-start inline-default mt-1")}>
         <div className="flex-1">
           <Stat
             label="Media Atual"
@@ -104,7 +104,7 @@ export function PrazoMedio() {
       </div>
 
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+        <div className={cn("flex inline-default")}>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Min</span>
             <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{minVal.toFixed(1)}d</p>

@@ -31,7 +31,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       <Heading level="widget">{title}</Heading>
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/40 bg-card/60 p-4")}>
         {children}
@@ -97,7 +97,7 @@ export function CapturadasDetailDialog({
           </DialogHeader>
 
           {/* Status + Badges principais */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+          <div className={cn("flex flex-wrap items-center inline-tight")}>
             {comunicacao.statusVinculacao === 'vinculado' && (
               <Badge variant="info">
                 <Link2 className="mr-1 size-3" aria-hidden />
@@ -162,7 +162,7 @@ export function CapturadasDetailDialog({
             </Section>
           )}
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row sm:justify-end")}>
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex flex-col inline-tight border-t border-border/40 pt-4 sm:flex-row sm:justify-end")}>
             <Button
               variant="outline"
               size="sm"

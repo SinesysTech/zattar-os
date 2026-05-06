@@ -184,9 +184,9 @@ export function AudienciasSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Week Navigator */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <button onClick={handlePrevWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
@@ -205,7 +205,7 @@ export function AudienciasSemanaView({
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
-      <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn("stack-default")}>
         <TabsList variant="week">
           {weekDays.map((day) => {
             const key = getDayKey(day);
@@ -243,7 +243,7 @@ export function AudienciasSemanaView({
           const groupedAudiencias = getGroupedAudiencias(dayAudiencias);
 
           return (
-            <TabsContent key={key} value={key} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mt-0 space-y-4")}>
+            <TabsContent key={key} value={key} className={cn("mt-0 stack-default")}>
               {dayAudiencias.length === 0 ? (
                 <GlassPanel className={cn(/* design-system-escape: p-10 → usar <Inset> */ "p-10 text-center")}>
                   <Text variant="label" as="p">
@@ -254,11 +254,11 @@ export function AudienciasSemanaView({
                   </Text>
                 </GlassPanel>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                <div className={cn("stack-default")}>
                   {groupedAudiencias.map((group) => (
-                    <section key={group.key} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <section key={group.key} className={cn("stack-tight")}>
                       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <div className={cn("flex items-center inline-tight")}>
                           <span className={cn(
                             'size-2 rounded-full',
                             group.tone === 'success' && 'bg-success',
@@ -273,7 +273,7 @@ export function AudienciasSemanaView({
                           {group.items.length}
                         </span>
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         {group.items.map((a) => (
                           <WeekDayCard
                             key={a.id}
@@ -352,7 +352,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         isCancelada && !isOngoing && 'opacity-45 border-l-2 border-l-destructive',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("flex items-center inline-default")}>
 
         {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
@@ -376,7 +376,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         <div className="flex-1 min-w-0">
 
           {/* L1 — Tipo como título + badges/flags à direita */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <h3 className="text-card-title text-foreground truncate">
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>

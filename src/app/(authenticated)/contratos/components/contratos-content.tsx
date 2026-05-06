@@ -119,7 +119,7 @@ export function ContratosContent({
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Contratos</Heading>
           <Text variant="caption" as="p" className="mt-0.5">
@@ -143,7 +143,7 @@ export function ContratosContent({
       ) : null}
 
       {/* ── Insight Banners ─────────────────────────────────────── */}
-      <div role="status" aria-live="polite" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
+      <div role="status" aria-live="polite" className={cn("stack-tight empty:hidden")}>
         {stats && stats.vencendo30d > 0 && (
           <InsightBanner type="warning">
             {stats.vencendo30d} contrato{stats.vencendo30d !== 1 ? 's' : ''} vence
@@ -167,7 +167,7 @@ export function ContratosContent({
           sort={viewMode !== 'kanban' ? sort : undefined}
           onSortChange={viewMode !== 'kanban' ? setSort : undefined}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end flex-wrap")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end flex-wrap")}>
           <SearchInput
             value={search}
             onChange={setSearch}

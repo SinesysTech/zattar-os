@@ -245,7 +245,7 @@ export function PangeaPageContent() {
   // Guard: permissões
   if (loadingPerms) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-muted-foreground")}>
+      <div className={cn("flex items-center inline-tight text-muted-foreground")}>
         <LoadingSpinner />
         <span>Carregando permissões…</span>
       </div>
@@ -260,7 +260,7 @@ export function PangeaPageContent() {
 
   if (!canList) {
     return (
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
+      <div className={cn("rounded-lg border bg-card inset-dialog")}>
         <Heading level="card">Acesso negado</Heading>
         <p className="text-sm text-muted-foreground mt-2">
           Você não tem permissão para acessar o módulo Pangea.
@@ -270,8 +270,8 @@ export function PangeaPageContent() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-loose")}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
         {/* Hero minimalista */}
         <div className={cn(/* design-system-escape: gap-8 gap sem token DS; py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center text-center gap-8 py-10")}>
           <Image
@@ -346,7 +346,7 @@ export function PangeaPageContent() {
         {/* Filtros avançados (painel) */}
         <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
           <CollapsibleContent id="pangea-advanced-filters" className="mt-2">
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS; space-y-6 → migrar para <Stack gap="loose"> */ "rounded-xl border bg-card p-4 md:p-6 space-y-6")}>
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "rounded-xl border bg-card p-4 md:p-6 stack-loose")}>
               <div className="flex items-center justify-between">
                 <p className={cn("text-body-sm text-muted-foreground")}>Ajuste os filtros para refinar a busca</p>
                 <button
@@ -359,7 +359,7 @@ export function PangeaPageContent() {
                 </button>
               </div>
 
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+              <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                   <Label>Trecho exato</Label>
                   <Input
@@ -387,7 +387,7 @@ export function PangeaPageContent() {
 
               <Separator />
 
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-12 gap-4")}>
+              <div className={cn("grid grid-cols-1 md:grid-cols-12 inline-default")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 md:col-span-4")}>
                   <Label>Órgãos</Label>
                   <Popover open={orgaosOpen} onOpenChange={setOrgaosOpen}>
@@ -400,7 +400,7 @@ export function PangeaPageContent() {
                         disabled={loadingOrgaos}
                       >
                         {loadingOrgaos ? (
-                          <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                          <span className={cn("flex items-center inline-tight")}>
                             <LoadingSpinner size="sm" />
                             Carregando…
                           </span>
@@ -532,7 +532,7 @@ export function PangeaPageContent() {
                   </Select>
                 </div>
 
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-7 padding direcional sem Inset equiv. */ "flex items-center gap-2 md:col-span-4 pt-7")}>
+                <div className={cn(/* design-system-escape: pt-7 padding direcional sem Inset equiv. */ "flex items-center inline-tight md:col-span-4 pt-7")}>
                   <Switch checked={cancelados} onCheckedChange={setCancelados} id="cancelados" />
                   <Label htmlFor="cancelados">Exibir cancelados</Label>
                 </div>

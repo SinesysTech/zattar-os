@@ -91,7 +91,7 @@ export function VersionHistoryDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <DialogTitle className={cn("flex items-center inline-tight")}>
               <History className="h-5 w-5" />
               Histórico de Versões
             </DialogTitle>
@@ -102,7 +102,7 @@ export function VersionHistoryDialog({
 
           <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-100 pr-4")}>
             {loading ? (
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <div className={cn("stack-default")}>
                 {[1, 2, 3].map((i) => (
                   <Skeleton key={i} className="h-20 w-full" />
                 ))}
@@ -120,7 +120,7 @@ export function VersionHistoryDialog({
                 {versions.map((version, index) => (
                   <div
                     key={version.id}
-                    className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-4 p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors")}
+                    className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start inline-default p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors")}
                   >
                     {/* Timeline indicator */}
                     <div className="flex flex-col items-center">
@@ -136,7 +136,7 @@ export function VersionHistoryDialog({
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+                      <div className={cn("flex items-start justify-between inline-default")}>
                         <div>
                           <Heading level="subsection" className="truncate">
                             {version.titulo || 'Sem título'}
@@ -159,7 +159,7 @@ export function VersionHistoryDialog({
                         </div>
 
                         {/* Actions */}
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <div className={cn("flex items-center inline-tight")}>
                           {index === 0 && (
                             <Badge variant="secondary" className={cn("text-caption")}>
                               Atual

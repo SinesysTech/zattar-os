@@ -255,7 +255,7 @@ function StatCard({
 }) {
   return (
     <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+      <div className={cn("flex items-center inline-tight mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
@@ -296,7 +296,7 @@ export function ObrigacoesYearHeatmap({
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS */ "flex h-full flex-col overflow-y-auto p-4 sm:p-6")}>
         {/* Year Navigator */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between mb-6 flex-wrap gap-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Button
               variant="ghost"
               size="icon"
@@ -330,7 +330,7 @@ export function ObrigacoesYearHeatmap({
 
         {/* Main Layout: Heatmap + Stats Sidebar */}
         <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex-1 min-w-0")}>
+          <GlassPanel depth={1} className={cn("inset-dialog flex-1 min-w-0")}>
             <div className="grid grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <Tooltip key={i}>
@@ -363,7 +363,7 @@ export function ObrigacoesYearHeatmap({
           </GlassPanel>
 
           {/* Stats Sidebar */}
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 w-full xl:w-64 shrink-0")}>
+          <div className={cn("flex flex-col inline-default w-full xl:w-64 shrink-0")}>
             <StatCard icon={CalendarDays} iconBg="bg-primary/15" iconColor="text-primary" label="Parcelas no Ano">
               <div className="text-kpi-value">{stats.total}</div>
             </StatCard>

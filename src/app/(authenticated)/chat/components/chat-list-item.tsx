@@ -55,7 +55,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+        <div className={cn("flex items-center justify-between inline-tight")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8rem] font-semibold text-foreground truncate")}>
             {chat.name || chat.nome}
           </span>
@@ -63,7 +63,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
             {chat.date ? new Date(chat.date).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : ''}
           </span>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2 mt-1")}>
+        <div className={cn("flex items-center justify-between inline-tight mt-1")}>
           <span className="text-[0.7rem] text-muted-foreground/70 truncate flex-1">
             {chat.lastMessage}
           </span>

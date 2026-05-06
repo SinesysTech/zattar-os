@@ -114,7 +114,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
 
   if (loading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <div className="h-8 w-full animate-pulse rounded bg-muted" />
         <div className="h-8 w-full animate-pulse rounded bg-muted" />
         <div className="h-8 w-full animate-pulse rounded bg-muted" />
@@ -129,7 +129,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
         variant="ghost"
         size="sm"
         className={cn(
-          /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'w-full justify-start gap-2 px-2 py-1.5 font-normal',
+          /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'w-full justify-start inline-tight px-2 py-1.5 font-normal',
           selectedFolderId === null && 'bg-accent'
         )}
         onClick={() => onFolderSelect(null)}

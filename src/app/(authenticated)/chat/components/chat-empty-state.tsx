@@ -35,7 +35,7 @@ const SUGGESTION_CARDS = [
 export function ChatEmptyState() {
   return (
     <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "hidden md:flex h-full w-full items-center justify-center p-8")}>
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col items-center gap-6 max-w-105 w-full")}>
+      <div className={cn("flex flex-col items-center inline-loose max-w-105 w-full")}>
         {/* Icon + Copy */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3")}>
           <div className="size-16 rounded-[1.25rem] bg-primary/8 flex items-center justify-center mb-2">

@@ -130,7 +130,7 @@ function Toolbar({
   return (
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {/* Row 1: Title + New Event */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Agenda</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
@@ -142,7 +142,7 @@ function Toolbar({
       </div>
 
       {/* Row 2: Search + Filters + Nav + View */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+      <div className={cn("flex items-center inline-tight flex-wrap")}>
         {/* Search */}
         <div className="relative flex-1 max-w-56">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/55" />
@@ -274,7 +274,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
   return (
     <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
       {/* Stats row */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
+      <div className={cn(/* design-system-escape: sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center inline-default sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
         {[
           { icon: Calendar, v: String(summary.total), l: "eventos", c: "text-primary" },
           { icon: Gavel, v: String(summary.audiencias), l: "audiências", c: "text-primary" },
@@ -282,7 +282,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
           { icon: Brain, v: summary.horasFoco, l: "foco livre", c: "text-success" },
           { icon: AlertTriangle, v: String(summary.alertas), l: "alertas", c: "text-destructive" },
         ].map((s, i) => (
-          <div key={s.l} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-max")}>
+          <div key={s.l} className={cn("flex items-center inline-tight min-w-max")}>
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.c)} />
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
@@ -644,7 +644,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium truncate", c.text, past && "line-through")}>{ev.title}</p>
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+                        <div className={cn("flex items-center inline-tight mt-0.5")}>
                           <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                             {ev.allDay ? "Dia inteiro" : `${fmtTime(ev.start)} – ${fmtTime(ev.end)}`}
                           </span>
@@ -687,7 +687,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
   const intensidade = dayEvents.length <= 2 ? "leve" : dayEvents.length <= 5 ? "moderado" : "intenso";
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Briefing */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv.; sm:px-5 sem equivalente DS */ "relative overflow-hidden rounded-2xl border border-primary/8 bg-primary/2 px-4 py-3.5 sm:px-5")}>
         <div className="absolute top-0 right-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
@@ -707,16 +707,16 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
       </div>
 
       {/* Grid: Timeline + Sidebar */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-7 gap-4")}>
+      <div className={cn("grid grid-cols-1 lg:grid-cols-7 inline-default")}>
         {/* Timeline (5/7) */}
         <div className="lg:col-span-5">
           <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
             <div className="flex items-center justify-between mb-3">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Clock className="size-3 text-muted-foreground/50" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Linha do Tempo</span>
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 {(["audiencias", "agenda", "expedientes"] as EventSource[]).map((s) => (
                   <div key={s} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                     <div className={cn("size-1.5 rounded-full", COLOR_MAP[SOURCE_CONFIG[s].defaultColor].dot)} />
@@ -768,17 +768,17 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
         </div>
 
         {/* Sidebar (2/7) */}
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "lg:col-span-2 space-y-4")}>
+        <div className={cn("lg:col-span-2 stack-default")}>
           {/* Prep Radar */}
           <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+            <div className={cn("flex items-center inline-tight mb-3")}>
               <Shield className="size-3 text-warning/40" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Preparação</span>
               {needsPrep.length > 0 && (
                 <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
               )}
             </div>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               {needsPrep.length > 0 ? needsPrep.map((ev) => <PrepRadarItem key={ev.id} event={ev} />) : (
                 <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4 text-center")}>
                   <CheckCircle2 className="size-5 text-success/25 mx-auto mb-1.5" />
@@ -791,11 +791,11 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
           {/* Alerts */}
           {(alerts.length > 0 || needsPrep.length > 0) && (
             <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+              <div className={cn("flex items-center inline-tight mb-3")}>
                 <AlertTriangle className="size-3 text-destructive/40" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
               </div>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 {dayEvents.filter((e) => e.prepStatus === "pendente").map((ev) => (
                   <AlertCard key={ev.id} icon={Timer} title={ev.title} desc={ev.description ?? "Preparação pendente"} variant="destructive" />
                 ))}
@@ -811,7 +811,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
 
           {/* Quick Actions */}
           <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+            <div className={cn("flex items-center inline-tight mb-3")}>
               <Zap className="size-3 text-primary/40" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
@@ -822,7 +822,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
                 { label: "Confirmar testemunhas", icon: Users },
                 { label: "Pauta da semana", icon: Calendar },
               ].map((a) => (
-                <button key={a.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4 transition-all cursor-pointer group")}>
+                <button key={a.label} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight px-2.5 py-1.5 rounded-lg text-[10px] text-muted-foreground/50 hover:text-foreground/70 hover:bg-foreground/4 transition-all cursor-pointer group")}>
                   <a.icon className="size-2.5 text-muted-foreground/45 group-hover:text-primary/40 transition-colors" />
                   {a.label}
                   <ArrowRight className="size-2 ml-auto opacity-0 group-hover:opacity-40 transition-opacity" />
@@ -856,12 +856,12 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
         <div className="flex-1 w-px bg-border/8 mt-1" />
       </div>
       <button onClick={onClick} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-1 rounded-xl border-l-[3px] p-3 transition-all duration-200 min-w-0 text-left", "border border-border/12 hover:border-border/20 hover:shadow-sm cursor-pointer", `border-l-${event.color === "sky" ? "sky" : event.color === "violet" ? "violet" : event.color === "rose" ? "rose" : event.color === "amber" ? "amber" : event.color === "emerald" ? "green" : "orange"}-500/50`, c.bg)}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+        <div className={cn("flex items-start inline-tight")}>
           <div className={cn("size-6 rounded-lg flex items-center justify-center shrink-0", c.bg)}>
             <SrcIcon className={cn("size-3", c.text)} />
           </div>
           <div className="min-w-0 flex-1">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-foreground truncate")}>{event.title}</h3>
               {prep && (
                 <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-0.5 px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0", prep.bg, prep.c)}>
@@ -874,7 +874,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
           </div>
         </div>
         {event.description && <p className="text-[10px] text-muted-foreground/60 mt-1 truncate ml-8">{event.description}</p>}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 ml-8 flex-wrap")}>
+        <div className={cn("flex items-center inline-tight mt-2 ml-8 flex-wrap")}>
           {event.location && (
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
               <ModalIcon className="size-2 text-muted-foreground/50" />
@@ -910,7 +910,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
 
 function PhaseLabel({ label, icon: Icon }: { label: string; icon: LucideIcon }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv.; first:pt-0 sem equivalente DS */ "flex items-center gap-2 pt-4 pb-1.5 first:pt-0")}>
+    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv.; first:pt-0 sem equivalente DS */ "flex items-center inline-tight pt-4 pb-1.5 first:pt-0")}>
       <Icon className="size-2.5 text-muted-foreground/60" />
       <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>{label}</span>
       <div className="flex-1 h-px bg-border/6" />
@@ -923,7 +923,7 @@ function FocusSlot({ inicio, fim, label }: { inicio: string; fim: string; label?
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-1")}>
       <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/45 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-success/25 shrink-0" />
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/1.5")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center inline-tight px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/1.5")}>
         <Brain className="size-2.5 text-success/30" />
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-success/40 font-medium")}>{label ?? "Foco"}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/60 ml-auto">{inicio}–{fim}</span>
@@ -950,7 +950,7 @@ function BreakSlot({ inicio, fim, label, icon: Icon }: { inicio: string; fim: st
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 py-1")}>
       <span className="w-11 text-right text-[10px] tabular-nums text-muted-foreground/60 shrink-0">{inicio}</span>
       <div className="size-1.5 rounded-full border border-dashed border-muted-foreground/10 shrink-0" />
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/1")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center inline-tight px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/1")}>
         <Icon className="size-2.5 text-muted-foreground/45" />
         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/45 font-medium")}>{label}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/10 ml-auto">{inicio}–{fim}</span>
@@ -979,12 +979,12 @@ function PrepRadarItem({ event }: { event: MockCalendarEvent }) {
   const c = COLOR_MAP[event.color];
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 p-2.5 rounded-xl border border-border/8 hover:border-border/15 transition-all cursor-pointer")}>
+    <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight p-2.5 rounded-xl border border-border/8 hover:border-border/15 transition-all cursor-pointer")}>
       <div className={cn("size-5 rounded-md flex items-center justify-center shrink-0 mt-0.5", c.bg)}>
         <SrcIcon className={cn("size-2.5", c.text)} />
       </div>
       <div className="min-w-0 flex-1">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline justify-between gap-2")}>
+        <div className={cn("flex items-baseline justify-between inline-tight")}>
           <h4 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-foreground truncate")}>{event.title}</h4>
           <span className="text-[9px] tabular-nums text-muted-foreground/55 shrink-0">{fmtTime(event.start)}</span>
         </div>
@@ -1010,7 +1010,7 @@ function AlertCard({ icon: Icon, title, desc, variant = "warning" }: { icon: Luc
   }[variant];
 
   return (
-    <div className={cn(/* design-system-escape: p-2.5 → usar <Inset>; gap-2 → migrar para <Inline gap="tight"> */ "p-2.5 rounded-xl border flex items-start gap-2", cfg.bg, cfg.border)}>
+    <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "p-2.5 rounded-xl border flex items-start inline-tight", cfg.bg, cfg.border)}>
       <Icon className={cn("size-3 mt-0.5 shrink-0", cfg.icon)} />
       <div className="min-w-0">
         <h4 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-medium leading-tight", cfg.title)}>{title}</h4>
@@ -1035,7 +1035,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
   return (
     <>
       <div className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border/20 bg-background shadow-lg p-6 space-y-4")}>
+      <div className={cn("fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md max-h-[85vh] overflow-y-auto rounded-2xl border border-border/20 bg-background shadow-lg inset-dialog stack-default")}>
         {/* Header */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
@@ -1053,7 +1053,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
         </div>
 
         {/* Source badge */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-2 py-0.5 rounded-full", c.bg, c.text)}>{srcCfg.label}</span>
           {event.processo && <span className="text-[10px] font-mono text-muted-foreground/55 tabular-nums">{event.processo}</span>}
         </div>
@@ -1128,7 +1128,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
               Abrir
             </button>
           )}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <button onClick={onClose} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "px-3 py-1.5 rounded-lg text-caption text-muted-foreground/50 hover:bg-foreground/4 cursor-pointer")}>
               {isAgenda ? "Cancelar" : "Fechar"}
             </button>
@@ -1189,7 +1189,7 @@ export default function AgendaMockPage() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pb-12 padding direcional sem Inset equiv. */ "space-y-4 pb-12")}>
+    <div className={cn(/* design-system-escape: pb-12 padding direcional sem Inset equiv. */ "stack-default pb-12")}>
       <Toolbar
         view={view}
         setView={setView}

@@ -47,7 +47,7 @@ export default async function NewProjectPage() {
   const { clientes, usuarios } = await fetchFormOptions();
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mx-auto max-w-3xl space-y-4")}>
+    <div className={cn("mx-auto max-w-3xl stack-default")}>
       <ProjectForm
         clientes={clientes}
         usuarios={usuarios}

@@ -60,11 +60,11 @@ export function UsuariosFiltrosAvancados({
         </Button>
       </PopoverTrigger>
       <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-default")}>
+          <div className={cn("stack-tight")}>
             <small className="text-sm font-semibold leading-none">Status</small>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
+            <div className={cn("stack-tight")}>
+              <label className={cn("flex items-center inline-tight cursor-pointer")}>
                 <input
                   type="radio"
                   name="ativo"
@@ -74,7 +74,7 @@ export function UsuariosFiltrosAvancados({
                 />
                 <span className="text-sm text-muted-foreground">Ativo</span>
               </label>
-              <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
+              <label className={cn("flex items-center inline-tight cursor-pointer")}>
                 <input
                   type="radio"
                   name="ativo"
@@ -84,7 +84,7 @@ export function UsuariosFiltrosAvancados({
                 />
                 <span className="text-sm text-muted-foreground">Inativo</span>
               </label>
-              <label className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
+              <label className={cn("flex items-center inline-tight cursor-pointer")}>
                 <input
                   type="radio"
                   name="ativo"
@@ -97,7 +97,7 @@ export function UsuariosFiltrosAvancados({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <label htmlFor="oab" className="text-sm font-semibold leading-none">
               Número da OAB
             </label>
@@ -109,7 +109,7 @@ export function UsuariosFiltrosAvancados({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <label htmlFor="ufOab" className="text-sm font-semibold leading-none">
               UF da OAB
             </label>

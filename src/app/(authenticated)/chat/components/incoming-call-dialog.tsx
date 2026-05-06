@@ -149,7 +149,7 @@ export function IncomingCallDialog({
           <div className="absolute inset-0 bg-primary/5 animate-pulse" />
         </div>
 
-        <DialogHeader className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-4 py-6")}>
+        <DialogHeader className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-default py-6")}>
           <DialogTitle className="sr-only">Recebendo chamada</DialogTitle>
           
           <div className="relative">
@@ -179,7 +179,7 @@ export function IncomingCallDialog({
         </DialogHeader>
 
         <DialogFooter className={cn(/* design-system-escape: gap-8 gap sem token DS; pb-6 padding direcional sem Inset equiv. */ "flex flex-row justify-center gap-8 sm:justify-center pb-6")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
+          <div className={cn("flex flex-col items-center inline-tight")}>
             <Button
               variant="destructive"
               size="icon" aria-label="Desligar"
@@ -192,7 +192,7 @@ export function IncomingCallDialog({
             <Text variant="caption">Recusar</Text>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
+          <div className={cn("flex flex-col items-center inline-tight")}>
             <Button
               variant="default"
               size="icon" aria-label="Câmera"

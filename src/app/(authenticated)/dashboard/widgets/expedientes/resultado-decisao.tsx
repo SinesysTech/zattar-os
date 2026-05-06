@@ -70,7 +70,7 @@ export function ResultadoDecisao() {
         <StackedBar segments={segments} height={10} />
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2")}>
+      <div className={cn("mt-3 stack-tight")}>
         {resultados.map((r) => {
           const percent = total > 0 ? Math.round((r.count / total) * 100) : 0;
           return (

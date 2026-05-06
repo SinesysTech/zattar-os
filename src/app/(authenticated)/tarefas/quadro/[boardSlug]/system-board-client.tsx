@@ -139,7 +139,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
   );
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
         <Heading level="page" className={cn(/* design-system-escape: sm:text-3xl sem equivalente DS */ "sm:text-3xl")}>
           Quadro - {board.titulo}
@@ -147,8 +147,8 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
       </div>
 
       {/* Toolbar */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center justify-between inline-tight")}>
+        <div className={cn("flex items-center inline-tight")}>
           <QuadroSelector
             quadros={quadros}
             value={board.id}
@@ -183,14 +183,14 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
               disabled={!board.dndEnabled}
             >
               <div className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-0 padding direcional sem Inset equiv. */ "flex items-center justify-between p-3 pb-0")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{col.label}</span>
                   <AppBadge variant="outline">
                     {columns[col.id]?.length ?? 0}
                   </AppBadge>
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex flex-col gap-2 p-3")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3")}>
                 {(columns[col.id] ?? []).map((item) => (
                   <Kanban.KanbanItem
                     key={item.id}

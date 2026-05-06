@@ -59,7 +59,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
 
   if (isSidebar || (isSpotlight && participants.length > 0)) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex h-full gap-4 p-4", className)}>
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex h-full inline-default p-4", className)}>
         {/* Main Stage */}
         <div className="flex-1 rounded-lg overflow-hidden bg-video-surface/50 relative">
           {spotlightParticipant ? (
@@ -75,7 +75,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
         </div>
 
         {/* Sidebar */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-64 flex flex-col gap-2 overflow-y-auto")}>
+        <div className={cn("w-64 flex flex-col inline-tight overflow-y-auto")}>
           {sidebarParticipants.map(p => (
             <div key={p.id} className="aspect-video rounded-lg overflow-hidden bg-video-surface-hover">
               <DyteParticipantTile participant={p} meeting={meeting} />
@@ -89,7 +89,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
   // Default Grid Layout
   return (
     <div className={cn(
-      /* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "grid gap-4 p-4 h-full content-center",
+      /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "grid inline-default p-4 h-full content-center",
       getGridClass(participants.length),
       className
     )}>

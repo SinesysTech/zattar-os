@@ -83,8 +83,8 @@ export function CredenciaisDialog({ credencial, open, onOpenChange, onSuccess }:
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="tribunal">Tribunal</Label>
             <Select value={tribunal} onValueChange={setTribunal}>
               <SelectTrigger id="tribunal">
@@ -100,7 +100,7 @@ export function CredenciaisDialog({ credencial, open, onOpenChange, onSuccess }:
             </Select>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="grau">Grau</Label>
             <Select value={grau} onValueChange={setGrau}>
               <SelectTrigger id="grau">

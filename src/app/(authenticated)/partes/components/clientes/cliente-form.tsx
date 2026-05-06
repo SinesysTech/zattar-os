@@ -429,7 +429,7 @@ export function ClienteFormDialog({
   // Renderizar Step 1 - Tipo de Pessoa
   const renderStep1 = () => (
     <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("flex flex-col inline-tight")}>
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
@@ -494,7 +494,7 @@ export function ClienteFormDialog({
   // Renderizar Step 2 - Identificacao
   const renderStep2 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="nome">
           {isPF ? 'Nome Completo' : 'Razão Social'} <span className="text-destructive">*</span>
         </Label>
@@ -508,7 +508,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="nome_social_fantasia">
           {isPF ? 'Nome Social' : 'Nome Fantasia'}
         </Label>
@@ -523,7 +523,7 @@ export function ClienteFormDialog({
 
       {isPF && (
         <>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="cpf">
               CPF <span className="text-destructive">*</span>
             </Label>
@@ -537,8 +537,8 @@ export function ClienteFormDialog({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="rg">RG</Label>
               <Input
                 id="rg"
@@ -548,7 +548,7 @@ export function ClienteFormDialog({
                 placeholder="Número do RG"
               />
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="data_nascimento">Data de Nascimento</Label>
               <FormDatePicker
                 id="data_nascimento"
@@ -558,8 +558,8 @@ export function ClienteFormDialog({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="genero">Gênero</Label>
               {mounted ? (
                 <Select
@@ -581,7 +581,7 @@ export function ClienteFormDialog({
                 <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="estado_civil">Estado Civil</Label>
               {mounted ? (
                 <Select
@@ -605,8 +605,8 @@ export function ClienteFormDialog({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="nacionalidade">Nacionalidade</Label>
               <Input
                 id="nacionalidade"
@@ -616,7 +616,7 @@ export function ClienteFormDialog({
                 placeholder="Ex: Brasileira"
               />
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="nome_genitora">Nome da Mãe</Label>
               <Input
                 id="nome_genitora"
@@ -632,7 +632,7 @@ export function ClienteFormDialog({
 
       {isPJ && (
         <>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="cnpj">
               CNPJ <span className="text-destructive">*</span>
             </Label>
@@ -646,8 +646,8 @@ export function ClienteFormDialog({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="inscricao_estadual">Inscrição Estadual</Label>
               <Input
                 id="inscricao_estadual"
@@ -657,7 +657,7 @@ export function ClienteFormDialog({
                 placeholder="Numero da IE"
               />
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="data_abertura">Data de Abertura</Label>
               <FormDatePicker
                 id="data_abertura"
@@ -674,9 +674,9 @@ export function ClienteFormDialog({
   // Renderizar Step 3 - Contato
   const renderStep3 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="novo-email-cliente">E-mails</Label>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+        <div className={cn("flex inline-tight")}>
           <Input
             id="novo-email-cliente"
             type="email"
@@ -707,7 +707,7 @@ export function ClienteFormDialog({
           Pressione Enter ou clique em + para adicionar múltiplos e-mails
         </p>
         {formData.emails.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-2")}>
+          <div className={cn("flex flex-wrap inline-tight mt-2")}>
             {formData.emails.map((email, index) => (
               <Badge
                 key={index}
@@ -730,7 +730,7 @@ export function ClienteFormDialog({
         )}
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Celular</Label>
         <InputTelefone
           mode="cell"
@@ -747,7 +747,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Telefone Residencial</Label>
         <InputTelefone
           mode="landline"
@@ -764,7 +764,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>Telefone Comercial</Label>
         <InputTelefone
           mode="landline"
@@ -786,7 +786,7 @@ export function ClienteFormDialog({
   // Renderizar Step 4 - Endereco
   const renderStep4 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label>CEP</Label>
         <InputCEP
           value={formData.cep}
@@ -796,7 +796,7 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="logradouro">Logradouro</Label>
         <Input
           id="logradouro"
@@ -806,8 +806,8 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="numero">Número</Label>
           <Input
             id="numero"
@@ -816,7 +816,7 @@ export function ClienteFormDialog({
             placeholder="No"
           />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="complemento">Complemento</Label>
           <Input
             id="complemento"
@@ -827,7 +827,7 @@ export function ClienteFormDialog({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="bairro">Bairro</Label>
         <Input
           id="bairro"
@@ -837,8 +837,8 @@ export function ClienteFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="municipio">Cidade</Label>
           <Input
             id="municipio"
@@ -847,7 +847,7 @@ export function ClienteFormDialog({
             placeholder="Nome da cidade"
           />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="estado_sigla">Estado</Label>
           {mounted ? (
             <Select
@@ -883,7 +883,7 @@ export function ClienteFormDialog({
 
     return (
       <div className="grid gap-(--density-field-gap)">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"
@@ -897,7 +897,7 @@ export function ClienteFormDialog({
 
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
           <Heading level="subsection" className="mb-3">Resumo do cadastro</Heading>
-          <dl className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 text-body-sm")}>
+          <dl className={cn("stack-tight text-body-sm")}>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Tipo</dt>
               <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
@@ -1057,7 +1057,7 @@ export function ClienteFormDialog({
   const isLastStep = currentStep === TOTAL_STEPS;
 
   const renderEditFullView = () => (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; pb-2 padding direcional sem Inset equiv. */ "space-y-6 pb-2")}>
+    <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "stack-loose pb-2")}>
       <section aria-labelledby="secao-identificacao">
         <Heading level="subsection" id="secao-identificacao" className="mb-3">
           Identificação
@@ -1083,7 +1083,7 @@ export function ClienteFormDialog({
         <Heading level="subsection" id="secao-observacoes" className="mb-3">
           Observações
         </Heading>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"

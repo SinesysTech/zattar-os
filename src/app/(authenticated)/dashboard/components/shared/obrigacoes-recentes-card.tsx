@@ -77,7 +77,7 @@ export function ObrigacoesRecentesCard() {
           <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             {[1, 2, 3, 4, 5].map((i) => (
               <Skeleton key={i} className="h-12 w-full" />
             ))}

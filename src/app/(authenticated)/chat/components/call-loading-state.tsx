@@ -58,14 +58,14 @@ export function CallLoadingState({
   };
 
   return (
-    <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex flex-col items-center justify-center h-full w-full bg-video-bg text-video-text p-6", className)}>
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "w-full max-w-sm flex flex-col items-center gap-6")}>
+    <div className={cn("flex flex-col items-center justify-center h-full w-full bg-video-bg text-video-text inset-dialog", className)}>
+      <div className={cn("w-full max-w-sm flex flex-col items-center inline-loose")}>
         <div className="relative">
           <div className="absolute inset-0 bg-info/20 blur-xl rounded-full" />
           <LoadingSpinner className="size-16 text-info relative z-10" />
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2 w-full")}>
+        <div className={cn("text-center stack-tight w-full")}>
           <Heading level="card">
             {message || defaultMessages[stage]}
           </Heading>
@@ -74,7 +74,7 @@ export function CallLoadingState({
           </p>
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "w-full space-y-2")}>
+        <div className={cn("w-full stack-tight")}>
           <Progress value={progress} className="h-2" />
           <Text variant="caption" className="text-right text-video-muted">{Math.round(progress)}%</Text>
         </div>

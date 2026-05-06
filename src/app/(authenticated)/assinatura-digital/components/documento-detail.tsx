@@ -43,7 +43,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             <Heading level="section" className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm leading-tight")}>
               {doc.titulo}
             </Heading>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
+            <div className={cn("flex items-center inline-tight mt-1")}>
               <span
                 className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}
               >
@@ -123,7 +123,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                 />
                 <div className="flex-1 min-w-0">
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>{a.nome}</p>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+                  <div className={cn("flex items-center inline-tight mt-0.5")}>
                     {a.email && (
                       <span className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "text-[9px] text-muted-foreground/55 flex items-center gap-0.5")}>
                         <Mail className="size-2" />
@@ -160,7 +160,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       </div>
 
       {/* Metadata */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 mb-4 text-[10px]")}>
+      <div className={cn("grid grid-cols-2 inline-tight mb-4 text-[10px]")}>
         <div>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado por
@@ -192,7 +192,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       </div>
 
       {/* Actions */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv. */ "flex gap-2 pt-3 border-t border-border/10")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex inline-tight pt-3 border-t border-border/10")}>
         {doc.status === "pronto" &&
           doc.assinantes.some((a) => a.status === "pendente") && (
             <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>

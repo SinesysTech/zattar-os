@@ -45,7 +45,7 @@ export function SettingsView({ projetoId }: SettingsViewProps) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "mx-auto max-w-3xl space-y-6")}>
+    <div className={cn("mx-auto max-w-3xl stack-loose")}>
       <Heading level="page">
         Configurações do Projeto
       </Heading>

@@ -110,7 +110,7 @@ export function WidgetSaúdeFinanceira() {
       className="md:col-span-2"
       depth={2}
     >
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col sm:flex-row items-start sm:items-center gap-6")}>
+      <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-loose")}>
 
         {/* Gauge */}
         <div className="shrink-0">
@@ -127,7 +127,7 @@ export function WidgetSaúdeFinanceira() {
         <div className="hidden sm:block w-px self-stretch bg-border/15" aria-hidden="true" />
 
         {/* Stats horizontais */}
-        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-wrap sm:flex-nowrap items-center gap-6 flex-1 min-w-0")}>
+        <div className={cn("flex flex-wrap sm:flex-nowrap items-center inline-loose flex-1 min-w-0")}>
 
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>

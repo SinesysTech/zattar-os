@@ -110,7 +110,7 @@ export function ParteDetalheDialog({
   const Campo = ({ label, value, icon }: { label: string; value: React.ReactNode; icon?: React.ReactNode }) => {
     if (!value || value === '-') return null;
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+      <div className={cn("flex items-start inline-tight")}>
         {icon && <span className="text-muted-foreground mt-0.5">{icon}</span>}
         <div>
           <Text variant="caption">{label}</Text>
@@ -131,7 +131,7 @@ export function ParteDetalheDialog({
     return (
       <div className={`space-y-3 ${!isPrincipal ? /* design-system-escape: pt-3 padding direcional sem Inset equiv. */ 'pt-3 border-t' : ''}`}>
         {/* Header com nome e tipo */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           {tipoPessoaIcon}
           <div className="flex-1 min-w-0">
             <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{p.nome}</div>
@@ -155,7 +155,7 @@ export function ParteDetalheDialog({
         )}
 
         {/* Contato */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 gap-2")}>
+        <div className={cn("grid grid-cols-1 inline-tight")}>
           {p.emails && p.emails.length > 0 && (
             <Campo
               label={p.emails.length > 1 ? 'E-mails' : 'E-mail'}
@@ -198,7 +198,7 @@ export function ParteDetalheDialog({
       >
         <DialogHeader className="px-6 py-4 border-b border-border/20 shrink-0">
           <DialogTitle asChild>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <AppBadge variant="outline" className={poloColorClass}>
                 {poloLabel}
               </AppBadge>
@@ -207,11 +207,11 @@ export function ParteDetalheDialog({
           </DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "stack-default py-2")}>
             {/* Loading state */}
             {isLoading && (
               <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <Skeleton className="h-5 w-5 rounded-full" />
                   <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1")}>
                     <Skeleton className="h-4 w-3/4" />

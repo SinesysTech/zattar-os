@@ -112,7 +112,7 @@ export function CallDetailSheet({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className=" max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             {Icon && <Icon className="h-5 w-5" />}
             Detalhes da Chamada
           </DialogTitle>
@@ -133,14 +133,14 @@ export function CallDetailSheet({
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="geral">Geral</TabsTrigger>
               <TabsTrigger value="participantes">Participantes</TabsTrigger>
-              <TabsTrigger value="transcricao" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
+              <TabsTrigger value="transcricao" className={cn("inline-tight")}>
                 <FileText className="w-3 h-3" /> Transcrição
               </TabsTrigger>
             </TabsList>
 
             <TabsContent
               value="geral"
-              className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-4 flex-1 overflow-auto")}
+              className={cn("stack-default mt-4 flex-1 overflow-auto")}
             >
               <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
                 <div className="flex justify-between items-center">
@@ -190,7 +190,7 @@ export function CallDetailSheet({
                 {chamada.iniciador && (
                   <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-between items-center pt-2 border-t border-border/20")}>
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Iniciado por</span>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <div className={cn("flex items-center inline-tight")}>
                       <Avatar size="sm">
                         <AvatarImage src={chamada.iniciador.avatar} />
                         <AvatarFallback>
@@ -225,7 +225,7 @@ export function CallDetailSheet({
                 </div>
 
                 {dyteDetails ? (
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 text-body-sm")}>
+                  <div className={cn("stack-tight text-body-sm")}>
                     <div className="flex justify-between">
                       <span>Status API:</span>
                       <Badge variant="outline">{dyteDetails.status}</Badge>
@@ -249,7 +249,7 @@ export function CallDetailSheet({
               className="mt-4 flex-1 overflow-hidden"
             >
               <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-full pr-4")}>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   {chamada.participantes.map((p) => (
                     <GlassPanel
                       key={p.id}

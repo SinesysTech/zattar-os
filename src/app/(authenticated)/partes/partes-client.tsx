@@ -96,7 +96,7 @@ function CardSkeleton() {
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 animate-pulse")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
         <div className="size-10 rounded-xl bg-muted-foreground/10 shrink-0" />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+        <div className={cn("flex-1 stack-tight")}>
           <div className="h-3 bg-muted-foreground/10 rounded w-3/4" />
           <div className="h-2.5 bg-muted-foreground/8 rounded w-1/2" />
         </div>
@@ -214,7 +214,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
           </div>
           <div>
             <Heading level="card">{data.nome}</Heading>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+            <div className={cn("flex items-center inline-tight mt-0.5")}>
               <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${config.bg} ${config.color}`}>
                 {config.label}
               </span>
@@ -254,7 +254,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       </div>
 
       {/* Métricas */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-3 → usar <Inset> */ "flex gap-4 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-default p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5")}>
         <div className="flex-1 text-center">
           <Text variant="kpi-value">{data.metricas.ativos}</Text>
           <p className="text-[9px] text-muted-foreground/60">Ativos</p>
@@ -293,7 +293,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       )}
 
       {/* Ações */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex gap-2 mt-5 pt-4 border-t border-border/10")}>
+      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex inline-tight mt-5 pt-4 border-t border-border/10")}>
         <Link
           href={perfilHref}
           className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
@@ -323,7 +323,7 @@ function InfoRow({
   value: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+    <div className={cn("flex items-start inline-tight")}>
       <Icon className="size-3 text-muted-foreground/55 mt-0.5 shrink-0" />
       <div className="min-w-0">
         <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{label}</p>
@@ -586,7 +586,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Partes</Heading>
           <p className={cn("text-body-sm text-muted-foreground/70 mt-0.5")}>
@@ -631,7 +631,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       <PulseStrip items={pulseItems} />
 
       {/* ── Insight Banner ──────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center gap-2 cursor-pointer hover:bg-primary/6 transition-colors")}>
+      <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center inline-tight cursor-pointer hover:bg-primary/6 transition-colors")}>
         <AlertCircle className="size-3.5 shrink-0" />
         <span>Verifique clientes sem processos ativos e cadastros com dados incompletos</span>
         <ChevronRight className="size-3 ml-auto shrink-0" />
@@ -640,7 +640,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       {/* ── Tabs + Status Filter + Search + View Toggle ─────────── */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <TabPills tabs={tabs} active={activeTab} onChange={handleTabChange} />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           {activeTab !== 'representantes' && (
             <StatusFilterPills
               value={statusFilter}

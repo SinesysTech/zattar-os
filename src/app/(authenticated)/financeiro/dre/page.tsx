@@ -16,8 +16,8 @@ function DRELoading() {
       </div>
 
       {/* DataTableToolbar skeleton - Linha 2: Filtros */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex items-center gap-4 pb-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
+      <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center inline-default pb-4")}>
+        <div className={cn("flex items-center inline-tight flex-1")}>
           <Skeleton className="h-9 w-80" />
           <Skeleton className="h-6 w-px" />
           <Skeleton className="h-5 w-40" />

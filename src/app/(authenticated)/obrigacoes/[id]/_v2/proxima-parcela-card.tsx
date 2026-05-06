@@ -30,7 +30,7 @@ export function ProximaParcelaCard({
   if (!parcela) {
     return (
       <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 flex items-center justify-center min-h-[180px]")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+        <div className={cn("text-center stack-tight")}>
           <IconContainer size="md" className="bg-success/8 mx-auto">
             <CheckCircle2 className="size-4 text-success/70" />
           </IconContainer>
@@ -75,7 +75,7 @@ export function ProximaParcelaCard({
           <Text variant="meta-label" className="text-muted-foreground/60">
             Próxima parcela
           </Text>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 mt-1")}>
+          <div className={cn("flex items-baseline inline-tight mt-1")}>
             <Heading level="card" className="tabular-nums">
               Parcela {parcela.numeroParcela}
             </Heading>
@@ -87,7 +87,7 @@ export function ProximaParcelaCard({
       </div>
 
       <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 mb-5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+        <div className={cn("flex items-baseline inline-tight")}>
           <Text
             variant="kpi-value"
             className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; leading-none sem token DS; tracking-tight sem token DS */ /* design-system-escape: text-3xl → migrar para <Heading level="display-*">; leading-none sem token DS; tracking-tight sem token DS */ "text-3xl leading-none tracking-tight")}
@@ -96,7 +96,7 @@ export function ProximaParcelaCard({
           </Text>
           <Icon className={cn('size-4', accentClass)} />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm")}>
+        <div className={cn("flex items-center inline-tight text-body-sm")}>
           <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>
             {format(venc, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </Text>
@@ -115,7 +115,7 @@ export function ProximaParcelaCard({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 flex-wrap")}>
+      <div className={cn("flex inline-tight flex-wrap")}>
         {onMarcarRecebida && (
           <Button
             size="sm"

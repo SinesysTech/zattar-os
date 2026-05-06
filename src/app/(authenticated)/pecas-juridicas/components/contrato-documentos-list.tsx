@@ -235,7 +235,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
                 <TableCell>
                   <button
                     onClick={() => handleOpenDocument(doc)}
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "text-left hover:underline font-medium flex items-center gap-2")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-left hover:underline font-medium flex items-center inline-tight")}
                   >
                     {doc.arquivo && <Text variant="caption" className="px-1.5 py-0.5 rounded bg-muted">FILE</Text>}
                     {titulo}

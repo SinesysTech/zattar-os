@@ -67,7 +67,7 @@ export function NetworkQualityIndicator({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-help", className)}>
+          <div className={cn("flex items-center inline-tight cursor-help", className)}>
             <Icon 
               className={cn(
                 "w-5 h-5 transition-colors duration-300", 

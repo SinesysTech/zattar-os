@@ -58,7 +58,7 @@ export function ObrigacoesBulkActions({
   if (selectedRows.length === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+    <div className={cn("flex items-center inline-tight")}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="ml-auto h-8 lg:flex">

@@ -153,7 +153,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
 
 function ErrorState({ message }: { message?: string }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center space-y-4")}>
+    <div className={cn("flex flex-col items-center stack-default")}>
       <div className="inline-flex size-14 items-center justify-center rounded-2xl bg-destructive/10">
         <AlertCircle className="size-7 text-destructive" />
       </div>

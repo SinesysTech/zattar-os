@@ -53,9 +53,9 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
   return (
     <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
       {/* Stats row */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
+      <div className={cn(/* design-system-escape: sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center inline-default sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
         {stats.map((s, i) => (
-          <div key={s.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-max")}>
+          <div key={s.label} className={cn("flex items-center inline-tight min-w-max")}>
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.color)} />
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>

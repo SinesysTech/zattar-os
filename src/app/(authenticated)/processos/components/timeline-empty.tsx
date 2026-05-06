@@ -18,12 +18,12 @@ export function TimelineEmpty() {
 
   return (
     <Card className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center text-center space-y-4")}>
-        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-full bg-muted p-6")}>
+      <div className={cn("flex flex-col items-center justify-center text-center stack-default")}>
+        <div className={cn("rounded-full bg-muted inset-dialog")}>
           <FileSearch className="h-12 w-12 text-muted-foreground" />
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Heading level="card">
             Nenhuma movimentação ou documento encontrado
           </Heading>
@@ -36,7 +36,7 @@ export function TimelineEmpty() {
         <Button
           variant="outline"
           onClick={() => router.push('/processos')}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2 mt-4")}
+          className={cn("inline-tight mt-4")}
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar para Listagem

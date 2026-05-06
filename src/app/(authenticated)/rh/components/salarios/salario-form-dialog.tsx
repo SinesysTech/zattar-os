@@ -158,8 +158,8 @@ export function SalarioFormDialog({
           <DialogTitle>{salario ? 'Editar Salário' : 'Novo Salário'}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form ref={formRef} onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <form ref={formRef} onSubmit={handleSubmit} className={cn("stack-default")}>
+        <div className={cn("stack-tight")}>
           <Label>Funcionário</Label>
           <Controller
             control={form.control}
@@ -193,7 +193,7 @@ export function SalarioFormDialog({
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>Atenção: Salário Vigente Existente</AlertTitle>
-            <AlertDescription className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <AlertDescription className={cn("stack-tight")}>
               <p>
                 Este funcionário já possui um salário vigente de{' '}
                 <strong>
@@ -242,7 +242,7 @@ export function SalarioFormDialog({
           </Alert>
         )}
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label>Cargo (Opcional)</Label>
           <Controller
             control={form.control}
@@ -267,7 +267,7 @@ export function SalarioFormDialog({
           />
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label>Salário Bruto (R$)</Label>
           <Input
             type="number"
@@ -281,7 +281,7 @@ export function SalarioFormDialog({
           )}
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label>Data de Início da Vigência</Label>
           <Input type="date" {...form.register('dataInicioVigencia')} />
           {form.formState.errors.dataInicioVigencia && (
@@ -291,7 +291,7 @@ export function SalarioFormDialog({
           )}
         </div>
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label>Observações</Label>
           <Textarea rows={3} {...form.register('observacoes')} placeholder="Ex: Promoção, Ajuste anual, etc." />
         </div>

@@ -77,7 +77,7 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
+      <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-4")}>
         {[1, 2, 3, 4].map((i) => (
           <GlassPanel key={i} depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
             <div className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
@@ -94,7 +94,7 @@ export function AtividadesCards({ usuarioId }: AtividadesCardsProps) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
+    <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-4")}>
       <StatCard
         title="Processos"
         value={stats.processos}

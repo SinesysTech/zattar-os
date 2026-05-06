@@ -48,8 +48,8 @@ export function TimelineFilterChips({
   const showGrauFilter = graus && graus.length > 1;
 
   return (
-    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none border-b px-3 py-2.5 space-y-2")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex-none border-b px-3 py-2.5 stack-tight")}>
+      <div className={cn("flex items-center justify-between inline-tight")}>
         <Text variant="caption" className="flex items-center gap-3">
           <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
             <FileText className="size-3" />

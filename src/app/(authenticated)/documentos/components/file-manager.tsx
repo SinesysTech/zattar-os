@@ -416,7 +416,7 @@ export function FileManager() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ─────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Documentos</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
@@ -442,7 +442,7 @@ export function FileManager() {
           criadores={criadores}
           counts={filterCounts}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}

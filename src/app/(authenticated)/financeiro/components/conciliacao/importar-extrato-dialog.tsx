@@ -99,8 +99,8 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
           <DialogTitle>Importar Extrato</DialogTitle>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-default")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="conta">Conta bancária</Label>
             <Select onValueChange={(val) => setContaId(Number(val))} value={contaId?.toString()}>
               <SelectTrigger id="conta">
@@ -116,7 +116,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
             </Select>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Tipo de arquivo</Label>
             <Select onValueChange={(val) => setTipoArquivo(val as 'ofx' | 'csv')} value={tipoArquivo || undefined}>
               <SelectTrigger>
@@ -155,7 +155,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
           </div>
 
           {isUploading && (
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Carregando...</Label>
               <Progress value={progress} />
             </div>

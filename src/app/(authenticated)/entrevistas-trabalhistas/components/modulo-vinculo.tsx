@@ -27,7 +27,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
     data.ctps_assinada === 'nao_informal' || data.ctps_assinada === 'obrigado_mei';
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">A Máscara do Vínculo</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -36,7 +36,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
       </div>
 
       {/* A.1.1: Registro em CTPS */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="ctps">A carteira de trabalho (CTPS) foi assinada desde o primeiro dia de trabalho?</Label>
         <Select
           value={data.ctps_assinada ?? ''}
@@ -56,8 +56,8 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
       </div>
 
       {/* A.1.2: Dados essenciais para cálculo */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("grid inline-default sm:grid-cols-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="funcao-cargo">Função/Cargo exercido</Label>
           <Input
             id="funcao-cargo"
@@ -66,7 +66,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
             onChange={(e) => onChange({ ...data, funcao_cargo: e.target.value })}
           />
         </div>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="remuneracao-mensal">Remuneração mensal</Label>
           <Input
             id="remuneracao-mensal"
@@ -77,7 +77,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 sm:max-w-xs")}>
+      <div className={cn("stack-tight sm:max-w-xs")}>
         <Label htmlFor="data-admissao">Data de admissão</Label>
         <Input
           id="data-admissao"
@@ -89,7 +89,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
 
       {/* Campo condicional: Subordinação */}
       {mostrarSubordinacao && (
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="subordinacao">
             Como era o controle de quem mandava em você? Quem dava as ordens?
           </Label>

@@ -17,7 +17,7 @@ export default function HistoricoSalarioPage({ params }: PageProps) {
 
   if (usuarioId === null) {
     return (
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6 text-center text-muted-foreground")}>
+      <div className={cn("rounded-lg border bg-card inset-dialog text-center text-muted-foreground")}>
         Carregando...
       </div>
     );

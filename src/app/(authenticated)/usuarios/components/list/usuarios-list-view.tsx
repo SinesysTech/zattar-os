@@ -193,7 +193,7 @@ export function UsuariosListView({
                 ? 'text-warning'
                 : 'text-destructive';
           return (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'flex items-center gap-2', !usuario.ativo && 'opacity-50')}>
+            <div className={cn('flex items-center inline-tight', !usuario.ativo && 'opacity-50')}>
               <div className="w-12 h-1 rounded-full bg-muted/20 overflow-hidden shrink-0">
                 <div
                   className={cn('h-full rounded-full', barColorClass)}

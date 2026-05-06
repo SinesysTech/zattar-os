@@ -112,7 +112,7 @@ export function TemplateTextoCreateForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("stack-loose")}>
         {/* Header with actions */}
         <div className="flex items-center justify-between">
           <Button
@@ -141,7 +141,7 @@ export function TemplateTextoCreateForm({
         </div>
 
         {/* Metadata fields */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2")}>
+        <div className={cn("grid inline-default sm:grid-cols-2")}>
           <FormField
             control={form.control}
             name="nome"
@@ -213,7 +213,7 @@ export function TemplateTextoCreateForm({
         />
 
         {/* Editor section */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <FormLabel>Conteúdo do Template</FormLabel>
           <TemplateTextoEditor
             value={editorContent}

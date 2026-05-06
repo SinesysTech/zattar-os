@@ -164,8 +164,8 @@ export function AdvogadoDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="nome_completo">Nome Completo *</Label>
               <Input
                 id="nome_completo"
@@ -177,7 +177,7 @@ export function AdvogadoDialog({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="cpf">CPF *</Label>
               <Input
                 id="cpf"
@@ -199,7 +199,7 @@ export function AdvogadoDialog({
               </div>
 
               {formData.oabs.map((oab, index) => (
-                <div key={index} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 items-end")}>
+                <div key={index} className={cn("flex inline-tight items-end")}>
                   <div className="flex-1">
                     <Input
                       value={oab.numero}

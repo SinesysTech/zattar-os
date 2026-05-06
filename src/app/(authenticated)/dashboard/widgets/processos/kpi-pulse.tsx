@@ -112,7 +112,7 @@ export function WidgetKpiPulse() {
         />
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 pt-3 border-t border-border/10")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center inline-default pt-3 border-t border-border/10")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <ProgressRing
             percent={taxaResolucao}

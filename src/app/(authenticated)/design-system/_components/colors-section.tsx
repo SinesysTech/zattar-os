@@ -18,7 +18,7 @@ function PalettePrimary() {
       title="Zattar Purple — hue 281°"
       aside="oklch(L C 281)"
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-[220px_1fr]")}>
+      <div className={cn("grid grid-cols-1 inline-default md:grid-cols-[220px_1fr]")}>
         <div
           className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex aspect-[1.3/1] flex-col justify-between rounded-2xl p-4 text-white")}
           style={{ background: "var(--primary)" }}
@@ -88,7 +88,7 @@ function PaletteNeutrals() {
       title="Micro-tinted hue 281°"
       aside="chroma 0.005–0.01"
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-4 gap-2 sm:grid-cols-8")}>
+      <div className={cn("grid grid-cols-4 inline-tight sm:grid-cols-8")}>
         {tiles.map((t) => (
           <div
             key={t.l}
@@ -142,7 +142,7 @@ function PaletteStatus() {
         {tiles.map((t) => (
           <div
             key={t.title}
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3.5 → usar <Inset> */ "flex min-h-[110px] flex-col justify-between gap-2 rounded-xl p-3.5 text-white")}
+            className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "flex min-h-[110px] flex-col justify-between inline-tight rounded-xl p-3.5 text-white")}
             style={{ background: t.bg }}
           >
             <div className="flex items-center justify-between font-mono text-[10px] opacity-85">
@@ -153,9 +153,9 @@ function PaletteStatus() {
           </div>
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex flex-col gap-2")}>
+      <div className={cn("mt-4 flex flex-col inline-tight")}>
         <Text variant="meta-label">CHIPS EM USO</Text>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+        <div className={cn("flex flex-wrap inline-tight")}>
           {chips.map((c) => (
             <span
               key={c.label}
@@ -197,7 +197,7 @@ function PaletteUser() {
           />
         ))}
       </div>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6")}>
+      <div className={cn("mt-4 grid grid-cols-2 inline-tight sm:grid-cols-3 lg:grid-cols-6")}>
         {labels.map((l) => (
           <div
             key={l.n}
@@ -258,7 +258,7 @@ function PaletteEvent() {
 
 export function ColorsSection() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <PalettePrimary />
       <PaletteNeutrals />
       <PaletteStatus />

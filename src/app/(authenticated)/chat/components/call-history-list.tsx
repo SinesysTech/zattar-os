@@ -196,7 +196,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       cell: ({ row }) => {
         const Icon = getTipoChamadaIcon(row.original.tipo as TipoChamada);
         return (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Icon className="h-4 w-4 text-muted-foreground" />
             <span className="capitalize">{row.original.tipo}</span>
           </div>
@@ -216,7 +216,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
       cell: ({ row }) => {
         const user = row.original.iniciador;
         return user ? (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Avatar size="sm">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.nomeCompleto.charAt(0)}</AvatarFallback>
@@ -391,7 +391,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
               }
             />
           ) : (
-            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
+            <div className={cn("inset-dialog")} />
           )
         }
         footer={

@@ -288,7 +288,7 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <GlassPanel key={i} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
@@ -336,7 +336,7 @@ function PaginationBar({
       <Text variant="caption" className="text-muted-foreground/75">
         {paginacao.total > 0 ? `${inicio}–${fim} de ${paginacao.total}` : '0 resultados'}
       </Text>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <button
           type="button"
           onClick={onPrev}
@@ -474,7 +474,7 @@ export function CapturaGlassList({
 
   return (
     <>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("flex flex-col inline-tight")}>
           {filtered.map((captura) => (
             <GlassRow
               key={captura.id}

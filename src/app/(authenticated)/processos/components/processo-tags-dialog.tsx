@@ -163,11 +163,11 @@ export function ProcessoTagsDialog({
           <DialogTitle>Gerenciar Etiquetas</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         {/* Tags selecionadas */}
         <div>
           <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Etiquetas selecionadas</Label>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "mt-2 flex flex-wrap gap-2 min-h-10 p-2 border rounded-md bg-muted/30")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex flex-wrap inline-tight min-h-10 p-2 border rounded-md bg-muted/30")}>
             {selectedTagIds.length === 0 ? (
               <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta selecionada</span>
             ) : (
@@ -206,7 +206,7 @@ export function ProcessoTagsDialog({
           {/* Formulário para criar nova tag */}
           {showNewTagForm && (
             <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "mb-3 p-3 border rounded-md bg-muted/30 space-y-3")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+              <div className={cn("flex inline-tight")}>
                 <Input
                   variant="glass"
                   placeholder="Nome da etiqueta"
@@ -232,7 +232,7 @@ export function ProcessoTagsDialog({
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-auto p-3")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-6 gap-2")}>
+                    <div className={cn("grid grid-cols-6 inline-tight")}>
                       {TAG_COLORS.map((color) => {
                         const isSelected = newTagCor === color.hex
                         return (
@@ -254,7 +254,7 @@ export function ProcessoTagsDialog({
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+              <div className={cn("flex justify-end inline-tight")}>
                 <Button
                   type="button"
                   variant="ghost"
@@ -285,7 +285,7 @@ export function ProcessoTagsDialog({
               <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 border rounded-md")}>
+            <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-wrap inline-tight max-h-48 overflow-y-auto p-2 border rounded-md")}>
               {todasTags.length === 0 ? (
                 <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta cadastrada</span>
               ) : (

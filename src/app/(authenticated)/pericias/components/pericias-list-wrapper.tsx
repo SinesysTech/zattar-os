@@ -159,7 +159,7 @@ export function PericiasListWrapper({
   }, []);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <PericiasGlassList
         pericias={pericias}
         isLoading={isLoading}
@@ -181,7 +181,7 @@ export function PericiasListWrapper({
             </span>{' '}
             de <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{total}</span>
           </span>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Button
               variant="outline"
               size="sm"

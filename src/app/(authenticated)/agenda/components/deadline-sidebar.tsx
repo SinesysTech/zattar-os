@@ -53,18 +53,18 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
 
   return (
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+      <div className={cn("flex items-center inline-tight mb-3")}>
         <AlarmClock className="size-3.5 text-destructive" />
         <Text variant="caption" className="font-semibold text-foreground">Prazos Próximos</Text>
       </div>
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         {deadlines.map((dl) => {
           const u = urgencyClasses(dl.daysLeft, dl.fatal);
           return (
             <div
               key={dl.id}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex items-center gap-2 p-2 rounded-lg border",
+                /* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight p-2 rounded-lg border",
                 u.bg,
                 u.border,
               )}

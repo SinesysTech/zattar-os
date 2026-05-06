@@ -75,7 +75,7 @@ export function OrigemDistribution() {
 
         <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
           {porOrigem.map((o) => (
-            <div key={o.origem} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={o.origem} className={cn("flex items-center inline-tight")}>
               <div
                 className="size-2.5 rounded-full shrink-0"
                 style={{ backgroundColor: o.color }}

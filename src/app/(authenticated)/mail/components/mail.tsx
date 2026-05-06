@@ -109,9 +109,9 @@ export function Mail({
 
   if (serviceUnavailable) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center gap-4 p-8 text-center")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center inline-default p-8 text-center")}>
         <MailWarning className="text-muted-foreground h-12 w-12" />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Heading level="section" className={cn("text-body-lg")}>E-mail não configurado</Heading>
           <p className={cn("text-muted-foreground max-w-md text-body-sm")}>
             Configure sua conta de e-mail para começar a enviar e receber mensagens.
@@ -172,7 +172,7 @@ export function Mail({
             defaultValue="all"
             className={cn(/* design-system-escape: gap-0 gap sem token DS */ "flex h-full flex-col gap-0 bg-card")}
             onValueChange={(value) => setTab(value)}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center gap-2 px-4")}>
+            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center inline-tight px-4")}>
               {hasSelection ? (
                 <>
                   <Checkbox

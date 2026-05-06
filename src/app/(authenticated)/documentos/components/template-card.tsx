@@ -48,7 +48,7 @@ export function TemplateCard({
     <Card className="flex flex-col hover:shadow-md transition-shadow">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <div className="flex items-start justify-between">
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <CardTitle className={cn("text-body line-clamp-1")}>{template.titulo}</CardTitle>

@@ -84,9 +84,9 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
           <DialogDescription>Selecione o período para gerar a folha de pagamento.</DialogDescription>
         </DialogHeader>
 
-        <form className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")} onSubmit={handleSubmit}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <form className={cn("stack-default")} onSubmit={handleSubmit}>
+          <div className={cn("grid grid-cols-2 inline-default")}>
+            <div className={cn("stack-tight")}>
               <Label>Mês</Label>
               <Controller
                 name="mesReferencia"
@@ -111,7 +111,7 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
               />
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Ano</Label>
               <Input
                 type="number"
@@ -120,12 +120,12 @@ export function GerarFolhaDialog({ open, onOpenChange, onSuccess }: GerarFolhaDi
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Data de Pagamento (opcional)</Label>
             <Input type="date" {...form.register('dataPagamento')} />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Observações</Label>
             <Textarea rows={3} {...form.register('observacoes')} />
           </div>

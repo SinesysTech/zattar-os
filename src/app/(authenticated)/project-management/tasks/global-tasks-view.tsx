@@ -89,7 +89,7 @@ const columns: ColumnDef<Tarefa>[] = [
       const nome = row.original.responsavelNome;
       if (!nome) return "—";
       return (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Avatar size="sm">
             <AvatarImage
               src={row.original.responsavelAvatar ?? ""}

@@ -140,7 +140,7 @@ export function TemplateFormFields({
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Seletor de Tipo de Template */}
       <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
         <Label>
@@ -148,11 +148,11 @@ export function TemplateFormFields({
         </Label>
         <Tabs value={tipoTemplate} onValueChange={handleTipoChange}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="markdown" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <TabsTrigger value="markdown" className={cn("flex items-center inline-tight")}>
               <FileText className="h-4 w-4" />
               Editor Texto (Markdown)
             </TabsTrigger>
-            <TabsTrigger value="pdf" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <TabsTrigger value="pdf" className={cn("flex items-center inline-tight")}>
               <FileUp className="h-4 w-4" />
               PDF Upload
             </TabsTrigger>
@@ -161,7 +161,7 @@ export function TemplateFormFields({
       </div>
 
       {/* Grid responsivo para campos básicos */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
         {/* Nome */}
         <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           <Label htmlFor="nome">

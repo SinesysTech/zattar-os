@@ -40,7 +40,7 @@ export function DepartmentGroupHeader({
   const overflow = members.length - MAX_AVATARS;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {/* Header bar */}
       <GlassPanel depth={1} className="overflow-hidden">
         <button

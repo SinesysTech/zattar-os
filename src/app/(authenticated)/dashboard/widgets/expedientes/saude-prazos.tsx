@@ -61,7 +61,7 @@ export function SaudePrazos() {
       depth={1}
       className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4 mt-1")}>
+      <div className={cn("flex items-start inline-default mt-1")}>
         <GaugeMeter
           value={score}
           max={100}
@@ -70,8 +70,8 @@ export function SaudePrazos() {
           size={90}
         />
 
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+        <div className={cn("flex-1 stack-tight")}>
+          <div className={cn("flex items-baseline inline-tight")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Vencidos
             </span>
@@ -81,7 +81,7 @@ export function SaudePrazos() {
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+          <div className={cn("flex items-baseline inline-tight")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Vencem Hoje
             </span>
@@ -92,7 +92,7 @@ export function SaudePrazos() {
           </div>
 
           {tempoResposta !== undefined && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
+            <div className={cn("flex items-baseline inline-tight")}>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Prazo Medio
               </span>

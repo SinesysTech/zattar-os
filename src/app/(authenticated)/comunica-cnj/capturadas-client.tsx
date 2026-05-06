@@ -249,7 +249,7 @@ export function CapturadasClient() {
           onStatusChange={(v) => setViewAtiva(statusToView(v))}
           statusCounts={statusCounts}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}

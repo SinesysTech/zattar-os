@@ -33,7 +33,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
   const mostrarAssistencia = data.sofreu_acidente === true;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">Precarização do Trabalho</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -42,7 +42,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.1: Horas por dia */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="horas-dia">Quantas horas por dia trabalhava em média na plataforma?</Label>
         <Select
           value={data.horas_dia ?? ''}
@@ -62,7 +62,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.2: Dias por semana */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="dias-semana">Quantos dias por semana?</Label>
         <Select
           value={data.dias_semana ?? ''}
@@ -139,7 +139,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
       </div>
 
       {/* B.3.7: Narrativa */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="narrativa-condicoes">Descreva suas condições de trabalho na plataforma</Label>
         <Textarea
           id="narrativa-condicoes"

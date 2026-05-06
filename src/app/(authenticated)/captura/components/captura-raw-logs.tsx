@@ -99,7 +99,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
   const stats = calcularEstatisticas(logs);
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2 sm:grid-cols-4")}>
+    <div className={cn("grid grid-cols-2 inline-tight sm:grid-cols-4")}>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-success/5 border-success/20 p-2.5")}>
         <FilePlus className="h-4 w-4 text-success shrink-0" />
         <div>
@@ -159,7 +159,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {erros.map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5")}
+                className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-2.5")}
               >
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <Text variant="caption" className="min-w-0">
@@ -181,7 +181,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {inseridos.slice(0, 30).map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md bg-success/4 border border-success/15 px-2.5 py-1.5")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-md bg-success/4 border border-success/15 px-2.5 py-1.5")}
               >
                 <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
                 <Text variant="caption" className="text-foreground/80">
@@ -241,7 +241,7 @@ interface CapturaRawLogsProps {
 export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
   if (rawLogs.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-8 text-center")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center inline-tight rounded-lg border border-dashed p-8 text-center")}>
         <ScrollText className="h-8 w-8 text-muted-foreground/65" />
         <p className={cn("text-body-sm text-muted-foreground")}>Nenhum log detalhado disponível para esta captura.</p>
       </div>
@@ -252,9 +252,9 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
   const totalErro = rawLogs.filter((l) => l.status === 'error').length;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Resumo geral */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 items-center")}>
+      <div className={cn("flex flex-wrap inline-tight items-center")}>
         <Badge variant="outline" className={cn("text-caption")}>
           {rawLogs.length} registro{rawLogs.length !== 1 ? 's' : ''}
         </Badge>
@@ -279,7 +279,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
       </div>
 
       {/* Logs por tribunal/grau */}
-      <Accordion type="multiple" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <Accordion type="multiple" className={cn("stack-tight")}>
         {rawLogs.map((rawLog) => {
           const logs = (rawLog.logs ?? []) as LogEntry[];
           const stats = calcularEstatisticas(logs);
@@ -330,7 +330,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                 <div className={cn(/* design-system-escape: space-y-3 sem token DS; pb-3 padding direcional sem Inset equiv. */ "space-y-3 pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>
+                    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>
                       <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                       <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
                     </div>

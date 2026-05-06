@@ -123,7 +123,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}
+      className={cn("relative flex inline-default")}
     >
       {/* Linha vertical */}
       <div className="relative flex flex-col items-center">
@@ -148,9 +148,9 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       {/* Conteúdo do item */}
       <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 mb-4")}>
         {/* Header do item */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           {/* Primeira linha: Instância (se disponível) + Título */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+          <div className={cn("flex items-center inline-tight flex-wrap")}>
             {grauOrigem && (
               <SemanticBadge category="grau" value={grauOrigem} className={cn("w-fit text-caption")}>
                 {formatarGrauComOrdinal(grauOrigem)}
@@ -190,7 +190,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
 
         {/* Ações (apenas para documentos com Backblaze) */}
         {isDocumento && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex gap-2")}>
+          <div className={cn("mt-4 flex inline-tight")}>
             {hasBackblaze ? (
               <>
                 <TooltipProvider>

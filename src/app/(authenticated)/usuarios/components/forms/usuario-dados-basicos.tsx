@@ -22,11 +22,11 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <CardTitle className={cn("flex items-center inline-tight")}>
             <User className="h-5 w-5" />
             Dados do Usuário
           </CardTitle>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               {usuario.isSuperAdmin && (
                 <Badge variant="info">
                   <Shield className="h-3 w-3 mr-1" />
@@ -39,13 +39,13 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             </div>
         </div>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <CardContent className={cn("stack-loose")}>
+        <div className={cn("stack-default")}>
           <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide">
             Identificação
           </small>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             <div>
               <p className="text-sm text-muted-foreground font-medium mb-1">
                 Nome Completo
@@ -62,7 +62,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
+          <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default")}>
             {usuario.dataNascimento && (
               <div>
                 <p className="text-sm text-muted-foreground font-medium mb-1 flex items-center gap-1.5">
@@ -109,13 +109,13 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         <Separator />
 
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide">
             Contato
           </small>
 
           {(usuario.telefone || usuario.ramal) && (
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               {usuario.telefone && (
                 <div>
                   <p className="text-sm text-muted-foreground font-medium mb-1 flex items-center gap-1.5">
@@ -138,7 +138,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
             </div>
           )}
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             <div>
               <p className="text-sm text-muted-foreground font-medium mb-1 flex items-center gap-1.5">
                 <Mail className="h-4 w-4" />
@@ -161,12 +161,12 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
 
         <Separator />
 
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide">
             Informações Profissionais
           </small>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-3 gap-4")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-3 inline-default")}>
             {usuario.oab && (
               <>
                 <div>
@@ -210,7 +210,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
         {usuario.endereco && Object.values(usuario.endereco).some((v) => v) && (
           <>
             <Separator />
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               <small className="text-sm font-medium leading-none text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
                 <MapPin className="h-4 w-4" />
                 Endereço

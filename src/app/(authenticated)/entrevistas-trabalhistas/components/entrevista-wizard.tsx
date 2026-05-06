@@ -198,9 +198,9 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Stepper horizontal */}
-      <nav className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+      <nav className={cn("flex items-center justify-between inline-tight")}>
         {modulos.map((modulo, index) => {
           const isActive = index === currentStep;
           const isComplete = index < currentStep;
@@ -248,7 +248,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       </nav>
 
       {/* Conteúdo do módulo atual */}
-      <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+      <GlassPanel className={cn("inset-dialog")}>
         {renderModulo()}
         <div className="mt-6">
           <AnexoUploadZone
@@ -274,7 +274,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       )}
 
       {currentModulo === 'consolidacao_final' && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap justify-end gap-2")}>
+        <div className={cn("flex flex-wrap justify-end inline-tight")}>
           <Button variant="secondary" onClick={handleConsolidarIA} disabled={isLoading}>
             <Sparkles className="mr-2 h-4 w-4" />
             Consolidar com IA

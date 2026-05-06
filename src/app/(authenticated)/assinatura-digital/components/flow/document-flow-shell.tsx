@@ -60,7 +60,7 @@ function StepPill({
     <div
       aria-current={isCurrent ? "step" : undefined}
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 rounded-full border pl-1.5 pr-3.5 py-1 text-body-sm font-medium transition-all duration-200",
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight rounded-full border pl-1.5 pr-3.5 py-1 text-body-sm font-medium transition-all duration-200",
         isCurrent &&
           "glass-kpi border-border/50 text-foreground shadow-md",
         isDone && "border-transparent text-foreground/75",
@@ -175,14 +175,14 @@ export function DocumentFlowShell({
       {/* Header transparente — integrado ao AmbientBackdrop global */}
       <header className="shrink-0">
         <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ /* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ "px-6 sm:px-8 pt-5 pb-4 sm:pb-5")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
+          <div className={cn("flex items-center justify-between inline-default")}>
             <Button
               type="button"
               variant="outline"
               onClick={() =>
                 router.push("/app/assinatura-digital/documentos/lista")
               }
-              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv. */ "h-10 gap-2 rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "h-10 inline-tight rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
             >
               <ArrowLeft className="size-4" />
               <span>Voltar</span>
@@ -208,7 +208,7 @@ export function DocumentFlowShell({
       <div
         className={cn(
           "flex-1 min-h-0 overflow-auto",
-          !fullHeight && /* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6",
+          !fullHeight && "inset-dialog",
         )}
       >
         {children}

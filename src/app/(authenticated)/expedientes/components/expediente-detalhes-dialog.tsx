@@ -93,7 +93,7 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
   if (exp.baixadoEm) return null;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2")}>
+    <div className={cn("flex items-center inline-tight mt-2")}>
       {!openEdit && (
         <Button size="sm" variant="outline" onClick={() => setOpenEdit(true)}>
           {exp.dataPrazoLegalParte ? 'Alterar prazo' : 'Definir prazo'}
@@ -101,7 +101,7 @@ const PrazoEditor: React.FC<PrazoEditorProps> = ({ exp, onUpdated, onSuccess }) 
       )}
 
       {openEdit && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <FormDatePicker
             value={dt ? dt.toISOString() : undefined}
             onChange={(val) => setDt(val ? new Date(val) : undefined)}
@@ -136,11 +136,11 @@ function ExpedienteListItem({
 
         <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mt-0")}>
           <div className="flex items-center justify-between">
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-body-lg flex items-center gap-2")}>
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body-lg flex items-center inline-tight")}>
               {exp.classeJudicial && <span className={cn("text-muted-foreground text-body-sm uppercase")}>{exp.classeJudicial}</span>}
               {exp.numeroProcesso}
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+            <div className={cn("flex inline-tight")}>
               <SemanticBadge category="expediente_status" value={getStatusTexto(exp.baixadoEm)}>
                 {getStatusTexto(exp.baixadoEm)}
               </SemanticBadge>
@@ -203,18 +203,18 @@ function ExpedienteSingleDetails({
   const { logs, isLoading: loadingLogs } = useAuditLogs('expedientes', expediente.id);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <Tabs defaultValue="detalhes" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
           <TabsTrigger value="historico">Histórico</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-0")}>
+        <TabsContent value="detalhes" className={cn("stack-default mt-0")}>
           <div className="flex items-center justify-between">
             <div>
               <Text variant="caption" className="uppercase font-bold tracking-wider mb-1">Status</Text>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+              <div className={cn("flex inline-tight")}>
                 <SemanticBadge category="expediente_status" value={getStatusTexto(expediente.baixadoEm)}>
                   {getStatusTexto(expediente.baixadoEm)}
                 </SemanticBadge>
@@ -225,8 +225,8 @@ function ExpedienteSingleDetails({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "border-t pt-4 space-y-4")}>
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "border-t pt-4 stack-default")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <Text variant="caption">Número do Processo</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-lg")}>
@@ -240,7 +240,7 @@ function ExpedienteSingleDetails({
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 p-3 rounded-md border")}>
                 <Text variant="caption" className="mb-1">Data de Ciência</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.dataCienciaParte)}</div>
@@ -256,7 +256,7 @@ function ExpedienteSingleDetails({
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <Text variant="caption">Parte Autora</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.nomeParteAutora || '-'}</div>
@@ -330,7 +330,7 @@ export function ExpedienteDetalhesDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "max-h-[60vh] pr-4")}>
             {exibirLista ? (
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <div className={cn("stack-default")}>
                 {listaLocal.map((exp) => (
                   <ExpedienteListItem
                     key={exp.id}

@@ -195,7 +195,7 @@ export function BlockedIpsContent() {
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center py-12 gap-4")}>
+      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 inline-default")}>
         <AlertTriangle className="h-12 w-12 text-destructive" />
         <p className="text-destructive">{error}</p>
         <Button onClick={fetchData} variant="outline">
@@ -211,9 +211,9 @@ export function BlockedIpsContent() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Stats Cards */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+      <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
             <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Total Bloqueados</CardTitle>
@@ -259,7 +259,7 @@ export function BlockedIpsContent() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <Shield className="h-5 w-5" />
               IPs Bloqueados
             </CardTitle>
@@ -313,7 +313,7 @@ export function BlockedIpsContent() {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+                        <div className={cn("flex justify-end inline-tight")}>
                           <Button
                             variant="outline"
                             size="sm"
@@ -362,7 +362,7 @@ export function BlockedIpsContent() {
       {/* Whitelist Table */}
       <Card>
         <CardHeader>
-          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <CardTitle className={cn("flex items-center inline-tight")}>
             <ShieldCheck className="h-5 w-5 text-success" />
             Whitelist
           </CardTitle>
@@ -481,8 +481,8 @@ export function BlockedIpsContent() {
               Insira o IP que deseja bloquear e o motivo.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="ip">Endereço IP</Label>
               <Input
                 id="ip"
@@ -491,7 +491,7 @@ export function BlockedIpsContent() {
                 onChange={(e) => setBlockDialog((prev) => ({ ...prev, ip: e.target.value }))}
               />
             </div>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="reason">Motivo</Label>
               <Input
                 id="reason"

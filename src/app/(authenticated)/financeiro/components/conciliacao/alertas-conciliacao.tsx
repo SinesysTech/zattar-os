@@ -78,7 +78,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
+      <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
@@ -97,7 +97,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default")}>
       {cardsConfig.map((card) => {
         const onClick = getOnClick(card.key);
         const valor = getValor(card.key);

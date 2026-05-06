@@ -216,11 +216,11 @@ export function AudienciaTimeline({
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
+      <div className={cn('stack-default', className)}>
         {[60, 80, 50].map((w, i) => (
           <div key={i} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex gap-3")}>
             <div className="size-10 shrink-0 animate-pulse rounded-full bg-muted" />
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+            <div className={cn("flex-1 stack-tight")}>
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w}%` }} />
               <div className="h-3 animate-pulse rounded bg-muted" style={{ width: `${w - 20}%` }} />
             </div>
@@ -263,7 +263,7 @@ export function AudienciaTimeline({
           {/* Content */}
           <div className="flex-1 min-w-0">
             {/* Header */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 flex-wrap")}>
+            <div className={cn("flex items-baseline inline-tight flex-wrap")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
                 {entry.type === 'manual' && entry.usuario
                   ? entry.usuario.nome

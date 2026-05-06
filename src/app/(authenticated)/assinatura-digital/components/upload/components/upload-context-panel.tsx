@@ -25,7 +25,7 @@ export function UploadContextPanel({
   isUploading,
 }: UploadContextPanelProps) {
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; p-6 → migrar para <Inset variant="dialog">; lg:p-8 sem equivalente DS */ "group relative flex flex-col justify-center space-y-6 p-6 lg:p-8 animate-fade-in-left animate-duration-500")}>
+    <div className={cn(/* design-system-escape: lg:p-8 sem equivalente DS */ "group relative flex flex-col justify-center stack-loose inset-dialog lg:p-8 animate-fade-in-left animate-duration-500")}>
       {/* Blob decorativo de fundo */}
       <div
         className={cn(
@@ -73,7 +73,7 @@ export function UploadContextPanel({
           onClick={onSelectFile}
           disabled={isUploading}
           className={cn(
-            /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 lg:w-auto rounded-xl",
+            "w-full inline-tight lg:w-auto rounded-xl",
             "bg-primary text-primary-foreground hover:bg-primary/90",
             "shadow-lg shadow-primary/20 hover:shadow-primary/40",
             "hover:-translate-y-0.5 transition-all duration-200",

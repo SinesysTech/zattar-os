@@ -74,7 +74,7 @@ export function ContratoProcessosCard({
             Nenhum processo vinculado
           </Text>
         ) : (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+          <div className={cn("flex flex-col inline-tight")}>
             {processos.map((vinculo) => {
               const processo = vinculo.processo;
               if (!processo) return null;

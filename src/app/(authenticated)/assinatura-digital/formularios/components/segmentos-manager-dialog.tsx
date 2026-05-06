@@ -94,7 +94,7 @@ export function SegmentosManagerDialog({
             <DialogDescription className="sr-only">Gerencie os segmentos de assinatura digital.</DialogDescription>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               {state.error && (
                 <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                   {state.error}
@@ -117,7 +117,7 @@ export function SegmentosManagerDialog({
                       className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center justify-between gap-3 p-3")}
                     >
                       <div className="min-w-0">
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <div className={cn("flex items-center inline-tight")}>
                           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>
                             {segmento.nome}
                           </span>

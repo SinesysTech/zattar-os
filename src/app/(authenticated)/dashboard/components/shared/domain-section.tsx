@@ -56,7 +56,7 @@ export function DomainSection({
   };
 
   return (
-    <section className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
+    <section className={cn('stack-default', className)}>
       {/* Header da seção */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
         {Icon && (
@@ -75,7 +75,7 @@ export function DomainSection({
       <Separator />
 
       {/* Grid de widgets */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ 'grid gap-4', gridCols[columns])}>
+      <div className={cn('grid inline-default', gridCols[columns])}>
         {children}
       </div>
     </section>

@@ -112,7 +112,7 @@ export function ParcelasTable({
   const isRecebimento = direcao === 'recebimento';
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {parcelas.map((parcela) => {
         const isPendente = parcela.status === 'pendente';
         const isAtrasada = parcela.status === 'atrasada';
@@ -148,7 +148,7 @@ export function ParcelasTable({
                     </span>
                   )}
                 </div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-[10px] text-muted-foreground/55 mt-0.5 flex gap-2 flex-wrap")}>
+                <div className={cn("text-[10px] text-muted-foreground/55 mt-0.5 flex inline-tight flex-wrap")}>
                   <span>
                     Hon. contr: {formatCurrency(parcela.honorariosContratuais)}
                   </span>

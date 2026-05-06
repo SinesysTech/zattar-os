@@ -140,10 +140,10 @@ export function UploadDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             {!selectedFile ? (
               <div
-                className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; sm:p-8 sem equivalente DS */ "border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer hover:bg-accent transition-colors")}
+                className={cn(/* design-system-escape: sm:p-8 sem equivalente DS */ "border-2 border-dashed rounded-lg inset-dialog sm:p-8 text-center cursor-pointer hover:bg-accent transition-colors")}
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />
@@ -175,8 +175,8 @@ export function UploadDialog({
                   </div>
                 )}
 
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; sm:gap-3 sem equivalente DS */ "flex items-center gap-2 sm:gap-3 flex-1 min-w-0")}>
+                <div className={cn("flex items-center justify-between inline-tight")}>
+                  <div className={cn(/* design-system-escape: sm:gap-3 sem equivalente DS */ "flex items-center inline-tight sm:gap-3 flex-1 min-w-0")}>
                     <File className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; sm:text-base sem equivalente DS */ "font-medium truncate text-body-sm sm:text-base")}>{selectedFile.name}</p>
@@ -197,7 +197,7 @@ export function UploadDialog({
                 </div>
 
                 {uploading && (
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 sm:mt-4 space-y-2")}>
+                  <div className={cn("mt-3 sm:mt-4 stack-tight")}>
                     <Text variant="caption" className="flex items-center justify-between">
                       <Text variant="caption" as="span" className="text-muted-foreground">Enviando...</Text>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{progress}%</span>

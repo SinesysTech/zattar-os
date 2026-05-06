@@ -55,7 +55,7 @@ export function WidgetFluxoCaixa() {
         />
 
         {/* Legend */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 text-[10px] text-muted-foreground/60")}>
+        <div className={cn("flex items-center inline-default text-[10px] text-muted-foreground/60")}>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className="size-2 rounded-sm bg-success/50" />
             <span>Receita</span>

@@ -92,13 +92,13 @@ export function ProcessosAlterarResponsavelDialog({
           <DialogTitle>Alterar Responsável</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form id="alterar-responsavel-processo-form" action={formAction} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <form id="alterar-responsavel-processo-form" action={formAction} className={cn("stack-default")}>
         <input
           type="hidden"
           name="responsavelId"
           value={responsavelId === 'null' || responsavelId === '' ? '' : responsavelId}
         />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="responsavelId">Responsável</Label>
           <Select
             value={responsavelId || 'null'}

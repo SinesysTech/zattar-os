@@ -57,7 +57,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <Skeleton className="h-10 w-64" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -67,14 +67,14 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
 
   if (error || !folha) {
     return (
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-center text-destructive")}>
+      <div className={cn("rounded-lg border border-destructive/50 bg-destructive/10 inset-dialog text-center text-destructive")}>
         {error || 'Folha não encontrada'}
       </div>
     );
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between")}>
         <div>
           <Heading level="page">
@@ -84,7 +84,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
             Gerada em {new Date(folha.dataGeracao).toLocaleString('pt-BR')}
           </p>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+        <div className={cn("flex flex-wrap items-center inline-tight")}>
           {cores && (
              <Badge
              className={`${cores.bg} ${cores.text} border ${cores.border}`}
@@ -114,7 +114,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         <CardHeader>
           <CardTitle>Resumo</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+        <CardContent className={cn("grid inline-default md:grid-cols-3")}>
           <div>
             <p className={cn("text-body-sm text-muted-foreground")}>Funcionários</p>
             <Text variant="kpi-value">{folha.totalFuncionarios}</Text>
@@ -186,7 +186,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         <Card className="border-primary/20 bg-primary/5">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <CardTitle className={cn("flex items-center inline-tight")}>
                 <DollarSign className="h-5 w-5" />
                 Lançamentos Financeiros
               </CardTitle>
@@ -212,7 +212,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                     className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between rounded-lg border bg-card p-4 hover:bg-accent/50 transition-colors")}
                   >
                     <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <div className={cn("flex items-center inline-tight")}>
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                           {item.usuario?.nomeExibicao ?? `Usuário ${item.usuarioId}`}
                         </span>
@@ -220,7 +220,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                           Lançamento #{item.lancamentoFinanceiroId}
                         </Badge>
                       </div>
-                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 text-body-sm text-muted-foreground")}>
+                      <div className={cn("flex items-center inline-default text-body-sm text-muted-foreground")}>
                         <span>Salário: {formatCurrency(item.valorBruto)}</span>
                         {folha.status === 'paga' && (
                           <Badge variant={getSemanticBadgeVariant('folha_status', 'PAGA')}>

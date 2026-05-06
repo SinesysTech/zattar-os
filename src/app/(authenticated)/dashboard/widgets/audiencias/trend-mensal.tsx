@@ -111,7 +111,7 @@ export function TrendMensal() {
         icon={TrendingUp}
         subtitle="Evolucao de audiencias"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
           <TrendingUp className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de tendencia indisponiveis
@@ -138,7 +138,7 @@ export function TrendMensal() {
     >
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         {/* Stats row */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-baseline gap-4")}>
+        <div className={cn("flex items-baseline inline-default")}>
           <div>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Mes Atual

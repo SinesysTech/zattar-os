@@ -85,7 +85,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
       className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-85 min-w-85 rounded-xl border border-border bg-card p-3")}
     >
       <div className="flex items-center justify-between mb-3">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{label}</span>
           <AppBadge variant="outline">{tasks.length}</AppBadge>
         </div>
@@ -93,7 +93,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
 
       <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
         {tasks.length > 0 ? (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-0.5 → usar <Inset> */ "flex flex-col gap-2 p-0.5")}>
+          <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex flex-col inline-tight p-0.5")}>
             {tasks.map((tarefa) => (
               <DraggableTaskCard
                 key={tarefa.id}
@@ -103,7 +103,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
             ))}
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-4 padding direcional sem Inset equiv. */ "flex flex-col justify-center gap-4 pt-4")}>
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex flex-col justify-center inline-default pt-4")}>
             <div className={cn("text-muted-foreground text-body-sm text-center")}>
               Nenhuma tarefa aqui.
             </div>
@@ -302,10 +302,10 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         {/* Toolbar */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center justify-between inline-tight")}>
+          <div className={cn("flex items-center inline-tight")}>
             <QuadroSelector
               quadros={quadros}
               value={selectedQuadroId}
@@ -322,7 +322,7 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <ViewModePopover
               value={viewMode}
               onValueChange={(v) => setViewMode(v as "lista" | "quadro")}
@@ -343,7 +343,7 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
         </div>
 
         {/* Kanban Board */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex w-full gap-4 overflow-x-auto pb-4")}>
+        <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex w-full inline-default overflow-x-auto pb-4")}>
           {STATUS_COLUMNS.map((column) => {
             const tasks = tarefasByStatus[column.value] ?? [];
             return (

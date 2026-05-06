@@ -200,7 +200,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (isLoadingUsuario) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "py-8 space-y-4")}>
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-default")}>
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
           <Button
             variant="ghost"
@@ -227,7 +227,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (errorUsuario || !usuario) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "py-8 space-y-4")}>
+      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-default")}>
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
           <Button
             variant="ghost"
@@ -240,7 +240,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </Button>
           <Heading level="section">Usuário</Heading>
         </div>
-        <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-4 → migrar para <Stack gap="default"> */ "p-6 space-y-4")}>
+        <GlassPanel depth={1} className={cn("inset-dialog stack-default")}>
           <Alert variant="destructive">
             <AlertCircle className="size-4" />
             <AlertTitle>Erro ao carregar usuário</AlertTitle>
@@ -248,7 +248,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               {errorUsuario || 'Usuário não encontrado ou você não tem permissão para acessá-lo.'}
             </AlertDescription>
           </Alert>
-          <Button onClick={() => router.push('/app/usuarios')} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
+          <Button onClick={() => router.push('/app/usuarios')} className={cn("inline-tight")}>
             <ArrowLeft className="size-4" />
             Voltar para Usuários
           </Button>
@@ -260,9 +260,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // ─── Main Layout ────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "py-8 space-y-6")}>
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-loose")}>
       {/* Two-column grid: sidebar (sticky) + content */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-4 items-start")}>
+      <div className={cn("grid grid-cols-1 lg:grid-cols-[300px_1fr] inline-default items-start")}>
 
         {/* ── Left: ProfileSidebar ─────────────────────────────────────────── */}
         <ProfileSidebar
@@ -276,7 +276,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         />
 
         {/* ── Right: Breadcrumb + Tabs + Content ───────────────────────────── */}
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 min-w-0")}>
+        <div className={cn("stack-default min-w-0")}>
 
           {/* Breadcrumb */}
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
@@ -316,7 +316,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Visão Geral ─────────────────────────────────────────── */}
           {activeTab === 'visao-geral' && (
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               <AtividadesCards usuarioId={usuario.id} />
               <ActivityHeatmap data={[]} />
             </div>
@@ -324,8 +324,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Dados Cadastrais ────────────────────────────────────── */}
           {activeTab === 'dados' && (
-            <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-5")}>
+            <GlassPanel depth={1} className={cn("inset-dialog")}>
+              <div className={cn("flex items-center inline-tight mb-5")}>
                 <User className="size-4 text-muted-foreground/50" />
                 <Heading level="card">Informações Pessoais</Heading>
               </div>
@@ -360,7 +360,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Atividades ──────────────────────────────────────────── */}
           {activeTab === 'atividades' && (
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               <AtividadesCards usuarioId={usuario.id} />
               <AtividadesRecentes usuarioId={usuario.id} />
             </div>
@@ -386,9 +386,9 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
           {/* ── Tab: Segurança ───────────────────────────────────────────── */}
           {activeTab === 'seguranca' && (
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               {/* Credentials */}
-              <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+              <GlassPanel depth={1} className={cn("inset-dialog")}>
                 <Heading level="card" className="mb-4">Credenciais de Acesso</Heading>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="space-y-1">
@@ -412,8 +412,8 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
               {/* Super Admin toggle — only for super admins */}
               {usuarioLogado?.isSuperAdmin && (
-                <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
+                <GlassPanel depth={1} className={cn("inset-dialog")}>
+                  <div className={cn("flex items-center inline-tight mb-4")}>
                     <Shield className="size-4 text-muted-foreground/50" />
                     <Heading level="card">Configurações de Segurança</Heading>
                   </div>

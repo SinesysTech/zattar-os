@@ -291,7 +291,7 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
@@ -352,7 +352,7 @@ export function ObrigacoesGlassList({
   if (acordos.length === 0) return <GlassEmptyState />;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {acordos.map((acordo) => (
         <GlassRow
           key={acordo.id}

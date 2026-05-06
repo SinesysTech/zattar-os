@@ -378,7 +378,7 @@ export default function CredenciaisPage() {
         {/* Filter Bar */}
         <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+            <div className={cn("flex items-center inline-tight flex-wrap")}>
               <AdvogadosFilter
                 title="Advogado"
                 options={advogadoOptions}
@@ -404,7 +404,7 @@ export default function CredenciaisPage() {
                 onValueChange={setStatusFilter}
               />
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+            <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
               <SearchInput
                 value={busca}
                 onChange={setBusca}
@@ -522,7 +522,7 @@ export default function CredenciaisPage() {
                   <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
 
                   {/* Actions */}
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <Button variant="ghost" size="sm" className={cn("flex-1 text-caption h-7")} onClick={() => handleToggleStatus(credencial)}>
                       {credencial.active ? (
                         <><PowerOff className="size-3 mr-1" />Desativar</>
@@ -562,7 +562,7 @@ export default function CredenciaisPage() {
           </DialogHeader>
 
           <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label>Advogado</Label>
               <AdvogadoCombobox
                 advogados={advogadosList}

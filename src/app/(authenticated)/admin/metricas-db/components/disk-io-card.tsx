@@ -81,7 +81,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         </CardHeader>
         <CardContent>
           <div className={`rounded-md p-4 text-sm ${bgClass}`}>
-            <p className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 font-medium")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight font-medium")}>
               <Icon className={`size-4 ${isLoading ? "animate-spin" : ""}`} />
               {title}
             </p>
@@ -108,7 +108,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <CardContent className={cn("stack-default")}>
         {/* Progress bar principal */}
         <div>
           <div className="flex items-center justify-between">
@@ -125,7 +125,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         </div>
 
         {/* IOPS */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
             <Text variant="caption">IOPS</Text>
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body-lg font-semibold")}>

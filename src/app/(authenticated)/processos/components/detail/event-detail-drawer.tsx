@@ -111,9 +111,9 @@ export function EventDetailDrawer({
         </div>
 
         {item?.backblaze && (
-          <DialogFooter className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-t border-border/30 bg-muted/30 p-6 mt-auto shrink-0")}>
+          <DialogFooter className={cn("border-t border-border/30 bg-muted/30 inset-dialog mt-auto shrink-0")}>
             <Button
-              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2")}
+              className={cn("w-full inline-tight")}
               onClick={handleDownloadAll}
               disabled={isDownloading}
             >

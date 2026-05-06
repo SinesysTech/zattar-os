@@ -35,7 +35,7 @@ export default function CapturaHistorico() {
           A tela de histórico apresenta todas as capturas realizadas em ordem cronológica
           decrescente. Para cada entrada são exibidos:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2 text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Data e hora de início e término da captura</li>
           <li>Advogado / credencial utilizada</li>
           <li>Tribunal capturado (TRT, TJ, etc.)</li>

@@ -31,12 +31,12 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
 
   if (isLoading) {
     return (
-      <Card className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <Card className={cn("inset-dialog")}>
+        <div className={cn("stack-default")}>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+            <div key={i} className={cn("flex inline-default")}>
               <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+              <div className={cn("flex-1 stack-tight")}>
                 <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
                 <div className="h-3 bg-muted rounded animate-pulse w-1/2" />
                 <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
@@ -71,7 +71,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
         ))}
 
         {/* Final da timeline */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
+        <div className={cn("relative flex inline-default")}>
           <div className="flex flex-col items-center">
             <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-muted-foreground bg-muted">
               <div className="w-2 h-2 rounded-full bg-muted-foreground" />

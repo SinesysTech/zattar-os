@@ -38,7 +38,7 @@ export default function RelatorioCustoPessoalPage() {
       ?.totalFuncionarios ?? 0;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Custo Total com Pessoal</Heading>
@@ -52,7 +52,7 @@ export default function RelatorioCustoPessoalPage() {
         <CardHeader>
           <CardTitle>Filtros</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+        <CardContent className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
           <div>
             <label className={cn("text-body-sm text-muted-foreground")}>Ano</label>
             <Select value={ano.toString()} onValueChange={(value) => setAno(Number(value))}>
@@ -89,18 +89,18 @@ export default function RelatorioCustoPessoalPage() {
 
       {isLoading && (
         <Card>
-          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-muted-foreground")}>Carregando dados...</CardContent>
+          <CardContent className={cn("inset-dialog text-muted-foreground")}>Carregando dados...</CardContent>
         </Card>
       )}
 
       {error && (
         <Card>
-          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-destructive")}>{error}</CardContent>
+          <CardContent className={cn("inset-dialog text-destructive")}>{error}</CardContent>
         </Card>
       )}
 
       {!isLoading && !error && (
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+        <div className={cn("grid inline-default md:grid-cols-4")}>
           <Card>
             <CardHeader>
               <CardTitle>Custo Total ({ano})</CardTitle>

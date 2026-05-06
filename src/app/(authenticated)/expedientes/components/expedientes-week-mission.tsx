@@ -234,7 +234,7 @@ function MissionItem({
             </p>
           )}
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "hidden items-center gap-2 sm:flex")}>
+        <div className={cn("hidden items-center inline-tight sm:flex")}>
           {expediente.trt && (
             <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "px-1.5 text-[10px]")}>{expediente.trt}</AppBadge>
           )}
@@ -431,7 +431,7 @@ export function ExpedientesWeekMission({
           { label: 'Pendentes', value: kpis.pendentes, icon: CalendarClock, color: 'text-primary/60' },
         ].map((kpi) => (
           <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3', kpi.highlight && 'border-destructive/15')}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+            <div className={cn("flex items-center justify-between inline-tight")}>
               <div>
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>{kpi.label}</p>
                 <Text variant="kpi-value" className={cn('mt-1', kpi.highlight && 'text-destructive/80')}>
@@ -450,7 +450,7 @@ export function ExpedientesWeekMission({
       </p>
 
       {/* Timeline por urgência */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("flex flex-col inline-tight")}>
         {doDia.length === 0 ? (
           <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-45 flex-col items-center justify-center p-8 text-center")}>
             <CalendarClock className="size-10 text-muted-foreground/40" />

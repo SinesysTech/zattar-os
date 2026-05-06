@@ -82,7 +82,7 @@ export function WidgetStatusContratos() {
           {porStatus.map((s) => {
             const pct = total > 0 ? ((s.count / total) * 100).toFixed(0) : '0';
             return (
-              <div key={s.status} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div key={s.status} className={cn("flex items-center inline-tight")}>
                 <ToneDot tone={s.tone} shape="square" size="lg" aria-label={s.status} />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {s.status.replace(/_/g, ' ')}

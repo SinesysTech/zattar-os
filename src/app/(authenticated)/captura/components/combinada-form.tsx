@@ -82,7 +82,7 @@ export const CombinadaForm = forwardRef<CapturaFormHandle, CombinadaFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>

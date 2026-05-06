@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function RelatorioRepassesPage() {
     return (
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn("stack-loose")}>
             <Card>
                 <CardHeader>
                     <CardTitle>Repasses ao Cliente</CardTitle>

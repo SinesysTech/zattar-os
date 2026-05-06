@@ -62,9 +62,9 @@ export function AssistenteForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
+    <form onSubmit={handleSubmit(onFormSubmit)} className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
       {/* Nome */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="nome">
           Nome <span className="text-destructive">*</span>
         </Label>
@@ -80,7 +80,7 @@ export function AssistenteForm({
       </div>
 
       {/* Descrição */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="descricao">Descrição</Label>
         <Textarea
           id="descricao"
@@ -95,7 +95,7 @@ export function AssistenteForm({
       </div>
 
       {/* Código do Iframe */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+      <div className={cn("grid inline-tight")}>
         <Label htmlFor="iframe_code">
           Código do Iframe <span className="text-destructive">*</span>
         </Label>
@@ -113,7 +113,7 @@ export function AssistenteForm({
 
       {/* Status - apenas edição */}
       {isEditing && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="ativo">Status</Label>
           <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
             <Switch
@@ -129,7 +129,7 @@ export function AssistenteForm({
         </div>
       )}
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
+      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
         <Button 
           type="button" 
           variant="outline" 

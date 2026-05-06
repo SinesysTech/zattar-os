@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 function FolhasLoading() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-[400px] w-full" />
     </div>

@@ -161,7 +161,7 @@ export function TaskFormDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
+            className={cn("stack-default")}
           >
             <FormField
               control={form.control}
@@ -197,7 +197,7 @@ export function TaskFormDialog({
               )}
             />
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
               <FormField
                 control={form.control}
                 name="status"
@@ -278,7 +278,7 @@ export function TaskFormDialog({
               )}
             />
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
               <FormField
                 control={form.control}
                 name="dataPrazo"

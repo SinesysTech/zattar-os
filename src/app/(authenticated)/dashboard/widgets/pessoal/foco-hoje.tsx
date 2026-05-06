@@ -174,7 +174,7 @@ export function WidgetFocoHoje() {
       subtitle="Próximas ações recomendadas"
       depth={2}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 mb-4")}>
+      <div className={cn("flex flex-col inline-tight mb-4")}>
         {acoes.map((acao, i) => (
           <div
             key={i}

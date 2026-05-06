@@ -48,23 +48,23 @@ export default async function ProcessosPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <Heading level="page">Processos</Heading>
         {/* Row 1: Hero + Heatmap */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <div className="xl:col-span-2">
             <WidgetSaudeProcessual />
           </div>
           <WidgetHeatmapAtividade />
         </div>
         {/* Row 2: KPIs + Tendência */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <WidgetKpiPulse />
           <WidgetTendenciaNovos />
           <WidgetProcessosComTabs />
         </div>
         {/* Row 3: Distribuições */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <WidgetStatusDistribuicao />
           <WidgetCasosTribunal />
           <WidgetSegmento />

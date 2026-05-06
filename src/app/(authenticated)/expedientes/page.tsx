@@ -12,12 +12,12 @@ function ExpedientesLoading() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Header skeleton */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Skeleton className="h-8 w-40" />
           <Skeleton className="h-4 w-56 mt-1.5" />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+        <div className={cn("flex inline-tight")}>
           <Skeleton className="h-9 w-9 rounded-lg" />
           <Skeleton className="h-9 w-36 rounded-lg" />
         </div>

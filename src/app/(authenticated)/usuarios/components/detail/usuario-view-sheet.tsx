@@ -40,7 +40,7 @@ export function UsuarioViewSheet({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "max-h-[90vh] w-[min(92vw,25rem)] sm:w-[min(92vw,33.75rem)] overflow-y-auto p-6")}>
+      <DialogContent className={cn("max-h-[90vh] w-[min(92vw,25rem)] sm:w-[min(92vw,33.75rem)] overflow-y-auto inset-dialog")}>
         <DialogHeader className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "pb-5")}>
           <DialogTitle className={cn("text-section-title flex items-center gap-2")}>
             {formatarNomeExibicao(usuario.nomeExibicao)}
@@ -53,10 +53,10 @@ export function UsuarioViewSheet({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-loose")}>
+          <div className={cn("stack-default")}>
             <Heading level="subsection">Informações Básicas</Heading>
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <p className="text-sm text-muted-foreground font-medium mb-1">
                   Nome Completo
@@ -112,9 +112,9 @@ export function UsuarioViewSheet({
 
           {(usuario.oab || usuario.ufOab) && (
             <>
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <div className={cn("stack-default")}>
                 <Heading level="subsection">Informações Profissionais</Heading>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+                <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
                   {usuario.oab && (
                     <div>
                       <p className="text-sm text-muted-foreground font-medium mb-1">
@@ -131,9 +131,9 @@ export function UsuarioViewSheet({
             </>
           )}
 
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             <Heading level="subsection">Contato</Heading>
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               {usuario.emailCorporativo && (
                 <div>
                   <p className="text-sm text-muted-foreground font-medium mb-1">
@@ -167,7 +167,7 @@ export function UsuarioViewSheet({
           {usuario.endereco && (
             <>
               <Separator />
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <div className={cn("stack-default")}>
                 <Heading level="subsection">Endereço</Heading>
                 <div>
                   <div className={cn("text-body")}>
@@ -179,9 +179,9 @@ export function UsuarioViewSheet({
           )}
 
           <Separator />
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             <Heading level="subsection">Informações do Sistema</Heading>
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <p className="text-sm text-muted-foreground font-medium mb-1">
                   Data de Criação

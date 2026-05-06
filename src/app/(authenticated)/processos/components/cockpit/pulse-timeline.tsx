@@ -154,7 +154,7 @@ export function PulseTimeline({
                       <div className="w-px grow bg-border/30 mt-1" />
                     </div>
                     <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-0.5")}>
+                      <div className={cn("flex items-center inline-tight mb-0.5")}>
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10")}>
                           {fi.tipo === 'audiencia' ? 'Audiência' : fi.tipo === 'expediente' ? 'Prazo' : 'Perícia'}
                         </span>

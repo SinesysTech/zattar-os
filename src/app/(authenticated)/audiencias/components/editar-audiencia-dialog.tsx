@@ -495,7 +495,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
           </DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-5 [scrollbar-width:thin]">
-      <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn("stack-default")}>
         {error && (
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
             <span className="shrink-0 mt-0.5">⚠️</span>
@@ -516,8 +516,8 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         {!isCapturada && (
           <>
             {/* TRT e Grau */}
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="trt">
                   <Text variant="label">Tribunal (TRT) *</Text>
                 </Label>
@@ -534,7 +534,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   </SelectContent>
                 </Select>
               </div>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="grau">
                   <Text variant="label">Grau *</Text>
                 </Label>
@@ -554,17 +554,17 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Processo - Combobox com busca */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="processo">
                 <Text variant="label">Processo *</Text>
               </Label>
               {!trt || !grau ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75 text-body-sm")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75 text-body-sm")}>
                   <span className="shrink-0">⏳</span>
                   <Text variant="caption">Selecione o TRT e Grau primeiro</Text>
                 </div>
               ) : loadingProcessos ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
                   <LoadingSpinner size="sm" />
                   <Text variant="caption">Carregando processos...</Text>
                 </div>
@@ -582,8 +582,8 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Data e Hora de Início */}
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="dataInicio">
                   <Text variant="label">Data de Início *</Text>
                 </Label>
@@ -593,7 +593,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   placeholder="Selecionar data"
                 />
               </div>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="horaInicio">
                   <Text variant="label">Hora de Início *</Text>
                 </Label>
@@ -608,8 +608,8 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Data e Hora de Fim */}
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="dataFim">
                   <Text variant="label">Data de Fim *</Text>
                 </Label>
@@ -619,7 +619,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   placeholder="Selecionar data"
                 />
               </div>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="horaFim">
                   <Text variant="label">Hora de Fim *</Text>
                 </Label>
@@ -634,12 +634,12 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Tipo de Audiência */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="tipo">
                 <Text variant="label">Tipo de Audiência</Text>
               </Label>
               {loadingTipos ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
                   <LoadingSpinner size="sm" />
                   <Text variant="caption">Carregando tipos...</Text>
                 </div>
@@ -666,12 +666,12 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             </div>
 
             {/* Sala de Audiência */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="sala">
                 <Text variant="label">Sala de Audiência</Text>
               </Label>
               {loadingSalas ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
                   <LoadingSpinner size="sm" />
                   <Text variant="caption">Carregando salas...</Text>
                 </div>
@@ -702,7 +702,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
               <>
                 {tipoSelecionado.is_virtual ? (
                   // Audiência Virtual - Campo URL
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="urlVirtual">
                       <Text variant="label">URL da Audiência Virtual</Text>
                     </Label>
@@ -717,14 +717,14 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 ) : (
                   // Audiência Presencial - Campos de Endereço
                   <>
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
                         <Text variant="label">Endereço da Audiência Presencial</Text>
                       </Label>
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-3 gap-4")}>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "sm:col-span-2 space-y-2")}>
+                    <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-default")}>
+                      <div className={cn("sm:col-span-2 stack-tight")}>
                         <Label htmlFor="logradouro">
                           <Text variant="label">Logradouro</Text>
                         </Label>
@@ -735,7 +735,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                           onChange={(e) => setLogradouro(e.target.value)}
                         />
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         <Label htmlFor="numero">
                           <Text variant="label">Número</Text>
                         </Label>
@@ -748,8 +748,8 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-2 gap-4")}>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-default")}>
+                      <div className={cn("stack-tight")}>
                         <Label htmlFor="complemento">
                           <Text variant="label">Complemento</Text>
                         </Label>
@@ -760,7 +760,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                           onChange={(e) => setComplemento(e.target.value)}
                         />
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         <Label htmlFor="bairro">
                           <Text variant="label">Bairro</Text>
                         </Label>
@@ -772,8 +772,8 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 sm:grid-cols-3 gap-4")}>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "sm:col-span-2 space-y-2")}>
+                    <div className={cn("grid grid-cols-1 sm:grid-cols-3 inline-default")}>
+                      <div className={cn("sm:col-span-2 stack-tight")}>
                         <Label htmlFor="cidade">
                           <Text variant="label">Cidade</Text>
                         </Label>
@@ -783,7 +783,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                           onChange={(e) => setCidade(e.target.value)}
                         />
                       </div>
-                      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                      <div className={cn("stack-tight")}>
                         <Label htmlFor="estado">
                           <Text variant="label">Estado</Text>
                         </Label>
@@ -797,7 +797,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       <Label htmlFor="cep">
                         <Text variant="label">CEP</Text>
                       </Label>
@@ -816,12 +816,12 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         )}
 
         {/* Responsável */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="responsavel">
             <Text variant="label">Responsável (opcional)</Text>
           </Label>
           {loadingUsuarios ? (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
               <LoadingSpinner size="sm" />
               <Text variant="caption">Carregando usuários...</Text>
             </div>
@@ -842,7 +842,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         </div>
 
         {/* Observações */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="observacoes">
             <Text variant="label">Observações</Text>
           </Label>

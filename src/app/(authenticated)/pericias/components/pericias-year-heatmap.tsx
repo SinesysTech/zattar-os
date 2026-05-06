@@ -283,7 +283,7 @@ function StatCard({
 }: StatCardProps) {
   return (
     <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "p-4 px-5")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+      <div className={cn("flex items-center inline-tight mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
@@ -332,10 +332,10 @@ export function PericiasYearHeatmap({
         {/* Main Layout: Heatmap + Stats Sidebar */}
         <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex gap-5 flex-wrap xl:flex-nowrap")}>
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 flex-1 min-w-0")}>
+          <GlassPanel depth={1} className={cn("inset-dialog flex-1 min-w-0")}>
             {/* Year Navigator (padrão audiências/expedientes — inline no painel) */}
             <div className="flex items-center justify-between mb-6">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
+              <div className={cn("flex items-center inline-tight flex-1")}>
                 <Button
                   variant="ghost"
                   size="icon"

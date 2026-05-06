@@ -174,7 +174,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {sorted.map((aud) => (
         <div
           key={aud.id}
@@ -182,7 +182,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
         >
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 space-y-1")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+              <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                   {aud.tipoDescricao || 'Audiência'}
                 </p>
@@ -273,7 +273,7 @@ function ExpedientesTable({
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {sorted.map((exp) => {
         const vencido =
           !!exp.dataPrazoLegalParte && !exp.baixadoEm && exp.prazoVencido;
@@ -289,8 +289,8 @@ function ExpedientesTable({
             className={`rounded-lg border p-3 transition-colors hover:bg-muted/50 ${vencido ? 'border-destructive/30 bg-destructive/5' : ''}`}
           >
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 flex-1 space-y-2")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+              <div className={cn("min-w-0 flex-1 stack-tight")}>
+                <div className={cn("flex items-center inline-tight flex-wrap")}>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>{tipoLabel}</p>
                 </div>
 
@@ -307,7 +307,7 @@ function ExpedientesTable({
                 </Text>
 
                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <Text variant="meta-label">
                       Responsável
                     </Text>
@@ -318,7 +318,7 @@ function ExpedientesTable({
                 </div>
               </div>
 
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
+              <div className={cn("flex items-center inline-tight shrink-0")}>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -387,7 +387,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {sorted.map((per) => (
         <div
           key={per.id}
@@ -395,7 +395,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
         >
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 space-y-1")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+              <div className={cn("flex items-center inline-tight flex-wrap")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                   {per.especialidade?.descricao || 'Perícia'}
                 </p>
@@ -524,12 +524,12 @@ export function ProcessoDetailsTabs({
   const loadingContent = (
     <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "rounded-xl border bg-background/70 p-3 space-y-3")}>
       {[...Array(4)].map((_, index) => (
-        <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border p-3 space-y-2")}>
+        <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3 stack-tight")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-6 w-28" />
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+          <div className={cn("flex inline-tight")}>
             <Skeleton className="h-3 w-28" />
             <Skeleton className="h-3 w-28" />
           </div>
@@ -541,7 +541,7 @@ export function ProcessoDetailsTabs({
   return (
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background/70 px-3 py-2.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2 text-body-sm text-muted-foreground")}>
+        <div className={cn("flex flex-wrap items-center inline-tight text-body-sm text-muted-foreground")}>
           <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <FileText className="h-3.5 w-3.5" />
             Expedientes {isLoading ? '...' : totalExpedientes}
@@ -556,7 +556,7 @@ export function ProcessoDetailsTabs({
           </span>
         </div>
 
-        <Button type="button" variant="ghost" size="sm" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")} onClick={() => setIsExpanded((current) => !current)}>
+        <Button type="button" variant="ghost" size="sm" className={cn("inline-tight")} onClick={() => setIsExpanded((current) => !current)}>
           {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           {isExpanded ? 'Recolher' : 'Expandir'}
         </Button>

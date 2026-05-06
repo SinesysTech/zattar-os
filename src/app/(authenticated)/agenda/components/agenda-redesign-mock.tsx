@@ -157,9 +157,9 @@ export function AgendaRedesignMock() {
   const eventCount = filteredEvents.length;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* ── Row 1: Title + View Toggle + CTA ── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between flex-wrap gap-4")}>
+      <div className={cn("flex items-center justify-between flex-wrap inline-default")}>
         <div>
           <Heading level="page">Agenda</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>

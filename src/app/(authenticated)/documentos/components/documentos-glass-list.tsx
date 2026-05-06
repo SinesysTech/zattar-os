@@ -240,7 +240,7 @@ function GlassRow({
         </div>
 
         {/* 4. Criador */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+        <div className={cn("flex items-center inline-tight min-w-0")}>
           <Avatar className="size-6">
             {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criadorNome} />}
             <AvatarFallback className="text-[9px] bg-primary/10 text-primary">
@@ -296,7 +296,7 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/40 bg-card p-4")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ 'hidden lg:grid gap-3 items-center', GRID_COLS)}>
@@ -309,7 +309,7 @@ function ListSkeleton() {
               <Skeleton className="h-3 w-20" />
               <Skeleton className="h-2.5 w-16" />
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <Skeleton className="size-6 rounded-full" />
               <Skeleton className="h-3 w-20" />
             </div>
@@ -369,7 +369,7 @@ export function DocumentosGlassList({
   if (items.length === 0) return <GlassEmptyState hasSearch={false} />;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {items.map((item) => {
         const key = `${item.tipo}-${item.dados.id}`;
         return (

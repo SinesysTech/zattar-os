@@ -200,7 +200,7 @@ export function ContratoDocumentosAssinaturaCard({
             </p>
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-1 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "flex items-center gap-3 px-1 pb-1")}>
               <p className="text-[11px] text-muted-foreground">
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{totalAssinados}</span>{' '}
@@ -262,7 +262,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
         {statusIcon}
       </div>
       <div className="flex-1 min-w-0">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+        <div className={cn("flex items-center inline-tight min-w-0")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12.5px] font-medium text-foreground truncate")}>
             {doc.titulo}
           </p>

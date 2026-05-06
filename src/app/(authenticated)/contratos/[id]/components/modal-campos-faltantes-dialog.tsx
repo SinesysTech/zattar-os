@@ -56,7 +56,7 @@ export function ModalCamposFaltantesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className=" max-w-lg">
         <DialogHeader>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <AlertTriangle className="size-5 text-warning" />
             Alguns dados do cliente estão incompletos
           </DialogTitle>
@@ -66,7 +66,7 @@ export function ModalCamposFaltantesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pr-2 padding direcional sem Inset equiv. */ "space-y-4 max-h-100rflow-y-auto pr-2")}>
+        <form onSubmit={handleSubmit} className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "stack-default max-h-100rflow-y-auto pr-2")}>
           {camposFaltantes.map((campo) => (
             <div key={campo.chave} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <Label htmlFor={campo.chave}>{campo.label}</Label>

@@ -250,7 +250,7 @@ function GlassCard({
         hasPendingLong && !isSelected && 'ring-1 ring-warning/15',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div
           className={cn(
             'size-10 rounded-[0.625rem] flex items-center justify-center',
@@ -284,7 +284,7 @@ function GlassCard({
         </p>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/30")}>
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/30")}>
         {doc.assinantes.length > 0 ? (
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <ProgressRing
@@ -327,7 +327,7 @@ function GlassCard({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div
           key={i}
@@ -395,7 +395,7 @@ export function DocumentosGlassList({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {documentos.map((doc, i) => (
         <GlassRow
           key={doc.uuid}

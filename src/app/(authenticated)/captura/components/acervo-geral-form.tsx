@@ -80,7 +80,7 @@ export const AcervoGeralForm = forwardRef<CapturaFormHandle, AcervoGeralFormProp
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}

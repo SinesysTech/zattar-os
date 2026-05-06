@@ -73,7 +73,7 @@ export default function PlaygroundPage() {
 
         {/* Content */}
         <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "container mx-auto px-6 py-8")}>
-          <div className={cn(/* design-system-escape: space-y-8 → migrar para <Stack gap="section"> */ "space-y-8")}>
+          <div className={cn("stack-section")}>
             {/* Theme Info */}
             <Card>
               <CardHeader>
@@ -83,7 +83,7 @@ export default function PlaygroundPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+                <div className={cn("flex items-center inline-default")}>
                   <div className={cn(
                     /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-4 py-2 rounded-md border-2 font-medium',
                     theme === 'light' && 'bg-primary text-primary-foreground border-primary',
@@ -112,7 +112,7 @@ export default function PlaygroundPage() {
                   Todas as variantes e tamanhos disponíveis
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+              <CardContent className={cn("stack-loose")}>
                 {/* Variants */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
@@ -192,7 +192,7 @@ export default function PlaygroundPage() {
                   Indicadores visuais de status e categorias
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+              <CardContent className={cn("stack-loose")}>
                 {/* Variants */}
                 <div>
                   <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
@@ -251,10 +251,10 @@ export default function PlaygroundPage() {
                   Campos de entrada de dados
                 </CardDescription>
               </CardHeader>
-              <CardContent className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+              <CardContent className={cn("stack-loose")}>
                 {/* States */}
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("grid inline-default md:grid-cols-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-default">Default</Label>
                     <Input 
                       id="input-default" 
@@ -262,7 +262,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-disabled">Disabled</Label>
                     <Input 
                       id="input-disabled" 
@@ -271,7 +271,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-filled">Com Valor</Label>
                     <Input 
                       id="input-filled" 
@@ -279,7 +279,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-error">Com Erro (aria-invalid)</Label>
                     <Input 
                       id="input-error" 
@@ -291,8 +291,8 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* Types */}
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("grid inline-default md:grid-cols-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-email">Email</Label>
                     <Input 
                       id="input-email" 
@@ -301,7 +301,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-password">Password</Label>
                     <Input 
                       id="input-password" 
@@ -310,7 +310,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-number">Number</Label>
                     <Input 
                       id="input-number" 
@@ -319,7 +319,7 @@ export default function PlaygroundPage() {
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="input-date">Date</Label>
                     <Input 
                       id="input-date" 
@@ -339,7 +339,7 @@ export default function PlaygroundPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4")}>
+                <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default")}>
                   <ColorSwatch name="Background" className="bg-background border" />
                   <ColorSwatch name="Foreground" className="bg-foreground" />
                   <ColorSwatch name="Primary" className="bg-primary" />
@@ -361,7 +361,7 @@ export default function PlaygroundPage() {
 // Helper Component
 function ColorSwatch({ name, className }: { name: string; className: string }) {
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       <div className={cn('h-20 rounded-md', className)} />
       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-center")}>{name}</p>
     </div>

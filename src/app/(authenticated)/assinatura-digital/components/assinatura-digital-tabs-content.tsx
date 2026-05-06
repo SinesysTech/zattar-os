@@ -18,7 +18,7 @@ interface AssinaturaDigitalTabsContentProps {
 
 function TabSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-64 w-full" />
     </div>

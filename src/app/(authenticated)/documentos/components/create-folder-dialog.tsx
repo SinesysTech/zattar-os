@@ -105,8 +105,8 @@ export function CreateFolderDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit}>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="nome">Nome *</Label>
               <Input
                 id="nome"
@@ -118,7 +118,7 @@ export function CreateFolderDialog({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="tipo">Tipo</Label>
               <Select
                 value={tipo}
@@ -140,7 +140,7 @@ export function CreateFolderDialog({
               </Text>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="descricao">Descrição (opcional)</Label>
               <Textarea
                 id="descricao"

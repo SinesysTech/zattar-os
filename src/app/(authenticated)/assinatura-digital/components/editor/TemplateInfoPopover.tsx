@@ -303,7 +303,7 @@ export default function TemplateInfoPopover({
         <SheetContent side="right" className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-96 overflow-y-auto p-5")}>
           <SheetHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-0 pb-1")}>
             <div className="flex items-center justify-between">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 <SheetTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold")}>
                   {isCreating ? 'Novo Template' : 'Informações do Template'}
@@ -325,7 +325,7 @@ export default function TemplateInfoPopover({
 
           <Separator className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "my-3")} />
 
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             {/* Nome */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="template-nome" className={cn("text-caption text-muted-foreground")}>
@@ -362,12 +362,12 @@ export default function TemplateInfoPopover({
               <Label htmlFor="template-markdown" className={cn("text-caption text-muted-foreground")}>
                 Conteúdo Markdown (Opcional)
               </Label>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+              <div className={cn("flex inline-tight")}>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowMarkdownEditor(true)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2 text-caption")}
+                  className={cn("flex-1 inline-tight text-caption")}
                 >
                   <Edit className="h-3.5 w-3.5" />
                   {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteúdo' : 'Editar Conteúdo'}
@@ -377,7 +377,7 @@ export default function TemplateInfoPopover({
                     variant="outline"
                     size="sm"
                     onClick={handleOpenPreview}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2 text-caption")}
+                    className={cn("flex-1 inline-tight text-caption")}
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Pré-visualizar
@@ -413,7 +413,7 @@ export default function TemplateInfoPopover({
             </div>
 
             {/* Acoes */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex gap-2 pt-2 border-t")}>
+            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex inline-tight pt-2 border-t")}>
               <Button
                 variant="outline"
                 size="sm"
@@ -425,7 +425,7 @@ export default function TemplateInfoPopover({
               </Button>
               <Button
                 size="sm"
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2 text-caption")}
+                className={cn("flex-1 inline-tight text-caption")}
                 onClick={handleRequestSave}
                 disabled={!hasChanges || isSaving || desativacaoCheck.isChecking}
               >
@@ -466,7 +466,7 @@ export default function TemplateInfoPopover({
       >
         <DialogContent className=" max-w-lg">
           <DialogHeader>
-            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <DialogTitle className={cn("flex items-center inline-tight")}>
               <AlertTriangle className="size-5 text-warning" />
               Template em uso em {desativacaoCheck.formularios.length} formulário
               {desativacaoCheck.formularios.length > 1 ? 's' : ''}
@@ -479,14 +479,14 @@ export default function TemplateInfoPopover({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; py-2 padding direcional sem Inset equiv. */ "max-h-64 overflow-y-auto space-y-2 py-2")}>
+          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "max-h-64 overflow-y-auto stack-tight py-2")}>
             {desativacaoCheck.formularios.map((f) => (
               <div
                 key={f.id}
                 className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-3 rounded-lg border border-border/40 bg-muted/30 px-3 py-2")}
               >
                 <div className="min-w-0 flex-1">
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+                  <div className={cn("flex items-center inline-tight flex-wrap")}>
                     <Text variant="caption" className="font-medium text-foreground truncate">
                       {f.nome}
                     </Text>

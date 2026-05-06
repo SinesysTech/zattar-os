@@ -30,7 +30,7 @@ export function DocSection({
 }) {
   const anchor = id ?? title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
   return (
-    <section id={anchor} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
+    <section id={anchor} className={cn('stack-default', className)}>
       <Heading level="section" className="scroll-mt-20">
         <a href={`#${anchor}`} className="hover:underline underline-offset-4">
           {title}
@@ -129,9 +129,9 @@ export type StepDef = {
 
 export function DocSteps({ steps }: { steps: StepDef[] }) {
   return (
-    <ol className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <ol className={cn("stack-default")}>
       {steps.map((s, i) => (
-        <li key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+        <li key={i} className={cn("flex inline-default")}>
           <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-body-sm font-bold")}>
             {i + 1}
           </span>

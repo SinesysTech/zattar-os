@@ -104,7 +104,7 @@ function SelectAllRail({
   visibleCount: number;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-4 pb-2 text-muted-foreground/70")}>
+    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-4 pb-2 text-muted-foreground/70")}>
       <Checkbox
         checked={allSelected ? true : someSelected ? 'indeterminate' : false}
         onCheckedChange={onToggleSelectAll}
@@ -319,7 +319,7 @@ function ResponsavelAssignPopover({
                   key={usuario.id}
                   value={usuario.nome}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
                 >
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
@@ -544,7 +544,7 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className={cn(/* design-system-escape: p-3.5 → usar <Inset> */ "rounded-2xl border border-border/40 bg-card p-3.5")}>
           <div className={cn(/* design-system-escape: gap-4 gap sem token DS */ 'grid items-center gap-4', GRID_TEMPLATE)}>
@@ -568,7 +568,7 @@ function ListSkeleton() {
             {/* 5. Processos — espelha visibilidade lg */}
             <Skeleton className="hidden lg:block h-3 w-28" />
             {/* 6. Responsável — espelha visibilidade sm */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "hidden sm:flex items-center gap-2")}>
+            <div className={cn("hidden sm:flex items-center inline-tight")}>
               <Skeleton className="size-5 rounded-full" />
               <Skeleton className="h-2.5 w-16" />
             </div>
@@ -638,7 +638,7 @@ export function ContratosGlassList({
           onToggleSelectAll={onToggleSelectAll}
           visibleCount={contratos.length}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           {contratos.map((contrato, i) => (
             <GlassRow
               key={contrato.id}

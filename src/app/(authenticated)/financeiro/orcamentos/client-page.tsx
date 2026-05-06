@@ -711,7 +711,7 @@ export default function OrcamentosClientPage({ usuarioId }: OrcamentosClientPage
               }
             />
           ) : (
-            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
+            <div className={cn("inset-dialog")} />
           )
         }
         footer={

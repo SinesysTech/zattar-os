@@ -49,7 +49,7 @@ export function TimelineSearchFilters({
 }: TimelineSearchFiltersProps) {
   return (
     <div
-      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex gap-2 px-4 py-3 border-b overflow-x-auto bg-muted/30")}
+      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex inline-tight px-4 py-3 border-b overflow-x-auto bg-muted/30")}
       role="group"
       aria-label="Filtros rápidos"
     >

@@ -43,7 +43,7 @@ export function DesktopStepper({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'flex items-center justify-center gap-2',
+        'flex items-center justify-center inline-tight',
         'animate-fade-in animate-duration-300',
         className
       )}
@@ -56,7 +56,7 @@ export function DesktopStepper({
         return (
           <Fragment key={step.id}>
             {/* Step container */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               {/* Step indicator */}
               <StepIndicator
                 step={step}

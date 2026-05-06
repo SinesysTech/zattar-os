@@ -52,7 +52,7 @@ export function WidgetContasPagar() {
       subtitle="Aging"
       action={<span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-destructive/70")}>{fmtMoeda(total)}</span>}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("flex flex-col inline-tight")}>
         {aging.map((item) => (
           <div key={item.faixa} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <span className="text-[10px] text-muted-foreground/60 w-20 shrink-0 truncate">

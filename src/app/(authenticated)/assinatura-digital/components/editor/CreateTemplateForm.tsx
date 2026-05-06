@@ -91,16 +91,16 @@ export default function CreateTemplateForm({
   };
 
   return (
-    <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border rounded-lg p-6 bg-card shadow-sm")}>
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("border rounded-lg inset-dialog bg-card shadow-sm")}>
+      <div className={cn("stack-default")}>
         {/* Header */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pb-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 pb-3 border-b")}>
+        <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight pb-3 border-b")}>
           <FileText className="h-4 w-4" />
           <Heading level="card" className={cn("text-body-sm")}>Informações do Novo Template</Heading>
         </div>
 
         {/* Nome */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
             Nome do Template *
           </Label>
@@ -115,7 +115,7 @@ export default function CreateTemplateForm({
         </div>
 
         {/* Descrição */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="template-desc-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
             Descrição
           </Label>
@@ -131,7 +131,7 @@ export default function CreateTemplateForm({
 
         {/* Conteúdo Markdown (condicional para tipoTemplate === 'markdown') */}
         {tipoTemplate === 'markdown' && (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="template-markdown-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
               Conteúdo Markdown *
             </Label>
@@ -144,7 +144,7 @@ export default function CreateTemplateForm({
               <Info className="h-4 w-4" />
               <AlertDescription className={cn("text-caption")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-2")}>Variáveis disponíveis (use entre chaves duplas):</p>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <div>
                     <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>📋 Dados do Cliente (Etapa 2):</p>
                     <ul className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "list-disc list-inside space-y-0.5 ml-2 text-[11px]")}>
@@ -207,7 +207,7 @@ export default function CreateTemplateForm({
         )}
 
         {/* Ações */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex gap-2 pt-2")}>
+        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex inline-tight pt-2")}>
           {onCancel && (
             <Button
               variant="outline"
@@ -221,7 +221,7 @@ export default function CreateTemplateForm({
           )}
           <Button
             size="sm"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2")}
+            className={cn("flex-1 inline-tight")}
             onClick={handleSubmit}
             disabled={!canSubmit || isSaving}
           >

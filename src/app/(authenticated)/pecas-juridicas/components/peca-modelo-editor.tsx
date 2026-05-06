@@ -58,7 +58,7 @@ import { LoadingSpinner } from "@/components/ui/loading-state"
 
 function PlateEditorSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-4xl space-y-4 py-8")}>
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-4xl stack-default py-8")}>
       <Skeleton className="h-8 w-3/4" />
       <Skeleton className="h-6 w-full" />
       <Skeleton className="h-6 w-full" />
@@ -256,9 +256,9 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
     <div className="flex h-full flex-col">
       {/* Header/Toolbar */}
       <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "flex h-14 items-center justify-between px-4 gap-4")}>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-14 items-center justify-between px-4 inline-default")}>
           {/* Left */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 min-w-0")}>
+          <div className={cn("flex items-center inline-tight flex-1 min-w-0")}>
             <Button
               variant="ghost"
               size="icon" aria-label="Voltar"
@@ -267,7 +267,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
               <ArrowLeft className="h-4 w-4" />
             </Button>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+            <div className={cn("flex items-center inline-tight min-w-0")}>
               <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
               <Input
                 value={form.watch('titulo')}
@@ -285,7 +285,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
           </div>
 
           {/* Right */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             {/* Tipo de Peça */}
             <Select
               value={form.watch('tipoPeca')}

@@ -251,7 +251,7 @@ export function PecaModeloFormSheet({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] p-0 flex flex-col")}>
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5" />
             {title}
           </DialogTitle>
@@ -260,7 +260,7 @@ export function PecaModeloFormSheet({
 
         <ScrollArea className="flex-1">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-6 p-6")}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-loose inset-dialog")}>
               {/* Título */}
               <FormField
                 control={form.control}
@@ -301,7 +301,7 @@ export function PecaModeloFormSheet({
               />
 
               {/* Tipo e Visibilidade */}
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+              <div className={cn("grid grid-cols-2 inline-default")}>
                 <FormField
                   control={form.control}
                   name="tipoPeca"
@@ -394,7 +394,7 @@ export function PecaModeloFormSheet({
 
               {/* Placeholders detectados */}
               {form.watch('conteudo') && (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
                     Placeholders detectados:
                   </p>
@@ -416,7 +416,7 @@ export function PecaModeloFormSheet({
 
               {/* Botões */}
               {!isViewMode && (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
+                <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
                   <Button
                     type="button"
                     variant="outline"

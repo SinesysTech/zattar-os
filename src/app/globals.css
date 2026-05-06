@@ -1870,6 +1870,38 @@
   }
 
   /* ══════════════════════════════════════════════════════════
+     SPACING TOKENS — Layout primitives (Inline, Stack, Inset)
+     Classes CSS utility espelhando SPACING_TOKENS de
+     @/lib/design-system/tokens. Permitem aplicar tokens semânticos
+     de espaçamento sem precisar de wrapper component. Usadas pelos
+     componentes <Stack>/<Inline>/<Inset> e diretamente em className.
+
+     Mapeamento canônico — alterar aqui afeta todo o app.
+     ══════════════════════════════════════════════════════════ */
+
+  /* Inline — gap horizontal em flex-row.
+     Minimalista: NÃO aplica items-/justify- defaults para não sobrepor
+     classes do caller. Use o componente <Inline> quando precisar de
+     defaults opinativos (align="center", justify="start"). */
+  .inline-tight    { @apply flex flex-row gap-2; }
+  .inline-default  { @apply flex flex-row gap-4; }
+  .inline-loose    { @apply flex flex-row gap-6; }
+
+  /* Stack — gap vertical em flex-col */
+  .stack-tight    { @apply flex flex-col gap-2; }
+  .stack-default  { @apply flex flex-col gap-4; }
+  .stack-loose    { @apply flex flex-col gap-6; }
+  .stack-section  { @apply flex flex-col gap-8; }
+  .stack-field    { @apply flex flex-col gap-4; }
+
+  /* Inset — padding semântico */
+  .inset-card          { @apply p-4 sm:p-6; }
+  .inset-card-compact  { @apply p-3 sm:p-4; }
+  .inset-dialog        { @apply p-6; }
+  .inset-page          { @apply p-4 sm:p-6 lg:p-8; }
+  .inset-section       { @apply p-4 sm:p-6; }
+
+  /* ══════════════════════════════════════════════════════════
      AUTH — CINEMATIC RUNWAY
      Full-dark, sem card. Grid + spotlights + noise.
      ══════════════════════════════════════════════════════════ */

@@ -166,7 +166,7 @@ export function AssistentesTiposConfig({
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Mensagens */}
       {error && (
         <Alert variant="destructive">
@@ -182,7 +182,7 @@ export function AssistentesTiposConfig({
       {/* Formulário de Criação */}
       <Card>
         <CardHeader>
-          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <CardTitle className={cn("flex items-center inline-tight")}>
             <Settings className="h-5 w-5" />
             Nova Configuração
           </CardTitle>
@@ -192,8 +192,8 @@ export function AssistentesTiposConfig({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("grid inline-default md:grid-cols-3")}>
+            <div className={cn("stack-tight")}>
               <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Assistente</label>
               <Select value={assistenteId} onValueChange={setAssistenteId}>
                 <SelectTrigger>
@@ -202,7 +202,7 @@ export function AssistentesTiposConfig({
                 <SelectContent>
                   {assistentesFiltrados.map((assistente) => (
                     <SelectItem key={assistente.id} value={String(assistente.id)}>
-                      <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <span className={cn("flex items-center inline-tight")}>
                         {assistente.nome}
                         <Text variant="caption">({assistente.tipo})</Text>
                       </span>
@@ -212,7 +212,7 @@ export function AssistentesTiposConfig({
               </Select>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Tipo de Expediente</label>
               <Select value={tipoExpedienteId} onValueChange={setTipoExpedienteId}>
                 <SelectTrigger>
@@ -277,7 +277,7 @@ export function AssistentesTiposConfig({
                   className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between p-4 border rounded-lg")}
                 >
                   <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 space-y-1")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <div className={cn("flex items-center inline-tight")}>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{relacao.assistente_nome}</span>
                       {relacao.ativo ? (
                         <SemanticBadge category="status" value="success">
@@ -299,7 +299,7 @@ export function AssistentesTiposConfig({
                     </Text>
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <Button
                       variant={relacao.ativo ? 'outline' : 'default'}
                       size="sm"

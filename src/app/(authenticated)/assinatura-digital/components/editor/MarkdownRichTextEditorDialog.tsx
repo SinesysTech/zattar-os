@@ -99,7 +99,7 @@ export function MarkdownRichTextEditorDialog({
           <div className={cn("text-body-sm text-muted-foreground")}>
             {characterCount.toLocaleString()} / {maxCharacters.toLocaleString()} caracteres
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+          <div className={cn("flex inline-tight")}>
             <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
               Cancelar
             </Button>

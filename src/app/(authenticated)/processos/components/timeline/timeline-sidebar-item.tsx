@@ -132,7 +132,7 @@ export function TimelineSidebarItem({
         {/* Coluna direita: badge + data + título */}
         <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
           {/* Linha 1: badge de tipo + grau + data */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
+          <div className={cn("flex items-center inline-tight mb-1")}>
             <TimelineTypeBadge
               label={meta.badgeLabel}
               bgClass={meta.badgeBgClass}

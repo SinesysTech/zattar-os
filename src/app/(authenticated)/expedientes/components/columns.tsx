@@ -212,7 +212,7 @@ export function TipoDescricaoCell({
               </button>
             </PopoverTrigger>
             <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-64 p-2")} align="start" onInteractOutside={(e) => e.preventDefault()}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Text variant="caption" className="font-medium">Tipo de Expediente</Text>
                 <Select
                   value={expediente.tipoExpedienteId?.toString() || 'null'}

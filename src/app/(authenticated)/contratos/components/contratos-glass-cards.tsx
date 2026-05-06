@@ -383,7 +383,7 @@ function GlassCard({
       </div>
 
       {/* Rodapé: responsável + cadastro + ações */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "relative mt-3 pt-3 border-t border-border/20 flex items-center justify-between gap-2")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20 flex items-center justify-between inline-tight")}>
         <ResponsavelChip
           contrato={contrato}
           usuariosMap={usuariosMap}
@@ -419,7 +419,7 @@ function CardSkeleton() {
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start gap-2.5")}>
         <Skeleton className="size-3.5 rounded" />
         <Skeleton className="size-9 rounded-xl" />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+        <div className={cn("flex-1 stack-tight")}>
           <Skeleton className="h-3 w-3/4" />
           <Skeleton className="h-2.5 w-1/2" />
           <Skeleton className="h-4 w-24 rounded" />
@@ -430,7 +430,7 @@ function CardSkeleton() {
         <Skeleton className="h-4 w-14 rounded" />
         <Skeleton className="h-4 w-20 rounded" />
       </div>
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 pt-3 border-t border-border/20 space-y-2")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/20 stack-tight")}>
         <Skeleton className="h-2 w-32" />
         <Skeleton className="h-4 w-40 rounded" />
       </div>

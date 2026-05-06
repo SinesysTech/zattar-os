@@ -27,7 +27,7 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv.; data-[collapsed=true]:py-2 sem equivalente DS */ "group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2")}>
+      className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; data-[collapsed=true]:py-2 sem equivalente DS */ "group flex flex-col inline-default py-2 data-[collapsed=true]:py-2")}>
       <nav
         role="navigation"
         aria-label="Pastas de e-mail"
@@ -48,7 +48,7 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
                   <span className="sr-only">{link.title}</span>
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+              <TooltipContent side="right" className={cn("flex items-center inline-default")}>
                 {link.title}
                 {link.label && <span className="text-muted-foreground ml-auto">{link.label}</span>}
               </TooltipContent>

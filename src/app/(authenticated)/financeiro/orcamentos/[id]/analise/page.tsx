@@ -110,7 +110,7 @@ function ResumoGeralCards({
 }) {
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+      <div className={cn("grid inline-default md:grid-cols-4")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
@@ -130,7 +130,7 @@ function ResumoGeralCards({
     : 0;
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+    <div className={cn("grid inline-default md:grid-cols-4")}>
       <Card>
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Total Previsto</CardDescription>
@@ -173,21 +173,21 @@ function ResumoGeralCards({
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <CardDescription>Status dos Itens</CardDescription>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "pt-0 space-y-2")}>
+        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0 stack-tight")}>
           {resumo.itensAcimaMeta > 0 && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <AlertTriangle className="h-4 w-4 text-destructive" />
               <span className={cn("text-body-sm")}>{resumo.itensAcimaMeta} acima da meta</span>
             </div>
           )}
           {resumo.itensAbaixoMeta > 0 && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <AlertTriangle className="h-4 w-4 text-warning" />
               <span className={cn("text-body-sm")}>{resumo.itensAbaixoMeta} abaixo da meta</span>
             </div>
           )}
           {resumo.itensAcimaMeta === 0 && resumo.itensAbaixoMeta === 0 && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <CheckCircle2 className="h-4 w-4 text-success" />
               <span className={cn("text-body-sm")}>Todos dentro da meta</span>
             </div>
@@ -321,7 +321,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {alertas.map((alerta, index) => (
         <Card key={index}>
-          <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-4 p-4")}>
+          <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start inline-default p-4")}>
             <AlertTriangle
               className={`h-5 w-5 mt-0.5 ${alerta.tipo === 'critico'
                 ? 'text-destructive'
@@ -331,7 +331,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
                 }`}
             />
             <div className="flex-1">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
+              <div className={cn("flex items-center inline-tight mb-1")}>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{alerta.descricao}</span>
                 <Badge variant={getTipoBadgeVariant(alerta.tipo)} className={cn("text-caption")}>
                   {getTipoLabel(alerta.tipo)}
@@ -597,15 +597,15 @@ export default function AnaliseOrcamentariaPage() {
   // Loading
   if (isLoading && !orcamento) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("stack-loose")}>
+        <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
           <Skeleton className="h-8 w-64" />
         </div>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+        <div className={cn("grid inline-default md:grid-cols-4")}>
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
-              <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+              <CardContent className={cn("inset-dialog")}>
                 <Skeleton className="h-20" />
               </CardContent>
             </Card>
@@ -618,7 +618,7 @@ export default function AnaliseOrcamentariaPage() {
   // Erro
   if (error || !orcamento) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -634,10 +634,10 @@ export default function AnaliseOrcamentariaPage() {
   const statusConfig = STATUS_CONFIG[orcamento.status];
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header - Botão Voltar e Badge */}
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+        <div className={cn("flex items-center inline-default")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -651,7 +651,7 @@ export default function AnaliseOrcamentariaPage() {
       <ResumoGeralCards resumo={resumo} isLoading={loadingAnalise} />
 
       {/* Tabs de Conteúdo */}
-      <Tabs defaultValue="analise" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <Tabs defaultValue="analise" className={cn("stack-default")}>
         <TabsList>
           <TabsTrigger value="analise">Análise por Item</TabsTrigger>
           <TabsTrigger value="alertas">
@@ -665,7 +665,7 @@ export default function AnaliseOrcamentariaPage() {
           <TabsTrigger value="projecao">Projeção</TabsTrigger>
         </TabsList>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 mt-4 justify-end")}>
+        <div className={cn("flex inline-tight mt-4 justify-end")}>
           <Button variant="outline" onClick={handleRefresh}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Atualizar

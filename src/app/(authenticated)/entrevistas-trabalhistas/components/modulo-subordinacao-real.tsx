@@ -28,7 +28,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
     data.reunioes_obrigatorias === true;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">CLT Disfarçada</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -93,7 +93,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.6: Local de trabalho */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="local-trabalho">Onde realizava o trabalho?</Label>
         <Select
           value={data.local_trabalho ?? ''}
@@ -113,7 +113,7 @@ export function ModuloSubordinacaoReal({ data, onChange }: ModuloSubordinacaoRea
       </div>
 
       {/* C.2.7: Narrativa */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="narrativa-rotina">Descreva como era sua rotina de trabalho na empresa</Label>
         <Textarea
           id="narrativa-rotina"

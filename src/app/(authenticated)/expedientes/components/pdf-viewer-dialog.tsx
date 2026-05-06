@@ -87,7 +87,7 @@ export function PdfViewerDialog({
                         <DialogTitle>{documentTitle}</DialogTitle>
                     </DialogHeader>
                     <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center flex-1 gap-4 h-[60vh] min-h-100")}>
+                        <div className={cn("flex flex-col items-center justify-center flex-1 inline-default h-[60vh] min-h-100")}>
                             <FileText className="h-16 w-16 text-muted-foreground" />
                             <p className="text-muted-foreground">Documento não disponível</p>
                         </div>
@@ -119,7 +119,7 @@ export function PdfViewerDialog({
                         )}
 
                         {error ? (
-                            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center h-full gap-4")}>
+                            <div className={cn("flex flex-col items-center justify-center h-full inline-default")}>
                                 <FileText className="h-16 w-16 text-destructive" />
                                 <p className="text-destructive text-center">{error}</p>
                             </div>

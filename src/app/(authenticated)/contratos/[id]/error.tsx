@@ -22,14 +22,14 @@ export default function ContratoDetalhesError({
 
   return (
     <div className="flex items-center justify-center min-h-[50vh]">
-      <GlassPanel className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "max-w-md w-full p-6")}>
+      <GlassPanel className={cn("max-w-md w-full inset-dialog")}>
         <div className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
           <Heading level="card" className="mb-4">Erro ao carregar contrato</Heading>
         </div>
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar os detalhes do contrato.
             Por favor, tente novamente.
@@ -41,7 +41,7 @@ export default function ContratoDetalhesError({
             </div>
           )}
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 justify-center")}>
+          <div className={cn("flex inline-tight justify-center")}>
             <Button variant="outline" asChild>
               <Link href="/app/contratos">
                 <ArrowLeft className="size-4 mr-2" />

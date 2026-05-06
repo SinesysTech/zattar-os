@@ -55,8 +55,8 @@ export function AddReminderDialog() {
         <DialogHeader>
           <DialogTitle>Adicionar Lembrete</DialogTitle>
         </DialogHeader>
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "mt-4 grid space-y-6")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("mt-4 grid stack-loose")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="texto">Nota</Label>
             <Input
               id="texto"
@@ -65,7 +65,7 @@ export function AddReminderDialog() {
               onChange={(e) => setTexto(e.target.value)}
             />
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label>Data e Hora</Label>
             <DateTimePicker date={date} setDate={setDate} />
           </div>

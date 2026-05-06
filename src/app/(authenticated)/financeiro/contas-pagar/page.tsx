@@ -193,7 +193,7 @@ function criarColunas(
         const conta = row.original;
         return (
           <div className="min-h-10 flex flex-col justify-center">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{conta.descricao}</span>
               {conta.recorrencia && (
                 <Repeat className="h-3 w-3 text-muted-foreground" aria-label="Recorrente" />
@@ -617,7 +617,7 @@ export default function ContasPagarPage() {
               }
             />
           ) : (
-            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")} />
+            <div className={cn("inset-dialog")} />
           )
         }
         footer={

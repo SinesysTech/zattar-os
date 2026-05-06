@@ -129,9 +129,9 @@ export function EspecialidadesPageClient() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
+          <div className={cn("flex items-center inline-tight mb-1")}>
             <Button
               asChild
               variant="ghost"
@@ -191,11 +191,11 @@ export function EspecialidadesPageClient() {
           </p>
         </GlassPanel>
       ) : (
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           {grouped.map(([trt, rows]) => (
             <GlassPanel key={trt} depth={1} className="overflow-hidden">
               <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
                     Tribunal
                   </span>
@@ -214,7 +214,7 @@ export function EspecialidadesPageClient() {
               >
                 <div
                   role="row"
-                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "grid grid-cols-[1fr_100px_120px_100px] gap-4 px-4 py-2 text-[10px] uppercase tracking-wider text-muted-foreground/60")}
+                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "grid grid-cols-[1fr_100px_120px_100px] inline-default px-4 py-2 text-[10px] uppercase tracking-wider text-muted-foreground/60")}
                 >
                   <span>Descrição</span>
                   <span>Grau</span>
@@ -225,7 +225,7 @@ export function EspecialidadesPageClient() {
                   <div
                     key={item.id}
                     role="row"
-                    className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[1fr_100px_120px_100px] gap-4 items-center px-4 py-2.5 hover:bg-muted/20 transition-colors")}
+                    className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[1fr_100px_120px_100px] inline-default items-center px-4 py-2.5 hover:bg-muted/20 transition-colors")}
                   >
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 truncate")}>
                       {item.descricao}

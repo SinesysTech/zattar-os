@@ -27,9 +27,9 @@ import {
  */
 export function AparenciaContent() {
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Grid de cards com configurações */}
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
+      <div className={cn("grid inline-loose md:grid-cols-2")}>
         {/* Card: Tema (Preset) */}
         <Card>
           <CardHeader>

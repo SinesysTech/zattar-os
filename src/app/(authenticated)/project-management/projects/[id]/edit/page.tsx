@@ -57,7 +57,7 @@ export default async function EditProjectPage({ params }: Props) {
   if (!projetoResult.success) notFound();
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mx-auto max-w-3xl space-y-4")}>
+    <div className={cn("mx-auto max-w-3xl stack-default")}>
       <ProjectForm
         projeto={projetoResult.data}
         clientes={clientes}

@@ -147,7 +147,7 @@ const actions: ActionDef[] = [
 export default function ExpedientesDoc() {
   return (
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Heading level="page">Expedientes</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Controle de intimações, citações, prazos e comunicações processuais.

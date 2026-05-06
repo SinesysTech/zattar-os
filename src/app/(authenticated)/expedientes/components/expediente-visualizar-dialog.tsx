@@ -110,7 +110,7 @@ function Section({
 }) {
   return (
     <section className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-      <header className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <header className={cn("flex items-center inline-tight")}>
         <span className="text-muted-foreground/70">{icon}</span>
         <Text
           variant="overline"

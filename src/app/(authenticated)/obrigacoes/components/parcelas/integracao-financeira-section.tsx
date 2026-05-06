@@ -119,9 +119,9 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
   const statusGeral = temInconsistencias ? 'inconsistente' : (pendentes > 0 ? 'pendente' : 'sincronizado');
 
   return (
-    <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
+    <div className={cn("rounded-lg border bg-card inset-dialog")}>
       <div className="flex items-center justify-between mb-4">
-        <Heading level="section" as="h2" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <Heading level="section" as="h2" className={cn("flex items-center inline-tight")}>
           <RefreshCw className="h-5 w-5" /> Integração Financeira
         </Heading>
         <Badge variant="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ 'gap-1',
@@ -136,7 +136,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
       </div>
 
       {statusSync && (
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4 mb-4")}>
+        <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default mb-4")}>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-muted/50 p-3")}>
             <Text variant="caption">Total</Text>
             <Text variant="kpi-value">{statusSync.totalParcelas}</Text>
@@ -156,7 +156,7 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
         </div>
       )}
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+      <div className={cn("flex flex-wrap inline-tight")}>
         <Button variant="outline" size="sm" onClick={() => setSyncDialogOpen(true)} disabled={isSyncing || isVerifying}>
           {isSyncing ? <LoadingSpinner className="mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
           Sincronizar

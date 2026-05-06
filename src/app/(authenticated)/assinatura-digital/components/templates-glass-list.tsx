@@ -242,7 +242,7 @@ function GlassRow({
         isAlt && 'bg-muted/20',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-[auto_1fr_auto_auto_90px_120px] gap-4 items-center")}>
+      <div className={cn("grid grid-cols-[auto_1fr_auto_auto_90px_120px] inline-default items-center")}>
         {/* Status dot */}
         <div className="flex items-center w-4">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getStatusDotColor(status))} />
@@ -254,7 +254,7 @@ function GlassRow({
             <Icon className="w-4 h-4 text-primary" />
           </div>
           <div className="min-w-0">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+            <div className={cn("flex items-center inline-tight flex-wrap")}>
               <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{displayName}</span>
               <span
                 className={cn(
@@ -362,7 +362,7 @@ function GlassCard({
         'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="w-10 h-10 rounded-[0.625rem] bg-primary/8 flex items-center justify-center">
           <Icon className="w-4 h-4 text-primary" />
         </div>
@@ -382,10 +382,10 @@ function GlassCard({
       </div>
 
       <div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+        <div className={cn("flex items-center inline-tight flex-wrap")}>
           <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold line-clamp-1")}>{displayName}</span>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-1 flex items-center gap-2")}>
+        <div className={cn("mt-1 flex items-center inline-tight")}>
           <span
             className={cn(
               /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold border',
@@ -406,7 +406,7 @@ function GlassCard({
         <Text variant="caption" className="text-muted-foreground/65 italic flex-1">Sem descrição</Text>
       )}
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/40")}>
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
         <span className="text-[10px] text-muted-foreground tabular-nums">
           {formatFileSize(template.arquivo_tamanho || 0)}
         </span>
@@ -429,7 +429,7 @@ function GlassCard({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div key={i} className="h-20 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -493,7 +493,7 @@ export function TemplatesGlassList({
           ))}
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           {templates.map((t, i) => (
             <GlassRow
               key={t.id}

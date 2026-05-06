@@ -419,7 +419,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
 
       {/* 1. Header */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">
             Expedientes
@@ -427,7 +427,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           <Text variant="caption" as="p" className="mt-0.5" aria-live="polite">{subtitle}</Text>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Button size="sm" className="rounded-xl" onClick={() => setIsCreateOpen(true)}>
             <Plus className="size-3.5" />
             Novo Expediente
@@ -454,7 +454,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
       />
 
       {/* 4. Insight Banners */}
-      <div role="status" aria-live="polite" aria-atomic="true" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
+      <div role="status" aria-live="polite" aria-atomic="true" className={cn("stack-tight empty:hidden")}>
         {!isLoading && showVencidosBanner && (
           <InsightBanner type="alert">
             {vencidos.length} expediente{vencidos.length !== 1 ? 's' : ''} com prazo vencido —
@@ -477,7 +477,7 @@ export function ExpedientesContent({ visualizacao: initialView = 'quadro' }: { v
           tiposExpedientes={tiposExpedientes || []}
           counts={globalCounts}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           <SearchInput
             value={search}
             onChange={setSearch}

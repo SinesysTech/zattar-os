@@ -78,7 +78,7 @@ export function TiposAudienciasList() {
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center h-64 gap-4")}>
+      <div className={cn("flex flex-col items-center justify-center h-64 inline-default")}>
         <Text variant="caption" className="text-destructive">{error}</Text>
         <Button variant="outline" size="sm" onClick={fetchTipos}>
           <RefreshCw className="h-4 w-4 mr-2" />
@@ -89,7 +89,7 @@ export function TiposAudienciasList() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <SearchInput
@@ -98,7 +98,7 @@ export function TiposAudienciasList() {
           placeholder="Buscar tipo de audiência..."
           className="max-w-sm"
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Text variant="caption" as="span" className="text-muted-foreground">
             {filteredTipos.length} tipo(s)
           </Text>

@@ -55,7 +55,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
             )}
           >
             {/* Header: badge + date */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-0.5 flex items-center justify-between gap-2")}>
+            <div className={cn("mb-0.5 flex items-center justify-between inline-tight")}>
               <div className="shrink-0">{item.badge}</div>
               <Text variant="micro-caption" className="whitespace-nowrap">
                 {item.date}

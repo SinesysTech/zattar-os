@@ -23,7 +23,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6 text-center text-muted-foreground")}>
+      <div className={cn("rounded-lg border bg-card inset-dialog text-center text-muted-foreground")}>
         Carregando histórico salarial...
       </div>
     );
@@ -31,7 +31,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border border-destructive/50 bg-destructive/10 p-6 text-destructive")}>
+      <div className={cn("rounded-lg border border-destructive/50 bg-destructive/10 inset-dialog text-destructive")}>
         {error}
       </div>
     );
@@ -39,7 +39,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
 
   if (salarios.length === 0) {
       return (
-        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6 text-center text-muted-foreground")}>
+        <div className={cn("rounded-lg border bg-card inset-dialog text-center text-muted-foreground")}>
             Nenhum histórico salarial encontrado.
         </div>
       );
@@ -48,7 +48,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
   const usuarioNome = salarios[0]?.usuario?.nomeExibicao ?? `Usuário ${usuarioId}`;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Histórico Salarial - {usuarioNome}</Heading>
@@ -62,7 +62,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
         </button>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         {salarios.map((salario) => {
           const vigente = !salario.dataFimVigencia;
           const duracao = calcularDuracaoVigencia(
@@ -85,7 +85,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
                   {vigente ? 'Vigente' : 'Encerrado'} · {duracao.texto}
                 </Badge>
               </CardHeader>
-              <CardContent className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <CardContent className={cn("stack-tight")}>
                 <p className={cn("text-body-sm text-muted-foreground")}>
                   Cargo: {salario.cargo?.nome ?? 'Não informado'}
                 </p>

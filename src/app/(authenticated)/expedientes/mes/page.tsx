@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 function ExpedientesLoading() {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
+    <div className={cn("flex flex-col inline-default")}>
       <Skeleton className="h-12 w-full" />
       <Skeleton className="h-96 w-full" />
     </div>

@@ -51,9 +51,9 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
    };
 
    return (
-      <div className={cn(/* design-system-escape: space-y-8 → migrar para <Stack gap="section"> */ "space-y-8")}>
+      <div className={cn("stack-section")}>
          {repassesPendentesDecl.length > 0 && (
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
                <Heading level="subsection">Aguardando Declaração</Heading>
                <div className="rounded-md border">
                   <Table>
@@ -75,7 +75,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
                                  </Badge>
                               </TableCell>
                               <TableCell className="text-right">
-                                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
+                                 <div className={cn("flex items-center justify-end inline-tight")}>
                                     <GerarLinkButton
                                        parcelaId={r.parcelaId}
                                        size="sm"
@@ -98,7 +98,7 @@ export function RepassesPendentesList({ onAnexarDeclaracao, onRealizarRepasse, r
          )}
 
          {repassesPendentesTransf.length > 0 && (
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
                <Heading level="subsection">Prontos para Transferência</Heading>
                <div className="rounded-md border">
                   <Table>

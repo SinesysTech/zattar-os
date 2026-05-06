@@ -21,7 +21,7 @@ export function GlassSection() {
   return (
     <SpecimenCard eyebrow="GLASS SYSTEM · VIDRO SOBRE PEDRA">
       <div
-        className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "relative overflow-hidden rounded-2xl p-6")}
+        className={cn("relative overflow-hidden rounded-2xl inset-dialog")}
         style={{
           background: `
             radial-gradient(700px at 15% 10%, oklch(0.48 0.26 281 / 0.22), transparent 60%),

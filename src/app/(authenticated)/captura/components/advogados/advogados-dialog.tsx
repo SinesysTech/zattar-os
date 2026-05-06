@@ -163,7 +163,7 @@ export function AdvogadosDialog({ advogado, open, onOpenChangeAction, onSuccessA
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
             <FormField
               control={form.control}
               name="nome_completo"
@@ -197,7 +197,7 @@ export function AdvogadosDialog({ advogado, open, onOpenChangeAction, onSuccessA
               )}
             />
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
               <FormField
                 control={form.control}
                 name="oab"

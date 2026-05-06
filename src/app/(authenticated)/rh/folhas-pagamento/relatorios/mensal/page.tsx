@@ -29,7 +29,7 @@ export default function RelatorioMensalFolhaPage() {
   const { folha, isLoading, error, refetch } = useFolhaDoPeriodo({ ano, mes });
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div className="flex items-center justify-between">
         <div>
           <Heading level="page">Relatório Mensal da Folha</Heading>
@@ -43,7 +43,7 @@ export default function RelatorioMensalFolhaPage() {
         <CardHeader>
           <CardTitle>Período</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-3")}>
+        <CardContent className={cn("grid grid-cols-1 inline-default md:grid-cols-3")}>
           <div>
             <label className={cn("text-body-sm text-muted-foreground")}>Mês</label>
             <Select value={mes.toString()} onValueChange={(value) => setMes(Number(value))}>
@@ -79,23 +79,23 @@ export default function RelatorioMensalFolhaPage() {
 
       {isLoading && (
         <Card>
-          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-muted-foreground")}>Carregando...</CardContent>
+          <CardContent className={cn("inset-dialog text-muted-foreground")}>Carregando...</CardContent>
         </Card>
       )}
 
       {error && (
         <Card>
-          <CardContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-destructive")}>{error}</CardContent>
+          <CardContent className={cn("inset-dialog text-destructive")}>{error}</CardContent>
         </Card>
       )}
 
       {folha && (
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <Card>
             <CardHeader>
               <CardTitle>Resumo</CardTitle>
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+            <CardContent className={cn("grid inline-default md:grid-cols-4")}>
               <div>
                 <p className={cn("text-body-sm text-muted-foreground")}>Funcionários</p>
                 <Text variant="kpi-value">{folha.totalFuncionarios}</Text>

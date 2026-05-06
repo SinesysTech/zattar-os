@@ -151,7 +151,7 @@ function GlassRow({
         isSelected && 'border-primary/40 bg-primary/5',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
+      <div className={cn("flex items-start inline-default")}>
         {/* COLUNA ESQUERDA (âncora): data + badge de tipo */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-start gap-1.5 w-24 shrink-0 pt-0.5")}>
           <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap")}>
@@ -278,7 +278,7 @@ export function CapturadasGlassList({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {comunicacoes.map((c) => (
         <GlassRow
           key={c.id}

@@ -77,8 +77,8 @@ export function AddMemberDialog({
           <DialogTitle>Adicionar Membro</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <form onSubmit={handleSubmit} className={cn("stack-default")}>
+          <div className={cn("stack-tight")}>
             <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Usuário</label>
             <Combobox
               options={usuarios}
@@ -90,7 +90,7 @@ export function AddMemberDialog({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Papel</label>
             <Select
               value={papel}

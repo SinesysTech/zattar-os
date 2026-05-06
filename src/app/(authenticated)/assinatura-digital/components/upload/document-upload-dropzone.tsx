@@ -126,7 +126,7 @@ export function DocumentUploadDropzone({ onUploadSuccess }: DocumentUploadDropzo
     });
 
   return (
-    <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; lg:p-12 sem equivalente DS */ "flex h-full w-full flex-1 flex-col items-center justify-center p-6 lg:p-12 animate-fade-in overflow-hidden")}>
+    <div className={cn(/* design-system-escape: lg:p-12 sem equivalente DS */ "flex h-full w-full flex-1 flex-col items-center justify-center inset-dialog lg:p-12 animate-fade-in overflow-hidden")}>
       <div className="relative w-full max-w-5xl flex flex-col items-center justify-center">
         <UploadDropzoneArea
           isDragActive={isDragActive}

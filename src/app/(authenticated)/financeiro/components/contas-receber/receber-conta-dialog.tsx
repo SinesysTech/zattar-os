@@ -255,7 +255,7 @@ export function ReceberContaDialog({
       <DialogContent className="sm:max-w-[500px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <DialogTitle className={cn("flex items-center inline-tight")}>
               <CreditCard className="h-5 w-5" />
               Confirmar Recebimento
             </DialogTitle>
@@ -264,9 +264,9 @@ export function ReceberContaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
             {/* Resumo da conta */}
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border bg-muted/50 p-4 space-y-2")}>
+            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-muted/50 p-4 stack-tight")}>
               <div className="flex justify-between items-start">
                 <div>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm")}>{conta.descricao}</p>
@@ -304,7 +304,7 @@ export function ReceberContaDialog({
             <Separator />
 
             {/* Forma de Recebimento */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="formaRecebimento">
                 Forma de Recebimento <span className="text-destructive">*</span>
               </Label>
@@ -326,7 +326,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Conta Bancária */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="contaBancaria">
                 Conta Bancária <span className="text-destructive">*</span>
               </Label>
@@ -337,7 +337,7 @@ export function ReceberContaDialog({
                 <SelectContent>
                   {contasBancarias.map((cb) => (
                     <SelectItem key={cb.id} value={cb.id.toString()}>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <div className={cn("flex items-center inline-tight")}>
                         <Building2 className="h-4 w-4 text-muted-foreground" />
                         {cb.nome}
                         {cb.banco && (
@@ -351,7 +351,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Data de Efetivação */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Data de Efetivação</Label>
               <Popover>
                 <PopoverTrigger asChild>
@@ -382,7 +382,7 @@ export function ReceberContaDialog({
             </div>
 
             {/* Observações */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="observacoes">Observações</Label>
               <Textarea
                 id="observacoes"
@@ -394,12 +394,12 @@ export function ReceberContaDialog({
             </div>
 
             {/* Comprovante de Recebimento */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="comprovante">Comprovante de Recebimento</Label>
 
               {comprovanteFile ? (
                 <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border bg-muted/50 p-3")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
+                  <div className={cn("flex items-center inline-tight overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">
                       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{comprovanteFile.name}</p>
@@ -431,7 +431,7 @@ export function ReceberContaDialog({
                     title="Anexar comprovante de recebimento"
                     aria-describedby="comprovante-help"
                   />
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-body-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
+                  <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex cursor-pointer items-center justify-center inline-tight rounded-md border border-dashed p-4 text-body-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
                     {comprovanteUploading ? (
                       <>
                         <LoadingSpinner />

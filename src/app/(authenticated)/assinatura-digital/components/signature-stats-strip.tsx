@@ -24,9 +24,9 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
   return (
     <GlassPanel className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3")}>
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6 overflow-x-auto")}>
+      <div className={cn("flex items-center inline-loose overflow-x-auto")}>
         {/* Total */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
+        <div className={cn("flex items-center inline-tight shrink-0")}>
           <FileSignature className="size-4 text-muted-foreground/55" />
           <div>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
@@ -45,7 +45,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa Conclusão
           </p>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <ProgressRing
               percent={stats.taxaConclusao}
               size={32}

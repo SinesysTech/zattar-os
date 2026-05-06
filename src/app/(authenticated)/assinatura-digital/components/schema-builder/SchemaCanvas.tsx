@@ -71,7 +71,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       ref={setNodeRef}
       style={style}
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "group flex items-center gap-2 rounded-lg border bg-card px-2.5 py-2 transition-all",
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "group flex items-center inline-tight rounded-lg border bg-card px-2.5 py-2 transition-all",
         isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-border",
         isDragging && "opacity-50"
       )}
@@ -188,7 +188,7 @@ function DroppableSectionCard({
       )}
       onClick={() => onSectionSelect(section.id)}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-2 px-3 pt-3 pb-2")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-tight px-3 pt-3 pb-2")}>
         <div className="flex-1 min-w-0">
           <Heading level="subsection" className={cn("text-caption")}>{section.title}</Heading>
           {section.description && (

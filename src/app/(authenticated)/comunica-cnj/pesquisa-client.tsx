@@ -102,7 +102,7 @@ export function PesquisaClient() {
 
       {/* Atalhos + stats antes da primeira busca */}
       {!jaBuscou && (
-        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex flex-col gap-6")}>
+        <div className={cn("flex flex-col inline-loose")}>
           <SearchShortcuts onAfterApply={executarBusca} />
           <SearchStats />
         </div>

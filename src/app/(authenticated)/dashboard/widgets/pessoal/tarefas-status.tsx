@@ -106,13 +106,13 @@ export function WidgetTarefasStatus() {
           strokeWidth={11}
           centerLabel={fmtNum(total)}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 flex-1 min-w-0")}>
+        <div className={cn("flex flex-col inline-tight flex-1 min-w-0")}>
           {[
             { label: 'Pendentes', value: pendentes, color: 'var(--warning)' },
             { label: 'Em Andamento', value: emAndamento, color: 'hsl(220 70% 60%)' },
             { label: 'Concluídas', value: concluidas, color: 'hsl(142 60% 45%)' },
           ].map((row) => (
-            <div key={row.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={row.label} className={cn("flex items-center inline-tight")}>
               <span
                 className="size-2 rounded-full shrink-0"
                 style={{ backgroundColor: row.color }}

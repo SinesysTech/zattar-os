@@ -48,7 +48,7 @@ export function WidgetSaldoTrend() {
 
   return (
     <WidgetContainer title="Saldo" icon={Wallet} subtitle="Tendência 12 meses">
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
+      <div className={cn("flex items-center justify-between inline-default")}>
         <Stat
           label="Saldo atual"
           value={fmtMoeda(saldo)}

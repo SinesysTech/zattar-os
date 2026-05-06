@@ -50,8 +50,8 @@ export default async function ConfiguracoesAssistentesTiposPage() {
   ]);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
+    <div className={cn("stack-loose")}>
+      <div className={cn("flex items-center justify-between inline-default")}>
         <Heading level="page">Geração Automática de Peças</Heading>
         <Button variant="outline" size="sm" asChild>
           <Link href="/app/configuracoes?tab=integracoes">

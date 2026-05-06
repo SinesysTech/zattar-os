@@ -27,7 +27,7 @@ const SECTIONS = [
 export default function DesignSystemPage() {
   return (
     <PageShell>
-      <header className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <header className={cn("stack-tight")}>
         <Text variant="meta-label">DESIGN SYSTEM · GLASS BRIEFING</Text>
         <Heading level="page">Fundação visual do ZattarOS</Heading>
         <Text variant="caption" className="max-w-3xl">
@@ -60,7 +60,7 @@ export default function DesignSystemPage() {
           key={id}
           id={id}
           aria-labelledby={`${id}-title`}
-          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pt-4 padding direcional sem Inset equiv. */ "scroll-mt-20 space-y-4 pt-4")}
+          className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "scroll-mt-20 stack-default pt-4")}
         >
           <Heading
             level="section"

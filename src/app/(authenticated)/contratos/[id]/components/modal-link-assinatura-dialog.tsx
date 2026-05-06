@@ -49,7 +49,7 @@ export function ModalLinkAssinaturaDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="">
         <DialogHeader>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <CheckCircle2 className="size-5 text-success" />
             {reaproveitado ? 'Link existente reutilizado' : 'Documentos prontos para assinatura'}
           </DialogTitle>
@@ -61,7 +61,7 @@ export function ModalLinkAssinaturaDialog({
         </DialogHeader>
 
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+          <div className={cn("flex inline-tight")}>
             <Input readOnly value={urlAbsoluta} />
             <Button size="sm" onClick={handleCopy}>
               <Copy className="size-4 mr-1" />

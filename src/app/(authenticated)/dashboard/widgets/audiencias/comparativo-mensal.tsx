@@ -45,7 +45,7 @@ export function WidgetComparativoMensal() {
         icon={BarChart3}
         subtitle="Comparacao entre os ultimos 2 meses"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
           <BarChart3 className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Necessario pelo menos 2 meses de dados
@@ -78,7 +78,7 @@ export function WidgetComparativoMensal() {
       icon={BarChart3}
       subtitle={`${previous.mes} vs ${current.mes}`}
     >
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         {/* Header: month labels */}
         <div className="flex items-center justify-between">
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
@@ -98,7 +98,7 @@ export function WidgetComparativoMensal() {
         </div>
 
         {/* Comparison stats grid */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
           <ComparisonStat
             label="Realizadas"
             current={current.realizadas}
@@ -128,7 +128,7 @@ export function WidgetComparativoMensal() {
         </div>
 
         {/* Visual comparison bars */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
             <p className="text-[9px] text-muted-foreground/50">Marcadas</p>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>

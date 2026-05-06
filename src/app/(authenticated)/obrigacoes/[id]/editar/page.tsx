@@ -81,8 +81,8 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
   }
 
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "py-8 space-y-6 max-w-4xl mx-auto")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-loose max-w-4xl mx-auto")}>
+      <div className={cn("flex items-center inline-default")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
           <Link href={`/obrigacoes/${acordoId}`}><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
@@ -91,7 +91,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "rounded-lg border bg-card p-6")}>
+      <div className={cn("rounded-lg border bg-card inset-dialog")}>
         <AcordoForm
           acordoId={acordoId || undefined}
           initialData={{

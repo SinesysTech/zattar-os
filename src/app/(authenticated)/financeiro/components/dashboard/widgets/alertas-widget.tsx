@@ -59,7 +59,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
     return (
       <Card className="h-full">
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Alertas</span>
           </div>
@@ -86,7 +86,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <CardTitle className="flex items-center justify-between">
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
             Alertas
           </div>
@@ -100,7 +100,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
       <CardContent className="flex-1">
         {alertas.length === 0 ? (
           <div className="flex items-center justify-center h-full min-h-32">
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+            <div className={cn("text-center stack-tight")}>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-success/10 p-3 mx-auto w-fit")}>
                 <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
@@ -108,7 +108,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
             </div>
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             {visibleAlertas.map((alerta, idx) => {
               const config = SEVERITY_CONFIG[alerta.tipo] || SEVERITY_CONFIG.info;
               const Icon = config.icon;

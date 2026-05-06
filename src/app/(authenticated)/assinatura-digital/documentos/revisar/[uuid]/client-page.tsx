@@ -120,7 +120,7 @@ function KpiCard({
 
   return (
     <GlassPanel depth={2} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="min-w-0">
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
             {label}
@@ -552,9 +552,9 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
   // ── Main ────────────────────────────────────────────────────────────
   return (
     <DocumentFlowShell primaryAction={primaryAction}>
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "w-full max-w-7xl mx-auto space-y-6")}>
+      <div className={cn("w-full max-w-7xl mx-auto stack-loose")}>
         {/* ── Header ─────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+        <div className={cn("flex items-end justify-between inline-default")}>
           <div className="min-w-0">
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 flex-wrap")}>
               <h1 className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-[26px] font-bold leading-tight truncate")}>
@@ -606,9 +606,9 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         )}
 
         {/* ── Grid: Links + PDF Preview ──────────────── */}
-        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6")}>
+        <div className={cn("grid grid-cols-1 lg:grid-cols-[1fr_420px] inline-loose")}>
           {/* Links */}
-          <section className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <section className={cn("stack-default")}>
             <SectionHeader
               icon={LinkIcon}
               title="Links de Assinatura"
@@ -630,7 +630,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               Compartilhe o link com cada assinante. Cada link é único e seguro.
             </Text>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               {documento.assinantes.map((assinante, idx) => (
                 <SignerLinkCard
                   key={assinante.id}
@@ -658,7 +658,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
           </section>
 
           {/* Preview */}
-          <section className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <section className={cn("stack-default")}>
             <SectionHeader
               icon={FileText}
               title="Preview do Documento"

@@ -27,7 +27,7 @@ export default function ExpedientesError({
           </div>
           <CardTitle>Erro ao carregar expedientes</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <CardContent className={cn("stack-default")}>
           <p className="text-center text-muted-foreground">
             Ocorreu um erro ao tentar carregar os expedientes.
             Por favor, tente novamente.

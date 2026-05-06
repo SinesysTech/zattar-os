@@ -54,11 +54,11 @@ function MetricColumn({
 function UltimaCapturaCardSkeleton() {
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 animate-pulse")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="h-4 w-28 bg-muted/30 rounded" />
         <div className="size-8 bg-muted/20 rounded-lg" />
       </div>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 mt-3")}>
+      <div className={cn("flex inline-default mt-3")}>
         {[0, 1, 2].map((i) => (
           <div key={i} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "flex-1 space-y-1.5")}>
             <div className="h-2.5 w-16 bg-muted/20 rounded" />
@@ -122,8 +122,8 @@ export function ExpedientesUltimaCapturaCard({
       <div className="absolute top-0 right-0 w-24 h-24 bg-info/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
+        <div className={cn("flex items-center inline-tight min-w-0")}>
           <IconContainer size="md" className="bg-info/8 shrink-0">
             <Radar className="size-4 text-info/70" />
           </IconContainer>
@@ -138,7 +138,7 @@ export function ExpedientesUltimaCapturaCard({
       </div>
 
       {/* Métricas */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 mt-3")}>
+      <div className={cn("flex inline-default mt-3")}>
         <MetricColumn
           label="Criados"
           value={resumo.totalCriados}

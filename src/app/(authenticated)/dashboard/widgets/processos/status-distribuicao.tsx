@@ -88,7 +88,7 @@ export function WidgetStatusDistribuicao() {
         />
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-center gap-2.5 flex-1 min-w-0")}>
           {segments.map((seg) => (
-            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={seg.label} className={cn("flex items-center inline-tight")}>
               <ToneDot tone={seg.tone} color={!seg.tone ? seg.color : undefined} aria-label={seg.label} />
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}

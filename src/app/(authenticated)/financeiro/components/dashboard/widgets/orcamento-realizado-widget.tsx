@@ -41,7 +41,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             <Skeleton className="h-6 w-full" />
             <Skeleton className="h-4 w-full" />
             {Array.from({ length: 3 }).map((_, i) => (
@@ -61,13 +61,13 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
     return (
       <Card className="h-full flex flex-col">
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
+          <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
             <Target className="h-4 w-4 text-muted-foreground" />
             Orçamento vs Realizado
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex items-center justify-center">
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
+          <div className={cn("text-center stack-tight")}>
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
               <Target className="h-5 w-5 text-muted-foreground" />
             </div>
@@ -90,17 +90,17 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
+        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
           <Target className="h-4 w-4 text-muted-foreground" />
           Orçamento vs Realizado
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4")}>
+      <CardContent className={cn("flex-1 stack-default")}>
         {/* Resumo geral */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <div className={cn("flex items-center justify-between text-body-sm")}>
             <span className="text-muted-foreground">Execução Geral</span>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <SemanticBadge category="status" value={Math.round(resumo.percentualExecutado)} variantOverride={isOverBudget ? 'destructive' : 'secondary'} className={cn("text-caption")}>
                 {Math.round(resumo.percentualExecutado)}%
               </SemanticBadge>
@@ -114,7 +114,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
         </div>
 
         {/* Status badges */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 flex-wrap")}>
+        <div className={cn("flex inline-tight flex-wrap")}>
           <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1")}>
             <TrendingUp className="h-3 w-3 text-destructive" />
             {resumo.itensAcimaMeta} acima

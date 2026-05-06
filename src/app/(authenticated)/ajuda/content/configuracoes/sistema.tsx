@@ -44,7 +44,7 @@ export default function Sistema() {
 
         {/* 2FAuth */}
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-8")}>
-          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-body flex items-center gap-2")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body flex items-center inline-tight")}>
             <ShieldCheck className="h-4 w-4 text-primary" />
             Autenticação em Dois Fatores (2FAuth)
           </h3>
@@ -78,7 +78,7 @@ export default function Sistema() {
 
         {/* Chatwoot */}
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-8")}>
-          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-body flex items-center gap-2")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body flex items-center inline-tight")}>
             <MessageSquare className="h-4 w-4 text-primary" />
             Chatwoot (Chat e Atendimento)
           </h3>
@@ -122,7 +122,7 @@ export default function Sistema() {
 
         {/* Dyte */}
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-body flex items-center gap-2")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body flex items-center inline-tight")}>
             <Video className="h-4 w-4 text-primary" />
             Dyte (Videoconferências)
           </h3>

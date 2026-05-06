@@ -114,7 +114,7 @@ export function ExpedienteTipoPopover({
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
               >
                 <Tag className="size-3.5 text-muted-foreground/65" />
                 <span className="italic text-muted-foreground/60">Sem tipo</span>
@@ -127,7 +127,7 @@ export function ExpedienteTipoPopover({
                   key={tipo.id}
                   value={getTipoLabel(tipo)}
                   onSelect={() => handleSelect(tipo.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <Tag className="size-3.5 text-muted-foreground/65" />
                   <span>{getTipoLabel(tipo)}</span>

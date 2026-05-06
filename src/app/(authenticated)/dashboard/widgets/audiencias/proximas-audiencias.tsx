@@ -61,7 +61,7 @@ function fmtDataAudiencia(dateStr: string): string {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
+    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
       <Calendar className="size-8 text-muted-foreground/45" />
       <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma audiência agendada nos próximos 30 dias
@@ -91,7 +91,7 @@ function AudienciaItem({
         ${isFirst ? `${styles.bgColor} border rounded-lg border-border/20 pr-2` : ''}
       `}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="min-w-0">
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
             <span
@@ -128,7 +128,7 @@ function AudienciaItem({
           )}
         </div>
       </div>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1.5")}>
+      <div className={cn("flex items-center inline-tight mt-1.5")}>
         {audiencia.url_audiencia_virtual && (
           <a
             href={audiencia.url_audiencia_virtual}
@@ -179,7 +179,7 @@ export function ProximasAudiencias() {
       {audiencias.length === 0 ? (
         <EmptyState />
       ) : (
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           {audiencias.map((a, index) => (
             <AudienciaItem key={a.id} audiencia={a} isFirst={index === 0} />
           ))}

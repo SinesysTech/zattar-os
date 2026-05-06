@@ -203,7 +203,7 @@ function StatCard({
 }) {
   return (
     <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-2")}>
+      <div className={cn("flex items-center inline-tight mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn("size-3.5", iconColor)} />
         </IconContainer>
@@ -247,7 +247,7 @@ function DayDetailDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-2 padding direcional sem Inset equiv. */ "space-y-2 pr-2")}>
+          <div className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "stack-tight pr-2")}>
             {sorted.map((evt) => {
               const colors = getSourceColors(evt.source);
               const cfg = SOURCE_CONFIGS[evt.source as AgendaSource];
@@ -262,7 +262,7 @@ function DayDetailDialog({
                   }}
                   className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1.5 sem token DS */ "w-full text-left rounded-xl border border-border/40 bg-muted/30 p-3 space-y-1.5 transition-colors hover:bg-muted/50 cursor-pointer")}
                 >
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <span
                       className={cn(
                         /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-medium border",
@@ -396,7 +396,7 @@ export function AnoView({
     <TooltipProvider delayDuration={100}>
       <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5", className)}>
         {/* Year Navigator */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Button
             variant="ghost"
             size="icon"
@@ -468,7 +468,7 @@ export function AnoView({
                     const colors = getSourceColors(src);
                     const cfg = SOURCE_CONFIGS[src];
                     return (
-                      <div key={src} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <div key={src} className={cn("flex items-center inline-tight")}>
                         <span
                           className={cn(
                             "size-1.5 rounded-full shrink-0",
@@ -546,7 +546,7 @@ export function AnoView({
                 </span>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "mt-2 space-y-1.5")}>
                   {topMonths.map((m, i) => (
-                    <div key={m.idx} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <div key={m.idx} className={cn("flex items-center inline-tight")}>
                       <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
                         {i + 1}
                       </span>
@@ -574,7 +574,7 @@ export function AnoView({
           </GlassPanel>
 
           {/* Heatmap Panel */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 min-w-0 p-6")}>
+          <GlassPanel depth={1} className={cn("flex-1 min-w-0 inset-dialog")}>
             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-8">
               {Array.from({ length: 12 }, (_, i) => (
                 <MonthGrid

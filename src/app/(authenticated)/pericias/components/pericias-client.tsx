@@ -337,7 +337,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Perícias</Heading>
           <p className={cn("text-body-sm text-muted-foreground/70 mt-0.5")}>{subtitle}</p>
@@ -364,7 +364,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       ) : null}
 
       {/* ── Insight Banners ─────────────────────────────────── */}
-      <div role="status" aria-live="polite" className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 empty:hidden")}>
+      <div role="status" aria-live="polite" className={cn("stack-tight empty:hidden")}>
         {!isStatsLoading && stats && stats.prazosCriticos7d > 0 && (
           <InsightBanner type="warning">
             {stats.prazosCriticos7d} perícia
@@ -396,7 +396,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       )}
 
       {/* ── Toolbar universal: Filters | Search | ViewToggle+Settings ── */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+      <div className={cn("flex items-center inline-tight flex-wrap")}>
         <PericiasFilterBar
           situacaoFilter={situacaoFilter}
           onSituacaoChange={setSituacaoFilter}
@@ -484,7 +484,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
 
       {/* ── Active Filter Chips ─────────────────────────────── */}
       {activeFilterChips.length > 0 && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+        <div className={cn("flex flex-wrap items-center inline-tight")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] uppercase tracking-wider text-muted-foreground/60")}>
             Filtros:
           </span>

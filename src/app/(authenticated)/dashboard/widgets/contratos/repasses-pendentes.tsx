@@ -76,7 +76,7 @@ export function WidgetRepassesPendentes() {
   if (repassesPendentes.length === 0) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
+        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
           <ArrowLeftRight className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Nenhum repasse pendente

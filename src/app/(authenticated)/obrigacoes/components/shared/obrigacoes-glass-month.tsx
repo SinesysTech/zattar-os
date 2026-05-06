@@ -259,7 +259,7 @@ function ParcelaItem({
       )}
     >
       {/* Valor + prazo */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+      <div className={cn("flex items-center justify-between inline-tight")}>
         <Text variant="caption" className="font-semibold text-foreground/85 tabular-nums">
           {CURRENCY.format(parcela.valorBrutoCreditoPrincipal)}
         </Text>
@@ -349,7 +349,7 @@ export function ObrigacoesGlassMonth({
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS */ "p-4 sm:p-6 flex flex-col")}>
       {/* Month Navigator */}
       <div className="flex items-center justify-between mb-6">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1")}>
+        <div className={cn("flex items-center inline-tight flex-1")}>
           <Button
             variant="ghost"
             size="icon"
@@ -384,7 +384,7 @@ export function ObrigacoesGlassMonth({
           )}
         </span>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 flex justify-end gap-2 text-[11px] text-muted-foreground/60")}>
+        <div className={cn("flex-1 flex justify-end inline-tight text-[11px] text-muted-foreground/60")}>
           <span>{summary.total} pendentes</span>
           {summary.vencidos > 0 && (
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-destructive/80 font-semibold")}>
@@ -395,7 +395,7 @@ export function ObrigacoesGlassMonth({
       </div>
 
       {/* Legend */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-1 padding direcional sem Inset equiv. */ "flex items-center gap-4 mb-4 px-1 flex-wrap")}>
+      <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center inline-default mb-4 px-1 flex-wrap")}>
         {(['critico', 'alto', 'medio', 'baixo'] as Urgency[]).map((level) => (
           <div key={level} className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
             <div className={cn('w-1.75 h-1.75 rounded-full', URGENCY_DOT[level])} />
@@ -464,7 +464,7 @@ export function ObrigacoesGlassMonth({
                       <X className="w-3.5 h-3.5 text-muted-foreground" />
                     </button>
                   </div>
-                  <div className={cn(/* design-system-escape: p-2 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "max-h-96 overflow-y-auto p-2 space-y-2")}>
+                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "max-h-96 overflow-y-auto p-2 stack-tight")}>
                     {popoverItems.map((item) => (
                       <ParcelaItem
                         key={item.parcela.id}

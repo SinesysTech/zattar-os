@@ -87,7 +87,7 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
             </DialogHeader>
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <form id="nova-tarefa-form" onSubmit={handleCreate}>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+                <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
                     <div className="md:col-span-2">
                         <Label htmlFor="title">Título</Label>
                         <Input

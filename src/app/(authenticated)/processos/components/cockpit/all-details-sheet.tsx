@@ -89,7 +89,7 @@ export function AllDetailsSheet({
         </DialogHeader>
 
         {isLoading ? (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             {[...Array(4)].map((_, i) => (
               <Skeleton key={i} className="h-16 w-full rounded-lg" />
             ))}
@@ -150,7 +150,7 @@ export function AllDetailsSheet({
                   Nenhum expediente.
                 </p>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {expedientes.map((exp) => (
                     <GlassPanel key={exp.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">Expediente</Text>
@@ -173,7 +173,7 @@ export function AllDetailsSheet({
                   Nenhuma audiência.
                 </p>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {audiencias.map((aud) => (
                     <GlassPanel key={aud.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">
@@ -195,7 +195,7 @@ export function AllDetailsSheet({
                   Nenhuma perícia.
                 </p>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {pericias.map((per) => (
                     <GlassPanel key={per.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">

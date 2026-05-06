@@ -46,7 +46,7 @@ export function WidgetDespesasCategoria() {
 
   return (
     <WidgetContainer title="Despesas por Categoria" icon={PieChart} subtitle="Distribuição">
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("flex items-center inline-default")}>
         <MiniDonut
           segments={segments}
           size={80}
@@ -57,7 +57,7 @@ export function WidgetDespesasCategoria() {
         {/* Legend */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex-1 flex flex-col gap-1.5 min-w-0")}>
           {categorias.map((c) => (
-            <div key={c.categoria} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={c.categoria} className={cn("flex items-center inline-tight")}>
               <ToneDot tone={c.tone} aria-label={c.categoria} />
               <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                 {c.categoria}

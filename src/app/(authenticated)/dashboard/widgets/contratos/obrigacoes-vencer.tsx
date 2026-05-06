@@ -90,7 +90,7 @@ export function WidgetObrigacoesVencer() {
   if (obrigacoesVencer.length === 0) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-8 gap-2")}>
+        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
           <Wallet className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Nenhuma obrigação a vencer no período
@@ -118,7 +118,7 @@ export function WidgetObrigacoesVencer() {
                 </p>
                 <TipoBadge tipo={ob.tipo} />
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+              <div className={cn("flex items-center inline-tight mt-0.5")}>
                 <span className="text-[10px] text-muted-foreground/60">
                   {fmtData(ob.vencimento)}
                 </span>

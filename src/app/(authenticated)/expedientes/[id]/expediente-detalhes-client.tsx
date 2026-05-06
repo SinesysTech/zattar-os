@@ -171,11 +171,11 @@ export function ExpedienteDetalhesClient({
 
       <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "relative z-10 flex flex-col gap-8")}>
         {/* ============================= BREADCRUMB ============================ */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4 flex-wrap")}>
+        <div className={cn("flex items-center justify-between inline-default flex-wrap")}>
           <Text
             variant="micro-caption"
             as="div"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 uppercase tracking-[0.18em] text-muted-foreground/60")}
+            className={cn("flex items-center inline-tight uppercase tracking-[0.18em] text-muted-foreground/60")}
           >
             <Link
               href="/expedientes"
@@ -331,7 +331,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; tracking-wider sem token DS */ "flex items-center gap-2 uppercase tracking-wider text-muted-foreground/70")}
+                className={cn(/* design-system-escape: tracking-wider sem token DS */ "flex items-center inline-tight uppercase tracking-wider text-muted-foreground/70")}
               >
                 <Clock className="size-3" />
                 <span>{prazoFormatted}</span>
@@ -347,7 +347,7 @@ function HeroBlock({
 
           {/* Partes editoriais */}
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex flex-col gap-5 min-w-0")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+            <div className={cn("flex items-center inline-tight flex-wrap")}>
               {tipoLabel && (
                 <Text
                   variant="micro-badge"
@@ -402,7 +402,7 @@ function HeroBlock({
               <button
                 type="button"
                 onClick={onCopyProcesso}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "group inline-flex items-center gap-2")}
+                className={cn("group inline-flex items-center inline-tight")}
                 title="Copiar número do processo"
               >
                 <Text
@@ -469,7 +469,7 @@ function EditorialTabs({
                   : 'text-muted-foreground/70 hover:text-muted-foreground',
               )}
             >
-              <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "inline-flex items-center gap-2")}>
+              <span className={cn("inline-flex items-center inline-tight")}>
                 {tab.label}
                 {tab.count !== undefined && (
                   <Text
@@ -614,7 +614,7 @@ function DadosTab({
       </div>
 
       {/* =============================== SIDEBAR =============================== */}
-      <aside className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6 lg:sticky lg:top-6 lg:self-start")}>
+      <aside className={cn("stack-loose lg:sticky lg:top-6 lg:self-start")}>
         <ResponsavelCard
           expedienteId={expediente.id}
           responsavelId={expediente.responsavelId}
@@ -748,7 +748,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
                 {(idx + 1).toString().padStart(2, '0')}
               </Text>
               <div className="flex-1 min-w-0">
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
+                <div className={cn("flex items-center inline-tight mb-1")}>
                   <Text
                     variant="micro-badge"
                     className="uppercase tracking-[0.2em] text-primary"
@@ -847,7 +847,7 @@ function HistoricoTab({
               {evt.descricao}
             </p>
             {autor && (
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2")}>
+              <div className={cn("flex items-center inline-tight mt-2")}>
                 <Avatar className="size-4">
                   <AvatarImage src={autor.avatarUrl || undefined} />
                   <AvatarFallback className="text-[7px]">
@@ -888,8 +888,8 @@ function EditorialBlock({
 }) {
   return (
     <section className="group">
-      <header className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex items-end justify-between gap-4 pb-4 mb-5 border-b border-border/20")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-baseline gap-4 min-w-0")}>
+      <header className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-end justify-between inline-default pb-4 mb-5 border-b border-border/20")}>
+        <div className={cn("flex items-baseline inline-default min-w-0")}>
           <Text
             variant="overline"
             className={cn(
@@ -955,7 +955,7 @@ function StatusChip({
 
 function MetaPill({ label, value }: { label: string; value: string }) {
   return (
-    <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "inline-flex items-center gap-2")}>
+    <span className={cn("inline-flex items-center inline-tight")}>
       <Text
         variant="micro-badge"
         className="uppercase tracking-[0.22em] text-muted-foreground/70"
@@ -1162,13 +1162,13 @@ function FlagChip({
   return (
     <div
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center justify-between gap-2 px-3 py-2 rounded-lg',
+        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center justify-between inline-tight px-3 py-2 rounded-lg',
         active
           ? 'bg-primary/6 ring-1 ring-inset ring-primary/15 text-foreground'
           : 'bg-transparent ring-1 ring-inset ring-border/20 text-muted-foreground/45',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <Icon className="size-3" />
         <Text variant="caption" as="span">{label}</Text>
       </div>
@@ -1218,7 +1218,7 @@ function InlineTipoEditor({
         <button
           type="button"
           className={cn(
-            /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-1 padding direcional sem Inset equiv. */ 'group inline-flex items-center gap-2 py-1 rounded-lg',
+            /* design-system-escape: py-1 padding direcional sem Inset equiv. */ 'group inline-flex items-center inline-tight py-1 rounded-lg',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none',
           )}
@@ -1253,7 +1253,7 @@ function InlineTipoEditor({
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-2")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-2")}
               >
                 <span className="italic text-muted-foreground/60 font-headline">Sem tipo</span>
               </CommandItem>
@@ -1262,7 +1262,7 @@ function InlineTipoEditor({
                   key={tipo.id}
                   value={tipo.tipo_expediente}
                   onSelect={() => handleSelect(tipo.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-2")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-2")}
                 >
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[13px] font-medium")}>
                     {tipo.tipo_expediente}

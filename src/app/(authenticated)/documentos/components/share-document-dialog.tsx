@@ -203,7 +203,7 @@ export function ShareDocumentDialog({
         className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <Users className="h-5 w-5" />
             Compartilhar documento
           </DialogTitle>
@@ -213,11 +213,11 @@ export function ShareDocumentDialog({
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             {/* Busca de usuários */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Adicionar pessoas</Label>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+              <div className={cn("flex inline-tight")}>
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -245,7 +245,7 @@ export function ShareDocumentDialog({
               </div>
 
               {/* Opção de permissão de deleção */}
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2")}>
+              <div className={cn("flex items-center inline-tight mt-2")}>
                 <Checkbox
                   id="pode-deletar"
                   checked={podeDeletar}
@@ -307,7 +307,7 @@ export function ShareDocumentDialog({
               {/* Usuário selecionado */}
               {selectedUser && (
                 <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex items-center justify-between rounded-md border bg-muted/50 p-2")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <Avatar>
                       <AvatarFallback className={cn("text-caption")}>
                         {getInitials(selectedUser.nomeCompleto)}
@@ -324,7 +324,7 @@ export function ShareDocumentDialog({
                       )}
                     </div>
                   </div>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <Button
                       variant="ghost"
                       size="icon" aria-label="Fechar"
@@ -350,7 +350,7 @@ export function ShareDocumentDialog({
             <Separator />
 
             {/* Lista de compartilhamentos */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Pessoas com acesso</Label>
               {compartilhamentos.length === 0 ? (
                 <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-4 text-center")}>
@@ -358,7 +358,7 @@ export function ShareDocumentDialog({
                 </p>
               ) : (
                 <ScrollArea className="max-h-60">
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     {compartilhamentos.map((compartilhamento) => (
                       <div
                         key={compartilhamento.id}
@@ -382,7 +382,7 @@ export function ShareDocumentDialog({
                             )}
                           </div>
                         </div>
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <div className={cn("flex items-center inline-tight")}>
                           <Select
                             value={compartilhamento.permissao}
                             onValueChange={(v) =>

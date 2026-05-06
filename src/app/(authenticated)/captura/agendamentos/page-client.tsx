@@ -221,7 +221,7 @@ export default function AgendamentosPage() {
 
         {/* Toolbar */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Text variant="caption" className="text-muted-foreground/75">
               {filteredAgendamentos.length} agendamento{filteredAgendamentos.length !== 1 ? 's' : ''}
             </Text>
@@ -235,7 +235,7 @@ export default function AgendamentosPage() {
               </>
             )}
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+          <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar agendamentos..." />
           </div>
         </div>
@@ -246,7 +246,7 @@ export default function AgendamentosPage() {
             <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
               {Array.from({ length: 5 }, (_, i) => (
                 <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 border-b border-border/5")}>
-                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+                  <div className={cn("flex items-center inline-default")}>
                     <Skeleton className="h-5 w-16 rounded-full" />
                     <Skeleton className="h-4 w-40" />
                     <Skeleton className="h-5 w-20 rounded-full" />
@@ -298,7 +298,7 @@ export default function AgendamentosPage() {
                   </div>
 
                   {/* Nome + Tipo badge */}
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+                  <div className={cn("flex items-center inline-tight min-w-0")}>
                     <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wide border shrink-0 ${tipoColor}`}>
                       {TIPO_LABELS[agendamento.tipo_captura] ?? agendamento.tipo_captura}
                     </span>

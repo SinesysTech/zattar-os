@@ -64,10 +64,10 @@ export function WidgetModeloCobranca() {
       subtitle="Pro Labore vs Pro Êxito"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+      <div className={cn("flex flex-col inline-default")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
           {/* Pro Labore */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex flex-col gap-2 p-3 rounded-xl bg-primary/[0.04] border border-primary/10")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3 rounded-xl bg-primary/[0.04] border border-primary/10")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
               Pro Labore
             </p>
@@ -86,7 +86,7 @@ export function WidgetModeloCobranca() {
           </div>
 
           {/* Pro Êxito */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex flex-col gap-2 p-3 rounded-xl bg-warning/[0.04] border border-warning/10")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3 rounded-xl bg-warning/[0.04] border border-warning/10")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
               Pro Êxito
             </p>
@@ -106,7 +106,7 @@ export function WidgetModeloCobranca() {
         </div>
 
         {/* Taxa de Realização */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-3 padding direcional sem Inset equiv. */ "flex items-center gap-4 pt-3 border-t border-border/10")}>
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center inline-default pt-3 border-t border-border/10")}>
           <ProgressRing
             percent={proExito.taxaRealizacao}
             size={48}

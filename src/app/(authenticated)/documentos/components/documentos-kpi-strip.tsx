@@ -82,7 +82,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Itens ─────────────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Itens
@@ -98,7 +98,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <Layers className="size-4 text-primary/50" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <span className="text-[9px] text-muted-foreground/50">
             {stats.criadosHoje > 0
               ? `${stats.criadosHoje} criado${stats.criadosHoje > 1 ? 's' : ''} hoje`
@@ -109,7 +109,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
 
       {/* ── Pastas ────────────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Pastas
@@ -127,7 +127,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <FolderClosed className="size-4 text-warning/50" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-warning/25 transition-all duration-500"
@@ -146,7 +146,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
 
       {/* ── Documentos ───────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Documentos
@@ -164,7 +164,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
             <FileText className="size-4 text-info/50" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-info/25 transition-all duration-500"
@@ -188,7 +188,7 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
 
       {/* ── Armazenamento ─────────────────────────────────── */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Armazenamento

@@ -56,7 +56,7 @@ function HashDisplay({ label, hash }: { label: string; hash: string | null | und
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2 group")}>
+    <div className={cn("flex items-start justify-between inline-tight group")}>
       <div className="min-w-0 flex-1">
         <Text variant="caption">{label}</Text>
         <Text variant="caption" className="font-mono break-all text-foreground/80">{hash}</Text>
@@ -186,7 +186,7 @@ export function DocumentoVerificacaoClient({
     <div className="flex min-h-0 flex-col lg:h-[calc(100dvh-9rem)]">
       <Card className={cn(/* design-system-escape: py-0 padding direcional sem Inset equiv. */ "flex min-h-0 flex-1 flex-col overflow-hidden py-0 shadow-sm")}>
         <CardHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS */ "border-b border-border/60 px-5 py-4 lg:px-6")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between")}>
+          <div className={cn("flex flex-col inline-default lg:flex-row lg:items-center lg:justify-between")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex min-w-0 items-start gap-3 md:items-center")}>
               <Button
                 variant="outline"
@@ -314,7 +314,7 @@ export function DocumentoVerificacaoClient({
                 />
               ) : isPdfLoading ? (
                 <div className="flex h-full items-center justify-center">
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
+                  <div className={cn("flex flex-col items-center inline-tight")}>
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
                     <p className={cn("text-body-sm text-muted-foreground")}>
                       Carregando PDF...
@@ -344,8 +344,8 @@ export function DocumentoVerificacaoClient({
               className="h-full min-h-0"
               viewportClassName=/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS; lg:pb-6 sem equivalente DS; lg:pt-6 sem equivalente DS */ "px-5 pb-5 pt-6 lg:px-6 lg:pb-6 lg:pt-6"
             >
-              <section className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-                <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-lg")}>
+              <section className={cn("stack-default")}>
+                <CardTitle className={cn("flex items-center inline-tight text-body-lg")}>
                   <Info className="h-4 w-4" />
                   Resumo de verificação
                 </CardTitle>
@@ -363,7 +363,7 @@ export function DocumentoVerificacaoClient({
               </section>
 
               <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-6 space-y-3")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <Info className="h-4 w-4 text-muted-foreground" />
                   <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
                     Documento
@@ -403,7 +403,7 @@ export function DocumentoVerificacaoClient({
                 <>
                   <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
                   <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <div className={cn("flex items-center inline-tight")}>
                       <ShieldCheck className="h-4 w-4 text-muted-foreground" />
                       <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
                         Integridade
@@ -437,7 +437,7 @@ export function DocumentoVerificacaoClient({
 
               <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                  <Heading level="section" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-lg flex items-center gap-2")}>
+                  <Heading level="section" className={cn("text-body-lg flex items-center inline-tight")}>
                     <Users className="h-5 w-5" />
                     Assinantes ({data.signatarios.length})
                   </Heading>

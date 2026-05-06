@@ -141,7 +141,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
 
           {pdfUrl && !isLoading && !error && (
             <>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-4 flex gap-2")}>
+              <div className={cn("mb-4 flex inline-tight")}>
                 <Button variant="outline" size="sm" onClick={handleDownload}>
                   <Download className="mr-2 size-4" aria-hidden />
                   Baixar PDF

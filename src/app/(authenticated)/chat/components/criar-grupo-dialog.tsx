@@ -175,7 +175,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
         <form
           id="criar-grupo-form"
           onSubmit={form.handleSubmit(handleSubmit)}
-          className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}
+          className={cn("stack-default inset-dialog")}
         >
           <FormField
             control={form.control}
@@ -195,7 +195,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
             )}
           />
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <FormLabel>Adicionar Membros</FormLabel>
             <Select onValueChange={handleAddMembro} value="">
               <SelectTrigger>
@@ -212,7 +212,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
 
             {/* Lista de membros selecionados */}
             {membrosSelecionados.length > 0 && (
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 mt-3")}>
+              <div className={cn("flex flex-wrap inline-tight mt-3")}>
                 {membrosSelecionados.map((membro) => (
                   <Badge key={membro.id} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS; pr-1 padding direcional sem Inset equiv. */ "flex items-center gap-1 pr-1")}>
                     {membro.nome}

@@ -18,7 +18,7 @@ export default function AssinaturaPageClient() {
   }, [router]);
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center min-h-100 gap-4")}>
+    <div className={cn("flex flex-col items-center justify-center min-h-100 inline-default")}>
       <LoadingSpinner className="size-8 text-muted-foreground" />
       <p className={cn("text-body-sm text-muted-foreground")}>
         Redirecionando para o novo fluxo de assinatura...

@@ -176,12 +176,12 @@ export function ProcessoForm({
           <DialogTitle>{isEditMode ? 'Editar Processo' : 'Novo Processo'}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form ref={formRef} action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <form ref={formRef} action={formAction} className={cn("stack-loose")}>
         {/* Seção 1 - Dados Básicos */}
         <div>
           <Heading level="card" className="mb-4">Dados Básicos</Heading>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "md:col-span-2 space-y-2")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
+            <div className={cn("md:col-span-2 stack-tight")}>
               <Label htmlFor="numeroProcesso">Número do Processo <span className="text-destructive">*</span></Label>
               <Input
                 id="numeroProcesso"
@@ -196,7 +196,7 @@ export function ProcessoForm({
               )}
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="classeJudicial">Classe Judicial <span className="text-destructive">*</span></Label>
               <Input
                 id="classeJudicial"
@@ -207,7 +207,7 @@ export function ProcessoForm({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="dataAutuacao">Data de Autuação <span className="text-destructive">*</span></Label>
               <FormDatePicker
                 id="dataAutuacao"
@@ -217,7 +217,7 @@ export function ProcessoForm({
               <input type="hidden" name="dataAutuacao" value={formData.dataAutuacao} />
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="trt">TRT <span className="text-destructive">*</span></Label>
               <Select
                 value={formData.trt}
@@ -238,7 +238,7 @@ export function ProcessoForm({
               )}
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="grau">Grau <span className="text-destructive">*</span></Label>
               <Select
                 value={formData.grau}
@@ -266,8 +266,8 @@ export function ProcessoForm({
         {/* Seção 2 - Partes */}
         <div>
           <Heading level="card" className="mb-4">Partes Envolvidas</Heading>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="nomeParteAutora">Parte Autora <span className="text-destructive">*</span></Label>
               <Input
                 id="nomeParteAutora"
@@ -278,7 +278,7 @@ export function ProcessoForm({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="nomeParteRe">Parte Ré <span className="text-destructive">*</span></Label>
               <Input
                 id="nomeParteRe"
@@ -296,7 +296,7 @@ export function ProcessoForm({
         {/* Seção 3 - Tribunal/Órgão */}
         <div>
           <Heading level="card" className="mb-4">Órgão Julgador</Heading>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="descricaoOrgaoJulgador">Descrição <span className="text-destructive">*</span></Label>
             <Input
               id="descricaoOrgaoJulgador"

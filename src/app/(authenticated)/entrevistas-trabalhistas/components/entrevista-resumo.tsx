@@ -100,7 +100,7 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
   if (filtrados.length === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-4 space-y-2")}>
+    <div className={cn("mt-4 stack-tight")}>
       <Text variant="caption" className="font-medium">Anexos</Text>
       {filtrados.map((anexo) => (
         <a
@@ -108,7 +108,7 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
           href={anexo.arquivoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-primary hover:underline")}
+          className={cn("flex items-center inline-tight text-body-sm text-primary hover:underline")}
         >
           <FileText className="h-3.5 w-3.5" />
           {anexo.descricao ?? anexo.tipoAnexo}
@@ -403,11 +403,11 @@ export function EntrevistaResumo({
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <SemanticBadge category="status" value={entrevista.tipoLitigio} variantOverride="secondary">
               {TIPO_LITIGIO_LABELS[entrevista.tipoLitigio]}
             </SemanticBadge>

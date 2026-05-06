@@ -14,7 +14,7 @@ export function ExpedientesYearWrapper({
   currentDate = new Date(),
 }: ExpedientesYearWrapperProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
+    <div className={cn("flex flex-col inline-default")}>
       <ExpedientesYearHeatmap
         expedientes={expedientes}
         currentDate={currentDate}

@@ -108,7 +108,7 @@ function GlassRow({
         isAlt && 'bg-muted/20',
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-[auto_1fr_auto_90px_120px] gap-4 items-center")}>
+      <div className={cn("grid grid-cols-[auto_1fr_auto_90px_120px] inline-default items-center")}>
         {/* Status dot */}
         <div className="flex items-center w-4">
           <div className={cn('w-2 h-2 rounded-full shrink-0', getAtivoDotColor(formulario.ativo))} />
@@ -120,7 +120,7 @@ function GlassRow({
             <ClipboardList className="w-4 h-4 text-primary" />
           </div>
           <div className="min-w-0">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+            <div className={cn("flex items-center inline-tight flex-wrap")}>
               <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{displayName}</span>
               {segmentoNome && (
                 <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-primary/10 border border-primary/20 text-primary/80 rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
@@ -243,7 +243,7 @@ function GlassCard({
       )}
     >
       {/* Top row: icon + status dot + menu */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+      <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="w-10 h-10 rounded-[0.625rem] bg-primary/8 flex items-center justify-center">
           <ClipboardList className="w-4 h-4 text-primary" />
         </div>
@@ -282,7 +282,7 @@ function GlassCard({
       )}
 
       {/* Footer: captura + status */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/40")}>
+      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           {formulario.foto_necessaria && (
             <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
@@ -457,7 +457,7 @@ function FormularioActions({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div key={i} className="h-20 rounded-2xl border border-border/40 bg-card animate-pulse" />
       ))}
@@ -521,7 +521,7 @@ export function FormulariosGlassList({
           ))}
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           {formularios.map((f, i) => (
             <GlassRow
               key={f.id}

@@ -69,7 +69,7 @@ function KanbanColumn({
         items={tarefas.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex flex-col gap-2 p-2 min-h-25")}>
+        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inline-tight p-2 min-h-25")}>
           {tarefas.map((tarefa) => (
             <TaskCard key={tarefa.id} tarefa={tarefa} />
           ))}
@@ -105,7 +105,7 @@ export function TaskBoard({ tarefas }: TaskBoardProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-4 padding direcional sem Inset equiv. */ "flex gap-4 overflow-x-auto pb-4")}>
+      <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex inline-default overflow-x-auto pb-4")}>
         {KANBAN_COLUMNS.map((status) => (
           <KanbanColumn
             key={status}

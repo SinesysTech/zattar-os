@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 function SegmentosLoading() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <Skeleton className="h-10 w-full" />
       <Skeleton className="h-125 w-full" />
     </div>

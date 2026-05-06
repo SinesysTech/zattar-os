@@ -120,12 +120,12 @@ export function ExpedientesBaixarDialog({
           <DialogTitle>Baixar Expediente</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form id="baixar-expediente-form" action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <form id="baixar-expediente-form" action={formAction} className={cn("stack-loose")}>
         {/* Hidden input para o ID do expediente */}
         <input type="hidden" name="expedienteId" value={expediente.id} />
 
         {/* Informações do expediente */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-tight rounded-lg border p-4 bg-muted/50")}>
           <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
             <div>
@@ -141,9 +141,9 @@ export function ExpedientesBaixarDialog({
         </div>
 
         {/* Modo de baixa */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label>Forma de Baixa</Label>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+          <div className={cn("flex inline-default")}>
             <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 cursor-pointer")}>
               <input
                 type="radio"
@@ -171,7 +171,7 @@ export function ExpedientesBaixarDialog({
 
         {/* Campo de protocolo */}
         {modo === 'protocolo' && (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="protocoloId">ID do Protocolo *</Label>
             <Input
               id="protocoloId"
@@ -192,7 +192,7 @@ export function ExpedientesBaixarDialog({
 
         {/* Campo de justificativa */}
         {modo === 'justificativa' && (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="justificativaBaixa">Justificativa da Baixa *</Label>
             <textarea
               id="justificativaBaixa"

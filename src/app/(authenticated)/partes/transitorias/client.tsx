@@ -86,7 +86,7 @@ export function TransitoriasListClient() {
         </PageHeaderDescription>
       </PageHeader>
       <PageContent>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
+      <div className={cn("flex flex-col inline-default")}>
         <SearchInput
           value={search}
           onChange={setSearch}
@@ -96,7 +96,7 @@ export function TransitoriasListClient() {
 
         <GlassPanel>
           <CardHeader>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <span
                 aria-hidden="true"
                 className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/15 ring-1 ring-warning/30"
@@ -116,7 +116,7 @@ export function TransitoriasListClient() {
           </CardHeader>
           <CardContent>
             {loading ? (
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 {[1, 2, 3, 4].map((i) => (
                   <Skeleton key={i} className="h-14 rounded-xl" />
                 ))}

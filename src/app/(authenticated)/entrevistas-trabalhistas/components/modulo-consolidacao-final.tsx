@@ -19,7 +19,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
   const justificativas = data.justificativas_inconsistencias ?? {};
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">Consolidacao Final da Entrevista</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -27,7 +27,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
         </p>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="relato-completo-texto">Relato completo em texto</Label>
         <Textarea
           id="relato-completo-texto"
@@ -38,7 +38,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
         />
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="observacoes-finais">Observacoes finais do operador</Label>
         <Textarea
           id="observacoes-finais"
@@ -51,7 +51,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
 
       {data.relato_consolidado_ia && (
         <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="relato-ia">Relato consolidado pela IA</Label>
             <Textarea
               id="relato-ia"
@@ -67,7 +67,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
         <div className={cn(/* design-system-escape: space-y-3 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-3 rounded-lg border border-warning/15 bg-warning/5 p-4")}>
           <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
           {inconsistencias.map((item, index) => (
-            <div key={`${item}-${index}`} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div key={`${item}-${index}`} className={cn("stack-tight")}>
               <p className={cn("text-body-sm")}>{item}</p>
               <Textarea
                 value={justificativas[item] ?? ''}

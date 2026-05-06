@@ -102,7 +102,7 @@ function formatDeletedAt(date: string | null): string {
 
 function LoadingState() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
       <Skeleton className="h-24 w-full" />
@@ -168,7 +168,7 @@ function DocumentoCard({
               </CardDescription>
             </div>
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Button
               variant="outline"
               size="sm"
@@ -338,7 +338,7 @@ export default function LixeiraClient() {
 
   return (
     <>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between")}>
+      <div className={cn("flex flex-col inline-default sm:flex-row sm:items-start sm:justify-between")}>
         <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           <Heading level="page">Lixeira</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
@@ -348,7 +348,7 @@ export default function LixeiraClient() {
       </div>
 
       {/* Toolbar com filtros */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-4")}>
+      <div className={cn("flex items-center inline-tight mb-4")}>
         <Button
           variant="ghost"
           size="icon"
@@ -372,7 +372,7 @@ export default function LixeiraClient() {
       ) : documentosFiltrados.length === 0 ? (
         <LixeiraEmptyState onVoltar={() => router.push('/app/documentos')} />
       ) : (
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <AvisoExclusaoCard />
           {documentosFiltrados.map((documento) => (
             <DocumentoCard

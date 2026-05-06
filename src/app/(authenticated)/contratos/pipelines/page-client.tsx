@@ -236,7 +236,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <Form {...form}>
-        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <form id="pipeline-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
           {!isEditing && (
             <FormField
               control={form.control}
@@ -408,7 +408,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <Form {...form}>
-            <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <form id="estagio-form" onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
               <FormField
                 control={form.control}
                 name="nome"
@@ -656,7 +656,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
 
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "flex-1 overflow-y-auto px-4 pb-4 space-y-3")}>
             {isLoadingEstagios ? (
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pt-2 padding direcional sem Inset equiv. */ "space-y-2 pt-2")}>
+              <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-tight pt-2")}>
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Skeleton key={i} className="h-14 w-full" />
                 ))}
@@ -666,7 +666,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                 Nenhum estágio cadastrado.
               </p>
             ) : (
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pt-2 padding direcional sem Inset equiv. */ "space-y-2 pt-2")}>
+              <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-tight pt-2")}>
                 {estagios.map((estagio, index) => (
                   <div
                     key={estagio.id}
@@ -724,7 +724,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "px-4 pb-4 pt-2 border-t space-y-2")}>
+          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "px-4 pb-4 pt-2 border-t stack-tight")}>
             {hasReordered && (
               <Button
                 onClick={() => void handleSaveOrder()}
@@ -871,7 +871,7 @@ export function PipelinesPageClient() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Header */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Pipelines de Contratos</Heading>
           {!isLoading && (
@@ -889,7 +889,7 @@ export function PipelinesPageClient() {
       {/* Lista Glass */}
       <GlassPanel depth={1} className="overflow-hidden">
         {isLoading ? (
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}
@@ -904,7 +904,7 @@ export function PipelinesPageClient() {
           <div role="table" aria-label="Pipelines de Contratos">
             <div
               role="row"
-              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
+              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
             >
               <span>Nome</span>
               <span>Segmento</span>
@@ -917,7 +917,7 @@ export function PipelinesPageClient() {
                 <div
                   key={pipeline.id}
                   role="row"
-                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
+                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <div className="min-w-0">
                     <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{pipeline.nome}</div>
@@ -952,7 +952,7 @@ export function PipelinesPageClient() {
                       {pipeline.ativo ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </span>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
+                  <div className={cn("flex items-center justify-end inline-tight")}>
                     <Button
                       variant="outline"
                       size="sm"

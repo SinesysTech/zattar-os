@@ -82,7 +82,7 @@ export function WidgetPreparacao() {
       depth={1}
     >
       {audiencias.length === 0 ? (
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
           <p className="text-[11px] text-muted-foreground/60">
             Nenhuma audiência próxima registrada.
           </p>

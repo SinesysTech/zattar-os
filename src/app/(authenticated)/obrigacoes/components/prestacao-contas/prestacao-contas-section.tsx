@@ -67,7 +67,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
   if (status.estado === 'assinado') {
     return (
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+        <div className={cn("flex items-start inline-tight")}>
           <CheckCircle2 className="size-4 text-success mt-0.5 shrink-0" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Declaração assinada pelo cliente</p>
@@ -101,7 +101,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
   if (status.estado === 'link_ativo') {
     return (
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+        <div className={cn("flex items-start inline-tight")}>
           <Clock className="size-4 text-warning mt-0.5 shrink-0" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Aguardando assinatura do cliente</p>
@@ -112,7 +112,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
             )}
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 flex-wrap")}>
+        <div className={cn("flex inline-tight flex-wrap")}>
           <Button
             size="sm"
             variant="outline"
@@ -146,7 +146,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
   if (status.estado === 'cancelado') {
     return (
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+        <div className={cn("flex items-start inline-tight")}>
           <Ban className="size-4 text-muted-foreground mt-0.5 shrink-0" />
           <p className={cn("text-body-sm")}>Link anterior foi cancelado. Gere um novo se necessário.</p>
         </div>

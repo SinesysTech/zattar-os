@@ -35,7 +35,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
       {/* Total Capturas */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Total Capturas
@@ -50,7 +50,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <Database className="size-4 text-primary/70" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-primary/25 transition-all duration-500"
@@ -63,7 +63,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
 
       {/* Taxa de Sucesso */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Taxa de Sucesso
@@ -79,7 +79,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <CheckCircle2 className="size-4 text-success/70" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-success/25 transition-all duration-500"
@@ -94,7 +94,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
 
       {/* Em Andamento */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Em Andamento
@@ -109,7 +109,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <Loader2 className="size-4 text-info/70" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-info/25 transition-all duration-500"
@@ -124,7 +124,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
 
       {/* Falhas */}
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
               Falhas (7d)
@@ -139,7 +139,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
             <AlertTriangle className="size-4 text-destructive/50" />
           </IconContainer>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-2.5 flex items-center gap-2")}>
+        <div className={cn("mt-2.5 flex items-center inline-tight")}>
           <div className="flex-1 h-1 rounded-full bg-muted/30 overflow-hidden">
             <div
               className="h-full rounded-full bg-destructive/25 transition-all duration-500"

@@ -254,8 +254,8 @@ export function ContratoForm({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form ref={formRef} action={formAction} className="space-y-(--density-field-gap)">
         {/* Linha 1: Tipo de Contrato + Tipo de Cobrança */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="tipoContrato">
               Tipo de Contrato <span className="text-destructive">*</span>
             </Label>
@@ -283,7 +283,7 @@ export function ContratoForm({
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="tipoCobranca">
               Tipo de Cobrança <span className="text-destructive">*</span>
             </Label>
@@ -313,8 +313,8 @@ export function ContratoForm({
         </div>
 
         {/* Linha 2: Segmento + Status */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="segmentoId">
               Segmento <span className="text-destructive">*</span>
             </Label>
@@ -342,7 +342,7 @@ export function ContratoForm({
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="status">Status</Label>
             <Select
               value={formData.status}
@@ -364,8 +364,8 @@ export function ContratoForm({
         </div>
 
         {/* Linha 3: Cliente + Polo do Cliente */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="clienteId">
               Cliente <span className="text-destructive">*</span>
             </Label>
@@ -400,7 +400,7 @@ export function ContratoForm({
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="papelClienteNoContrato">
               Polo do Cliente <span className="text-destructive">*</span>
             </Label>
@@ -430,8 +430,8 @@ export function ContratoForm({
         </div>
 
         {/* Linha 4: Parte Contrária + Responsável */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid grid-cols-2 inline-default")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="partesContrariasIds">Partes Contrárias</Label>
             <ServerCombobox
               onSearch={async (query) => {
@@ -471,7 +471,7 @@ export function ContratoForm({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid inline-tight")}>
             <Label htmlFor="responsavelId">Responsável</Label>
             <Select
               value={formData.responsavelId || '__none__'}
@@ -494,7 +494,7 @@ export function ContratoForm({
         </div>
 
         {/* Linha 5: Cadastrado em */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="cadastradoEm">Cadastrado em</Label>
           <FormDatePicker
             id="cadastradoEm"
@@ -505,7 +505,7 @@ export function ContratoForm({
         </div>
 
         {/* Linha 7: Observações (largura total) */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="observacoes">Observações</Label>
           <Textarea
             id="observacoes"

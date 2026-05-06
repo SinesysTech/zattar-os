@@ -123,7 +123,7 @@ export function WidgetCapturaStatus() {
       </div>
 
       {/* Lista de tribunais */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("flex flex-col inline-tight")}>
         {capturas.map((captura) => {
           const dotClass = STATUS_DOT_CLASSES[captura.status];
           const statusLabel = STATUS_LABELS[captura.status];

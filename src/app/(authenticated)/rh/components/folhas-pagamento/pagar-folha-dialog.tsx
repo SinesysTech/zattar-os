@@ -94,8 +94,8 @@ export function PagarFolhaDialog({
           <DialogDescription>Confirme a forma de pagamento e a data de efetivação.</DialogDescription>
         </DialogHeader>
 
-        <form className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")} onSubmit={handleSubmit}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <form className={cn("stack-default")} onSubmit={handleSubmit}>
+          <div className={cn("stack-tight")}>
             <Label>Forma de Pagamento</Label>
             <Controller
               name="formaPagamento"
@@ -120,7 +120,7 @@ export function PagarFolhaDialog({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Conta Bancária</Label>
             <Controller
               name="contaBancariaId"
@@ -145,12 +145,12 @@ export function PagarFolhaDialog({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Data de Efetivação</Label>
             <Input type="date" {...form.register('dataEfetivacao')} />
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Observações</Label>
             <Textarea rows={3} {...form.register('observacoes')} />
           </div>

@@ -47,7 +47,7 @@ export function ProcessosInsightBanner({
   if (banners.length === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {banners.map((banner, index) => (
         <button
           key={index}
@@ -55,7 +55,7 @@ export function ProcessosInsightBanner({
           onClick={banner.onClick}
           className={cn(
             /* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'w-full rounded-lg border px-3.5 py-2 text-[11px] font-medium',
-            /* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ 'flex items-center gap-2 transition-colors cursor-pointer',
+            'flex items-center inline-tight transition-colors cursor-pointer',
             TYPE_STYLES[banner.type]
           )}
         >

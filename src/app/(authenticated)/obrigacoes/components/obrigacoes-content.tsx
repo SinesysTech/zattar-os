@@ -144,7 +144,7 @@ export function ObrigacoesContent({
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* 1. Header */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Obrigações</Heading>
           <p
@@ -155,7 +155,7 @@ export function ObrigacoesContent({
           </p>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Button
             size="sm"
             className="rounded-xl"
@@ -173,7 +173,7 @@ export function ObrigacoesContent({
       {/* 3. Controls Row: filters (esquerda) + search + view toggle (direita) */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
         <ObrigacoesFilterBar filters={filters} onChange={setFilters} />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           <SearchInput
             value={busca}
             onChange={setBusca}

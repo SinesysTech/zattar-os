@@ -126,8 +126,8 @@ export function ProximaAudienciaPopover({
         align="start"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("stack-tight")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Calendar className={cn('h-4 w-4', getUrgenciaColor())} />
             <Heading level="subsection" className={cn("text-body-sm")}>Próxima Audiência</Heading>
           </div>

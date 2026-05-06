@@ -51,12 +51,12 @@ function ButtonsSpecimen() {
 function BadgesSpecimen() {
   return (
     <SpecimenCard eyebrow="BADGES · CHIPS">
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("stack-default")}>
+        <div className={cn("flex flex-col inline-tight")}>
           <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-muted-foreground opacity-70">
             STATUS (PROCESSO)
           </span>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+          <div className={cn("flex flex-wrap inline-tight")}>
             <Badge tone="soft" variant="default">EM ANDAMENTO</Badge>
             <Badge tone="soft" variant="success">ATIVO</Badge>
             <Badge tone="soft" variant="warning">SUSPENSO</Badge>
@@ -64,11 +64,11 @@ function BadgesSpecimen() {
             <Badge tone="soft" variant="neutral">ARQUIVADO</Badge>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-muted-foreground opacity-70">
             ENTITY (PARTE)
           </span>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+          <div className={cn("flex flex-wrap inline-tight")}>
             <span
               className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
               style={{
@@ -111,11 +111,11 @@ function BadgesSpecimen() {
             </span>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-muted-foreground opacity-70">
             TAG · COUNTER · SHORTCUT
           </span>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+          <div className={cn("flex flex-wrap items-center inline-tight")}>
             <Badge tone="soft" variant="neutral">Trabalhista</Badge>
             <Badge tone="soft" variant="neutral">Cível</Badge>
             <Badge tone="soft" variant="neutral">Família</Badge>
@@ -136,7 +136,7 @@ function BadgesSpecimen() {
 function InputsSpecimen() {
   return (
     <SpecimenCard eyebrow="INPUTS · FORMS">
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2")}>
+      <div className={cn("grid inline-default sm:grid-cols-2")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
           <Label htmlFor="ds-processo">Nº do processo</Label>
           <Input
@@ -308,7 +308,7 @@ function CardsSpecimen() {
 
 export function ComponentsSection() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <ButtonsSpecimen />
       <BadgesSpecimen />
       <InputsSpecimen />

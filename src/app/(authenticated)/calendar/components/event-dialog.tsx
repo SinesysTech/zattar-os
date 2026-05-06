@@ -236,7 +236,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             {error}
           </div>
         )}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
+        <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
           <div className="*:not-first:mt-1.5">
             <Label htmlFor="title">Título</Label>
             <Input
@@ -258,7 +258,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+          <div className={cn("flex inline-default")}>
             <div className="flex-1 *:not-first:mt-1.5">
               <Label htmlFor="start-date">Data de Início</Label>
               <Popover
@@ -327,7 +327,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+          <div className={cn("flex inline-default")}>
             <div className="flex-1 *:not-first:mt-1.5">
               <Label htmlFor="end-date">Data de Término</Label>
               <Popover
@@ -393,7 +393,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Checkbox
               id="all-day"
               checked={allDay}
@@ -446,7 +446,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
             )}
           </div>
 
-          <fieldset className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <fieldset className={cn("stack-default")}>
             <legend className={cn(/* design-system-escape: leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-foreground text-body-sm leading-none font-medium")}>Cor</legend>
             <RadioGroup
               className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5")}
@@ -479,7 +479,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
               <Trash2 size={16} aria-hidden="true" />
             </Button>
           )}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-1 justify-end gap-2")}>
+          <div className={cn("flex flex-1 justify-end inline-tight")}>
             {readOnly && onNavigateToSource && (
               <Button variant="outline" onClick={onNavigateToSource}>
                 <ExternalLink size={16} aria-hidden="true" />

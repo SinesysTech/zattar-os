@@ -76,13 +76,13 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               {projeto.membros && projeto.membros.length > 0 && (
                 <MemberAvatarGroup membros={projeto.membros} max={3} />
               )}
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <ProjectStatusBadge status={projeto.status} />
               {deadlineText && (
                 <span

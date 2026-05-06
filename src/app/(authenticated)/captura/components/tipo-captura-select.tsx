@@ -93,7 +93,7 @@ export function TipoCapturaSelect({
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectTrigger className="w-full">
         <SelectValue>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Icon className="h-4 w-4" />
             <span>{selectedTipo?.label}</span>
           </div>

@@ -190,9 +190,9 @@ export function SemanaView({
   }, [today]);
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4", className)}>
+    <div className={cn("flex inline-default", className)}>
       {/* Sidebar */}
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "w-56 shrink-0 space-y-4 hidden xl:flex xl:flex-col")}>
+      <div className={cn("w-56 shrink-0 stack-default hidden xl:flex xl:flex-col")}>
         <MiniCalendar
           currentDate={currentDate}
           selectedDate={currentDate}

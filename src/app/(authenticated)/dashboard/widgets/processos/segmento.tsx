@@ -86,11 +86,11 @@ export function WidgetSegmento() {
           strokeWidth={11}
           centerLabel={total > 0 && dominant ? `${Math.round((dominant.value / total) * 100)}%` : '0%'}
         />
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2 flex-1 min-w-0")}>
+        <div className={cn("flex flex-col inline-tight flex-1 min-w-0")}>
           {segments.map((seg) => {
             const pct = total > 0 ? Math.round((seg.value / total) * 100) : 0;
             return (
-              <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div key={seg.label} className={cn("flex items-center inline-tight")}>
                 <ToneDot tone={seg.tone} aria-label={seg.label} />
                 <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                   {seg.label}

@@ -97,7 +97,7 @@ export function AgingFunnel() {
       depth={1}
       className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
     >
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-1 space-y-2")}>
+      <div className={cn("mt-1 stack-tight")}>
         {faixas.map((row) => (
           <div key={row.label} className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
             <UrgencyDot level={row.level} />
@@ -106,7 +106,7 @@ export function AgingFunnel() {
                 {row.label}
               </span>
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex h-4.5 flex-1 items-center gap-2")}>
+            <div className={cn("flex h-4.5 flex-1 items-center inline-tight")}>
               <div
                 className="h-full rounded-sm transition-all duration-500"
                 style={{

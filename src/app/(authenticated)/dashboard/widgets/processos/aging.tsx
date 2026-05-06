@@ -83,7 +83,7 @@ export function WidgetAging() {
         {segments.map((seg) => {
           const pct = total > 0 ? Math.round((seg.value / total) * 100) : 0;
           return (
-            <div key={seg.label} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={seg.label} className={cn("flex items-center inline-tight")}>
               <ToneDot tone={seg.tone} shape="bullet" aria-label={seg.label} />
               <span className="text-[10px] text-muted-foreground/60 flex-1 truncate">
                 {seg.label}

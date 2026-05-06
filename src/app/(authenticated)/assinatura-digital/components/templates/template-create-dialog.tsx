@@ -253,7 +253,7 @@ export function TemplateCreateDialog({
             <form
               id="template-create-form"
               onSubmit={handleSubmit(onSubmit)}
-              className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
+              className={cn("stack-default")}
             >
               {/* Etapa 1: Informações do Template */}
               {step === 1 && (

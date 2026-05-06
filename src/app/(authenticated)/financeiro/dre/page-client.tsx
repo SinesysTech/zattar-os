@@ -493,20 +493,20 @@ function CategoriaTab({
         {isLoading ? (
           <Skeleton className="h-72" />
         ) : categorias && categorias.length > 0 ? (
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-2")}>
+          <div className={cn("grid inline-default lg:grid-cols-2")}>
             <CategoriaPieChart categorias={categorias} />
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Text variant="caption" className="font-medium uppercase tracking-wider mb-2">Detalhamento</Text>
               {categorias.map((cat: CategoriaDRE, i: number) => (
                 <div key={cat.categoria} className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <div
                       className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] } as React.CSSProperties}
                     />
                     <span className={cn("text-body-sm")}>{cat.categoria}</span>
                   </div>
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-right flex items-center gap-2")}>
+                  <div className={cn("text-right flex items-center inline-tight")}>
                     <span className={cn("font-mono text-body-sm tabular-nums")}>{formatarValor(cat.valor)}</span>
                     <Text variant="caption" className="tabular-nums w-14 text-right">
                       {formatarPercentual(cat.percentualReceita)}
@@ -816,7 +816,7 @@ export default function DREClient() {
               </>
             }
             actionSlot={
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Button variant="ghost" size="icon" aria-label="Atualizar" className="h-8 w-8" onClick={handleRefresh} disabled={isLoading}>
                   <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
                   <span className="sr-only">Atualizar</span>

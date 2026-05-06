@@ -110,8 +110,8 @@ export function PericiaDialog({
           <DialogTitle>Editar perícia</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
+            <div className={cn("grid inline-tight")}>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Responsável</div>
               <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
                 <SelectTrigger className="w-full bg-card">
@@ -128,7 +128,7 @@ export function PericiaDialog({
               </Select>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "md:col-span-2 grid gap-2")}>
+            <div className={cn("md:col-span-2 grid inline-tight")}>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Observações</div>
               <Textarea
                 value={observacoes}

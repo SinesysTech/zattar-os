@@ -9,7 +9,7 @@ export const revalidate = 0;
 
 export default function FinanceiroPage() {
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <FinanceiroNavigationSelect />
       <Suspense fallback={<Skeleton className="h-10 w-full" />}>
         <FinanceiroDashboard />

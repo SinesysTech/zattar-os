@@ -9,7 +9,7 @@ export default function AjudaLayout({ children }: { children: React.ReactNode })
     <PageShell className={cn(/* design-system-escape: -m-6 sem equivalente DS; space-y-0! sem token DS */ "-m-6 -mt-6 space-y-0!")}>
       <div className="flex min-h-0 flex-1 mt-0!">
         <DocsSidebar />
-        <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "flex-1 overflow-y-auto p-6")}>
+        <div className={cn("flex-1 overflow-y-auto inset-dialog")}>
           {children}
         </div>
       </div>

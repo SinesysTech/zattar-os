@@ -146,11 +146,11 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
           <Skeleton className="h-4 w-full mt-2" />
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             {[1, 2, 3].map((i) => (
-              <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+              <div key={i} className={cn("flex inline-default")}>
                 <Skeleton className="h-10 w-10 rounded-full" />
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+                <div className={cn("flex-1 stack-tight")}>
                   <Skeleton className="h-4 w-32" />
                   <Skeleton className="h-3 w-full" />
                 </div>
@@ -165,7 +165,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <CardTitle className={cn("flex items-center inline-tight")}>
           <Clock className="h-5 w-5" />
           Atividades Recentes
         </CardTitle>
@@ -199,7 +199,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
             {/* Linha vertical da timeline */}
             <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
-            <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+            <div className={cn("stack-loose")}>
               {atividades.map((atividade) => {
                 const Icon = EVENT_ICONS[atividade.tipoEvento] ?? Activity;
                 const label = EVENT_LABELS[atividade.tipoEvento] ?? 'Atividade registrada';
@@ -208,7 +208,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                 const descricao = gerarDescricaoEvento(atividade);
 
                 return (
-                  <div key={atividade.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
+                  <div key={atividade.id} className={cn("relative flex inline-default")}>
                     {/* Ícone do evento */}
                     <div
                       className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background border-2 ${colorClass}`}
@@ -219,9 +219,9 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                     {/* Conteúdo */}
                     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
                       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4")}>
-                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+                        <div className={cn("flex items-start justify-between inline-default")}>
                           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                            <div className={cn("flex items-center inline-tight")}>
                               <p className={`font-medium ${colorClass}`}>{label}</p>
                               <AppBadge variant="outline" className={cn("text-caption")}>
                                 {entidadeLabel}

@@ -99,7 +99,7 @@ export function ClienteResponsavelCell({
                     role="combobox"
                     aria-expanded={open}
                     className={cn(
-                        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-2 h-8 w-full min-w-0 px-1 hover:bg-muted/50",
+                        /* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-tight h-8 w-full min-w-0 px-1 hover:bg-muted/50",
                         !responsavel && "text-muted-foreground"
                     )}
                     title={responsavel ? `Responsável: ${responsavel.nomeExibicao}` : 'Clique para atribuir responsável'}
@@ -130,7 +130,7 @@ export function ClienteResponsavelCell({
                             <CommandItem
                                 value="null"
                                 onSelect={() => handleSelect('null')}
-                                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+                                className={cn("inline-tight")}
                             >
                                 <Text variant="caption" className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed">
                                     ?
@@ -144,7 +144,7 @@ export function ClienteResponsavelCell({
                                     key={usuario.id}
                                     value={usuario.nomeExibicao} // Buscando pelo nome
                                     onSelect={() => handleSelect(usuario.id.toString())}
-                                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+                                    className={cn("inline-tight")}
                                 >
                                     <Avatar size="sm">
                                         <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />

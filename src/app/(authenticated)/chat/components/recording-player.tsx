@@ -20,7 +20,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
         <Heading level="card">
           {titulo || `Gravação da Chamada #${chamadaId}`}
@@ -29,7 +29,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
           variant="outline"
           size="sm"
           onClick={handleDownload}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+          className={cn("inline-tight")}
         >
           <Download className="h-4 w-4" />
           Baixar
@@ -48,7 +48,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
       </div>
 
       {error && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm text-destructive flex items-center gap-2")}>
+        <div className={cn("text-body-sm text-destructive flex items-center inline-tight")}>
           <AlertCircle className="h-4 w-4" />
           {error}
         </div>

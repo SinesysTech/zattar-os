@@ -47,7 +47,7 @@ export function ModalidadeDistribution() {
         icon={MapPin}
         subtitle="Distribuicao de formatos"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center justify-center py-6 gap-2")}>
+        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
           <MapPin className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de modalidade indisponiveis
@@ -71,7 +71,7 @@ export function ModalidadeDistribution() {
       icon={MapPin}
       subtitle="Distribuicao de formatos"
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}>
+      <div className={cn("flex flex-col items-center inline-default")}>
         <MiniDonut
           segments={segments}
           size={90}
@@ -88,13 +88,13 @@ export function ModalidadeDistribution() {
                 key={m.modalidade}
                 className="flex items-center justify-between text-[11px]"
               >
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+                <div className={cn("flex items-center inline-tight min-w-0")}>
                   <ToneDot tone={m.tone} size="lg" aria-label={m.modalidade} />
                   <span className="text-muted-foreground/70 truncate">
                     {m.modalidade}
                   </span>
                 </div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
+                <div className={cn("flex items-center inline-tight shrink-0")}>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>
                     {fmtNum(m.count)}
                   </span>

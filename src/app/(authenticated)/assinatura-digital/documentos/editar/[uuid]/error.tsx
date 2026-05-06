@@ -19,12 +19,12 @@ export default function ErrorBoundary({
     }, [error]);
 
     return (
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "flex h-screen w-full flex-col items-center justify-center gap-4 bg-background p-4")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex h-screen w-full flex-col items-center justify-center inline-default bg-background p-4")}>
             <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-destructive/10 p-4")}>
                 <AlertCircle className="h-12 w-12 text-destructive" />
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2 max-w-md")}>
+            <div className={cn("text-center stack-tight max-w-md")}>
                 <Heading level="page">Algo deu errado!</Heading>
                 <p className="text-muted-foreground">
                     Não foi possível carregar o editor de documentos.
@@ -51,7 +51,7 @@ export default function ErrorBoundary({
                 )}
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 mt-6")}>
+            <div className={cn("flex inline-tight mt-6")}>
                 <Button variant="outline" onClick={() => window.location.href = '/app/assinatura-digital/documentos'}>
                     Voltar para Lista
                 </Button>

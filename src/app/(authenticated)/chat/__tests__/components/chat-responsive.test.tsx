@@ -80,7 +80,7 @@ const MockAttachment = ({
             )}
             {type === 'video' && <video src="/test.mp4" className={isMobile ? 'w-full' : 'max-w-sm'} />}
             {type === 'document' && (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                     <span>Document</span>
                     <button className={isMobile ? 'shrink-0' : ''}>
                         {isMobile ? '⬇' : 'Baixar'}

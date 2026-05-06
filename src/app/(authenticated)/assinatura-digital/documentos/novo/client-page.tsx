@@ -103,7 +103,7 @@ function ContextPanel() {
         aria-hidden="true"
       />
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
           <Info className="size-3" />
           MP 2.200-2/2001
@@ -121,7 +121,7 @@ function ContextPanel() {
 export function NovoDocumentoClient() {
   return (
     <DocumentFlowShell>
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose">; lg:gap-8 sem equivalente DS */ "flex h-full min-h-0 flex-col lg:flex-row gap-6 lg:gap-8 max-w-6xl mx-auto w-full")}>
+      <div className={cn(/* design-system-escape: lg:gap-8 sem equivalente DS */ "flex h-full min-h-0 flex-col lg:flex-row inline-loose lg:gap-8 max-w-6xl mx-auto w-full")}>
         {/* Dropzone — principal */}
         <div className="flex-1 min-h-0 flex flex-col">
           <DocumentUploadDropzone />

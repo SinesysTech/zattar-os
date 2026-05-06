@@ -147,7 +147,7 @@ export function NovoChatDialog({ open, onOpenChange, onChatCreated }: NovoChatDi
           <DialogTitle>Nova Conversa</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-2 px-6 py-4")}>
+      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "stack-tight px-6 py-4")}>
         <Label>Com quem você quer conversar?</Label>
         <Select
           onValueChange={setSelectedUsuarioId}

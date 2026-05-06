@@ -47,9 +47,9 @@ export function ContratoResumoCard({
 
   return (
     <WidgetContainer title="Resumo" icon={ClipboardList}>
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         {/* Estatisticas */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-3 gap-2")}>
+        <div className={cn("grid grid-cols-3 inline-tight")}>
           <GlassPanel depth={2} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-3 py-3 text-center")}>
             <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>{stats.totalPartes}</p>
             <Text variant="meta-label">Partes</Text>

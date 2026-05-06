@@ -117,7 +117,7 @@ export function SignatureFlowShell({
         className={cn(
           mode === "fullscreen"
             ? "flex-1 min-h-0 relative flex"
-            : /* design-system-escape: p-6 → migrar para <Inset variant="dialog">; space-y-6 → migrar para <Stack gap="loose"> */ "flex-1 p-6 space-y-6"
+            : "flex-1 inset-dialog stack-loose"
         )}
       >
         {children}

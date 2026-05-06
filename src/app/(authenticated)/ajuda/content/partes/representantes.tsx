@@ -99,7 +99,7 @@ const actions: ActionDef[] = [
 export default function RepresentantesDoc() {
   return (
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Heading level="page">Representantes</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Cadastro de advogados e representantes legais vinculados às partes e processos do escritório.

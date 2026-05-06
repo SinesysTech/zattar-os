@@ -10,7 +10,7 @@ interface TypeRowProps {
 
 function TypeRow({ token, size, children }: TypeRowProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv. */ "grid grid-cols-[100px_1fr_90px] items-baseline gap-4 border-b border-dashed border-border py-2 last:border-b-0 sm:grid-cols-[120px_1fr_80px]")}>
+    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "grid grid-cols-[100px_1fr_90px] items-baseline inline-default border-b border-dashed border-border py-2 last:border-b-0 sm:grid-cols-[120px_1fr_80px]")}>
       <span className="font-mono text-[10px] text-muted-foreground">{token}</span>
       <div className="min-w-0 truncate">{children}</div>
       <span className="text-right font-mono text-[10px] text-muted-foreground">
@@ -75,7 +75,7 @@ function TypeBody() {
           <Text variant="caption">Atualizado em 12 abr 2026 · 14:32</Text>
         </TypeRow>
       </div>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "mt-4 flex items-baseline gap-4 rounded-xl border border-border bg-card px-3.5 py-3")}>
+      <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "mt-4 flex items-baseline inline-default rounded-xl border border-border bg-card px-3.5 py-3")}>
         <Text variant="kpi-value">R$ 1.245.830</Text>
         <Text variant="widget-sub">valor total em disputa · 28 processos</Text>
       </div>
@@ -128,7 +128,7 @@ function TypeMeta() {
 
 export function TypeSection() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <TypeHeadings />
       <TypeBody />
       <TypeMeta />

@@ -47,7 +47,7 @@ export default function TransacaoDetalhePage() {
   const score = transacao.conciliacao?.scoreSimilaridade;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Button variant="ghost" onClick={() => router.push('/financeiro/conciliacao-bancaria')}>
@@ -55,7 +55,7 @@ export default function TransacaoDetalhePage() {
           </Button>
           <Badge>{status}</Badge>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+        <div className={cn("flex inline-tight")}>
           {status === 'conciliado' ? (
             <Button variant="outline" onClick={handleDesconciliar}>
               Desconciliar
@@ -66,8 +66,8 @@ export default function TransacaoDetalhePage() {
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
-        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
+      <div className={cn("grid inline-default md:grid-cols-2")}>
+        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Dados da transação</p>
           <Separator />
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{transacao.descricao}</p>
@@ -76,7 +76,7 @@ export default function TransacaoDetalhePage() {
           <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento || '-'}</p>
         </Card>
 
-        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
+        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conciliação</p>
           <Separator />
           <p className={cn("text-body-sm text-muted-foreground")}>Status: {status}</p>
@@ -105,7 +105,7 @@ export default function TransacaoDetalhePage() {
           </div>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2")}>
             {sugestoes?.map((s) => (
-              <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-md border p-3 space-y-2")}>
+              <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-tight")}>
                 <div className="flex items-center justify-between">
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{s.lancamento.descricao}</p>
                   <Badge>{Math.round(s.score)}%</Badge>

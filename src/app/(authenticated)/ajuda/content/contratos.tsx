@@ -171,7 +171,7 @@ const creationSteps: StepDef[] = [
 export default function ContratosDoc() {
   return (
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Heading level="page">Contratos</Heading>
         <p className={cn("text-muted-foreground text-body-lg")}>
           Gestão de contratos de honorários e serviços firmados com os clientes do escritório.

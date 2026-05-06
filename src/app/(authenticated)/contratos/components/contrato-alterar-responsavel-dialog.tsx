@@ -85,7 +85,7 @@ export function ContratoAlterarResponsavelDialog({
           <DialogTitle>Alterar Responsável</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="responsavel-contrato">Responsável</Label>
             <Select
               value={responsavelId || 'null'}

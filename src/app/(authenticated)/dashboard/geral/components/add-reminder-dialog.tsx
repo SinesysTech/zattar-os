@@ -91,9 +91,9 @@ export function AddReminderDialog() {
             <form
               id="add-reminder-form"
               onSubmit={handleSubmit}
-              className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-4 px-6 py-4")}
+              className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "stack-default px-6 py-4")}
             >
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn("grid inline-tight")}>
                 <Label htmlFor="reminder-text">Nota</Label>
                 <Input
                   id="reminder-text"
@@ -108,7 +108,7 @@ export function AddReminderDialog() {
                 />
               </div>
 
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn("grid inline-tight")}>
                 <Label htmlFor="reminder-date">Data e Hora</Label>
                 <DateTimePicker date={date} setDate={setDate} />
               </div>
@@ -147,7 +147,7 @@ export function AddReminderDialog() {
                 </RadioGroup>
               </div>
 
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+              <div className={cn("grid inline-tight")}>
                 <Label htmlFor="reminder-category">Categoria</Label>
                 <Select
                   value={newReminder.categoria}

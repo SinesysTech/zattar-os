@@ -52,7 +52,7 @@ export function SourceLegend({
 }: SourceLegendProps) {
   return (
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+      <div className={cn("flex items-center inline-tight mb-3")}>
         <Layers className="size-3.5 text-muted-foreground/55" />
         <Text variant="caption" className="font-semibold text-foreground">Calendários</Text>
       </div>

@@ -374,7 +374,7 @@ export default function EventCalendarApp({
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col gap-4")}>
+    <div className={cn("flex min-h-[calc(100vh-var(--header-height)-2rem)] flex-col inline-default")}>
       {/* Row 1: Title + Create button */}
       <div className="flex items-center justify-between">
         <Heading level="page">Agenda</Heading>
@@ -385,7 +385,7 @@ export default function EventCalendarApp({
       </div>
 
       {/* Row 2: Search (left) + Navigation controls + View selector (right) */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <div className="relative max-w-sm flex-1">
           <SearchIcon
             className="text-muted-foreground/70 pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
@@ -516,7 +516,7 @@ function CalendarViewPopover({
                   setOpen(false);
                 }}
                 className={cn(
-                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm transition-colors",
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center inline-tight rounded-sm px-2 py-1.5 text-body-sm transition-colors",
                   "hover:bg-accent hover:text-accent-foreground",
                   "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2",
                   isSelected && "bg-accent text-accent-foreground"
@@ -536,7 +536,7 @@ function CalendarViewPopover({
               setOpen(false);
             }}
             className={cn(
-              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm transition-colors",
+              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center inline-tight rounded-sm px-2 py-1.5 text-body-sm transition-colors",
               "hover:bg-accent hover:text-accent-foreground",
               "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2"
             )}

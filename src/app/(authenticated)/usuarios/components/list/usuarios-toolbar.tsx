@@ -50,7 +50,7 @@ export function UsuariosToolbar({
   return (
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
       {/* Left: tabs + filter */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+      <div className={cn("flex items-center inline-tight flex-wrap")}>
         <TabPills tabs={tabs} active={activeTab} onChange={onTabChange} />
         <FilterPopover
           label="Cargo"
@@ -62,7 +62,7 @@ export function UsuariosToolbar({
       </div>
 
       {/* Right: search + view toggle */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+      <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
         <SearchInput
           value={search}
           onChange={onSearchChange}

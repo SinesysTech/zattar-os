@@ -186,7 +186,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
         {/* ── Section: Sincronizar ── */}
         {section === 'sincronizar' && (
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-1 padding direcional sem Inset equiv. */ "flex flex-col gap-4 pt-1")}>
+          <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-col inline-default pt-1")}>
             <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground leading-relaxed")}>
               Dispare uma sincronização manual para buscar novas publicações
               do Comunicação CNJ.
@@ -199,12 +199,12 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
               className="w-full"
             >
               {isSyncing ? (
-                <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <span className={cn("flex items-center inline-tight")}>
                   <LoadingSpinner />
                   Sincronizando...
                 </span>
               ) : result ? (
-                <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <span className={cn("flex items-center inline-tight")}>
                   <CheckCircle2 className="size-4 text-success" />
                   Sincronizar novamente
                 </span>
@@ -215,7 +215,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
             {/* Results grid */}
             {result && !isSyncing && (
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+              <div className={cn("flex flex-col inline-tight")}>
                 <Text variant="caption" className="font-medium">
                   Resultado da sincronização
                 </Text>

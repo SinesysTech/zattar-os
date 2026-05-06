@@ -28,7 +28,7 @@ export default async function SystemBoardPage({ params }: Props) {
 
   const user = await getCurrentUser();
   if (!user) {
-    return <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>Você precisa estar autenticado.</div>;
+    return <div className={cn("inset-dialog")}>Você precisa estar autenticado.</div>;
   }
 
   const isSuperAdmin = user.roles.includes("admin");
@@ -40,7 +40,7 @@ export default async function SystemBoardPage({ params }: Props) {
   );
 
   if (!eventsResult.success) {
-    return <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>Erro ao carregar: {eventsResult.error.message}</div>;
+    return <div className={cn("inset-dialog")}>Erro ao carregar: {eventsResult.error.message}</div>;
   }
 
   const quadrosResult = await tarefasService.listarQuadros(user.id);

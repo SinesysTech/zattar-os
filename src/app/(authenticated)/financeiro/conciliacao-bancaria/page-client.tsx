@@ -315,7 +315,7 @@ export default function ConciliacaoBancariaPage() {
 
   return (
     <>
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         {/* Linha 1: Título + Botão Importar Extrato */}
         <div className="flex items-center justify-between">
           <Heading level="page">Conciliação Bancária</Heading>

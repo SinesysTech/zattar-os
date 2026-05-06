@@ -44,7 +44,7 @@ export function EventAttachmentsList({
           Nenhum arquivo disponível.
         </p>
       ) : (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+        <div className={cn("flex flex-col inline-tight")}>
           {/* Arquivo do Backblaze B2 */}
           {temBackblaze && item.backblaze && (
             <div

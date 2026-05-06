@@ -86,8 +86,8 @@ export function LinkGeradoDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-2 padding direcional sem Inset equiv. */ "space-y-4 py-2")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 items-center")}>
+        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "stack-default py-2")}>
+          <div className={cn("flex inline-tight items-center")}>
             <Input readOnly value={fullUrl} className={cn("text-caption")} />
             <Button
               size="sm"
@@ -99,7 +99,7 @@ export function LinkGeradoDialog({
             </Button>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 sm:grid-cols-2 gap-2")}>
+          <div className={cn("grid grid-cols-1 sm:grid-cols-2 inline-tight")}>
             <Button
               size="sm"
               variant="outline"

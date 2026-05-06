@@ -157,7 +157,7 @@ export function DocumentList() {
               selectedFolderId={pastaAtual}
             />
           </div>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-2 → usar <Inset> */ "space-y-2 border-t p-2")}>
+          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "stack-tight border-t p-2")}>
             <Button
               variant="outline"
               size="sm"
@@ -184,8 +184,8 @@ export function DocumentList() {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-1 items-center gap-2")}>
+          <div className={cn("flex items-center justify-between inline-default")}>
+            <div className={cn("flex flex-1 items-center inline-tight")}>
               {/* Busca */}
               <div className="relative flex-1 max-w-sm">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -221,7 +221,7 @@ export function DocumentList() {
               </Select>
             </div>
 
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               {/* View mode toggle */}
               <Tabs
                 value={viewMode}
@@ -247,7 +247,7 @@ export function DocumentList() {
 
           {/* Tags ativas */}
           {tagsAtivas.length > 0 && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex flex-wrap gap-2")}>
+            <div className={cn("mt-3 flex flex-wrap inline-tight")}>
               <span className={cn("text-body-sm text-muted-foreground")}>Tags:</span>
               {tagsAtivas.map((tag) => (
                 <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "gap-1")}>
@@ -278,7 +278,7 @@ export function DocumentList() {
         {/* Lista/Grid de documentos */}
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 overflow-auto p-4")}>
           {loading ? (
-            <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <div className={cn("stack-default")}>
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />
               <Skeleton className="h-20 w-full" />
@@ -309,7 +309,7 @@ export function DocumentList() {
               </div>
             </div>
           ) : viewMode === 'grid' ? (
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>
+            <div className={cn("grid inline-default sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4")}>
               {documentos.map((doc) => (
                 <DocumentCard
                   key={doc.id}
@@ -335,7 +335,7 @@ export function DocumentList() {
                 {Math.min((params.offset || 0) + documentos.length, total)} de{' '}
                 {total} documentos
               </p>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Button
                   variant="outline"
                   size="sm"

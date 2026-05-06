@@ -32,7 +32,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
   const forteIndicioVinculo = data.atende_exclusivamente === true && data.pode_enviar_substituto === false;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">Só Você Serve</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -71,7 +71,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       )}
 
       {/* C.3.3: Proibição de outros clientes */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="proibicao">A empresa proibia (formal ou informalmente) que atendesse outros clientes?</Label>
         <Select
           value={data.proibicao_outros_clientes ?? ''}
@@ -101,7 +101,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
       </div>
 
       {/* C.3.5: Duração da relação */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="duracao">Quanto tempo durou sua relação com esta empresa?</Label>
         <Select
           value={data.duracao_relacao ?? ''}

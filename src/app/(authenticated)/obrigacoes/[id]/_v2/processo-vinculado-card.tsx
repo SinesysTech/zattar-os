@@ -86,7 +86,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
 
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mb-5")}>
         {processo.descricao_orgao_julgador && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
+          <div className={cn("flex items-start inline-tight")}>
             <Building2 className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
             <Text
               variant="caption"
@@ -121,7 +121,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
 
 function PartesRow({ polo, nome }: { polo: string; nome: string }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 min-w-0")}>
+    <div className={cn("flex items-baseline inline-tight min-w-0")}>
       <Text
         variant="meta-label"
         className="text-muted-foreground/55 shrink-0 w-12"

@@ -22,7 +22,7 @@ export function HorasExtrasCalculator() {
   const totalBruto = totalHorasExtras + dsr;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-8 → migrar para <Stack gap="section">; pb-20 padding direcional sem Inset equiv. */ "max-w-6xl mx-auto space-y-8 animate-in fade-in duration-700 w-full pb-20")}>
+    <div className={cn(/* design-system-escape: pb-20 padding direcional sem Inset equiv. */ "max-w-6xl mx-auto stack-section animate-in fade-in duration-700 w-full pb-20")}>
       
       {/* Header */}
       <div className="mb-12">
@@ -39,10 +39,10 @@ export function HorasExtrasCalculator() {
 
       <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "grid grid-cols-1 lg:grid-cols-12 gap-8 items-start")}>
         {/* Formulário / Inputs */}
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "lg:col-span-7 space-y-6")}>
+        <div className={cn("lg:col-span-7 stack-loose")}>
           <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "bg-surface-container-high/60 backdrop-blur-xl rounded-2xl p-8 border border-foreground/5 shadow-lg")}>
             <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 gap-8")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Salário Bruto (R$)</Text>
                 <input 
                   type="number" 
@@ -52,7 +52,7 @@ export function HorasExtrasCalculator() {
                 />
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Jornada Mensal</Text>
                 <input 
                   type="number" 
@@ -62,7 +62,7 @@ export function HorasExtrasCalculator() {
                 />
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Qtd. Horas Extras</Text>
                 <input 
                   type="number" 
@@ -72,9 +72,9 @@ export function HorasExtrasCalculator() {
                 />
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Adicional</Text>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+                <div className={cn("flex inline-tight")}>
                   <button 
                     onClick={() => setPercentual(50)}
                     className={`flex-1 py-4 font-bold text-sm rounded-lg transition-all ${percentual === 50 ? 'bg-primary text-on-primary-fixed' : 'bg-surface-container-highest text-on-surface-variant hover:text-on-surface border border-foreground/5'}`}
@@ -99,7 +99,7 @@ export function HorasExtrasCalculator() {
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog">; gap-6 → migrar para <Inline gap="loose"> */ "bg-surface-container-low rounded-xl p-6 border border-foreground/5 flex gap-6 items-start")}>
+          <div className={cn("bg-surface-container-low rounded-xl inset-dialog border border-foreground/5 flex inline-loose items-start")}>
             <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
               <Gavel className="text-primary w-6 h-6" />
             </div>
@@ -115,13 +115,13 @@ export function HorasExtrasCalculator() {
           <div className="bg-surface-container-lowest/40 backdrop-blur-[20px] border border-foreground/10 rounded-2xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
             <div className={cn(/* design-system-escape: p-8 → usar <Inset>; pb-4 padding direcional sem Inset equiv. */ "p-8 pb-4")}>
               <Text variant="caption" className="uppercase tracking-widest text-primary font-bold">Resultado da Análise</Text>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex items-baseline gap-2")}>
+              <div className={cn("mt-4 flex items-baseline inline-tight")}>
                 <span className="text-5xl font-black font-headline text-on-surface">R$ {totalBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-on-surface-variant text-body-sm font-medium")}>TOTAL LÍQUIDO</span>
               </div>
             </div>
             
-            <div className={cn(/* design-system-escape: px-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "px-8 space-y-4 mb-8")}>
+            <div className={cn(/* design-system-escape: px-8 padding direcional sem Inset equiv. */ "px-8 stack-default mb-8")}>
               <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3 border-b border-foreground/5")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>Valor da Hora Base</span>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-on-surface font-medium")}>R$ {valorHora.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
@@ -136,7 +136,7 @@ export function HorasExtrasCalculator() {
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: p-8 → usar <Inset>; gap-4 → migrar para <Inline gap="default"> */ "p-8 bg-foreground/5 flex gap-4")}>
+            <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 bg-foreground/5 flex inline-default")}>
               <button className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; font-bold → className de <Text>/<Heading> */ "flex-1 py-3 border border-foreground/10 rounded-lg text-body-sm font-bold text-on-surface hover:bg-foreground/5 transition-all")}>Exportar PDF</button>
               <button className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; font-bold → className de <Text>/<Heading> */ "flex-1 py-3 border border-foreground/10 rounded-lg text-body-sm font-bold text-on-surface hover:bg-foreground/5 transition-all")}>Compartilhar Relatório</button>
             </div>

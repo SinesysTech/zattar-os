@@ -135,8 +135,8 @@ export function EditParcelaDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-tight")}>
             <Label>Valor Bruto do Crédito Principal</Label>
             <Input
               type="text"
@@ -148,7 +148,7 @@ export function EditParcelaDialog({
             <Text variant="caption" className="text-muted-foreground">Atual: {formatCurrency(parcela.valorBrutoCreditoPrincipal)}</Text>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Honorários Sucumbenciais</Label>
             <Input
               type="text"
@@ -160,7 +160,7 @@ export function EditParcelaDialog({
             <Text variant="caption">Atual: {formatCurrency(parcela.honorariosSucumbenciais)}</Text>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label>Data de Vencimento</Label>
             <FormDatePicker
               value={valores.dataVencimento || undefined}
@@ -169,7 +169,7 @@ export function EditParcelaDialog({
             />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-start gap-2 p-3 rounded-md bg-warning/5 border border-warning/15")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight p-3 rounded-md bg-warning/5 border border-warning/15")}>
             <AlertCircle className="h-5 w-5 text-warning mt-0.5 shrink-0" />
             <div className={cn("text-body-sm text-warning")}>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>Atenção</p>

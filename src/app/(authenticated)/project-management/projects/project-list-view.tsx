@@ -39,12 +39,12 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
 
   if (viewMode === "cards") {
     return (
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between py-4")}>
           <Heading level="page">
             Projetos
           </Heading>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             {viewModeToggle}
             <Button
               onClick={() =>
@@ -56,7 +56,7 @@ export function ProjectListView({ projetos }: ProjectListViewProps) {
             </Button>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-4")}>
+        <div className={cn("grid grid-cols-1 inline-default lg:grid-cols-2 xl:grid-cols-4")}>
           {projetos.map((projeto) => (
             <ProjectCard key={projeto.id} projeto={projeto} />
           ))}

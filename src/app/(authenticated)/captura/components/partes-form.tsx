@@ -151,7 +151,7 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -159,9 +159,9 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
           onCredenciaisChange={setCredenciaisSelecionadas}
           onCredenciaisDisponiveisChange={setCredenciaisDisponiveis}
         >
-          <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 md:grid-cols-2 gap-6")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-loose")}>
             {credSelecionadasDetalhes.length > 0 && (
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
+              <div className={cn("stack-tight md:col-span-2")}>
                 <Label>Escopo da captura</Label>
                 <Text variant="caption" as="div" className="rounded-md border border-dashed border-border/60 p-3 space-y-1">
                   <p>
@@ -177,7 +177,7 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
               </div>
             )}
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="numeroProcesso">Número do processo (único)</Label>
               <Input
                 id="numeroProcesso"
@@ -190,7 +190,7 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
               </Text>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="numerosLista">Lista de processos</Label>
               <Textarea
                 id="numerosLista"

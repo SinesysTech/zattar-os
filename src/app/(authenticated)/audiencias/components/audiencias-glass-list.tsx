@@ -231,7 +231,7 @@ function GlassRow({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
       )}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
+      <div className={cn("flex items-start inline-default")}>
         {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center gap-1.5 w-22 shrink-0 pt-0.5")}>
           <div className="text-center">
@@ -256,7 +256,7 @@ function GlassRow({
         <div className="flex-1 min-w-0">
 
           {/* L1 — Título + badges/flags à direita */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <h3 className="text-card-title text-foreground truncate">
               {audiencia.tipoDescricao || 'Audiência'}
             </h3>
@@ -448,16 +448,16 @@ function GlassRow({
 
 function ListSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+    <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
         <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/60 bg-card p-4")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2 w-21 shrink-0")}>
+          <div className={cn("flex items-start inline-default")}>
+            <div className={cn("flex flex-col items-center inline-tight w-21 shrink-0")}>
               <Skeleton className="w-11 h-11 rounded-full" />
               <Skeleton className="h-3 w-14" />
               <Skeleton className="h-3 w-12" />
             </div>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+            <div className={cn("flex-1 stack-tight")}>
               <Skeleton className="h-4 w-64" />
               <Skeleton className="h-3.5 w-full" />
               <Skeleton className="h-3 w-48" />
@@ -496,7 +496,7 @@ export function AudienciasGlassList({ audiencias, isLoading, onView, usuarios }:
 
   return (
     <TooltipProvider>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
+      <div className={cn("flex flex-col inline-tight")}>
         {audiencias.map((aud) => (
           <GlassRow key={aud.id} audiencia={aud} onView={() => onView(aud)} usuarios={usuarios} />
         ))}

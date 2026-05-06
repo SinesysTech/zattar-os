@@ -94,7 +94,7 @@ export function ClienteSelect({
 
   if (error && options.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-destructive")}>
+      <div className={cn("flex items-center inline-tight text-body-sm text-destructive")}>
         <span>{error}</span>
         <button
           type="button"
@@ -118,7 +118,7 @@ export function ClienteSelect({
           disabled={disabled}
           className="w-full justify-between"
         >
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 truncate")}>
+          <div className={cn("flex items-center inline-tight truncate")}>
             {selectedOption ? (
               <>
                 <User className="h-4 w-4 shrink-0 opacity-50" />
@@ -146,7 +146,7 @@ export function ClienteSelect({
           <CommandList>
             <CommandEmpty>
               {loading ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-2 py-4")}>
+                <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-tight py-4")}>
                   <RefreshCw className="h-4 w-4 animate-spin" />
                   <span>Carregando...</span>
                 </div>
@@ -166,7 +166,7 @@ export function ClienteSelect({
                     setOpen(false);
                     setSearchQuery("");
                   }}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                  className={cn("flex items-center inline-tight")}
                 >
                   <Check
                     className={cn(

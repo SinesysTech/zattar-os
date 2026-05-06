@@ -131,7 +131,7 @@ export default function TribunaisPage() {
 
         {/* Filter Bar */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+          <div className={cn("flex items-center inline-tight flex-wrap")}>
             <AdvogadosFilter
               title="Tribunal"
               options={tribunalOptions}
@@ -145,7 +145,7 @@ export default function TribunaisPage() {
               onValueChange={setTipoAcessoFilter}
             />
           </div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+          <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar tribunais..." />
           </div>
         </div>
@@ -173,7 +173,7 @@ export default function TribunaisPage() {
                 className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 h-full")}
               >
                 {/* Header: Acronym + Name + Grau badge */}
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2 mb-3")}>
+                <div className={cn("flex items-start justify-between inline-tight mb-3")}>
                   <div className="min-w-0">
                     <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-lg font-bold text-primary font-heading leading-none")}>
                       {tribunal.tribunal_codigo}

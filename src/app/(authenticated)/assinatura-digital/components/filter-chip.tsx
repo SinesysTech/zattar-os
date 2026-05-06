@@ -128,7 +128,7 @@ export function FilterChipMulti({
                   type="button"
                   onClick={() => toggle(opt.value)}
                   className={cn(
-                    /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                    /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                     isSelected
                       ? 'bg-primary/8 text-primary'
                       : 'hover:bg-muted/30 text-muted-foreground/70',

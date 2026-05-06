@@ -211,9 +211,9 @@ export function ObrigacoesSemanaView({
   const weekLabel = `${format(weekStart, "d 'de' MMM", { locale: ptBR })} — ${format(friday, "d 'de' MMM", { locale: ptBR })}`;
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Week Navigator */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <button
           onClick={handlePrevWeek}
           className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
@@ -257,7 +257,7 @@ export function ObrigacoesSemanaView({
             >
               {/* Day header */}
               <div className="flex items-center justify-between mb-3">
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <span
                     className={cn(
                       /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
@@ -290,7 +290,7 @@ export function ObrigacoesSemanaView({
                   <Text variant="caption" className="text-muted-foreground/30">—</Text>
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   {dayItems.map((item) => (
                     <WeekDayCard
                       key={item.parcela.id}

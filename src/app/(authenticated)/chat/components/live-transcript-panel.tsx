@@ -28,7 +28,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
   return (
     <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-video-surface-hover rounded-lg shadow-lg flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
       <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3 border-b border-video-surface-hover")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-video-text")}>
+        <div className={cn("flex items-center inline-tight text-video-text")}>
           <MessageSquareText className="w-4 h-4" />
           <Heading level="widget">Transcrição em Tempo Real</Heading>
         </div>
@@ -51,7 +51,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
           ) : (
             transcripts.map((segment) => (
               <div key={segment.id} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
+                <div className={cn("flex items-center justify-between inline-tight")}>
                   <Text variant="caption" className="font-bold text-info truncate max-w-37.5">
                     {segment.participantName}
                   </Text>

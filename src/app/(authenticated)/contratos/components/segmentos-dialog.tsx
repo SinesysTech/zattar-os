@@ -257,10 +257,10 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 overflow-y-auto space-y-4")}>
+          <div className={cn("flex-1 overflow-y-auto stack-default")}>
             {/* Formulário de Criação/Edição */}
             {(isCreating || editingId) && (
-              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "border rounded-lg p-4 space-y-4")}>
+              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border rounded-lg p-4 stack-default")}>
                 <div className="flex items-center justify-between">
                   <small className="text-sm font-medium leading-none">
                     {editingId ? 'Editar Segmento' : 'Novo Segmento'}
@@ -275,9 +275,9 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   </Button>
                 </div>
 
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
-                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                <div className={cn("grid inline-default")}>
+                  <div className={cn("grid grid-cols-2 inline-default")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label htmlFor="nome">
                         Nome <span className="text-destructive">*</span>
                       </Label>
@@ -291,7 +291,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                       />
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label htmlFor="slug">
                         Slug <span className="text-destructive">*</span>
                       </Label>
@@ -308,7 +308,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     </div>
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                  <div className={cn("grid inline-tight")}>
                     <Label htmlFor="descricao">Descrição</Label>
                     <Textarea
                       id="descricao"
@@ -323,7 +323,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   </div>
 
                   {editingId && (
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                    <div className={cn("flex items-center inline-tight")}>
                       <Checkbox
                         id="ativo"
                         checked={formData.ativo}
@@ -339,7 +339,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                   )}
                 </div>
 
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+                <div className={cn("flex justify-end inline-tight")}>
                   <Button
                     variant="outline"
                     onClick={resetForm}
@@ -388,7 +388,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     key={segmento.id}
                     className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded")}
                   >
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 min-w-0")}>
+                    <div className={cn("flex items-center inline-tight flex-1 min-w-0")}>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{segmento.nome}</span>
                       {!segmento.ativo && (
                         <AppBadge variant="secondary" className={cn("text-caption")}>

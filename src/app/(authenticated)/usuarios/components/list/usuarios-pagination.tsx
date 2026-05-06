@@ -38,7 +38,7 @@ export function UsuariosPagination({
 
   return (
     <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between px-2 py-4")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <p className="text-sm text-muted-foreground">
           Mostrando {pageIndex * pageSize + 1} a{' '}
           {Math.min((pageIndex + 1) * pageSize, total)} de {total} resultados
@@ -57,7 +57,7 @@ export function UsuariosPagination({
         </Select>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <Button
           variant="outline"
           size="sm"

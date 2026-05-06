@@ -133,7 +133,7 @@ export function ObrigacoesYearWrapper({
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh]">
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-1 → usar <Inset> */ "space-y-2 p-1")}>
+            <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "stack-tight p-1")}>
               {selectedDayParcelas.map((item, idx) => (
                 <GlassPanel
                   key={idx}
@@ -150,7 +150,7 @@ export function ObrigacoesYearWrapper({
                         {item.acordo.processo?.numero_processo ||
                           `Acordo #${item.acordo.id}`}
                       </Text>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
+                      <div className={cn("flex items-center inline-tight mt-1")}>
                         <SemanticBadge
                           category="obrigacao_tipo"
                           value={item.acordo.tipo}

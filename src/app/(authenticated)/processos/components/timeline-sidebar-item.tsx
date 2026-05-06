@@ -54,7 +54,7 @@ export function TimelineSidebarItem({
       disabled={!isClickable}
       onClick={() => isClickable && onSelect(item)}
       className={cn(
-        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; gap-2 → migrar para <Inline gap="tight"> */ 'w-full text-left px-3 py-2 flex items-start gap-2 transition-colors border-l-2',
+        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full text-left px-3 py-2 flex items-start inline-tight transition-colors border-l-2',
         isClickable
           ? 'cursor-pointer hover:bg-accent/50'
           : 'cursor-default opacity-60',

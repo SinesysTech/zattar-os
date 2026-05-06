@@ -43,7 +43,7 @@ export function ChatSidebar({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "px-5 pt-5 space-y-4")}>
+      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv. */ "px-5 pt-5 stack-default")}>
         {/* Title row */}
         <div className="flex items-center justify-between">
           <div>

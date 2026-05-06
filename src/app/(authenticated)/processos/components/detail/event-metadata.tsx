@@ -21,7 +21,7 @@ function MetadataRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex justify-between items-start gap-4")}>
+    <div className={cn("flex justify-between items-start inline-default")}>
       <Text variant="label" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-muted-foreground font-medium shrink-0")}>
         {label}
       </Text>
@@ -50,7 +50,7 @@ export function EventMetadata({ item }: EventMetadataProps) {
 
   return (
     <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "px-6 py-6 border-b")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
+      <div className={cn("flex flex-col inline-default")}>
         {/* ID */}
         <MetadataRow label="ID">
           <span

@@ -170,7 +170,7 @@ export function MissionCard({
               <Gavel className="size-4 text-primary" />
             </IconContainer>
             <div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-primary/60")}>
                   {isOngoing ? 'Em andamento' : isPast ? 'Concluída' : 'Próxima missão'}
                 </span>
@@ -244,7 +244,7 @@ export function MissionCard({
 
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 mb-4 px-3 py-2 rounded-lg bg-border/5")}>
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight mb-4 px-3 py-2 rounded-lg bg-border/5")}>
             <span className="text-micro-caption text-foreground/70 truncate">{audiencia.poloAtivoNome || '–'}</span>
             <span className="text-micro-caption text-muted-foreground/55 shrink-0">vs</span>
             <span className="text-micro-caption text-foreground/70 truncate">{audiencia.poloPassivoNome || '–'}</span>
@@ -260,7 +260,7 @@ export function MissionCard({
         )}
 
         {/* Bottom: Prep Score + Actions */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+        <div className={cn("flex items-end justify-between inline-default")}>
           {/* Prep Score */}
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <div className="relative shrink-0" style={{ width: ringSize, height: ringSize }}>

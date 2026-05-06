@@ -92,7 +92,7 @@ export function ExpedientesReverterBaixaDialog({
   const generalError = !formState.success ? (formState.error || formState.message) : null;
 
   const footerButtons = (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full items-center justify-end gap-2")}>
+    <div className={cn("flex w-full items-center justify-end inline-tight")}>
       <Button
         type="button"
         variant="outline"
@@ -125,9 +125,9 @@ export function ExpedientesReverterBaixaDialog({
           <DialogTitle>Reverter Baixa de Expediente</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn("stack-loose")}>
         {/* Informações do expediente */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-tight rounded-lg border p-4 bg-muted/50")}>
           <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
             <div>
@@ -173,7 +173,7 @@ export function ExpedientesReverterBaixaDialog({
         </div>
 
         {/* Confirmação textual — previne reversão acidental */}
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           <Label htmlFor="reverter-confirmacao" className={cn("text-body-sm")}>
             Para confirmar, digite{' '}
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{PALAVRA_CONFIRMACAO}</span> abaixo

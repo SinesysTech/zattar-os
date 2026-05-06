@@ -196,15 +196,15 @@ export default function ContaReceberDetalhesPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("stack-loose")}>
+        <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
+        <div className={cn("grid inline-loose md:grid-cols-2")}>
           <Skeleton className="h-64" />
           <Skeleton className="h-64" />
         </div>
@@ -215,7 +215,7 @@ export default function ContaReceberDetalhesPage() {
   // Error state
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -231,7 +231,7 @@ export default function ContaReceberDetalhesPage() {
   // Not found state
   if (!contaReceber) {
     return (
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -250,10 +250,10 @@ export default function ContaReceberDetalhesPage() {
   const isPendente = contaReceber.status === 'pendente';
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+        <div className={cn("flex items-center inline-default")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -270,7 +270,7 @@ export default function ContaReceberDetalhesPage() {
 
         {/* Actions */}
         {isPendente && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Button variant="outline" onClick={() => setEditDialogOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
               Editar
@@ -308,16 +308,16 @@ export default function ContaReceberDetalhesPage() {
       />
 
       {/* Cards de detalhes */}
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
+      <div className={cn("grid inline-loose md:grid-cols-2")}>
         {/* Informações Financeiras */}
         <Card>
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <DollarSign className="h-5 w-5" />
               Informações Financeiras
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <CardContent className={cn("stack-default")}>
             <DetalheItem
               icon={DollarSign}
               label="Valor Total"
@@ -397,12 +397,12 @@ export default function ContaReceberDetalhesPage() {
         {/* Informações de Vinculação */}
         <Card>
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <Building2 className="h-5 w-5" />
               Vinculações
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <CardContent className={cn("stack-default")}>
             {contaReceber.cliente ? (
               <DetalheItem
                 icon={User}
@@ -482,7 +482,7 @@ export default function ContaReceberDetalhesPage() {
             <Card className="md:col-span-2">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <CardTitle className={cn("flex items-center inline-tight")}>
                     <History className="h-5 w-5" />
                     Histórico de Recebimentos
                   </CardTitle>
@@ -506,9 +506,9 @@ export default function ContaReceberDetalhesPage() {
                   {/* Timeline line */}
                   <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted" />
 
-                  <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+                  <div className={cn("stack-loose")}>
                     {historico!.recebimentos.map((recebimento, index) => (
-                      <div key={recebimento.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
+                      <div key={recebimento.id} className={cn("relative flex inline-default")}>
                         {/* Timeline dot */}
                         <div
                           className={cn(
@@ -527,7 +527,7 @@ export default function ContaReceberDetalhesPage() {
 
                         {/* Content */}
                         <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex-1 pb-4")}>
-                          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+                          <div className={cn("flex items-start justify-between inline-default")}>
                             <div>
                               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                                 {formatarValor(recebimento.valor)}
@@ -570,7 +570,7 @@ export default function ContaReceberDetalhesPage() {
         {contaReceber.observacoes && (
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <CardTitle className={cn("flex items-center inline-tight")}>
                 <FileText className="h-5 w-5" />
                 Observações
               </CardTitle>
@@ -585,7 +585,7 @@ export default function ContaReceberDetalhesPage() {
         {contaReceber.anexos && contaReceber.anexos.length > 0 && (
           <Card className="md:col-span-2">
             <CardHeader>
-              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <CardTitle className={cn("flex items-center inline-tight")}>
                 <Paperclip className="h-5 w-5" />
                 Anexos
               </CardTitle>
@@ -631,14 +631,14 @@ export default function ContaReceberDetalhesPage() {
         {/* Informações de Auditoria */}
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <Clock className="h-5 w-5" />
               Auditoria
             </CardTitle>
             <CardDescription>Informações de criação e atualização</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-3")}>
+            <div className={cn("grid inline-default sm:grid-cols-3")}>
               <DetalheItem
                 icon={Calendar}
                 label="Data de Lançamento"

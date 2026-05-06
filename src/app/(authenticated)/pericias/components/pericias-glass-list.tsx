@@ -146,7 +146,7 @@ function ResponsavelCell({ responsavelId, usuarios }: ResponsavelCellProps) {
 
   if (responsavel && nome) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+      <div className={cn("flex items-center inline-tight min-w-0")}>
         <Avatar size="xs" className="shrink-0 size-6">
           <AvatarImage src={responsavel.avatarUrl || undefined} alt={nome} />
           <AvatarFallback className="text-[9px]">
@@ -161,7 +161,7 @@ function ResponsavelCell({ responsavelId, usuarios }: ResponsavelCellProps) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+    <div className={cn("flex items-center inline-tight min-w-0")}>
       <div className="size-6 rounded-full bg-muted/40 flex items-center justify-center shrink-0">
         <User className="size-3 text-muted-foreground/40" />
       </div>
@@ -233,7 +233,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
           )}
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 shrink-0")}>
+        <div className={cn("flex items-center inline-tight shrink-0")}>
           {especialidade && (
             <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
               {especialidade}
@@ -270,7 +270,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
 
       {/* ── Footer: Prazo · Responsável · Countdown ── */}
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "mt-3 pt-3 border-t border-border/40 flex items-center justify-between gap-3 flex-wrap")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 min-w-0 flex-wrap")}>
+        <div className={cn("flex items-center inline-default min-w-0 flex-wrap")}>
           {prazoFormatted && (
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium")}>
@@ -316,7 +316,7 @@ export function PericiasGlassList({
 }: PericiasGlassListProps) {
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         {Array.from({ length: 6 }).map((_, i) => (
           <Skeleton key={i} className="h-28 w-full rounded-2xl" />
         ))}
@@ -337,7 +337,7 @@ export function PericiasGlassList({
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {pericias.map((pericia) => (
         <GlassRow
           key={pericia.id}

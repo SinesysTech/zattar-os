@@ -25,15 +25,15 @@ export function SimNaoRadio({
     <RadioGroup
       value={radioValue}
       onValueChange={(v) => onValueChange(v === 'sim')}
-      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}
+      className={cn("flex inline-default")}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <RadioGroupItem value="sim" id={`${id}-sim`} />
         <Label htmlFor={`${id}-sim`} className="cursor-pointer font-normal">
           {labelSim}
         </Label>
       </div>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <RadioGroupItem value="nao" id={`${id}-nao`} />
         <Label htmlFor={`${id}-nao`} className="cursor-pointer font-normal">
           {labelNao}

@@ -184,7 +184,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-full">
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4")}>
+        <div className={cn("flex-1 stack-default")}>
           {/* Datas e Horários - Grid 4 colunas em telas grandes */}
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 lg:grid-cols-4 gap-3")}>
             <FormField
@@ -307,7 +307,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
           </div>
 
           {/* Tipo e Modalidade - Grid 2 colunas */}
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-2 gap-4")}>
+          <div className={cn("grid grid-cols-1 lg:grid-cols-2 inline-default")}>
             <FormField
               control={form.control}
               name="tipoAudienciaId"
@@ -343,7 +343,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value ?? undefined}
-                      className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-1 padding direcional sem Inset equiv. */ "flex flex-row gap-4 pt-1")}
+                      className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-row inline-default pt-1")}
                     >
                       <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
                         <FormControl>

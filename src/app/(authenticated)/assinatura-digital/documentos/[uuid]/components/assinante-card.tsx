@@ -90,7 +90,7 @@ function ImagePreview({
       <button
         type="button"
         onClick={() => url && setShowDialog(true)}
-        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex min-w-24 flex-col items-center gap-2 rounded-2xl border border-dashed border-border/70 bg-background/80 px-3 py-3 transition-colors hover:bg-muted/40 cursor-pointer")}
+        className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex min-w-24 flex-col items-center inline-tight rounded-2xl border border-dashed border-border/70 bg-background/80 px-3 py-3 transition-colors hover:bg-muted/40 cursor-pointer")}
       >
         {isLoading ? (
           <LoadingSpinner className="size-8 text-muted-foreground" />
@@ -151,8 +151,8 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
     <Card className={cn(/* design-system-escape: py-0 padding direcional sem Inset equiv. */ "overflow-hidden rounded-3xl border-border/60 bg-muted/15 py-0 shadow-none hover:shadow-sm")}>
       <CardHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "border-b border-border/60 px-5 py-4")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
+          <div className={cn("stack-tight")}>
+            <div className={cn("flex flex-wrap items-center inline-tight")}>
               <CardTitle className={cn("text-body")}>
               {signatario.nome || `Assinante ${index + 1}`}
               </CardTitle>
@@ -176,12 +176,12 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "space-y-4 px-5 py-4")}>
+      <CardContent className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "stack-default px-5 py-4")}>
         {/* Dados pessoais */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>
           {signatario.cpf && (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-body-sm")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-muted-foreground")}>
+              <div className={cn("flex items-center inline-tight text-muted-foreground")}>
                 <CreditCard className="h-3.5 w-3.5 shrink-0" />
                 <span>CPF</span>
               </div>
@@ -190,7 +190,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           )}
           {signatario.email && (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-body-sm")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-muted-foreground")}>
+              <div className={cn("flex items-center inline-tight text-muted-foreground")}>
                 <Mail className="h-3.5 w-3.5 shrink-0" />
                 <span>Email</span>
               </div>
@@ -199,7 +199,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           )}
           {signatario.telefone && (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-body-sm")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-muted-foreground")}>
+              <div className={cn("flex items-center inline-tight text-muted-foreground")}>
                 <Phone className="h-3.5 w-3.5 shrink-0" />
                 <span>Telefone</span>
               </div>
@@ -208,7 +208,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           )}
           {signatario.concluidoEm && (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/50 bg-background/80 px-4 py-3 text-body-sm")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-muted-foreground")}>
+              <div className={cn("flex items-center inline-tight text-muted-foreground")}>
                 <Clock className="h-3.5 w-3.5 shrink-0" />
                 <span>Assinado em</span>
               </div>
@@ -271,7 +271,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
         {signatario.token && !isConcluido && (
           <>
             <Separator />
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+            <div className={cn("flex flex-wrap inline-tight")}>
               <Button
                 variant="outline"
                 size="sm"

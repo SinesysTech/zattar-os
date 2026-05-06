@@ -50,7 +50,7 @@ export function NavMobile() {
 
         <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-2 py-2")}>
           <ComposeMailDialog>
-            <Button variant="default" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2")}>
+            <Button variant="default" className={cn("w-full inline-tight")}>
               <Pencil className="h-4 w-4" />
               Novo E-mail
             </Button>

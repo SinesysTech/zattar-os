@@ -100,7 +100,7 @@ export function AgendaEventDetail({
           {/* ── Header ── */}
           <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-0 padding direcional sem Inset equiv. */ "px-7 pt-6 pb-0 shrink-0")}>
             {/* Top row */}
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4 mb-4")}>
+            <div className={cn("flex items-start justify-between inline-default mb-4")}>
               <div className={cn(/* design-system-escape: gap-3.5 gap sem token DS */ "flex items-start gap-3.5 flex-1 min-w-0")}>
                 <div className={cn(
                   "size-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5",
@@ -196,13 +196,13 @@ export function AgendaEventDetail({
             {/* Action buttons */}
             {event.source === "audiencias" && (
               <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 mb-5 flex-wrap")}>
-                <button className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-[13px] font-medium hover:bg-primary/90 transition-colors cursor-pointer")}>
+                <button className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight px-4 py-2 bg-primary text-primary-foreground rounded-xl text-[13px] font-medium hover:bg-primary/90 transition-colors cursor-pointer")}>
                   <Video className="size-4" /> Entrar na Sala Virtual
                 </button>
-                <button className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 px-4 py-2 border border-border/30 text-foreground/80 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
+                <button className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight px-4 py-2 border border-border/30 text-foreground/80 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
                   <FileText className="size-4" /> Visualizar Ata
                 </button>
-                <button className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 px-4 py-2 border border-border/30 text-foreground/80 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
+                <button className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight px-4 py-2 border border-border/30 text-foreground/80 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
                   <ExternalLink className="size-4" /> Abrir PJe
                 </button>
               </div>
@@ -216,7 +216,7 @@ export function AgendaEventDetail({
             {/* Processo Section */}
             {event.processo && (
               <div className="mb-5">
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+                <div className={cn("flex items-center inline-tight mb-3")}>
                   <FileText className="size-3.5 text-muted-foreground/40" />
                   <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Processo Vinculado</Text>
                 </div>
@@ -237,7 +237,7 @@ export function AgendaEventDetail({
                   {event.partes && (
                     <>
                       <div className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "h-px bg-border/10 my-3")} />
-                      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex gap-6")}>
+                      <div className={cn("flex inline-loose")}>
                         <div>
                           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 mb-1")}>
                             <div className="size-1.5 rounded-full bg-info" />
@@ -262,7 +262,7 @@ export function AgendaEventDetail({
             {/* Checklist */}
             {event.source === "audiencias" && (
               <div className="mb-5">
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+                <div className={cn("flex items-center inline-tight mb-3")}>
                   <ShieldCheck className="size-3.5 text-muted-foreground/40" />
                   <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Checklist de Preparo</Text>
                   <span className={cn(
@@ -298,7 +298,7 @@ export function AgendaEventDetail({
             {/* Observações */}
             {event.descricao && (
               <div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+                <div className={cn("flex items-center inline-tight mb-3")}>
                   <MessageSquare className="size-3.5 text-muted-foreground/40" />
                   <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Observações</Text>
                 </div>
@@ -315,15 +315,15 @@ export function AgendaEventDetail({
           <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between px-7 py-4 border-t border-border/15 shrink-0")}>
             <button
               onClick={onClose}
-              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 px-4 py-2 border border-border/30 text-foreground/70 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight px-4 py-2 border border-border/30 text-foreground/70 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}
             >
               Fechar
             </button>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
-              <button className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 px-4 py-2 border border-border/30 text-foreground/70 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
+            <div className={cn("flex inline-tight")}>
+              <button className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight px-4 py-2 border border-border/30 text-foreground/70 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
                 <Pencil className="size-4" /> Editar
               </button>
-              <button className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-xl text-[13px] font-medium hover:bg-primary/90 transition-colors cursor-pointer")}>
+              <button className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight px-4 py-2 bg-primary text-primary-foreground rounded-xl text-[13px] font-medium hover:bg-primary/90 transition-colors cursor-pointer")}>
                 <CheckCircle className="size-4" /> Marcar Preparado
               </button>
             </div>

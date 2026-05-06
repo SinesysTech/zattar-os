@@ -140,7 +140,7 @@ export function WidgetHeatmapProdutividade() {
       </div>
 
       {/* Estatisticas */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; gap-4 → migrar para <Inline gap="default"> */ "mt-3 pt-3 border-t border-border/10 flex items-start justify-between gap-4")}>
+      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10 flex items-start justify-between inline-default")}>
         <ComparisonStat
           label="Media semanal"
           current={semanaAtual}

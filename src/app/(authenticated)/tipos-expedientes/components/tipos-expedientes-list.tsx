@@ -184,7 +184,7 @@ export function TiposExpedientesList({ initialData }: TiposExpedientesListProps)
     };
 
     return (
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col h-full space-y-4")}>
+        <div className={cn("flex flex-col h-full stack-default")}>
             <DataShell
                 header={
                     <DataTableToolbar

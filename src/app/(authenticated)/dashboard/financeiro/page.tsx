@@ -49,11 +49,11 @@ export default async function FinanceiroPage() {
 
   return (
     <DashboardProvider initialData={initialData}>
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <Heading level="page">Financeiro</Heading>
 
         {/* Row 1: Saúde Financeira (col-span-2) + Inadimplência */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <div className="xl:col-span-2">
             <WidgetSaúdeFinanceira />
           </div>
@@ -61,7 +61,7 @@ export default async function FinanceiroPage() {
         </div>
 
         {/* Row 2: Fluxo de Caixa (col-span-2) + Saldo Trend */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <div className="xl:col-span-2">
             <WidgetFluxoCaixa />
           </div>
@@ -69,14 +69,14 @@ export default async function FinanceiroPage() {
         </div>
 
         {/* Row 3: Contas Receber + Contas Pagar + Despesas Categoria */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <WidgetContasReceber />
           <WidgetContasPagar />
           <WidgetDespesasCategoria />
         </div>
 
         {/* Row 4: DRE + Fluxo Tabs + Despesas Treemap */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 xl:grid-cols-3")}>
+        <div className={cn("grid inline-default md:grid-cols-2 xl:grid-cols-3")}>
           <WidgetDREComparativo />
           <WidgetFluxoComTabs />
           <WidgetDespesasTreemap />

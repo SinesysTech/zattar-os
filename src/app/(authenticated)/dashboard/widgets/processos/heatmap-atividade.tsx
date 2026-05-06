@@ -106,7 +106,7 @@ export function WidgetHeatmapAtividade() {
             </div>
             <span className="text-[8px] text-muted-foreground/50">Mais</span>
           </div>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+          <div className={cn("flex items-center inline-default")}>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
               <Text variant="caption" className="font-semibold tabular-nums">{mediaFmt}</Text>
               <span className="text-[8px] text-muted-foreground/50">média/dia</span>

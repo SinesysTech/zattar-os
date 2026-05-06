@@ -423,7 +423,7 @@ export function ExpedienteDialog({
       form="criar-expediente-form"
       type="submit"
       size="sm"
-      className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "rounded-xl gap-2")}
+      className={cn("rounded-xl inline-tight")}
       disabled={isPending || !podeSubmeter}
     >
       {isPending ? (
@@ -461,7 +461,7 @@ export function ExpedienteDialog({
       <form
         id="criar-expediente-form"
         action={formAction}
-        className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}
+        className={cn("stack-default")}
       >
         {/* Hidden inputs — contratam com o schema do backend */}
         <input
@@ -528,9 +528,9 @@ export function ExpedienteDialog({
             )}
             title="Selecione o tribunal e grau"
           >
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <Label htmlFor="trt" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
+              <div className={cn("stack-tight")}>
+                <Label htmlFor="trt" className={cn("flex items-center inline-tight")}>
                   <Building2 className="h-4 w-4 text-muted-foreground" />
                   TRT
                   <span className="text-destructive">*</span>
@@ -567,8 +567,8 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <Label htmlFor="grau" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("stack-tight")}>
+                <Label htmlFor="grau" className={cn("flex items-center inline-tight")}>
                   <Scale className="h-4 w-4 text-muted-foreground" />
                   Grau
                   <span className="text-destructive">*</span>
@@ -618,10 +618,10 @@ export function ExpedienteDialog({
             )}
             title="Selecione o processo"
           >
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label
                 htmlFor="processoIdCombobox"
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                className={cn("flex items-center inline-tight")}
               >
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 Processo
@@ -629,7 +629,7 @@ export function ExpedienteDialog({
               </Label>
 
               {loadingProcessos ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                   <LoadingSpinner />
                   <span className={cn("text-body-sm text-muted-foreground")}>
                     Carregando processos...
@@ -734,17 +734,17 @@ export function ExpedienteDialog({
             stepState={stepStateFor(currentStep === 3, podeSubmeter)}
             title="Dados do expediente"
           >
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1 md:col-span-2")}>
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
+              <div className={cn("stack-tight col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="tipoExpedienteIdSelect"
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                  className={cn("flex items-center inline-tight")}
                 >
                   <FileType className="h-4 w-4 text-muted-foreground" />
                   Tipo de expediente
                 </Label>
                 {loadingTipos ? (
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
+                  <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
                     <span className={cn("text-body-sm text-muted-foreground")}>
                       Carregando tipos...
@@ -784,10 +784,10 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1 md:col-span-2")}>
+              <div className={cn("stack-tight col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="descricao"
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                  className={cn("flex items-center inline-tight")}
                 >
                   <FileText className="h-4 w-4 text-muted-foreground" />
                   Descrição
@@ -817,10 +817,10 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1")}>
+              <div className={cn("stack-tight col-span-1")}>
                 <Label
                   htmlFor="dataPrazo"
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                  className={cn("flex items-center inline-tight")}
                 >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   Data do prazo
@@ -836,10 +836,10 @@ export function ExpedienteDialog({
                 </div>
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1")}>
+              <div className={cn("stack-tight col-span-1")}>
                 <Label
                   htmlFor="horaPrazo"
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                  className={cn("flex items-center inline-tight")}
                 >
                   <Clock className="h-4 w-4 text-muted-foreground" />
                   Hora
@@ -875,16 +875,16 @@ export function ExpedienteDialog({
                 )}
               </div>
 
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 col-span-1 md:col-span-2")}>
+              <div className={cn("stack-tight col-span-1 md:col-span-2")}>
                 <Label
                   htmlFor="responsavelIdCombobox"
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}
+                  className={cn("flex items-center inline-tight")}
                 >
                   <User className="h-4 w-4 text-muted-foreground" />
                   Responsável
                 </Label>
                 {loadingUsuarios ? (
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
+                  <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
                     <span className={cn("text-body-sm text-muted-foreground")}>
                       Carregando usuários...

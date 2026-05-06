@@ -295,7 +295,7 @@ export default function PdfCanvasArea({
       <ContextMenuTrigger asChild>
         <div
           ref={canvasRef}
-          className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}
+          className={cn("flex flex-col items-center inline-default")}
           style={{ transform: `scale(${zoom})`, transformOrigin: "top center" }}
         >
           {/* Renderizar todas as páginas em sequência (scroll contínuo) */}

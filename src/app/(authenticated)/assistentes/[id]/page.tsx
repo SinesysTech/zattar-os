@@ -34,7 +34,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
   if (!result.success || !result.data) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center p-8 stack-default")}>
         <Heading level="section" className="text-destructive">Assistente não encontrado</Heading>
         <Button asChild variant="outline">
           <Link href="/assistentes">Voltar</Link>
@@ -51,7 +51,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
     if (!difyApp) {
       return (
-        <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
+        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center p-8 stack-default")}>
           <Heading level="section" className="text-destructive">App Dify não encontrado</Heading>
           <p className={cn("text-body-sm text-muted-foreground")}>
             O app Dify vinculado a este assistente foi removido.

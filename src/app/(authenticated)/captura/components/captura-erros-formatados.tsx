@@ -108,11 +108,11 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
   }, {} as Record<string, number>);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Cabeçalho de erros */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-4")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 min-w-0 w-full")}>
+        <div className={cn("stack-tight min-w-0 w-full")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>
             {errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''} na captura
           </p>
@@ -140,18 +140,18 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
       </div>
 
       {/* Erros agrupados por tribunal */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         {grupos.map((grupo) => (
           <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-2.5 flex items-center gap-2")}>
+            <div className={cn("mb-2.5 flex items-center inline-tight")}>
               <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
               <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
                 {grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''}
               </Badge>
             </div>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               {grupo.erros.map((e, i) => (
-                <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2 text-caption")}>
+                <div key={i} className={cn("flex items-start inline-tight text-caption")}>
                   <IconeErro tipo={e.tipo} />
                   <div className="min-w-0 flex-1">
                     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap items-center gap-1.5 mb-1")}>

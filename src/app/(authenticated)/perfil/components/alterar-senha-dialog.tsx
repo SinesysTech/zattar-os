@@ -129,7 +129,7 @@ export function AlterarSenhaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
             {error && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 {error}
@@ -142,7 +142,7 @@ export function AlterarSenhaDialog({
               </div>
             )}
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="senhaAtual">Senha Atual *</Label>
               <div className="relative">
                 <Input
@@ -171,7 +171,7 @@ export function AlterarSenhaDialog({
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="novaSenha">Nova Senha *</Label>
               <div className="relative">
                 <Input
@@ -203,7 +203,7 @@ export function AlterarSenhaDialog({
               </Text>
             </div>
 
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="confirmarSenha">Confirmar Nova Senha *</Label>
               <div className="relative">
                 <Input

@@ -24,7 +24,7 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md bg-video-surface border-video-border text-video-text">
         <DialogHeader>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <Keyboard className="w-5 h-5" />
             Atalhos de Teclado
           </DialogTitle>
@@ -42,7 +42,7 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
               <TableRow key={shortcut.action} className="border-video-border hover:bg-video-surface-hover/50">
                 <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{shortcut.action}</TableCell>
                 <TableCell className="text-right">
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
+                  <div className={cn("flex justify-end inline-tight")}>
                     {shortcut.keys.map((key) => (
                       <kbd
                         key={key}

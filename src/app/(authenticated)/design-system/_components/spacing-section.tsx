@@ -21,9 +21,9 @@ function SpacingScale() {
   ];
   return (
     <SpecimenCard eyebrow="SPACING · GRID 4PX">
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-2 padding direcional sem Inset equiv. */ "flex items-end gap-4 py-2")}>
+      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-end inline-default py-2")}>
         {steps.map((s) => (
-          <div key={s.t} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
+          <div key={s.t} className={cn("flex flex-col items-center inline-tight")}>
             <div
               className="w-5 rounded bg-primary"
               style={{ height: s.h }}
@@ -96,7 +96,7 @@ function ShadowScale() {
   ];
   return (
     <SpecimenCard eyebrow="SHADOW · ELEVAÇÃO">
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-6 padding direcional sem Inset equiv. */ "grid grid-cols-2 gap-4 pb-6 sm:grid-cols-5")}>
+      <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "grid grid-cols-2 inline-default pb-6 sm:grid-cols-5")}>
         {tiles.map((t) => (
           <div
             key={t.lbl}
@@ -123,7 +123,7 @@ function ShadowScale() {
 
 export function SpacingSection() {
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <SpacingScale />
       <RadiusScale />
       <ShadowScale />

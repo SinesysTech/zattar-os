@@ -137,7 +137,7 @@ export function CoverEditDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           {/* Preview da capa */}
           <div
             className={cn(
@@ -153,7 +153,7 @@ export function CoverEditDialog({
                   alt="Capa do perfil"
                   className="w-full h-full object-cover"
                 />
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2")}>
+                <div className={cn("absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center inline-tight")}>
                   <Button
                     size="sm"
                     variant="secondary"
@@ -196,7 +196,7 @@ export function CoverEditDialog({
             <Text variant="caption">
               Formatos: JPEG, PNG, WebP • Máx: 10MB
             </Text>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+            <div className={cn("flex inline-tight")}>
               {!displayUrl && (
                 <Button
                   onClick={triggerFileInput}

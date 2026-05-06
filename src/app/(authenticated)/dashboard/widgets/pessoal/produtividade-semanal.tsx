@@ -96,7 +96,7 @@ export function WidgetProdutividadeSemanal() {
       subtitle="Baixas por dia — semana atual"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-end justify-between gap-2 mb-3")}>
+      <div className={cn("flex items-end justify-between inline-tight mb-3")}>
         <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Total semana

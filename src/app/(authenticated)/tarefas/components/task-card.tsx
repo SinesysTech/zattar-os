@@ -102,7 +102,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "p-3 pt-0 space-y-2")}>
+      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "p-3 pt-0 stack-tight")}>
         {/* Description */}
         {tarefa.description && (
           <Text variant="caption" className="line-clamp-2">
@@ -141,7 +141,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
         {/* Footer metadata */}
         <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             {/* Due date */}
             {dueDate && (
               <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
@@ -159,7 +159,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             {/* Subtasks */}
             {totalSubtasks > 0 && (
               <Tooltip>

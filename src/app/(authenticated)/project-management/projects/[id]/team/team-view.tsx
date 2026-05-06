@@ -98,7 +98,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>

@@ -139,9 +139,9 @@ export function AcordoDetalhesV2Client({
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 h-full")}>
+    <div className={cn("flex flex-col inline-default h-full")}>
       {/* ==================== HEADER ==================== */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4 flex-wrap")}>
+      <div className={cn("flex items-start justify-between inline-default flex-wrap")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 min-w-0 flex-1")}>
           <Button
             variant="ghost"
@@ -154,8 +154,8 @@ export function AcordoDetalhesV2Client({
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 space-y-2")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+          <div className={cn("min-w-0 stack-tight")}>
+            <div className={cn("flex items-center inline-tight flex-wrap")}>
               <Heading level="page" className="min-w-0 truncate">
                 {tituloPartes}
               </Heading>
@@ -230,7 +230,7 @@ export function AcordoDetalhesV2Client({
           </div>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 shrink-0")}>
+        <div className={cn("flex inline-tight shrink-0")}>
           <Button variant="outline" size="sm" asChild className="rounded-xl">
             <Link href={`/obrigacoes/${acordoId}/editar`}>
               <Edit className="size-3.5 mr-1" />
@@ -338,9 +338,9 @@ function ResumoTab({
   const parcelas = acordo.parcelas ?? [];
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Row 1 — Ação + Split */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-5 gap-4")}>
+      <div className={cn("grid grid-cols-1 lg:grid-cols-5 inline-default")}>
         <div className="lg:col-span-2">
           <ProximaParcelaCard
             parcela={proximaParcela}
@@ -363,7 +363,7 @@ function ResumoTab({
       )}
 
       {/* Row 3 — Detalhes + Processo */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-2 gap-4")}>
+      <div className={cn("grid grid-cols-1 lg:grid-cols-2 inline-default")}>
         <DetalhesAcordoCard acordo={acordo} />
         <ProcessoVinculadoCard processo={acordo.processo} />
       </div>
@@ -451,7 +451,7 @@ function DetalhesAcordoCard({ acordo }: { acordo: AcordoComParcelas }) {
 function ObservacoesCard({ observacoes }: { observacoes: string }) {
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5")}>
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+      <div className={cn("flex items-center inline-tight mb-3")}>
         <FileText className="size-3.5 text-muted-foreground/60" />
         <Text variant="meta-label" className="text-muted-foreground/60">
           Observações
@@ -485,7 +485,7 @@ function RepassesTab({
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+    <div className={cn("stack-tight")}>
       {parcelas.map((parcela) => {
         const valorRepasse = parcela.valorRepasseCliente ?? 0;
         const toneClass =
@@ -499,7 +499,7 @@ function RepassesTab({
           <GlassPanel key={parcela.id} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 flex-wrap")}>
               <div className="min-w-0">
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <Text
                     variant="caption"
                     className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}
@@ -604,7 +604,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
                   dotClass,
                 )}
               />
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Icon className="w-3.5 h-3.5 text-muted-foreground/50" />
                 <Text
                   variant="caption"

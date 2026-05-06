@@ -206,7 +206,7 @@ export default function ContasPagar() {
         <p className="text-muted-foreground">
           A listagem de contas a pagar oferece os seguintes filtros combinados:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2 text-body-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn("mt-3 stack-tight text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Período de vencimento ou competência</li>
           <li>Status: Em aberto, Pago, Vencido</li>
           <li>Categoria do plano de contas</li>

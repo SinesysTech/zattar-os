@@ -144,13 +144,13 @@ export default function FormularioSchemaPage({ params }: PageProps) {
   if (loading || isLoadingPermissoes) {
     return (
       <PageShell>
-        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "h-full flex flex-col gap-6")}>
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "shrink-0 space-y-2")}>
+        <div className={cn("h-full flex flex-col inline-loose")}>
+          <div className={cn("shrink-0 stack-tight")}>
             <Skeleton className="h-9 w-64" />
             <Skeleton className="h-4 w-96" />
           </div>
           
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex-1 min-h-0 grid grid-cols-[280px_1fr_320px] gap-4")}>
+          <div className={cn("flex-1 min-h-0 grid grid-cols-[280px_1fr_320px] inline-default")}>
             <Skeleton className="h-full w-full" />
             <Skeleton className="h-full w-full" />
             <Skeleton className="h-full w-full" />
@@ -164,11 +164,11 @@ export default function FormularioSchemaPage({ params }: PageProps) {
     return (
       <PageShell>
         <div className="h-full flex items-center justify-center">
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "text-center space-y-4 max-w-md")}>
+          <div className={cn("text-center stack-default max-w-md")}>
             <div className="flex justify-center">
               <AlertCircle className="h-10 w-10 text-destructive" />
             </div>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Acesso negado
               </Heading>
@@ -189,19 +189,19 @@ export default function FormularioSchemaPage({ params }: PageProps) {
     return (
       <PageShell>
         <div className="h-full flex items-center justify-center">
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "text-center space-y-4 max-w-md")}>
+          <div className={cn("text-center stack-default max-w-md")}>
             <div className="flex justify-center">
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-destructive/10 p-3")}>
                 <AlertCircle className="h-10 w-10 text-destructive" />
               </div>
             </div>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Erro ao carregar formulário
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
             </div>
-            <Button onClick={handleRetry} variant="outline" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
+            <Button onClick={handleRetry} variant="outline" className={cn("inline-tight")}>
               <RefreshCw className="h-4 w-4" />
               Tentar novamente
             </Button>

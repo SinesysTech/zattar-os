@@ -142,7 +142,7 @@ export function TemplateLibraryDialog({
         className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
         <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
-          <DialogTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <DialogTitle className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5" />
             Biblioteca de Templates
           </DialogTitle>
@@ -161,9 +161,9 @@ export function TemplateLibraryDialog({
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="todos" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "mt-0 space-y-4")}>
+            <TabsContent value="todos" className={cn("mt-0 stack-default")}>
               {/* Filtros */}
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>
+              <div className={cn("flex flex-wrap inline-tight")}>
                 <div className="relative flex-1 min-w-50">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -201,13 +201,13 @@ export function TemplateLibraryDialog({
                   <SelectContent>
                     <SelectItem value="__all__">Todas</SelectItem>
                     <SelectItem value="publico">
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <div className={cn("flex items-center inline-tight")}>
                         <Globe className="h-4 w-4" />
                         Público
                       </div>
                     </SelectItem>
                     <SelectItem value="privado">
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                      <div className={cn("flex items-center inline-tight")}>
                         <Lock className="h-4 w-4" />
                         Privado
                       </div>
@@ -225,7 +225,7 @@ export function TemplateLibraryDialog({
               {/* Lista de templates */}
               <ScrollArea className="h-100">
                 {templatesLoading ? (
-                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 lg:grid-cols-3 gap-4")}>
+                  <div className={cn("grid grid-cols-2 lg:grid-cols-3 inline-default")}>
                     {[1, 2, 3, 4, 5, 6].map((i) => (
                       <Skeleton key={i} className="h-48 w-full" />
                     ))}
@@ -241,7 +241,7 @@ export function TemplateLibraryDialog({
                     </p>
                   </div>
                 ) : (
-                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4")}>
+                  <div className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 inline-default pr-4")}>
                     {templates.map((template) => (
                       <TemplateCard
                         key={template.id}
@@ -265,7 +265,7 @@ export function TemplateLibraryDialog({
                     </p>
                   </div>
                 ) : (
-                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 gap-4 pr-4")}>
+                  <div className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 inline-default pr-4")}>
                     {maisUsados.map((template) => (
                       <TemplateCard
                         key={template.id}
@@ -282,7 +282,7 @@ export function TemplateLibraryDialog({
           {/* Loading overlay */}
           {creating && (
             <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
+              <div className={cn("flex flex-col items-center inline-tight")}>
                 <LoadingSpinner className="size-8 text-primary" />
                 <p className={cn("text-body-sm text-muted-foreground")}>Criando documento...</p>
               </div>

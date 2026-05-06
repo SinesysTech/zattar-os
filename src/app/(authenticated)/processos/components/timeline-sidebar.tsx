@@ -81,7 +81,7 @@ export function TimelineSidebar({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none p-3 border-b space-y-2")}>
+      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-none p-3 border-b stack-tight")}>
         <Text variant="caption">
           {items.length} {items.length === 1 ? 'item' : 'itens'} · {totalDocs}{' '}
           {totalDocs === 1 ? 'documento' : 'documentos'} · {totalMovs}{' '}

@@ -198,7 +198,7 @@ export default function AdvogadosPage() {
         </nav>
 
         {/* Header */}
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+        <div className={cn("flex items-end justify-between inline-default")}>
           <div>
             <Heading level="page">Advogados</Heading>
             <Text variant="caption" className="text-muted-foreground/70 mt-0.5">
@@ -226,7 +226,7 @@ export default function AdvogadosPage() {
             value={ufFilter}
             onValueChange={setUfFilter}
           />
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+          <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
             <SearchInput value={busca} onChange={setBusca} placeholder="Buscar advogados..." />
           </div>
         </div>
@@ -318,7 +318,7 @@ export default function AdvogadosPage() {
                   <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
 
                   {/* Actions */}
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     {temCredenciais ? (
                       <Button
                         variant="ghost"

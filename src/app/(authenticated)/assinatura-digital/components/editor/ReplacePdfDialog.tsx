@@ -233,7 +233,7 @@ export default function ReplacePdfDialog({
                 {/* Indicador de arquivo selecionado */}
                 <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "border rounded-lg p-3 bg-card")}>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
+                    <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
                       <div className={`shrink-0 p-1.5 rounded-full ${
                         uploadedFile.isValid
                           ? 'bg-success/10'
@@ -293,7 +293,7 @@ export default function ReplacePdfDialog({
             <Button
               onClick={handleReplace}
               disabled={!uploadedFile || !uploadedFile.isValid || isUploading}
-              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
+              className={cn("inline-tight")}
             >
               {isUploading ? (
                 <>

@@ -73,7 +73,7 @@ export function ComunicacaoDetalhesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn("stack-loose")}>
           {/* Processo */}
           <div>
             <SectionHeading>Processo</SectionHeading>
@@ -189,7 +189,7 @@ export function ComunicacaoDetalhesDialog({
           )}
 
           {/* Ações */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex flex-col gap-2 border-t border-border/40 pt-4 sm:flex-row")}>
+          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex flex-col inline-tight border-t border-border/40 pt-4 sm:flex-row")}>
             <Button
               variant="outline"
               size="sm"

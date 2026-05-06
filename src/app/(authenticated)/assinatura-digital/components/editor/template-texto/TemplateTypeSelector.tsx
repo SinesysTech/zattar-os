@@ -43,7 +43,7 @@ export function TemplateTypeSelector({
   disabled = false,
 }: TemplateTypeSelectorProps) {
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 sm:grid-cols-2")}>
+    <div className={cn("grid grid-cols-1 inline-default sm:grid-cols-2")}>
       {templateTypes.map((option) => {
         const Icon = option.icon;
         const isSelected = value === option.type;

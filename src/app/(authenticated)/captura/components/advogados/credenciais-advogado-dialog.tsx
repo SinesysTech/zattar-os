@@ -424,7 +424,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
 
                 {/* Resultado do lote */}
                 {loteResultado ? (
-                  <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                  <div className={cn("stack-default")}>
                     <Alert variant={loteResultado.erros > 0 ? 'destructive' : 'default'}>
                       <CheckCircle className="h-4 w-4" />
                       <AlertTitle>Operação concluída</AlertTitle>
@@ -474,15 +474,15 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </table>
                     </ScrollArea>
 
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
+                    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
                       <Button onClick={resetForm}>Fechar</Button>
                     </div>
                   </div>
                 ) : editingCredencial ? (
                   // Formulário de edição (individual)
-                  <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                  <div className={cn("stack-default")}>
+                    <div className={cn("grid grid-cols-2 inline-default")}>
+                      <div className={cn("grid inline-tight")}>
                         <Label htmlFor="tribunal">Tribunal *</Label>
                         <Select
                           value={formData.tribunal}
@@ -501,7 +501,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         </Select>
                       </div>
 
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                      <div className={cn("grid inline-tight")}>
                         <Label htmlFor="grau">Grau *</Label>
                         <Select
                           value={formData.grau}
@@ -523,7 +523,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label htmlFor="usuario">
                         Usuario (Login PJE)
                         <Text variant="caption" className="ml-2">
@@ -538,7 +538,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       />
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label htmlFor="senha">
                         Senha
                         <Text variant="caption" className="ml-2">
@@ -566,7 +566,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
+                    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
                       <Button variant="outline" onClick={resetForm} disabled={isSaving}>
                         Cancelar
                       </Button>
@@ -578,14 +578,14 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                   </div>
                 ) : (
                   // Formulário de criação em lote
-                  <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                  <div className={cn("stack-default")}>
                     {/* Seleção de Tribunais */}
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <div className="flex items-center justify-between">
                         <Label>
                           Tribunais <span className="text-destructive">*</span>
                         </Label>
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+                        <div className={cn("flex inline-tight")}>
                           <Button
                             type="button"
                             variant="ghost"
@@ -607,7 +607,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         </div>
                       </div>
                       <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-35 border rounded-md p-3")}>
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-4 gap-2")}>
+                        <div className={cn("grid grid-cols-4 inline-tight")}>
                           {TRIBUNAIS_ATIVOS.map((trt) => (
                             <div key={trt} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                               <Checkbox
@@ -639,13 +639,13 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     </div>
 
                     {/* Seleção de Graus */}
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label>
                         Graus <span className="text-destructive">*</span>
                       </Label>
-                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+                      <div className={cn("flex inline-default")}>
                         {GRAUS.map((grau) => (
-                          <label key={grau.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 cursor-pointer")}>
+                          <label key={grau.value} className={cn("flex items-center inline-tight cursor-pointer")}>
                             <Checkbox
                               checked={loteFormData.graus.includes(grau.value)}
                               onCheckedChange={(checked) => {
@@ -664,7 +664,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     </div>
 
                     {/* Senha */}
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label htmlFor="senha-lote">
                         Senha <span className="text-destructive">*</span>
                       </Label>
@@ -694,12 +694,12 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     </div>
 
                     {/* Modo duplicata */}
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+                    <div className={cn("grid inline-tight")}>
                       <Label>Se a credencial já existir</Label>
                       <RadioGroup
                         value={loteFormData.modoDuplicata}
                         onValueChange={(v) => setLoteFormData({ ...loteFormData, modoDuplicata: v as 'pular' | 'sobrescrever' })}
-                        className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}
+                        className={cn("flex inline-default")}
                         disabled={isSaving}
                       >
                         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
@@ -729,7 +729,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </Alert>
                     )}
 
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex justify-end gap-2 pt-4")}>
+                    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
                       <Button variant="outline" onClick={resetForm} disabled={isSaving}>
                         Cancelar
                       </Button>

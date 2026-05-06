@@ -62,10 +62,10 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       <div className="fixed top-16 right-48 w-32 h-32 bg-info/3 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header da página */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between relative")}>
+      <div className={cn("flex flex-col inline-default sm:flex-row sm:items-center sm:justify-between relative")}>
         <div>
           <Heading level="page">{tipoFormatado}</Heading>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
+          <div className={cn("flex items-center inline-tight mt-0.5")}>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground uppercase tracking-wide")}>
               Captura #{captura.id}
             </p>
@@ -87,7 +87,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
       {/* KPI Strip */}
       <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4 sm:grid-cols-4")}>
+        <div className={cn("grid grid-cols-2 inline-default sm:grid-cols-4")}>
           {/* Status */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
@@ -212,7 +212,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
         <TabsContent value="dados-brutos" className="mt-4">
           <div className="flex flex-col">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-0.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 mb-2.5 px-0.5")}>
+            <div className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight mb-2.5 px-0.5")}>
               <AlertTriangle className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
               <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
                 Payload JSON da execução — dados técnicos para auditoria
@@ -224,7 +224,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (
-                <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6 text-center")}>
+                <div className={cn("inset-dialog text-center")}>
                   <p className="text-[11px] text-muted-foreground/75">
                     Nenhum dado disponível.
                   </p>

@@ -70,7 +70,7 @@ export function PerfilView() {
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <div className="flex items-center justify-between">
           <div>
             <Skeleton className="h-8 w-48 mb-2" />
@@ -90,10 +90,10 @@ export function PerfilView() {
   const avatarUrl = getAvatarUrl(usuario.avatarUrl);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header com Avatar */}
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-start justify-between gap-6")}>
-        <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "flex items-center gap-6")}>
+      <div className={cn("flex items-start justify-between inline-loose")}>
+        <div className={cn("flex items-center inline-loose")}>
           {/* Avatar */}
           <div
             className="relative group cursor-pointer"
@@ -125,7 +125,7 @@ export function PerfilView() {
           </div>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+        <div className={cn("flex inline-tight")}>
           <Button variant="outline" onClick={() => setAlterarSenhaDialogOpen(true)}>
             <KeyRound className="mr-2 h-4 w-4" />
             Alterar Senha
@@ -138,16 +138,16 @@ export function PerfilView() {
       </div>
 
       {/* Cards de Informação */}
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 md:grid-cols-2")}>
+      <div className={cn("grid inline-loose md:grid-cols-2")}>
         {/* Informações Pessoais */}
         <Card>
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <User className="h-5 w-5" />
               Informações Pessoais
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <CardContent className={cn("stack-default")}>
             <div>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Nome Completo
@@ -195,12 +195,12 @@ export function PerfilView() {
         {/* Contato */}
         <Card>
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <Mail className="h-5 w-5" />
               Contato
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <CardContent className={cn("stack-default")}>
             {usuario.emailCorporativo && (
               <div>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
@@ -236,12 +236,12 @@ export function PerfilView() {
         {(usuario.oab || usuario.ufOab) && (
           <Card>
             <CardHeader>
-              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <CardTitle className={cn("flex items-center inline-tight")}>
                 <Briefcase className="h-5 w-5" />
                 Informações Profissionais
               </CardTitle>
             </CardHeader>
-            <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+            <CardContent className={cn("stack-default")}>
               {usuario.oab && (
                 <div>
                   <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
@@ -260,7 +260,7 @@ export function PerfilView() {
         {usuario.endereco && (
           <Card>
             <CardHeader>
-              <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <CardTitle className={cn("flex items-center inline-tight")}>
                 <MapPin className="h-5 w-5" />
                 Endereço
               </CardTitle>
@@ -280,7 +280,7 @@ export function PerfilView() {
           <CardTitle>Informações do Sistema</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             <div>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Data de Criação

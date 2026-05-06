@@ -213,7 +213,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
     <DashboardProvider initialData={initialData}>
     <div className={cn(/* design-system-escape: space-y-5 sem token DS; pb-8 padding direcional sem Inset equiv. */ "space-y-5 pb-8")}>
       {/* ── Cabecalho ───────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">
             {saudacao}, {primeiroNome}.
@@ -276,7 +276,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center justify-center text-center gap-4")}>
+      <div className={cn("flex flex-col items-center justify-center text-center inline-default")}>
         <div className="size-14 rounded-2xl border border-border/20 bg-foreground/3 flex items-center justify-center">
           <LayoutGrid className="size-6 text-muted-foreground/55" />
         </div>
@@ -295,7 +295,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
             variant="outline"
             size="sm"
             onClick={onOpenPicker}
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2 border-border/30 bg-transparent hover:bg-foreground/5")}
+            className={cn("inline-tight border-border/30 bg-transparent hover:bg-foreground/5")}
           >
             <LayoutGrid className="size-3.5" />
             Personalizar

@@ -130,7 +130,7 @@ export function PostHearingFlow({
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <div className="size-1.5 rounded-full bg-warning/50" />
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-warning/60")}>
               Concluída
@@ -148,7 +148,7 @@ export function PostHearingFlow({
         </div>
 
         {/* Process info */}
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
+        <div className={cn("flex items-center inline-tight mb-3")}>
           <span className="text-mono-num text-muted-foreground/60">{audiencia.numeroProcesso}</span>
           {audiencia.trt && (
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>
@@ -208,7 +208,7 @@ export function PostHearingFlow({
                 onClick={() => !action.done && handleActionClick(action.id)}
                 disabled={action.done}
                 className={cn(
-                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
+                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
                   action.done
                     ? "text-muted-foreground/55"
                     : "text-foreground/75 hover:bg-foreground/4or-pointer",

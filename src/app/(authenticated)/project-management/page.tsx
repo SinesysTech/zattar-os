@@ -73,23 +73,23 @@ export default async function ProjectManagementDashboard() {
         </Heading>
       </div>
 
-      <Tabs defaultValue="overview" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <Tabs defaultValue="overview" className={cn("stack-default")}>
         <TabsList className="z-10">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="reports">Projetos</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="overview" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <TabsContent value="overview" className={cn("stack-default")}>
           <SummaryCards data={resumo} />
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "mt-4 grid gap-4 lg:grid-cols-3")}>
+          <div className={cn("mt-4 grid inline-default lg:grid-cols-3")}>
             <div className="lg:col-span-2">
               <ChartProjectOverview data={projetosPeriodo} />
             </div>
             <SuccessMetrics membros={membros} resumo={resumo} />
           </div>
 
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "mt-4 grid gap-4 grid-cols-1 lg:grid-cols-4")}>
+          <div className={cn("mt-4 grid inline-default grid-cols-1 lg:grid-cols-4")}>
             <Reminders lembretes={lembretes} />
             <AchievementByYear data={comparativo} />
             <ChartProjectEfficiency data={distribuicao} />

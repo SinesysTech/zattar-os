@@ -63,10 +63,10 @@ export function ViewerToolbar({
   const actionsDisabled = isLoading || !hasBackblaze;
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "absolute top-3 left-3 right-3 z-10 flex items-center gap-2 pointer-events-none")}>
+    <div className={cn("absolute top-3 left-3 right-3 z-10 flex items-center inline-tight pointer-events-none")}>
       {/* Título do documento atual */}
       {title && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
+        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center inline-tight rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
           <Text variant="caption" className="truncate font-medium text-foreground">{title}</Text>
           {date && (
             <>

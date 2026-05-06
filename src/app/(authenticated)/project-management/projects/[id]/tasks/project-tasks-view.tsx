@@ -32,7 +32,7 @@ export function ProjectTasksView({
   const [formOpen, setFormOpen] = React.useState(false);
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       <div className="flex items-center justify-between">
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
@@ -52,7 +52,7 @@ export function ProjectTasksView({
           </div>
         </div>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <ToggleGroup
             type="single"
             value={viewMode}

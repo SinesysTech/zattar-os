@@ -51,7 +51,7 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
             {...listeners}
             {...attributes}
             className={cn(
-              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md border border-dashed border-border bg-card px-2.5 py-1.5 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
+              /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-md border border-dashed border-border bg-card px-2.5 py-1.5 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
               isDragging && "opacity-50 border-primary"
             )}
           >
@@ -115,7 +115,7 @@ export default function FieldPalette() {
 
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "shrink-0 px-3 pt-3 pb-2 space-y-2 border-b")}>
+      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "shrink-0 px-3 pt-3 pb-2 stack-tight border-b")}>
         <Heading level="card" className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-caption uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
@@ -146,7 +146,7 @@ export default function FieldPalette() {
                   open={isExpanded}
                   onOpenChange={() => toggleCategory(category.id)}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors")}>
                     <CategoryIcon className="size-3.5 text-muted-foreground" />
                     <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left")}>{category.label}</span>
                     <ChevronDown

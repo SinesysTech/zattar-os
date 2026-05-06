@@ -96,7 +96,7 @@ function AlertaCard({
           </div>
           <div className="flex-1 min-w-0">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium', styles.text)}>{titulo}</p>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
+            <div className={cn("flex items-center inline-tight mt-1")}>
               <Badge variant="secondary" className={cn("text-caption")}>
                 {quantidade} {quantidade === 1 ? 'conta' : 'contas'}
               </Badge>
@@ -121,13 +121,13 @@ export function AlertasVencimento({
 }: AlertasVencimentoProps) {
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4")}>
+      <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 inline-default mb-4")}>
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="animate-pulse">
             <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <div className="h-9 w-9 rounded-full bg-muted" />
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+                <div className={cn("flex-1 stack-tight")}>
                   <div className="h-4 w-24 bg-muted rounded" />
                   <div className="h-3 w-32 bg-muted rounded" />
                 </div>
@@ -157,7 +157,7 @@ export function AlertasVencimento({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4")}>
+    <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 inline-default mb-4")}>
       <AlertaCard
         titulo="Contas Vencidas"
         quantidade={vencidas.quantidade}

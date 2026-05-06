@@ -141,15 +141,15 @@ export default function RelatorioInadimplenciaPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+      <div className={cn("stack-loose")}>
+        <div className={cn("flex items-center inline-default")}>
           <Skeleton className="h-10 w-10" />
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+        <div className={cn("grid inline-default md:grid-cols-4")}>
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-32" />
           ))}
@@ -162,7 +162,7 @@ export default function RelatorioInadimplenciaPage() {
   // Error state
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+      <div className={cn("stack-default")}>
         <Button variant="ghost" onClick={handleVoltar}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
@@ -176,16 +176,16 @@ export default function RelatorioInadimplenciaPage() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={handleVoltar}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           {/* Filtro de Período */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div className={cn("flex items-center inline-tight")}>
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -229,7 +229,7 @@ export default function RelatorioInadimplenciaPage() {
       </div>
 
       {/* Cards de Resumo */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
+      <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
             <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Contas Vencidas</CardTitle>
@@ -290,11 +290,11 @@ export default function RelatorioInadimplenciaPage() {
       </div>
 
       {/* Grid: Ranking e Faixas de Atraso */}
-      <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid gap-6 lg:grid-cols-2")}>
+      <div className={cn("grid inline-loose lg:grid-cols-2")}>
         {/* Ranking de Clientes Inadimplentes */}
         <Card>
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <TrendingDown className="h-5 w-5" />
               Ranking de Inadimplência
             </CardTitle>
@@ -317,7 +317,7 @@ export default function RelatorioInadimplenciaPage() {
                   {relatorio.clientesRanking.slice(0, 10).map((cliente, index) => (
                     <TableRow key={cliente.clienteId}>
                       <TableCell>
-                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                        <div className={cn("flex items-center inline-tight")}>
                           <Badge
                             variant="outline"
                             className={cn(
@@ -354,7 +354,7 @@ export default function RelatorioInadimplenciaPage() {
         {/* Distribuição por Faixa de Atraso */}
         <Card>
           <CardHeader>
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <CardTitle className={cn("flex items-center inline-tight")}>
               <Clock className="h-5 w-5" />
               Distribuição por Faixa de Atraso
             </CardTitle>
@@ -364,12 +364,12 @@ export default function RelatorioInadimplenciaPage() {
           </CardHeader>
           <CardContent>
             {relatorio?.faixasAtraso && relatorio.faixasAtraso.length > 0 ? (
-              <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+              <div className={cn("stack-default")}>
                 {relatorio.faixasAtraso.map((faixa) => (
-                  <div key={faixa.faixa} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div key={faixa.faixa} className={cn("stack-tight")}>
                     <div className={cn("flex items-center justify-between text-body-sm")}>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{faixa.faixa}</span>
-                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+                      <div className={cn("flex items-center inline-default")}>
                         <span className="text-muted-foreground">
                           {faixa.quantidadeContas} contas
                         </span>

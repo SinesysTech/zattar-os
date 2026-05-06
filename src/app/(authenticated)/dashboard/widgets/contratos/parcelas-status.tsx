@@ -86,14 +86,14 @@ export function WidgetParcelasStatus() {
       subtitle="Status de pagamento"
       depth={1}
     >
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
+      <div className={cn("flex flex-col inline-default")}>
         <StackedBar segments={segments} height={10} />
 
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
           {parcelasStatus.map((p) => {
             const pct = totalCount > 0 ? ((p.count / totalCount) * 100).toFixed(0) : '0';
             return (
-              <div key={p.status} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div key={p.status} className={cn("flex items-center inline-tight")}>
                 <ToneDot tone={p.tone} shape="square" size="lg" aria-label={p.status} />
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {p.status.replace(/_/g, ' ')}

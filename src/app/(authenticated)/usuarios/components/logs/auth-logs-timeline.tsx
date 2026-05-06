@@ -88,14 +88,14 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
   if (isLoading) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+      <GlassPanel depth={1} className={cn("inset-dialog")}>
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-4 w-full mt-2" />
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-4")}>
+        <div className={cn("stack-default mt-4")}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
+            <div key={i} className={cn("flex inline-default")}>
               <Skeleton className="h-10 w-10 rounded-full" />
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "flex-1 space-y-2")}>
+              <div className={cn("flex-1 stack-tight")}>
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-3 w-full" />
               </div>
@@ -107,8 +107,8 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
   }
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
-      <Heading level="widget" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+    <GlassPanel depth={1} className={cn("inset-dialog")}>
+      <Heading level="widget" className={cn("flex items-center inline-tight")}>
         <Clock className="size-4" />
         Histórico de Acesso
       </Heading>
@@ -142,14 +142,14 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
             {/* Linha vertical da timeline */}
             <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
-            <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+            <div className={cn("stack-loose")}>
               {logs.map((log, index) => {
                 const Icon = EVENT_ICONS[log.eventType];
                 const label = EVENT_LABELS[log.eventType];
                 const colorClass = EVENT_COLORS[log.eventType];
 
                 return (
-                  <div key={index} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "relative flex gap-4")}>
+                  <div key={index} className={cn("relative flex inline-default")}>
                     {/* Ícone do evento */}
                     <div
                       className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background border-2 ${colorClass}`}
@@ -160,7 +160,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                     {/* Conteúdo */}
                     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
                       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "bg-muted/4 border-border/15 rounded-xl p-4")}>
-                        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
+                        <div className={cn("flex items-start justify-between inline-default")}>
                           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                             <p className={`font-medium ${colorClass}`}>{label}</p>
                             <p className={cn("text-body-sm text-muted-foreground")}>
@@ -172,15 +172,15 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                           </div>
                         </div>
 
-                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2 text-body-sm text-muted-foreground")}>
+                        <div className={cn("mt-3 stack-tight text-body-sm text-muted-foreground")}>
                           {log.ipAddress && (
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                            <div className={cn("flex items-center inline-tight")}>
                               <MapPin className="h-3.5 w-3.5" />
                               <span>IP: {log.ipAddress}</span>
                             </div>
                           )}
                           {log.userAgent && (
-                            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                            <div className={cn("flex items-center inline-tight")}>
                               <Monitor className="h-3.5 w-3.5" />
                               <span>{simplifyUserAgent(log.userAgent)}</span>
                             </div>

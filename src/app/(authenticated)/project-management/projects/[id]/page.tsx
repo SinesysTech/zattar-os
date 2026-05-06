@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({ params }: Props) {
   ];
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div className="flex items-center justify-between">
         <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
           <Heading level="page">{projeto.nome}</Heading>
@@ -87,7 +87,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             )}
           </div>
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Button variant="outline" asChild>
             <Link href={`${basePath}/edit`}>
               <Pencil className="mr-1 size-4" />
@@ -103,7 +103,7 @@ export default async function ProjectDetailPage({ params }: Props) {
       </div>
 
       {/* Links de navegação para sub-rotas */}
-      <nav className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+      <nav className={cn("flex inline-tight")}>
         {navLinks.map((link) => (
           <Button key={link.href} variant="outline" size="sm" asChild>
             <Link href={link.href}>
@@ -120,8 +120,8 @@ export default async function ProjectDetailPage({ params }: Props) {
       </nav>
 
       {/* Visão Geral — conteúdo principal */}
-      <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2 lg:grid-cols-4")}>
+      <div className={cn("stack-default")}>
+        <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-4")}>
           <Card>
             <CardHeader>
               <CardDescription>Progresso</CardDescription>
@@ -208,7 +208,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <CardTitle>Informações</CardTitle>
           </CardHeader>
           <CardContent>
-            <dl className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 text-body-sm sm:grid-cols-2")}>
+            <dl className={cn("grid grid-cols-1 inline-default text-body-sm sm:grid-cols-2")}>
               <div>
                 <dt className="text-muted-foreground">Responsável</dt>
                 <dd>{projeto.responsavelNome ?? "—"}</dd>

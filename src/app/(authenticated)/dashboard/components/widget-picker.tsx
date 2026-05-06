@@ -69,7 +69,7 @@ export function WidgetPicker({
         <Button
           variant="outline"
           size="sm"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "gap-2 text-caption font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
+          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-tight text-caption font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
           aria-label="Personalizar dashboard"
         >
           <LayoutGrid className="size-3.5" />
@@ -119,7 +119,7 @@ export function WidgetPicker({
                 <label
                   key={widget.id}
                   htmlFor={`widget-toggle-${widget.id}`}
-                  className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center gap-4 px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150")}
+                  className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center inline-default px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150")}
                 >
                   <Switch
                     id={`widget-toggle-${widget.id}`}
@@ -128,7 +128,7 @@ export function WidgetPicker({
                     aria-label={`${isEnabled ? 'Desativar' : 'Ativar'} widget ${widget.title}`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS; gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm font-medium leading-tight truncate flex items-center gap-2")}>
+                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-medium leading-tight truncate flex items-center inline-tight")}>
                        {/* Opcional: mostrar um ícone bem sutil do módulo se quiser, mas o usuário pediu para não separar */}
                       {widget.title}
                     </p>

@@ -50,7 +50,7 @@ export function SummaryCards({ data }: SummaryCardsProps) {
   ];
 
   return (
-    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "*:data-[slot=card]:from-primary/10 grid gap-4 *:data-[slot=card]:bg-gradient-to-t md:grid-cols-2 lg:grid-cols-4")}>
+    <div className={cn("*:data-[slot=card]:from-primary/10 grid inline-default *:data-[slot=card]:bg-gradient-to-t md:grid-cols-2 lg:grid-cols-4")}>
       {cards.map((card) => (
         <Card key={card.title}>
           <CardHeader>

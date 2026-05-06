@@ -87,7 +87,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
             </Text>
           </div>
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 divide-y divide-border/20")}>
+          <div className={cn("stack-tight divide-y divide-border/20")}>
             {user.about && (
               <div className={cn(/* design-system-escape: space-y-3 sem token DS; py-4 padding direcional sem Inset equiv. */ "space-y-3 py-4")}>
                 <Text variant="overline" as="h5">Sobre</Text>
@@ -111,7 +111,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                 <Text variant="overline" as="h5">Mídia</Text>
                 <div>
                   <ScrollArea className="w-full">
-                    <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4 *:shrink-0")}>
+                    <div className={cn("flex inline-default *:shrink-0")}>
                       {user.medias.map(
                         (item: { type: string; url: string }, i) => (
                           <div key={i}>
@@ -154,7 +154,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                 <Text variant="overline" as="h5">
                   Redes Sociais
                 </Text>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2 *:shrink-0")}>
+                <div className={cn("flex flex-wrap items-center inline-tight *:shrink-0")}>
                   {user.socialLinks.map(
                     (item: { icon: string; link: string }, key) => (
                       <Button

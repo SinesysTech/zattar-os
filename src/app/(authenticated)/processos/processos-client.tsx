@@ -198,7 +198,7 @@ export function ProcessosClient({
             currentUserId={currentUserId}
             stats={stats}
           />
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 sm:ml-auto")}>
+          <div className={cn("flex items-center inline-tight sm:ml-auto")}>
             <SearchInput
               value={search}
               onChange={setSearch}

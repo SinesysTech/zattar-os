@@ -76,7 +76,7 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
           <Skeleton className="h-5 w-32" />
         </div>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-4 → migrar para <Stack gap="default"> */ "flex-1 p-4 space-y-4")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 stack-default")}>
           <Skeleton className="h-12 w-3/4" />
           <Skeleton className="h-12 w-1/2 ml-auto" />
           <Skeleton className="h-12 w-2/3" />
@@ -92,7 +92,7 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
-        <Heading level="card" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <Heading level="card" className={cn("flex items-center inline-tight")}>
           <MessageSquare className="h-4 w-4" />
           Chat do Documento
         </Heading>

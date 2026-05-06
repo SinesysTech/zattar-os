@@ -191,7 +191,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
     }), [handleCaptura, isLoading]);
 
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+      <div className={cn("stack-loose")}>
         <CapturaFormBase
           advogadoId={advogadoId}
           credenciaisSelecionadas={credenciaisSelecionadas}
@@ -210,7 +210,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
               </AlertDescription>
             </Alert>
           )}
-          <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-loose md:col-span-2")}>
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <Label htmlFor="processo-id">Número do Processo *</Label>
               <Input
@@ -240,14 +240,14 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
             </div>
             {baixarDocumentos && (
               <Collapsible open={filtrosAbertos} onOpenChange={setFiltrosAbertos} className="md:col-span-2">
-                <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium hover:underline")}>
+                <CollapsibleTrigger className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium hover:underline")}>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${filtrosAbertos ? 'rotate-180' : ''
                       }`}
                   />
                   Filtros Avançados
                 </CollapsibleTrigger>
-                <CollapsibleContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pt-4 padding direcional sem Inset equiv. */ "space-y-4 pt-4")}>
+                <CollapsibleContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "stack-default pt-4")}>
                   <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                     <Checkbox
                       id="apenas-assinados"
@@ -278,7 +278,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     </Label>
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("stack-tight")}>
                     <Label htmlFor="tipos-documento" className={cn("text-body-sm")}>
                       Tipos de Documento (separados por vírgula)
                     </Label>
@@ -291,8 +291,8 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                   </div>
 
-                  <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                  <div className={cn("grid grid-cols-2 inline-default")}>
+                    <div className={cn("stack-tight")}>
                       <Label htmlFor="data-inicial" className={cn("text-body-sm")}>
                         Data Inicial
                       </Label>
@@ -303,7 +303,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                       />
                     </div>
 
-                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                    <div className={cn("stack-tight")}>
                       <Label htmlFor="data-final" className={cn("text-body-sm")}>
                         Data Final
                       </Label>

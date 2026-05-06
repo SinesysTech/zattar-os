@@ -135,7 +135,7 @@ export function PlanoContaEditDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
+          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
@@ -143,7 +143,7 @@ export function PlanoContaEditDialog({
             )}
 
             {/* Código (somente leitura) */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Código</Label>
               <Input value={conta.codigo} disabled className="bg-muted" />
               <Text variant="caption">
@@ -152,7 +152,7 @@ export function PlanoContaEditDialog({
             </div>
 
             {/* Nível (somente leitura) */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Nível</Label>
               <Input
                 value={conta.nivel === 'sintetica' ? 'Sintética' : 'Analítica'}
@@ -165,7 +165,7 @@ export function PlanoContaEditDialog({
             </div>
 
             {/* Nome */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="nome">
                 Nome <span className="text-destructive">*</span>
               </Label>
@@ -181,7 +181,7 @@ export function PlanoContaEditDialog({
             </div>
 
             {/* Descrição */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label htmlFor="descricao">Descrição</Label>
               <Textarea
                 id="descricao"
@@ -195,9 +195,9 @@ export function PlanoContaEditDialog({
             </div>
 
             {/* Grid para Tipo e Natureza */}
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
               {/* Tipo de Conta */}
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label>
                   Tipo <span className="text-destructive">*</span>
                 </Label>
@@ -225,7 +225,7 @@ export function PlanoContaEditDialog({
               </div>
 
               {/* Natureza */}
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label>
                   Natureza <span className="text-destructive">*</span>
                 </Label>
@@ -252,7 +252,7 @@ export function PlanoContaEditDialog({
             </div>
 
             {/* Conta Pai */}
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div className={cn("stack-tight")}>
               <Label>Conta Pai</Label>
               <PlanoContaPaiSelect
                 value={watch('contaPaiId')}
@@ -266,9 +266,9 @@ export function PlanoContaEditDialog({
             </div>
 
             {/* Grid para Ordem e Status */}
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
+            <div className={cn("grid grid-cols-2 inline-default")}>
               {/* Ordem de Exibição */}
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label htmlFor="ordemExibicao">Ordem de Exibição</Label>
                 <Input
                   id="ordemExibicao"
@@ -285,7 +285,7 @@ export function PlanoContaEditDialog({
               </div>
 
               {/* Status Ativo */}
-              <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+              <div className={cn("stack-tight")}>
                 <Label>Status</Label>
                 <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center space-x-2 pt-2")}>
                   <Switch

@@ -68,12 +68,12 @@ export function CapturadasGlassCards({
           >
             <GlassPanel
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ 'gap-2 p-4 transition-all duration-200',
+                /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'inline-tight p-4 transition-all duration-200',
                 'hover:border-primary/30 hover:shadow-[0_4px_24px_rgba(85,35,235,0.06)]',
                 isSelected && 'border-primary/40 bg-primary/5',
               )}
             >
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <TribunalBadge codigo={c.siglaTribunal} />
                 {c.tipoComunicacao && (
                   <Badge variant="outline" className="text-[10px]">

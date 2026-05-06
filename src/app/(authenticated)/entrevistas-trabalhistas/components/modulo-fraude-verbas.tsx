@@ -51,7 +51,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">O Que Você Perdeu</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -69,7 +69,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
         />
 
         {data.valor_mensal_fixo === true && (
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="valor-aprox">Valor aproximado</Label>
             <Input
               id="valor-aprox"
@@ -85,9 +85,9 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       {/* C.4.2: Benefícios recebidos */}
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebia algum desses benefícios da empresa?</Label>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           {BENEFICIO_RECEBIDO_OPTIONS.map((opt) => (
-            <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={opt.value} className={cn("flex items-center inline-tight")}>
               <Checkbox
                 id={`beneficio-${opt.value}`}
                 checked={beneficios.includes(opt.value)}
@@ -114,7 +114,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
       </div>
 
       {/* C.4.4: Férias */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="ferias">Como funcionavam as férias?</Label>
         <Select
           value={data.regime_ferias ?? ''}

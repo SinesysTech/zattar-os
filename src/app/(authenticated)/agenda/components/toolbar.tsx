@@ -91,7 +91,7 @@ export function AgendaToolbar({
   return (
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {/* Row 1: Title + New Event */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
+      <div className={cn("flex items-end justify-between inline-default")}>
         <div>
           <Heading level="page">Agenda</Heading>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
@@ -103,7 +103,7 @@ export function AgendaToolbar({
       </div>
 
       {/* Row 2: Search + Filters + Nav + View */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+      <div className={cn("flex items-center inline-tight flex-wrap")}>
         {/* Search (reusa SearchInput existente) */}
         <SearchInput
           value={search}

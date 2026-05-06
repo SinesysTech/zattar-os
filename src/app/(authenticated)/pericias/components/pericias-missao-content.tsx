@@ -153,7 +153,7 @@ function ResponsavelAvatar({
 
   if (responsavel && nome) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+      <div className={cn("flex items-center inline-tight min-w-0")}>
         <Avatar size="xs" className="shrink-0 size-6">
           <AvatarImage src={responsavel.avatarUrl || undefined} alt={nome} />
           <AvatarFallback className="text-[9px]">
@@ -168,7 +168,7 @@ function ResponsavelAvatar({
   }
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0")}>
+    <div className={cn("flex items-center inline-tight min-w-0")}>
       <div className="size-6 rounded-full bg-muted/40 flex items-center justify-center shrink-0">
         <User className="size-3 text-muted-foreground/40" />
       </div>
@@ -294,7 +294,7 @@ function PericiaMissionCard({
 
           {/* ── 3. Partes: Autor vs Réu ──────────────────────────── */}
           {(parteAutora || parteRe) && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg bg-border/5 px-3 py-2")}>
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg bg-border/5 px-3 py-2")}>
               <div className="flex-1 min-w-0">
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
                   Autor
@@ -331,7 +331,7 @@ function PericiaMissionCard({
           )}
 
           {/* ── 5. Footer: Responsável (canto inferior direito) ── */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-end gap-2")}>
+          <div className={cn("flex items-center justify-end inline-tight")}>
             <ResponsavelAvatar
               responsavelId={pericia.responsavelId}
               usuarios={usuarios}
@@ -535,9 +535,9 @@ export function PericiasMissaoContent({
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* Grupos de urgência */}
       {isLoading ? (
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+            <div key={i} className={cn("stack-tight")}>
               <Skeleton className="h-10 w-64 rounded-lg" />
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3")}>
                 {Array.from({ length: 3 }).map((_, j) => (
@@ -558,7 +558,7 @@ export function PericiasMissaoContent({
           </p>
         </GlassPanel>
       ) : (
-        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+        <div className={cn("stack-loose")}>
           {groups
             .filter((g) => g.pericias.length > 0)
             .map((group) => (

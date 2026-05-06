@@ -9,7 +9,7 @@ export const revalidate = 0;
 function ContasReceberLoading() {
   return (
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 sm:grid-cols-4 gap-4")}>
+      <div className={cn("grid grid-cols-2 sm:grid-cols-4 inline-default")}>
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />
         <Skeleton className="h-20 w-full" />

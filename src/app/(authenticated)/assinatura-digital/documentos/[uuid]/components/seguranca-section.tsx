@@ -36,7 +36,7 @@ function CopyableValue({ value, label }: { value: string; label?: string }) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2 group")}>
+    <div className={cn("flex items-start inline-tight group")}>
       <div className="flex-1 min-w-0">
         {label && (
           <Text variant="caption">{label}</Text>

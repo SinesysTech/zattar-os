@@ -87,12 +87,12 @@ export function MailList({ items }: MailListProps) {
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col gap-2 p-4")}>
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col inline-tight p-4")}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex flex-col gap-2 rounded-lg border p-3")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+          <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight rounded-lg border p-3")}>
+            <div className={cn("flex items-center inline-tight")}>
               <Skeleton className="h-4 w-32" />
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "ml-auto flex items-center gap-2")}>
+              <div className={cn("ml-auto flex items-center inline-tight")}>
                 <Skeleton className="h-2 w-2 rounded-full" />
                 <Skeleton className="h-3 w-16" />
               </div>
@@ -120,12 +120,12 @@ export function MailList({ items }: MailListProps) {
         ref={listRef}
         role="listbox"
         aria-label="Lista de e-mails"
-        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col gap-2 p-4")}>
+        className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col inline-tight p-4")}>
         {items.map((item, index) => (
           <div
             key={item.uid}
             className={cn(
-              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "group flex gap-2 rounded-lg border p-3 text-body-sm transition-colors duration-200",
+              /* design-system-escape: p-3 → usar <Inset> */ "group flex inline-tight rounded-lg border p-3 text-body-sm transition-colors duration-200",
               selectedMail?.uid === item.uid
                 ? "bg-accent"
                 : "hover:bg-muted/50"
@@ -150,7 +150,7 @@ export function MailList({ items }: MailListProps) {
               onKeyDown={(e) => handleKeyDown(e, index)}>
               <div className="flex w-full flex-wrap items-start gap-x-3 gap-y-1">
                 <div className="min-w-0 flex-1">
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex min-w-0 flex-wrap items-center gap-2")}>
+                  <div className={cn("flex min-w-0 flex-wrap items-center inline-tight")}>
                     <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-5 sem token DS */ "text-foreground whitespace-normal wrap-break-word font-semibold leading-5")}>
                       {getMailPrimaryName(item)}
                     </div>

@@ -52,9 +52,9 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
           Comparativo de projetos concluídos nos últimos anos.
         </CardDescription>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
+      <CardContent className={cn("grid inline-default")}>
         {data.map((item, index) => (
-          <div key={item.ano} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid auto-rows-min gap-2")}>
+          <div key={item.ano} className={cn("grid auto-rows-min inline-tight")}>
             <Text variant="kpi-value" className="flex items-baseline gap-1">
               {item.totalConcluidos}
               <Text variant="caption" className="font-normal">

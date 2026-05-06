@@ -60,7 +60,7 @@ function ContaSection({
   return (
     <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
       <div className="flex items-center justify-between">
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md p-1.5', colorClass)}>
             <Icon className={cn('h-3.5 w-3.5', iconColorClass)} />
           </div>
@@ -94,7 +94,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
           <Skeleton className="h-5 w-40" />
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+          <div className={cn("stack-default")}>
             <Skeleton className="h-16 w-full" />
             <Skeleton className="h-2.5 w-full rounded-full" />
             <Skeleton className="h-16 w-full" />
@@ -113,7 +113,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
           Contas a Pagar / Receber
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4")}>
+      <CardContent className={cn("flex-1 stack-default")}>
         <ContaSection
           title="A Pagar"
           icon={ArrowUpFromLine}

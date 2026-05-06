@@ -215,7 +215,7 @@ export function OrigemLancamentoSection({
       <Card className={cn('border-info/30', className)}>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-info")}>
+            <CardTitle className={cn("flex items-center inline-tight text-info")}>
               <Scale className="h-5 w-5" />
               Origem: Acordo Judicial
             </CardTitle>
@@ -228,14 +228,14 @@ export function OrigemLancamentoSection({
             Este lançamento foi gerado automaticamente a partir de um acordo/condenação
           </CardDescription>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
+        <CardContent className={cn("stack-default")}>
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             {acordo && (
               <DetalheItem
                 icon={Scale}
                 label="Acordo/Condenação"
                 value={
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                  <div className={cn("flex items-center inline-tight")}>
                     <span>
                       {acordo.tipo === 'acordo' ? 'Acordo' : 'Condenação'} #{acordo.id}
                     </span>
@@ -285,7 +285,7 @@ export function OrigemLancamentoSection({
           </div>
 
           {/* Links de navegação */}
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex flex-wrap gap-2 pt-2 border-t")}>
+          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex flex-wrap inline-tight pt-2 border-t")}>
             {acordo && (
               <Button variant="outline" size="sm" asChild>
                 <Link href={`/obrigacoes/${acordo.id}`}>
@@ -333,7 +333,7 @@ export function OrigemLancamentoSection({
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <CardTitle className={cn("flex items-center inline-tight")}>
           <FileText className="h-5 w-5" />
           Origem: {origemInfo.label}
         </CardTitle>

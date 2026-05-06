@@ -43,7 +43,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">A Ruptura e o Acerto de Contas</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -52,7 +52,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
       </div>
 
       {/* A.4.1: Motivo do término */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="motivo">Como o trabalho terminou?</Label>
         <Select
           value={data.motivo ?? ''}
@@ -71,7 +71,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
         </Select>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 sm:max-w-xs")}>
+      <div className={cn("stack-tight sm:max-w-xs")}>
         <Label htmlFor="data-demissao">Data do desligamento</Label>
         <Input
           id="data-demissao"
@@ -84,9 +84,9 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
       {/* A.4.2: Verbas rescisórias */}
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>Recebeu o acerto rescisório e guias do FGTS e Seguro-Desemprego?</Label>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+        <div className={cn("stack-tight")}>
           {VERBAS_RECEBIDAS_OPTIONS.map((opt) => (
-            <div key={opt.value} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div key={opt.value} className={cn("flex items-center inline-tight")}>
               <Checkbox
                 id={`verba-${opt.value}`}
                 checked={verbas.includes(opt.value)}

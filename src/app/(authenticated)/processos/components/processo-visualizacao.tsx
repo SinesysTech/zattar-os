@@ -277,17 +277,17 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Loading inicial
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pb-8 padding direcional sem Inset equiv. */ "flex w-full min-h-[calc(100vh-7rem)] flex-col gap-4 pb-8")}>
+      <div className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "flex w-full min-h-[calc(100vh-7rem)] flex-col inline-default pb-8")}>
         <section className="rounded-2xl border bg-card shadow-sm">
-          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS; space-y-4 → migrar para <Stack gap="default"> */ "px-5 py-5 sm:px-6 space-y-4")}>
-            <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "px-5 py-5 sm:px-6 stack-default")}>
+            <div className={cn("stack-tight")}>
               <Skeleton className="h-3 w-36" />
               <Skeleton className="h-10 w-3/4" />
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Skeleton className="h-4 w-52" />
                 <Skeleton className="h-4 w-56" />
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Skeleton className="h-6 w-16" />
                 <Skeleton className="h-6 w-16" />
                 <Skeleton className="h-6 w-28" />
@@ -297,19 +297,19 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
 
           <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t bg-muted/20 px-5 py-4 sm:px-6")}>
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
+              <div className={cn("flex items-center inline-default")}>
                 <Skeleton className="h-7 w-28" />
                 <Skeleton className="h-7 w-24" />
                 <Skeleton className="h-7 w-20" />
               </div>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-3 sem token DS */ "rounded-xl border bg-background/70 p-3 space-y-3")}>
                 {[...Array(3)].map((_, index) => (
-                  <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border p-3 space-y-2")}>
+                  <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3 stack-tight")}>
                     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-6 w-28" />
                     </div>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
+                    <div className={cn("flex inline-tight")}>
                       <Skeleton className="h-3 w-28" />
                       <Skeleton className="h-3 w-28" />
                     </div>
@@ -322,11 +322,11 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t px-5 py-5 sm:px-6")}>
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-xl border bg-card px-4 py-3 mb-5")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                <div className={cn("stack-tight")}>
                   <Skeleton className="h-4 w-36" />
                   <Skeleton className="h-3 w-72" />
                 </div>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                <div className={cn("flex items-center inline-tight")}>
                   <Skeleton className="h-9 w-24" />
                   <Skeleton className="h-9 w-28" />
                   <Skeleton className="h-9 w-32" />
@@ -344,7 +344,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Erro ao carregar
   if (error && !processo) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "w-full space-y-6")}>
+      <div className={cn("w-full stack-loose")}>
         <TimelineError error={error} onRetry={refetch} />
       </div>
     );
@@ -353,7 +353,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Processo não encontrado
   if (!processo) {
     return (
-      <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "w-full space-y-6")}>
+      <div className={cn("w-full stack-loose")}>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Processo não encontrado</AlertTitle>

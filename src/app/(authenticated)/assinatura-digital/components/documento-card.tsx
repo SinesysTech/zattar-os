@@ -106,7 +106,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-semibold truncate leading-tight")}>
               {doc.titulo}
             </p>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
+            <div className={cn("flex items-center inline-tight mt-1")}>
               <span
                 className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${cfg.bg} ${cfg.color}`}
               >
@@ -146,7 +146,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
         )}
 
         {doc.assinantes.length === 0 && doc.status === "rascunho" && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex items-center gap-2 text-[10px] text-muted-foreground/55")}>
+          <div className={cn("mt-3 flex items-center inline-tight text-[10px] text-muted-foreground/55")}>
             <Users className="size-3" />
             Sem assinantes configurados
           </div>

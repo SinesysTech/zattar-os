@@ -117,7 +117,7 @@ export function ComposeMailPanel() {
 
       {/* Fields */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 grid gap-3 px-4 py-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <div className="flex items-center justify-between">
             <Label htmlFor="compose-panel-to">Para</Label>
             {!showCcBcc && (
@@ -141,7 +141,7 @@ export function ComposeMailPanel() {
 
         {showCcBcc && (
           <>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="compose-panel-cc">Cc</Label>
               <Input
                 id="compose-panel-cc"
@@ -151,7 +151,7 @@ export function ComposeMailPanel() {
                 onChange={(e) => setCc(e.target.value)}
               />
             </div>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+            <div className={cn("grid inline-tight")}>
               <Label htmlFor="compose-panel-bcc">Cco</Label>
               <Input
                 id="compose-panel-bcc"
@@ -164,7 +164,7 @@ export function ComposeMailPanel() {
           </>
         )}
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
+        <div className={cn("grid inline-tight")}>
           <Label htmlFor="compose-panel-subject">Assunto</Label>
           <Input
             id="compose-panel-subject"
@@ -186,7 +186,7 @@ export function ComposeMailPanel() {
       <Separator />
 
       {/* Footer */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 items-center justify-end gap-2 p-4")}>
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 items-center justify-end inline-tight p-4")}>
         <Button
           variant="outline"
           size="sm"

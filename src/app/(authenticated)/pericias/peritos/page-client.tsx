@@ -39,9 +39,9 @@ export function PeritosPageClient() {
   return (
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4 flex-wrap")}>
+      <div className={cn("flex items-end justify-between inline-default flex-wrap")}>
         <div>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
+          <div className={cn("flex items-center inline-tight mb-1")}>
             <Button
               asChild
               variant="ghost"
@@ -62,7 +62,7 @@ export function PeritosPageClient() {
             </p>
           )}
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+        <div className={cn("flex items-center inline-tight flex-wrap")}>
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground/50 pointer-events-none" />
             <Input

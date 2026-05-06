@@ -13,7 +13,7 @@ function AudienciasLoading() {
     <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
       <Skeleton className="h-9 w-40" />
       <Skeleton className="h-14 w-full rounded-2xl" />
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton key={i} className="h-12 w-full rounded-xl" />
         ))}

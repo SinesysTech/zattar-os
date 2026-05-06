@@ -35,7 +35,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
   const empresaImpos = data.origem_pj === 'empresa_obrigou' || data.origem_pj === 'empresa_sugeriu';
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       <div>
         <Heading level="card">A Máscara do CNPJ</Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -44,7 +44,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.1: Origem do PJ */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="origem-pj">Quem pediu para você abrir o CNPJ/MEI?</Label>
         <Select
           value={data.origem_pj ?? ''}
@@ -69,7 +69,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.2: Tipo de PJ */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="tipo-pj">Qual o tipo de empresa/regime que abriu?</Label>
         <Select
           value={data.tipo_pj ?? ''}
@@ -88,8 +88,8 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
         </Select>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 sm:grid-cols-2")}>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 sm:max-w-xs")}>
+      <div className={cn("grid inline-default sm:grid-cols-2")}>
+        <div className={cn("stack-tight sm:max-w-xs")}>
           <Label htmlFor="data-inicio-pj">Data de início da relação PJ</Label>
           <Input
             id="data-inicio-pj"
@@ -98,7 +98,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
             onChange={(e) => onChange({ ...data, data_inicio_pj: e.target.value })}
           />
         </div>
-        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 sm:max-w-xs")}>
+        <div className={cn("stack-tight sm:max-w-xs")}>
           <Label htmlFor="data-fim-pj">Data de fim da relação PJ</Label>
           <Input
             id="data-fim-pj"
@@ -109,7 +109,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="remuneracao-liquida">Remuneração líquida mensal</Label>
         <Input
           id="remuneracao-liquida"
@@ -156,7 +156,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.6: Tipo de pagamento */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="tipo-pagamento">Como era feito o pagamento?</Label>
         <Select
           value={data.tipo_pagamento ?? ''}
@@ -176,7 +176,7 @@ export function ModuloContratoPJ({ data, onChange }: ModuloContratoPJProps) {
       </div>
 
       {/* C.1.7: Valor aproximado */}
-      <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+      <div className={cn("stack-tight")}>
         <Label htmlFor="valor-mensal">Valor mensal aproximado recebido</Label>
         <Input
           id="valor-mensal"

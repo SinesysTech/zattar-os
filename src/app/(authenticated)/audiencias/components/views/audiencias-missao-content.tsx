@@ -128,9 +128,9 @@ export function AudienciasMissaoContent({
   const dateLabel = format(currentDate, "EEEE, d 'de' MMMM", { locale: ptBR });
 
   return (
-    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+    <div className={cn("stack-default")}>
       {/* Date Navigator */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+      <div className={cn("flex items-center inline-tight")}>
         <button onClick={handlePrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
@@ -160,12 +160,12 @@ export function AudienciasMissaoContent({
       )}
 
       {/* Main Grid: Timeline + Sidebar */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 lg:grid-cols-3 gap-4")}>
+      <div className={cn("grid grid-cols-1 lg:grid-cols-3 inline-default")}>
         {/* Timeline (2/3) */}
         <div className="lg:col-span-2">
           <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
             <div className="flex items-center justify-between mb-4">
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+              <div className={cn("flex items-center inline-tight")}>
                 <Clock className="size-3 text-muted-foreground/70" />
                 <Text variant="meta-label">Timeline do dia</Text>
               </div>
@@ -194,7 +194,7 @@ export function AudienciasMissaoContent({
                 )}
 
                 {morning.length > 0 && afternoon.length > 0 && (
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-3 px-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-3 px-2")}>
+                  <div className={cn(/* design-system-escape: py-3 px-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-3 px-2")}>
                     <div className="flex-1 h-px bg-border/8" />
                     <span className="text-overline text-muted-foreground/65">Intervalo</span>
                     <div className="flex-1 h-px bg-border/8" />
@@ -224,7 +224,7 @@ export function AudienciasMissaoContent({
 
                 {finalizadas.length > 0 && (
                   <>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2 mt-2")}>
+                    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-2 mt-2")}>
                       <div className="flex-1 h-px bg-border/8" />
                       <span className="text-overline text-muted-foreground/60">Concluídas</span>
                       <div className="flex-1 h-px bg-border/8" />
@@ -240,7 +240,7 @@ export function AudienciasMissaoContent({
         </div>
 
         {/* Sidebar (1/3) */}
-        <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <div className={cn("stack-default")}>
           <RhythmStrip audiencias={audiencias} />
           <LoadHeatmap audiencias={audiencias} responsavelNomes={responsavelNomes} />
         </div>
@@ -253,7 +253,7 @@ export function AudienciasMissaoContent({
 
 function SectionHeader({ label, icon: Icon }: { label: string; icon: typeof Sun }) {
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-2")}>
+    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-2")}>
       <Icon className="size-3 text-muted-foreground/65" />
       <h3 className="text-overline">{label}</h3>
       <div className="flex-1 h-px bg-border/6" />
@@ -265,7 +265,7 @@ function renderBuffer(prevEnd: string, nextStart: string) {
   const buffer = getBufferMinutes(prevEnd, nextStart);
   if (buffer <= 0 || buffer >= 180) return null;
   return (
-    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; py-1 padding direcional sem Inset equiv.; pl-16 padding direcional sem Inset equiv. */ "flex items-center gap-2 py-1 pl-16")}>
+    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv.; pl-16 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-1 pl-16")}>
       <div className="w-px h-4 bg-border/10 ml-0.5" />
       <span className="text-micro-caption text-muted-foreground/65">{getBufferLabel(buffer)} buffer</span>
     </div>
@@ -308,9 +308,9 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
           isOngoing && 'ring-1 ring-success/20 border-success/15',
         )}
       >
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+        <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0 flex-1">
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+            <div className={cn("flex items-center inline-tight")}>
               <Gavel className="size-3 text-primary/65 shrink-0" />
               <span className="text-subsection-title text-foreground truncate">{audiencia.tipoDescricao || 'Audiência'}</span>
               {isOngoing && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>}
@@ -342,7 +342,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
           </div>
         )}
 
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-2 flex-wrap")}>
+        <div className={cn("flex items-center inline-tight mt-2 flex-wrap")}>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <ModalIcon className="size-2 text-muted-foreground/70" />
             <span className="text-micro-caption text-muted-foreground/60">

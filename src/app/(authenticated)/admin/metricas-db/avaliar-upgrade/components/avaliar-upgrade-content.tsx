@@ -130,9 +130,9 @@ export function AvaliarUpgradeContent() {
   const computeTier = metricsSnapshot.diskIO?.compute_tier ?? "unknown";
 
   return (
-    <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
+    <div className={cn("stack-loose")}>
       {/* Métricas Atuais */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
+      <div className={cn("grid inline-default md:grid-cols-3")}>
         <Card>
           <CardHeader>
             <CardTitle>Cache Hit Rate</CardTitle>
@@ -180,8 +180,8 @@ export function AvaliarUpgradeContent() {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-          <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "list-inside list-disc space-y-2")}>
+        <CardContent className={cn("stack-default")}>
+          <ul className={cn("list-inside list-disc stack-tight")}>
             {recommendation.reasons.map((reason, index) => (
               <li key={index} className={cn("text-body-sm")}>{reason}</li>
             ))}
@@ -247,10 +247,10 @@ export function AvaliarUpgradeContent() {
         <CardHeader>
           <CardTitle>Próximos Passos</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+        <CardContent className={cn("stack-default")}>
           {recommendation.should_upgrade ? (
             <>
-              <ol className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "list-inside list-decimal space-y-2 text-body-sm")}>
+              <ol className={cn("list-inside list-decimal stack-tight text-body-sm")}>
                 <li>Acessar <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Supabase Dashboard</a> → Settings → Compute</li>
                 <li>Selecionar tier recomendado: <strong className="capitalize">{recommendation.recommended_tier}</strong></li>
                 <li>Agendar upgrade para horário de baixo tráfego (ex: 3h da manhã)</li>
@@ -266,7 +266,7 @@ export function AvaliarUpgradeContent() {
             </p>
           )}
 
-          <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+          <div className={cn("stack-tight")}>
             <Label htmlFor="justificativa">Justificativa / Observações (opcional)</Label>
             <Textarea
               id="justificativa"

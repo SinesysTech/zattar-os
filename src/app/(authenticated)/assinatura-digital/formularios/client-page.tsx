@@ -271,7 +271,7 @@ export function FormulariosClient() {
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 lg:grid-cols-4")}>
         {statCards.map(({ label, value, Icon, tint, iconColor }) => (
           <GlassPanel key={label} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2")}>
+            <div className={cn("flex items-start justify-between inline-tight")}>
               <div className="min-w-0">
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
                   {label}
@@ -290,13 +290,13 @@ export function FormulariosClient() {
 
       {/* Toolbar */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
+        <div className={cn("flex items-center inline-tight flex-wrap")}>
           <FilterChipMulti label="Status" options={ATIVO_OPTIONS} value={ativoFiltro} onValueChange={setAtivoFiltro} />
           <FilterChipMulti label="Segmento" options={segmentoOptions} value={segmentoFiltro} onValueChange={setSegmentoFiltro} popoverWidth="w-56" />
           <FilterChipMulti label="Foto" options={FOTO_OPTIONS} value={fotoFiltro} onValueChange={setFotoFiltro} />
           <FilterChipMulti label="Geoloc." options={GEO_OPTIONS} value={geoFiltro} onValueChange={setGeoFiltro} />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 justify-end")}>
+        <div className={cn("flex items-center inline-tight flex-1 justify-end")}>
           <SearchInput
             value={busca}
             onChange={setBusca}

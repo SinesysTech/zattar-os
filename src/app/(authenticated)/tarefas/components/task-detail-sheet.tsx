@@ -273,9 +273,9 @@ export function TaskDetailSheet() {
             <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] w-full p-0 flex flex-col")}>
                 {tarefa && (
                     <div className="flex flex-1 min-h-0 flex-col">
-                        <DialogHeader className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-b border-border/30 p-6 shrink-0")}>
+                        <DialogHeader className={cn("border-b border-border/30 inset-dialog shrink-0")}>
                             <div className="flex items-center justify-between">
-                                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                <div className={cn("flex items-center inline-tight")}>
                                     <Badge variant="outline" className="capitalize">
                                         {labelInfo?.icon && <labelInfo.icon className="mr-1 h-3 w-3" />}
                                         {labelInfo?.label || tarefa.label}
@@ -284,7 +284,7 @@ export function TaskDetailSheet() {
                                         <Badge variant="secondary" className="text-[10px]">Virtual</Badge>
                                     )}
                                 </div>
-                                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                <div className={cn("flex items-center inline-tight")}>
                                     <Button
                                         variant="ghost"
                                         size="icon" aria-label="Favoritar"
@@ -321,26 +321,26 @@ export function TaskDetailSheet() {
                         </DialogHeader>
 
                         <ScrollArea className="flex-1">
-                            <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "p-6")}>
+                            <div className={cn("inset-dialog")}>
                                 {/* Status & Details Grid */}
-                                <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-2 gap-6 sm:grid-cols-3")}>
+                                <div className={cn("grid grid-cols-2 inline-loose sm:grid-cols-3")}>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                        <div className={cn("flex items-center inline-tight")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                        <div className={cn("flex items-center inline-tight")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 col-span-2 sm:col-span-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prazo</Text>
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm")}>
+                                        <div className={cn("flex items-center inline-tight text-body-sm")}>
                                             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                                             <span>{tarefa.dueDate ? format(new Date(tarefa.dueDate), "dd/MM/yyyy", { locale: ptBR }) : "Sem prazo"}</span>
                                         </div>
@@ -350,7 +350,7 @@ export function TaskDetailSheet() {
                                 {tarefa.description && (
                                     <>
                                         <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
-                                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                                        <div className={cn("stack-tight")}>
                                             <Text variant="caption" className="font-medium uppercase tracking-wider">Descrição</Text>
                                             <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
                                                 {tarefa.description}
@@ -362,9 +362,9 @@ export function TaskDetailSheet() {
                                 <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
 
                                 {/* Subtasks Section */}
-                                <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                                <div className={cn("stack-default")}>
                                     <div className="flex items-center justify-between">
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                        <div className={cn("flex items-center inline-tight")}>
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
                                             <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Subtarefas</Heading>
                                         </div>
@@ -375,7 +375,7 @@ export function TaskDetailSheet() {
                                         )}
                                     </div>
 
-                                    <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                                    <div className={cn("stack-tight")}>
                                         {tarefa.subTasks?.map((st) => (
                                             <div key={st.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "group flex items-center justify-between gap-3 rounded-lg border p-3 hover:bg-accent/50 transition-colors")}>
                                                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
@@ -398,7 +398,7 @@ export function TaskDetailSheet() {
                                             </div>
                                         ))}
 
-                                        <form onSubmit={handleAddSubtask} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 pt-2")}>
+                                        <form onSubmit={handleAddSubtask} className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight pt-2")}>
                                             <Input
                                                 placeholder="Adicionar subtarefa..."
                                                 value={newSubtask}
@@ -415,9 +415,9 @@ export function TaskDetailSheet() {
                                 <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
 
                                 {/* Attachments Section */}
-                                <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
+                                <div className={cn("stack-default")}>
                                     <div className="flex items-center justify-between">
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                        <div className={cn("flex items-center inline-tight")}>
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
                                             <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Anexos</Heading>
                                         </div>
@@ -439,7 +439,7 @@ export function TaskDetailSheet() {
                                         />
                                     </div>
 
-                                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-1 gap-2 sm:grid-cols-2")}>
+                                    <div className={cn("grid grid-cols-1 inline-tight sm:grid-cols-2")}>
                                         {tarefa.files?.map((file) => (
                                             <div
                                                 key={file.id}
@@ -480,14 +480,14 @@ export function TaskDetailSheet() {
                                 <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
 
                                 {/* Comments Section */}
-                                <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-                                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+                                <div className={cn("stack-default")}>
+                                    <div className={cn("flex items-center inline-tight")}>
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
                                         <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Comentários</Heading>
                                     </div>
 
-                                    <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pb-4 padding direcional sem Inset equiv. */ "space-y-4 pb-4")}>
-                                        <form onSubmit={handleAddComment} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
+                                    <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "stack-default pb-4")}>
+                                        <form onSubmit={handleAddComment} className={cn("stack-tight")}>
                                             <Textarea
                                                 placeholder="Escreva um comentário..."
                                                 value={newComment}
@@ -501,9 +501,9 @@ export function TaskDetailSheet() {
                                             </div>
                                         </form>
 
-                                        <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose">; pt-2 padding direcional sem Inset equiv. */ "space-y-6 pt-2")}>
+                                        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-loose pt-2")}>
                                             {tarefa.comments?.map((comment) => (
-                                                <div key={comment.id} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "group relative flex gap-4")}>
+                                                <div key={comment.id} className={cn("group relative flex inline-default")}>
                                                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
                                                         <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold")}>U</span>
                                                     </div>

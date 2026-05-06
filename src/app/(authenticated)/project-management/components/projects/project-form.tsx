@@ -142,7 +142,7 @@ export function ProjectForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}
+            className={cn("stack-loose")}
           >
             <FormField
               control={form.control}
@@ -178,7 +178,7 @@ export function ProjectForm({
               )}
             />
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="status"
@@ -236,7 +236,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="clienteId"
@@ -287,7 +287,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="dataInicio"
@@ -317,7 +317,7 @@ export function ProjectForm({
               />
             </div>
 
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
+            <div className={cn("grid grid-cols-1 inline-default md:grid-cols-2")}>
               <FormField
                 control={form.control}
                 name="orcamento"

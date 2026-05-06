@@ -10,17 +10,17 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
     <div className={cn("relative w-full h-full bg-video-bg flex flex-col overflow-hidden", className)}>
       {/* Header / Top Bar */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "h-16 border-b border-video-border flex items-center justify-between px-4")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Skeleton className="h-8 w-8 rounded-full bg-video-skeleton" />
           <Skeleton className="h-4 w-32 bg-video-skeleton" />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
+        <div className={cn("flex items-center inline-tight")}>
           <Skeleton className="h-8 w-20 rounded-md bg-video-skeleton" />
         </div>
       </div>
 
       {/* Main Grid */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-4 → migrar para <Inline gap="default"> */ "flex-1 p-4 grid grid-cols-1 md:grid-cols-2 gap-4")}>
+      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 grid grid-cols-1 md:grid-cols-2 inline-default")}>
         {/* Mock Participant 1 (Self) */}
         <div className="relative bg-video-surface rounded-lg overflow-hidden border border-video-border">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -43,7 +43,7 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
       </div>
 
       {/* Control Bar */}
-      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "h-20 border-t border-video-border flex items-center justify-center gap-4")}>
+      <div className={cn("h-20 border-t border-video-border flex items-center justify-center inline-default")}>
         {[1, 2, 3, 4, 5].map((i) => (
           <Skeleton key={i} className="w-12 h-12 rounded-full bg-video-skeleton" />
         ))}
