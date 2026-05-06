@@ -146,7 +146,7 @@ function NovoPopover({
           <button
             type="button"
             onClick={wrap(onCreateFolder)}
-            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
+            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/10 text-warning">
               <FolderPlus className="size-3.5" />
@@ -161,7 +161,7 @@ function NovoPopover({
           <button
             type="button"
             onClick={wrap(onCreateDocument)}
-            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
+            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 text-info">
               <FileText className="size-3.5" />
@@ -177,7 +177,7 @@ function NovoPopover({
           <button
             type="button"
             onClick={wrap(onUpload)}
-            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
+            className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <UploadIcon className="size-3.5" />
@@ -459,7 +459,7 @@ export function FileManager() {
       {/* ── Breadcrumbs (dentro de pasta) ──────────────────── */}
       {currentPastaId && (
         <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
-          <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")} aria-label="Breadcrumb">
+          <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-caption")} aria-label="Breadcrumb">
             <button
               type="button"
               onClick={() => router.push('/documentos')}

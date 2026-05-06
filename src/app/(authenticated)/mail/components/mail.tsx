@@ -280,10 +280,10 @@ export function Mail({
                   )}
 
                   <TabsList className="ml-auto h-7">
-                    <TabsTrigger value="all" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv. */ "text-xs px-2 h-5")}>
+                    <TabsTrigger value="all" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "text-caption px-2 h-5")}>
                       Todos
                     </TabsTrigger>
-                    <TabsTrigger value="unread" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv. */ "text-xs px-2 h-5")}>
+                    <TabsTrigger value="unread" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "text-caption px-2 h-5")}>
                       Não lidos
                     </TabsTrigger>
                   </TabsList>

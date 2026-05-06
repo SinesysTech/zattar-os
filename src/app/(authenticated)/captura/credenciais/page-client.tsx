@@ -523,14 +523,14 @@ export default function CredenciaisPage() {
 
                   {/* Actions */}
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs h-7")} onClick={() => handleToggleStatus(credencial)}>
+                    <Button variant="ghost" size="sm" className={cn("flex-1 text-caption h-7")} onClick={() => handleToggleStatus(credencial)}>
                       {credencial.active ? (
                         <><PowerOff className="size-3 mr-1" />Desativar</>
                       ) : (
                         <><Power className="size-3 mr-1" />Ativar</>
                       )}
                     </Button>
-                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs h-7")} onClick={() => handleEdit(credencial)}>
+                    <Button variant="ghost" size="sm" className={cn("text-caption h-7")} onClick={() => handleEdit(credencial)}>
                       Editar
                     </Button>
                   </div>

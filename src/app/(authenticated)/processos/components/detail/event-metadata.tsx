@@ -55,7 +55,7 @@ export function EventMetadata({ item }: EventMetadataProps) {
         <MetadataRow label="ID">
           <span
             className={cn(
-              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'font-mono bg-muted px-2 py-0.5 rounded-lg border text-xs'
+              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'font-mono bg-muted px-2 py-0.5 rounded-lg border text-caption'
             )}
           >
             {item.id}

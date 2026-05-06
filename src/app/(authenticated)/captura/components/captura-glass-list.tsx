@@ -342,7 +342,7 @@ function PaginationBar({
           onClick={onPrev}
           disabled={pagina <= 1}
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-caption font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',
@@ -356,7 +356,7 @@ function PaginationBar({
           onClick={onNext}
           disabled={pagina >= paginacao.totalPaginas}
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-caption font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',

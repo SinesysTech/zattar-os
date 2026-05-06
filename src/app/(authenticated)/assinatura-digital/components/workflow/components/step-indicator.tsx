@@ -38,7 +38,7 @@ export function StepIndicator({
   const { status, index } = step;
 
   const sizeClasses = {
-    sm: /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'h-6 w-6 text-xs',
+    sm: 'h-6 w-6 text-caption',
     md: /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'h-8 w-8 text-sm',
   };
 

@@ -92,7 +92,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
         </div>
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>
-          <button onClick={onToday} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "px-3 py-1.5 rounded-lg text-xs font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>Hoje</button>
+          <button onClick={onToday} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>Hoje</button>
           <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Próximo mês"><ChevronRight className="size-3.5" /></button>
         </div>
       </div>
@@ -105,7 +105,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
         {cells.map((cell, i) => (
           <div key={i} className={cn("min-h-22 rounded-xl border border-transparent transition-all cursor-pointer hover:bg-muted/8 hover:border-border/10", !cell.currentMonth && "opacity-30")}>
             <div className="mb-1">
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold", cell.isToday ? "inline-flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-[11px]" : "text-muted-foreground/60")}>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption font-semibold", cell.isToday ? "inline-flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-[11px]" : "text-muted-foreground/60")}>
                 {cell.day}
               </span>
             </div>

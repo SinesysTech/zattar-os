@@ -229,14 +229,14 @@ export function UsuarioCreateDialog({
                 <React.Fragment key={label}>
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <div className={cn(
-                      /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-semibold → className de <Text>/<Heading> */ 'size-7 rounded-full flex items-center justify-center text-xs font-semibold transition-colors',
+                      /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'size-7 rounded-full flex items-center justify-center text-caption font-semibold transition-colors',
                       i < step ? 'bg-success/15 text-success' :
                       i === step ? 'bg-primary/15 text-primary' :
                       'bg-muted/8 text-muted-foreground/40'
                     )}>
                       {i < step ? '✓' : i + 1}
                     </div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs hidden sm:inline', i === step ? 'text-foreground' : 'text-muted-foreground/40')}>
+                    <span className={cn('text-caption hidden sm:inline', i === step ? 'text-foreground' : 'text-muted-foreground/40')}>
                       {label}
                     </span>
                   </div>

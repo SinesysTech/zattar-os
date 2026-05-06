@@ -306,7 +306,7 @@ function ResponsavelAssignPopover({
         onClick={(e) => e.stopPropagation()}
       >
         <Command>
-          <CommandInput placeholder="Buscar usuário..." className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
+          <CommandInput placeholder="Buscar usuário..." className={cn("h-8 text-caption rounded-lg")} />
           <CommandList className="max-h-52">
             <CommandEmpty>
               <Text variant="caption" className="text-muted-foreground/65">
@@ -319,7 +319,7 @@ function ResponsavelAssignPopover({
                   key={usuario.id}
                   value={usuario.nome}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5 cursor-pointer")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
                 >
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />

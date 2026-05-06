@@ -86,7 +86,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
               <summary className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "cursor-pointer text-sm font-medium")}>
                 Detalhes técnicos
               </summary>
-              <pre className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; p-3 → usar <Inset> */ "mt-2 text-xs bg-muted p-3 rounded overflow-x-auto")}>
+              <pre className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 text-caption bg-muted p-3 rounded overflow-x-auto")}>
                 {error.message}
               </pre>
             </details>

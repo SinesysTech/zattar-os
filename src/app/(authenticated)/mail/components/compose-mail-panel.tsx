@@ -123,7 +123,7 @@ export function ComposeMailPanel() {
             {!showCcBcc && (
               <button
                 type="button"
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer")}
+                className={cn("text-caption text-muted-foreground hover:text-foreground transition-colors cursor-pointer")}
                 onClick={() => setShowCcBcc(true)}>
                 Cc / Cco
               </button>

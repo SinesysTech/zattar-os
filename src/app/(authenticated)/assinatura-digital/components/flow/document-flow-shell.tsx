@@ -69,7 +69,7 @@ function StepPill({
     >
       <span
         className={cn(
-          /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-semibold → className de <Text>/<Heading> */ "flex size-6 items-center justify-center rounded-full text-xs font-semibold transition-all duration-200",
+          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex size-6 items-center justify-center rounded-full text-caption font-semibold transition-all duration-200",
           isCurrent && "bg-foreground text-background",
           isDone && "bg-success/15 text-success",
           !isCurrent && !isDone && "bg-foreground/8 text-muted-foreground",

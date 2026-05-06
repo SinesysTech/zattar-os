@@ -110,7 +110,7 @@ function StatusAudienciaBadge({ status }: { status: StatusAudiencia }) {
   const label = STATUS_AUDIENCIA_LABELS[status] || status;
 
   return (
-    <SemanticBadge category="audiencia_status" value={status} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+    <SemanticBadge category="audiencia_status" value={status} className={cn("text-caption")}>
       {label}
     </SemanticBadge>
   );
@@ -119,7 +119,7 @@ function StatusAudienciaBadge({ status }: { status: StatusAudiencia }) {
 function StatusExpedienteBadge({ expediente }: { expediente: Expediente }) {
   if (expediente.baixadoEm) {
     return (
-      <SemanticBadge category="status" value="respondido" variantOverride="success" toneOverride="soft" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+      <SemanticBadge category="status" value="respondido" variantOverride="success" toneOverride="soft" className={cn("text-caption")}>
         <CheckCircle2 className="h-3 w-3 mr-0.5" />
         Respondido
       </SemanticBadge>
@@ -128,7 +128,7 @@ function StatusExpedienteBadge({ expediente }: { expediente: Expediente }) {
 
   if (expediente.dataPrazoLegalParte && expediente.prazoVencido) {
     return (
-      <SemanticBadge category="status" value="vencido" variantOverride="destructive" toneOverride="soft" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+      <SemanticBadge category="status" value="vencido" variantOverride="destructive" toneOverride="soft" className={cn("text-caption")}>
         <AlertTriangle className="h-3 w-3 mr-0.5" />
         Vencido
       </SemanticBadge>
@@ -138,7 +138,7 @@ function StatusExpedienteBadge({ expediente }: { expediente: Expediente }) {
   if (expediente.dataPrazoLegalParte) {
     const relativa = formatarDataRelativa(expediente.dataPrazoLegalParte);
     return (
-      <SemanticBadge category="status" value="no-prazo" variantOverride="warning" toneOverride="soft" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+      <SemanticBadge category="status" value="no-prazo" variantOverride="warning" toneOverride="soft" className={cn("text-caption")}>
         <Clock className="h-3 w-3 mr-0.5" />
         {relativa || 'No prazo'}
       </SemanticBadge>
@@ -150,7 +150,7 @@ function StatusExpedienteBadge({ expediente }: { expediente: Expediente }) {
 
 function SituacaoPericiaBadge({ codigo }: { codigo: SituacaoPericiaCodigo }) {
   const label = SITUACAO_PERICIA_LABELS[codigo] || codigo;
-  return <SemanticBadge category="status" value={codigo} variantOverride="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{label}</SemanticBadge>;
+  return <SemanticBadge category="status" value={codigo} variantOverride="outline" className={cn("text-caption")}>{label}</SemanticBadge>;
 }
 
 // ─── Tabelas ────────────────────────────────────────────────────────────────
@@ -409,7 +409,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
 
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
               {per.laudoJuntado ? (
-                <SemanticBadge category="status" value="juntado" variantOverride="success" toneOverride="soft" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <SemanticBadge category="status" value="juntado" variantOverride="success" toneOverride="soft" className={cn("text-caption")}>
                   Laudo Juntado
                 </SemanticBadge>
               ) : (
@@ -542,15 +542,15 @@ export function ProcessoDetailsTabs({
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background/70 px-3 py-2.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex flex-wrap items-center gap-2 text-sm text-muted-foreground")}>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-xs font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <FileText className="h-3.5 w-3.5" />
             Expedientes {isLoading ? '...' : totalExpedientes}
           </span>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-xs font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <Calendar className="h-3.5 w-3.5" />
             Audiências {isLoading ? '...' : totalAudiencias}
           </span>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-xs font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <Microscope className="h-3.5 w-3.5" />
             Perícias {isLoading ? '...' : totalPericias}
           </span>

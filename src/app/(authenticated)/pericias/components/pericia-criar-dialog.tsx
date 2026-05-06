@@ -112,7 +112,7 @@ function SearchableCombobox({
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder={searchPlaceholder}
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs rounded-lg")}
+              className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-60 px-1.5 pb-1.5")}>
@@ -132,7 +132,7 @@ function SearchableCombobox({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
                   >
                     <span className="truncate flex-1">{opt.label}</span>
                     {isSelected && (

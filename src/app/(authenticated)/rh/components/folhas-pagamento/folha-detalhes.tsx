@@ -216,7 +216,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                           {item.usuario?.nomeExibicao ?? `Usuário ${item.usuarioId}`}
                         </span>
-                        <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                        <Badge variant="outline" className={cn("text-caption")}>
                           Lançamento #{item.lancamentoFinanceiroId}
                         </Badge>
                       </div>

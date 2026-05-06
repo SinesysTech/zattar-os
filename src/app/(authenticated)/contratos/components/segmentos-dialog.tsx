@@ -391,7 +391,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-1 min-w-0")}>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{segmento.nome}</span>
                       {!segmento.ativo && (
-                        <AppBadge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                        <AppBadge variant="secondary" className={cn("text-caption")}>
                           Inativo
                         </AppBadge>
                       )}

@@ -203,7 +203,7 @@ export function TemplateFormFields({
               variant="ghost"
               size="sm"
               onClick={handleClearSegmento}
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-6 text-xs")}
+              className={cn("h-6 text-caption")}
             >
               Limpar seleção
             </Button>

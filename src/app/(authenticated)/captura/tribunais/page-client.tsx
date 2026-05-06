@@ -218,12 +218,12 @@ export default function TribunaisPage() {
                 {/* Action */}
                 <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")}>
                   {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? (
-                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-full text-xs h-7 text-primary")}>
+                    <Button variant="ghost" size="sm" className={cn("w-full text-caption h-7 text-primary")}>
                       <Settings className="size-3 mr-1" />
                       Configurar
                     </Button>
                   ) : (
-                    <Button variant="ghost" size="sm" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-full text-xs h-7 text-warning")}>
+                    <Button variant="ghost" size="sm" className={cn("w-full text-caption h-7 text-warning")}>
                       <Plus className="size-3 mr-1" />
                       Adicionar Credencial
                     </Button>

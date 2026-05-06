@@ -239,7 +239,7 @@ export function OrigemLancamentoSection({
                     <span>
                       {acordo.tipo === 'acordo' ? 'Acordo' : 'Condenação'} #{acordo.id}
                     </span>
-                    <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                    <Badge variant="outline" className={cn("text-caption")}>
                       {acordo.direcao === 'recebimento' ? 'Recebimento' : 'Pagamento'}
                     </Badge>
                   </div>

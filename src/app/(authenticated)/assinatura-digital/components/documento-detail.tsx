@@ -97,7 +97,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Signers list */}
       <div className="mb-4">
-        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "text-xs mb-2 flex items-center gap-1.5")}>
+        <Heading level="card" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "text-caption mb-2 flex items-center gap-1.5")}>
           <Users className="size-3.5 text-muted-foreground/60" />
           Assinantes
         </Heading>
@@ -195,12 +195,12 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv. */ "flex gap-2 pt-3 border-t border-border/10")}>
         {doc.status === "pronto" &&
           doc.assinantes.some((a) => a.status === "pendente") && (
-            <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-xs font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
+            <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
               <RotateCcw className="size-3" />
               Reenviar convites
             </button>
           )}
-        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
+        <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
           <ExternalLink className="size-3" />
           Ver documento
         </button>

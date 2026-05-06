@@ -224,7 +224,7 @@ export function ProcessoHeader({
               </div>
 
               <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex flex-wrap items-center gap-x-3 gap-y-2 text-sm")}>
-                <SemanticBadge category="tribunal" value={trt} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                <SemanticBadge category="tribunal" value={trt} className={cn("text-caption")}>
                   {trt}
                 </SemanticBadge>
 
@@ -232,7 +232,7 @@ export function ProcessoHeader({
                   <GrauBadgesSimple grausAtivos={processo.grausAtivos} />
                 ) : (
                   processo.grauAtual && (
-                    <SemanticBadge category="grau" value={processo.grauAtual} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                    <SemanticBadge category="grau" value={processo.grauAtual} className={cn("text-caption")}>
                       {formatarGrau(processo.grauAtual)}
                     </SemanticBadge>
                   )

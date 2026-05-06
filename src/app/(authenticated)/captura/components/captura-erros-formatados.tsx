@@ -151,7 +151,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
             </div>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               {grupo.erros.map((e, i) => (
-                <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 text-xs")}>
+                <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2 text-caption")}>
                   <IconeErro tipo={e.tipo} />
                   <div className="min-w-0 flex-1">
                     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap items-center gap-1.5 mb-1")}>

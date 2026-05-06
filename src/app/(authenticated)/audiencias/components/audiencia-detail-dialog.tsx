@@ -736,7 +736,7 @@ export function AudienciaDetailDialog({
                               placeholder="https://..."
                               value={urlDraft}
                               onChange={(e) => setUrlDraft(e.target.value)}
-                              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs flex-1")}
+                              className={cn("h-8 text-caption flex-1")}
                               autoFocus
                             />
                             <Button
@@ -831,7 +831,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                                 autoFocus
                               />
                               <Input
@@ -840,7 +840,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, numero: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                               />
                             </div>
                             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
@@ -850,7 +850,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, complemento: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                               />
                               <Input
                                 placeholder="Bairro"
@@ -858,7 +858,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, bairro: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                               />
                             </div>
                             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-[1fr_60px_100px] gap-2")}>
@@ -868,7 +868,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, cidade: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                               />
                               <Input
                                 placeholder="UF"
@@ -880,7 +880,7 @@ export function AudienciaDetailDialog({
                                     uf: e.target.value.toUpperCase(),
                                   }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                               />
                               <Input
                                 placeholder="CEP"
@@ -888,7 +888,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, cep: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn("h-8 text-caption")}
                               />
                             </div>
                             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5 mt-1")}>
@@ -896,7 +896,7 @@ export function AudienciaDetailDialog({
                                 size="sm"
                                 variant="ghost"
                                 onClick={() => setEditingEndereco(false)}
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                                className={cn("h-7 text-caption")}
                               >
                                 Cancelar
                               </Button>
@@ -904,7 +904,7 @@ export function AudienciaDetailDialog({
                                 size="sm"
                                 onClick={handleSaveEndereco}
                                 disabled={savingEndereco}
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                                className={cn("h-7 text-caption")}
                               >
                                 {savingEndereco && (
                                   <LoadingSpinner size="sm" className="mr-1" />
@@ -1026,7 +1026,7 @@ export function AudienciaDetailDialog({
                             size="sm"
                             variant="ghost"
                             onClick={() => setEditingObs(false)}
-                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-7 text-xs")}
+                            className={cn("h-7 text-caption")}
                           >
                             Cancelar
                           </Button>
@@ -1034,7 +1034,7 @@ export function AudienciaDetailDialog({
                             size="sm"
                             onClick={handleSaveObs}
                             disabled={savingObs}
-                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                            className={cn("h-7 text-caption")}
                           >
                             {savingObs && <LoadingSpinner size="sm" className="mr-1" />}
                             Salvar

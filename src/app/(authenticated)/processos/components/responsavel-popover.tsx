@@ -106,7 +106,7 @@ export function ResponsavelPopover({
             </p>
             <CommandInput
               placeholder="Buscar..."
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs rounded-lg")}
+              className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
@@ -120,7 +120,7 @@ export function ResponsavelPopover({
               <CommandItem
                 value="sem-responsavel"
                 onSelect={() => handleSelect(null)}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
               >
                 <UserX className="size-3.5 text-muted-foreground/65" />
                 <span>Sem responsável</span>
@@ -133,7 +133,7 @@ export function ResponsavelPopover({
                   key={usuario.id}
                   value={usuario.nomeExibicao}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />

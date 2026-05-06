@@ -161,7 +161,7 @@ export function VersionHistoryDialog({
                         {/* Actions */}
                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                           {index === 0 && (
-                            <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                            <Badge variant="secondary" className={cn("text-caption")}>
                               Atual
                             </Badge>
                           )}

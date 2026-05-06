@@ -189,7 +189,7 @@ export default function AdvogadosPage() {
     <>
       <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* Breadcrumb */}
-        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption" as="div"> */ "flex items-center gap-1.5 text-xs text-muted-foreground/75")}>
+        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-caption text-muted-foreground/75")}>
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>
           <ChevronRight className="size-3" />
           <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>
@@ -323,7 +323,7 @@ export default function AdvogadosPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs h-7 text-primary")}
+                        className={cn("flex-1 text-caption h-7 text-primary")}
                         onClick={() => handleViewCredenciais(advogado)}
                       >
                         Ver Credenciais
@@ -332,7 +332,7 @@ export default function AdvogadosPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs h-7 text-warning")}
+                        className={cn("flex-1 text-caption h-7 text-warning")}
                         onClick={() => handleViewCredenciais(advogado)}
                       >
                         Adicionar Credenciais
@@ -341,7 +341,7 @@ export default function AdvogadosPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs h-7")}
+                      className={cn("text-caption h-7")}
                       onClick={() => handleEdit(advogado)}
                     >
                       Editar
@@ -349,7 +349,7 @@ export default function AdvogadosPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; p-0 → usar <Inset> */ "text-xs h-7 w-7 p-0 text-muted-foreground/65 hover:text-destructive")}
+                      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "text-caption h-7 w-7 p-0 text-muted-foreground/65 hover:text-destructive")}
                       onClick={() => handleDelete(advogado)}
                       aria-label="Excluir"
                     >

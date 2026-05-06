@@ -135,7 +135,7 @@ export function ProximaAudienciaPopover({
             <div className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "space-y-1 text-sm")}>
               <p className="text-muted-foreground capitalize">{clientData.data}</p>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>às {clientData.hora}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'text-xs font-medium', getUrgenciaColor())}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption font-medium', getUrgenciaColor())}>
                 {getUrgenciaLabel()}
               </p>
             </div>

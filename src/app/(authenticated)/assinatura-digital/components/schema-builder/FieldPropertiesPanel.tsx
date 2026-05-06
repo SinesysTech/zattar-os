@@ -288,7 +288,7 @@ export default function FieldPropertiesPanel({
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "shrink-0 px-3 pt-3 pb-2 border-b")}>
-        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "text-xs uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
+        <Heading level="card" className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-caption uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
         <Text variant="caption" className="text-foreground mt-0.5 truncate font-medium">{field.label}</Text>
       </div>
 
@@ -334,7 +334,7 @@ export default function FieldPropertiesPanel({
                       <FormControl>
                         <Input {...formField} placeholder="campo_id" readOnly className="bg-muted" />
                       </FormControl>
-                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                      <FormDescription className={cn("text-caption")}>
                         Identificador único gerado automaticamente
                       </FormDescription>
                       <FormMessage />
@@ -351,7 +351,7 @@ export default function FieldPropertiesPanel({
                       <FormControl>
                         <Input {...formField} placeholder="campo_nome" />
                       </FormControl>
-                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                      <FormDescription className={cn("text-caption")}>
                         Nome do campo usado na submissão do formulário
                       </FormDescription>
                       <FormMessage />
@@ -469,7 +469,7 @@ export default function FieldPropertiesPanel({
                           />
                         )}
                       </FormControl>
-                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                      <FormDescription className={cn("text-caption")}>
                         Valor inicial do campo ao carregar o formulário
                       </FormDescription>
                       <FormMessage />
@@ -490,7 +490,7 @@ export default function FieldPropertiesPanel({
                       </FormControl>
                       <div className={cn(/* design-system-escape: space-y-1 sem token DS; leading-none sem token DS */ "space-y-1 leading-none")}>
                         <FormLabel>Campo Oculto</FormLabel>
-                        <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                        <FormDescription className={cn("text-caption")}>
                           Campo não será exibido no formulário público, mas estará no schema
                         </FormDescription>
                       </div>
@@ -589,7 +589,7 @@ export default function FieldPropertiesPanel({
                         <FormControl>
                           <Input {...field} placeholder="^[A-Za-z]+$" />
                         </FormControl>
-                        <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                        <FormDescription className={cn("text-caption")}>
                           Expressão regular para validação
                         </FormDescription>
                         <FormMessage />
@@ -686,7 +686,7 @@ export default function FieldPropertiesPanel({
                               ))}
                             </SelectContent>
                           </Select>
-                          <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                          <FormDescription className={cn("text-caption")}>
                             Campo que controla a visibilidade deste campo
                           </FormDescription>
                           <FormMessage />
@@ -815,7 +815,7 @@ export default function FieldPropertiesPanel({
                               checked={option.disabled || false}
                               onCheckedChange={checked => updateOption(index, 'disabled', checked as boolean)}
                             />
-                            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Desabilitado</Label>
+                            <Label className={cn("text-caption")}>Desabilitado</Label>
                           </div>
                         </div>
                         <Button
@@ -865,7 +865,7 @@ export default function FieldPropertiesPanel({
                   </CollapsibleTrigger>
                   <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv.; space-y-3 sem token DS */ "pt-2 space-y-3")}>
                     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                      <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Buscar por</Label>
+                      <Label className={cn("text-caption text-muted-foreground")}>Buscar por</Label>
                       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                         {(['cpf', 'cnpj', 'nome'] as const).map((searchType) => {
                           const isRelevant = 
@@ -886,7 +886,7 @@ export default function FieldPropertiesPanel({
                                   }
                                 }}
                               />
-                              <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-normal capitalize")}>
+                              <Label className={cn("text-caption font-normal capitalize")}>
                                 {searchType === 'cpf' ? 'CPF' : searchType === 'cnpj' ? 'CNPJ' : 'Nome'}
                               </Label>
                             </div>
@@ -897,7 +897,7 @@ export default function FieldPropertiesPanel({
 
                     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                       <div className="flex items-center justify-between">
-                        <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Mapeamento Auto-fill</Label>
+                        <Label className={cn("text-caption text-muted-foreground")}>Mapeamento Auto-fill</Label>
                         <Button
                           type="button"
                           variant="outline"
@@ -983,7 +983,7 @@ export default function FieldPropertiesPanel({
             <Button
               type="submit"
               size="sm"
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs")}
+              className={cn("flex-1 text-caption")}
             >
               <Save className="size-3.5" />
               Aplicar
@@ -993,7 +993,7 @@ export default function FieldPropertiesPanel({
               variant="destructive"
               size="sm"
               onClick={onDelete}
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+              className={cn("text-caption")}
             >
               <Trash2 className="size-3.5" />
               Deletar

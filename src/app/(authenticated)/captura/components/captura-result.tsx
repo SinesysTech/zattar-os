@@ -278,7 +278,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
           </p>
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {data.erros.slice(0, 5).map((e, i) => (
-              <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-xs")}>
+              <div key={i} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5 text-caption")}>
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <div>
                   <span className="font-mono text-foreground/80">{e.numero_processo}</span>

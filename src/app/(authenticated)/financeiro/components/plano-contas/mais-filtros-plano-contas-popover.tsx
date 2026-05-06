@@ -93,7 +93,7 @@ export function MaisFiltrosPlanoContasPopover({
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 px-2 text-xs")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-caption")}
                 onClick={handleClearAll}
               >
                 <X className="mr-1 h-3 w-3" />
@@ -104,7 +104,7 @@ export function MaisFiltrosPlanoContasPopover({
 
           {/* Natureza */}
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Natureza</Label>
+            <Label className={cn("text-caption text-muted-foreground")}>Natureza</Label>
             <Select
               value={natureza || 'all'}
               onValueChange={(val) => onNaturezaChange(val === 'all' ? '' : val)}
@@ -125,7 +125,7 @@ export function MaisFiltrosPlanoContasPopover({
 
           {/* Conta Pai */}
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Conta Pai</Label>
+            <Label className={cn("text-caption text-muted-foreground")}>Conta Pai</Label>
             <FiltroContaContabil
               value={contaPaiId}
               onChange={onContaPaiIdChange}

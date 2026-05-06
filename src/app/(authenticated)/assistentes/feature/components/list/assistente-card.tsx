@@ -77,7 +77,7 @@ export function AssistenteCard({
 
         {temDescricao && (
           <CardContent className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pt-0 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-4 pt-0 pb-2")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-2")} title={assistente.descricao || ''}>
+            <p className={cn("text-caption text-muted-foreground line-clamp-2")} title={assistente.descricao || ''}>
               {truncarDescricao(assistente.descricao || null, 120)}
             </p>
           </CardContent>

@@ -266,7 +266,7 @@ export function DocumentList() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption")}
                 onClick={() => setTagsAtivas([])}
               >
                 Limpar

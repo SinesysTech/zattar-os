@@ -134,7 +134,7 @@ export function TemplateSelect({
                       variant={
                         template.tipo_template === "pdf" ? "default" : "secondary"
                       }
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+                      className={cn("text-caption")}
                     >
                       {template.tipo_template.toUpperCase()}
                     </Badge>

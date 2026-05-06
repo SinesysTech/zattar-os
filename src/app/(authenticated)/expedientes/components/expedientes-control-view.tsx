@@ -256,7 +256,7 @@ function DetailPanel({
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-5 flex flex-col gap-2")}>
         {onBaixar && (
           <Button
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "h-9 w-full gap-2 text-xs")}
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "h-9 w-full gap-2 text-caption")}
             onClick={() => onBaixar(expediente)}
           >
             <CheckCircle2 className="size-3.5" />
@@ -266,7 +266,7 @@ function DetailPanel({
         {onViewDetail && (
           <Button
             variant="outline"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "h-9 w-full gap-2 text-xs")}
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "h-9 w-full gap-2 text-caption")}
             onClick={() => onViewDetail(expediente)}
           >
             <ExternalLink className="size-3.5" />

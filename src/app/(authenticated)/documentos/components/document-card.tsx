@@ -79,12 +79,12 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
         {documento.tags && documento.tags.length > 0 && (
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1 mt-3")}>
             {documento.tags.slice(0, 3).map((tag: string) => (
-              <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge key={tag} variant="secondary" className={cn("text-caption")}>
                 {tag}
               </Badge>
             ))}
             {documento.tags.length > 3 && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="secondary" className={cn("text-caption")}>
                 +{documento.tags.length - 3}
               </Badge>
             )}
@@ -92,7 +92,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
         )}
 
         {/* Footer */}
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between mt-4 pt-3 border-t text-xs text-muted-foreground")}>
+        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 pt-3 border-t text-caption text-muted-foreground")}>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Users className="h-3 w-3" />
             <span>{documento.criador.nomeCompleto}</span>

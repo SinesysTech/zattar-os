@@ -149,7 +149,7 @@ export function PlaceholderInsertMenu({
                           >
                             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
                               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{placeholder.label}</span>
-                              <AppBadge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-auto text-xs font-mono")}>
+                              <AppBadge variant="secondary" className={cn("ml-auto text-caption font-mono")}>
                                 {`{{${placeholder.key}}}`}
                               </AppBadge>
                             </div>

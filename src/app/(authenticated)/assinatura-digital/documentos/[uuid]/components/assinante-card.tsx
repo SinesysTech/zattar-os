@@ -156,7 +156,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
               <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
               {signatario.nome || `Assinante ${index + 1}`}
               </CardTitle>
-              <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="outline" className={cn("text-caption")}>
                 {TIPO_LABELS[signatario.tipo] || signatario.tipo}
               </Badge>
             </div>

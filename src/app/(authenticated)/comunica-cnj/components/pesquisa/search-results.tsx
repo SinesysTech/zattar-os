@@ -50,7 +50,7 @@ function ResultadoCard({
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
               <TribunalBadge codigo={item.siglaTribunal} />
               {item.tipoComunicacao && (
-                <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <Badge variant="outline" className={cn("text-caption")}>
                   {item.tipoComunicacao}
                 </Badge>
               )}
@@ -157,7 +157,7 @@ export function SearchResults() {
         <Text variant="overline" className="text-muted-foreground/70">
           {total.toLocaleString('pt-BR')} resultado{total === 1 ? '' : 's'}
         </Text>
-        <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+        <Button variant="ghost" size="sm" asChild className={cn("text-caption")}>
           <a
             href="https://comunica.pje.jus.br/"
             target="_blank"

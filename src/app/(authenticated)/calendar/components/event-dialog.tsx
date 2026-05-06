@@ -465,7 +465,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                       style={{ backgroundColor: colorOption.cssVar }}
                     />
                   </TooltipTrigger>
-                  <TooltipContent side="bottom" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                  <TooltipContent side="bottom" className={cn("text-caption")}>
                     {colorOption.label}
                   </TooltipContent>
                 </Tooltip>

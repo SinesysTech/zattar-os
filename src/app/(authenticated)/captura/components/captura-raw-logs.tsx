@@ -255,13 +255,13 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
     <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {/* Resumo geral */}
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2 items-center")}>
-        <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+        <Badge variant="outline" className={cn("text-caption")}>
           {rawLogs.length} registro{rawLogs.length !== 1 ? 's' : ''}
         </Badge>
         {totalSucesso > 0 && (
           <Badge
             variant="outline"
-            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1 border-success/30 bg-success/5 text-success")}
+            className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1 border-success/30 bg-success/5 text-success")}
           >
             <CheckCircle2 className="h-3 w-3" />
             {totalSucesso} com sucesso
@@ -270,7 +270,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
         {totalErro > 0 && (
           <Badge
             variant="outline"
-            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1 border-destructive/30 bg-destructive/5 text-destructive")}
+            className={cn(/* design-system-escape: gap-1 gap sem token DS */ "text-caption gap-1 border-destructive/30 bg-destructive/5 text-destructive")}
           >
             <XCircle className="h-3 w-3" />
             {totalErro} com erro{totalErro !== 1 ? 's' : ''}

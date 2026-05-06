@@ -78,7 +78,7 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
               href={href}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium transition-colors',
+                /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-caption font-medium transition-colors',
                 active
                   ? 'bg-foreground text-background shadow-sm'
                   : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground',

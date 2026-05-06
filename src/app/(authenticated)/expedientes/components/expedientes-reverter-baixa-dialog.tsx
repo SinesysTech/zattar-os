@@ -191,7 +191,7 @@ export function ExpedientesReverterBaixaDialog({
             aria-describedby="reverter-confirmacao-hint"
             placeholder={PALAVRA_CONFIRMACAO}
           />
-          <p id="reverter-confirmacao-hint" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <p id="reverter-confirmacao-hint" className={cn("text-caption text-muted-foreground")}>
             Case-insensitive. A ação só será habilitada após a confirmação exata.
           </p>
         </div>

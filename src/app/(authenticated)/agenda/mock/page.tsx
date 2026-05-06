@@ -151,7 +151,7 @@ function Toolbar({
             placeholder="Buscar eventos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "w-full pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20")}
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-caption placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20")}
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
@@ -165,7 +165,7 @@ function Toolbar({
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className={cn(
-              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs border transition-colors cursor-pointer",
+              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
               activeFilters > 0
                 ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
@@ -187,7 +187,7 @@ function Toolbar({
                     <button
                       key={src}
                       onClick={() => toggleSource(src)}
-                      className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs hover:bg-foreground/4 transition-colors cursor-pointer")}
+                      className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
                     >
                       <div className={cn("size-3.5 rounded border flex items-center justify-center", active ? "bg-primary border-primary" : "border-border/30")}>
                         {active && <Check className="size-2.5 text-primary-foreground" />}
@@ -234,7 +234,7 @@ function Toolbar({
                     key={opt.id}
                     onClick={() => { setView(opt.id); setViewOpen(false); }}
                     className={cn(
-                      /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer",
+                      /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-caption transition-colors cursor-pointer",
                       view === opt.id ? "bg-primary/8 text-primary" : "text-muted-foreground/60 hover:bg-foreground/4",
                     )}
                   >
@@ -614,7 +614,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                   <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold tabular-nums", !isDateToday && "text-foreground/60")}>{date.getDate()}</span>
                 </div>
                 <div>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
                   <span className="text-[10px] text-muted-foreground/55 ml-2">{fmtDate(date)}</span>
                 </div>
                 <span className="text-[9px] text-muted-foreground/45 ml-auto tabular-nums">{dayEvents.length}</span>
@@ -643,7 +643,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                         <div className={cn("size-1.5 rounded-full", c.dot)} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate", c.text, past && "line-through")}>{ev.title}</p>
+                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium truncate", c.text, past && "line-through")}>{ev.title}</p>
                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-0.5")}>
                           <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                             {ev.allDay ? "Dia inteiro" : `${fmtTime(ev.start)} – ${fmtTime(ev.end)}`}
@@ -1112,7 +1112,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
           )}
 
           {/* Color indicator */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 text-caption")}>
             <div className={cn("size-3.5 rounded-full", c.dot)} />
             <p className="text-muted-foreground/50 capitalize">{event.color === "sky" ? "Azul" : event.color === "amber" ? "Âmbar" : event.color === "violet" ? "Violeta" : event.color === "rose" ? "Rosa" : event.color === "emerald" ? "Verde" : "Laranja"}</p>
           </div>
@@ -1129,11 +1129,11 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
             </button>
           )}
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            <button onClick={onClose} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "px-3 py-1.5 rounded-lg text-xs text-muted-foreground/50 hover:bg-foreground/4 cursor-pointer")}>
+            <button onClick={onClose} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "px-3 py-1.5 rounded-lg text-caption text-muted-foreground/50 hover:bg-foreground/4 cursor-pointer")}>
               {isAgenda ? "Cancelar" : "Fechar"}
             </button>
             {isAgenda && (
-              <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "px-3 py-1.5 rounded-lg text-xs bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer")}>
+              <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "px-3 py-1.5 rounded-lg text-caption bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer")}>
                 Salvar
               </button>
             )}

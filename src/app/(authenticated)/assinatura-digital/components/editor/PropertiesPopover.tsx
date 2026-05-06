@@ -136,12 +136,12 @@ export default function PropertiesPopover({
           <div className="flex items-center justify-between">
             <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold")}>Propriedades do Campo</SheetTitle>
             {selectedFieldTypeLabel && (
-              <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="outline" className={cn("text-caption")}>
                 {selectedFieldTypeLabel}
               </Badge>
             )}
           </div>
-          <SheetDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+          <SheetDescription className={cn("text-caption")}>
             Editar propriedades do campo selecionado
           </SheetDescription>
         </SheetHeader>
@@ -162,14 +162,14 @@ export default function PropertiesPopover({
               {/* Variavel selector (ocultar para texto_composto) */}
               {selectedField.tipo !== 'texto_composto' && (
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="field-variavel" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Variável</Label>
+                  <Label htmlFor="field-variavel" className={cn("text-caption text-muted-foreground")}>Variável</Label>
                   <Popover modal>
                     <PopoverTrigger asChild>
                       <Button
                         id="field-variavel"
                         variant="outline"
                         role="combobox"
-                        className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 w-full justify-between text-xs font-normal")}
+                        className={cn("h-8 w-full justify-between text-caption font-normal")}
                         aria-label="Selecionar variável vinculada ao campo"
                       >
                         <span className="truncate">{selectedVariableLabel}</span>
@@ -178,7 +178,7 @@ export default function PropertiesPopover({
                     </PopoverTrigger>
                     <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0")} align="start" side="bottom" sideOffset={4}>
                       <Command>
-                        <CommandInput placeholder="Buscar variável..." className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")} />
+                        <CommandInput placeholder="Buscar variável..." className={cn("h-8 text-caption")} />
                         <CommandList className="max-h-64">
                           <CommandEmpty>Nenhuma variável encontrada.</CommandEmpty>
                           {Object.entries(VARIABLES_BY_CATEGORY).map(([category, items]) => (
@@ -193,7 +193,7 @@ export default function PropertiesPopover({
                                       nome: item.label,
                                     });
                                   }}
-                                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+                                  className={cn("text-caption")}
                                 >
                                   <Check
                                     className={cn(
@@ -218,7 +218,7 @@ export default function PropertiesPopover({
                 </div>
               )}
               <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                <Label htmlFor="field-ordem" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Ordem de Exibição</Label>
+                <Label htmlFor="field-ordem" className={cn("text-caption text-muted-foreground")}>Ordem de Exibição</Label>
                 <Input
                   id="field-ordem"
                   type="number"
@@ -227,7 +227,7 @@ export default function PropertiesPopover({
                   onChange={(event) =>
                     onUpdateField({ ordem: parseInt(event.target.value, 10) || 1 })
                   }
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                  className={cn("h-8 text-caption")}
                   placeholder="1, 2, 3..."
                 />
                 <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] leading-tight text-muted-foreground")}>
@@ -249,7 +249,7 @@ export default function PropertiesPopover({
             <CollapsibleContent className={cn(/* design-system-escape: space-y-3 sem token DS; px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "space-y-3 px-2 pt-2")}>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="field-pos-x" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Posição X</Label>
+                  <Label htmlFor="field-pos-x" className={cn("text-caption text-muted-foreground")}>Posição X</Label>
                   <Input
                     id="field-pos-x"
                     type="number"
@@ -262,11 +262,11 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                    className={cn("h-8 text-caption")}
                   />
                 </div>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="field-pos-y" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Posição Y</Label>
+                  <Label htmlFor="field-pos-y" className={cn("text-caption text-muted-foreground")}>Posição Y</Label>
                   <Input
                     id="field-pos-y"
                     type="number"
@@ -279,13 +279,13 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                    className={cn("h-8 text-caption")}
                   />
                 </div>
               </div>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid grid-cols-2 gap-2")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="field-width" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Largura</Label>
+                  <Label htmlFor="field-width" className={cn("text-caption text-muted-foreground")}>Largura</Label>
                   <Input
                     id="field-width"
                     type="number"
@@ -298,11 +298,11 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                    className={cn("h-8 text-caption")}
                   />
                 </div>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="field-height" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Altura</Label>
+                  <Label htmlFor="field-height" className={cn("text-caption text-muted-foreground")}>Altura</Label>
                   <Input
                     id="field-height"
                     type="number"
@@ -315,7 +315,7 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                    className={cn("h-8 text-caption")}
                   />
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function PropertiesPopover({
               </CollapsibleTrigger>
               <CollapsibleContent className={cn(/* design-system-escape: space-y-3 sem token DS; px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "space-y-3 px-2 pt-2")}>
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="field-font-size" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Tamanho da fonte</Label>
+                  <Label htmlFor="field-font-size" className={cn("text-caption text-muted-foreground")}>Tamanho da fonte</Label>
                   <Input
                     id="field-font-size"
                     type="number"
@@ -347,12 +347,12 @@ export default function PropertiesPopover({
                         },
                       })
                     }
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                    className={cn("h-8 text-caption")}
                   />
                 </div>
 
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-                  <Label htmlFor="font-family-select" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Label htmlFor="font-family-select" className={cn("text-caption text-muted-foreground")}>
                     Família da fonte
                   </Label>
                   <Select
@@ -366,16 +366,16 @@ export default function PropertiesPopover({
                       })
                     }
                   >
-                    <SelectTrigger id="font-family-select" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}>
+                    <SelectTrigger id="font-family-select" className={cn("h-8 text-caption")}>
                       <SelectValue placeholder="Selecionar fonte" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectLabel className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Fontes disponíveis</SelectLabel>
-                        <SelectItem value="Helvetica" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Helvetica</SelectItem>
-                        <SelectItem value="Open Sans" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Open Sans</SelectItem>
-                        <SelectItem value="Times-Roman" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Times New Roman</SelectItem>
-                        <SelectItem value="Courier" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Courier</SelectItem>
+                        <SelectLabel className={cn("text-caption")}>Fontes disponíveis</SelectLabel>
+                        <SelectItem value="Helvetica" className={cn("text-caption")}>Helvetica</SelectItem>
+                        <SelectItem value="Open Sans" className={cn("text-caption")}>Open Sans</SelectItem>
+                        <SelectItem value="Times-Roman" className={cn("text-caption")}>Times New Roman</SelectItem>
+                        <SelectItem value="Courier" className={cn("text-caption")}>Courier</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -391,7 +391,7 @@ export default function PropertiesPopover({
             <Button
               variant="outline"
               size="sm"
-              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "w-full gap-2 text-xs")}
+              className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
               onClick={() => {
                 onEditRichText(selectedField.id);
                 onOpenChange(false);
@@ -406,7 +406,7 @@ export default function PropertiesPopover({
           <Button
             variant="destructive"
             size="sm"
-            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "w-full gap-2 text-xs")}
+            className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
             onClick={() => onDeleteField(selectedField.id)}
           >
             <Trash2 className="h-3.5 w-3.5" />

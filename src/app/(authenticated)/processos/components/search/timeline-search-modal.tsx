@@ -140,7 +140,7 @@ export function TimelineSearchModal({
             placeholder="Buscar na linha do tempo..."
             className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; p-0 → usar <Inset> */ "flex-1 bg-transparent border-none text-lg placeholder:text-muted-foreground p-0 outline-none focus:ring-0")}
           />
-          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; tracking-tight sem token DS */ "hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-xs text-muted-foreground font-mono tracking-tight")}>
+          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-tight sem token DS */ "hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-caption text-muted-foreground font-mono tracking-tight")}>
             ESC
           </kbd>
         </div>

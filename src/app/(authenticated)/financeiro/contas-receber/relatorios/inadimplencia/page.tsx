@@ -321,7 +321,7 @@ export default function RelatorioInadimplenciaPage() {
                           <Badge
                             variant="outline"
                             className={cn(
-                              /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ 'w-6 h-6 rounded-full flex items-center justify-center text-xs',
+                              'w-6 h-6 rounded-full flex items-center justify-center text-caption',
                               index < 3 && 'bg-destructive/10 text-destructive border-destructive'
                             )}
                           >

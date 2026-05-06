@@ -117,7 +117,7 @@ export function AgendaEventDetail({
                     </DialogTitle>
                     {event.status && (
                       <span className={cn(
-                        /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium",
+                        /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-caption font-medium",
                         statusClasses(event.status),
                       )}>
                         <CircleDot className="size-3" />
@@ -230,7 +230,7 @@ export function AgendaEventDetail({
                         </div>
                       )}
                     </div>
-                    <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-3 py-1.5 border border-border/30 text-foreground/70 rounded-lg text-xs font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
+                    <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 px-3 py-1.5 border border-border/30 text-foreground/70 rounded-lg text-caption font-medium hover:bg-muted/10 transition-colors cursor-pointer")}>
                       <ExternalLink className="size-3" /> Ver Processo
                     </button>
                   </div>

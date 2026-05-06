@@ -235,7 +235,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
             />
 
             {saving && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+              <Badge variant="secondary" className={cn("text-caption")}>
                 Salvando...
               </Badge>
             )}

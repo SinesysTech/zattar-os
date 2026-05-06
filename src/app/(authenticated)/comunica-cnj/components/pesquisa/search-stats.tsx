@@ -75,7 +75,7 @@ export function SearchStats() {
         </Text>
         <Link
           href="/comunica-cnj/capturadas"
-          className={cn(/* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline")}
+          className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1 text-caption font-medium text-primary hover:underline")}
         >
           Ver gestão completa
           <ArrowRight className="size-3" aria-hidden />

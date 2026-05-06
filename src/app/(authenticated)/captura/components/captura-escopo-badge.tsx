@@ -77,7 +77,7 @@ export function CapturaEscopoBadge({
       <TooltipTrigger asChild>
         <span
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ 'inline-flex items-baseline gap-1 text-xs text-muted-foreground/80 cursor-help',
+            /* design-system-escape: gap-1 gap sem token DS */ 'inline-flex items-baseline gap-1 text-caption text-muted-foreground/80 cursor-help',
             'hover:text-foreground transition-colors',
             className,
           )}

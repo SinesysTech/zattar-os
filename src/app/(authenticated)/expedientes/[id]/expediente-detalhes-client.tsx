@@ -190,11 +190,11 @@ export function ExpedienteDetalhesClient({
             </span>
           </Text>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
+            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-caption gap-1.5")}>
               <Download className="size-3" />
               PDF
             </Button>
-            <Button size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
+            <Button size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-caption gap-1.5")}>
               <Edit3 className="size-3" />
               Editar
             </Button>
@@ -728,7 +728,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             <span className="text-muted-foreground/70 font-normal">documentos</span>
           </Heading>
         </div>
-        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
+        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-caption gap-1.5")}>
           <Plus className="size-3" />
           Adicionar
         </Button>
@@ -1245,7 +1245,7 @@ function InlineTipoEditor({
             >
               Escolher tipo
             </Text>
-            <CommandInput placeholder="Buscar tipo…" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")} />
+            <CommandInput placeholder="Buscar tipo…" className={cn("h-8 text-caption rounded-lg")} />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-64 px-1.5 pb-1.5")}>
             <CommandEmpty>Nenhum tipo encontrado</CommandEmpty>
@@ -1253,7 +1253,7 @@ function InlineTipoEditor({
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-2")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-2")}
               >
                 <span className="italic text-muted-foreground/60 font-headline">Sem tipo</span>
               </CommandItem>
@@ -1262,7 +1262,7 @@ function InlineTipoEditor({
                   key={tipo.id}
                   value={tipo.tipo_expediente}
                   onSelect={() => handleSelect(tipo.id)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-2")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-2")}
                 >
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[13px] font-medium")}>
                     {tipo.tipo_expediente}

@@ -167,7 +167,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           label="Termos de Aceite"
           value={
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-              <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="outline" className={cn("text-caption")}>
                 {signatario.termosAceiteVersao}
               </Badge>
               {signatario.termosAceiteData && (
@@ -214,7 +214,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           </CollapsibleTrigger>
           <CollapsibleContent>
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 rounded-md bg-muted/50 p-3 max-h-64 overflow-auto")}>
-              <pre className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono whitespace-pre-wrap break-all")}>
+              <pre className={cn("text-caption font-mono whitespace-pre-wrap break-all")}>
                 {JSON.stringify(
                   signatario.dispositivoFingerprint,
                   null,

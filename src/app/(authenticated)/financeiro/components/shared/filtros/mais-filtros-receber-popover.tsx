@@ -118,7 +118,7 @@ export function MaisFiltrosReceberPopover({
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 px-2 text-xs")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-caption")}
                 onClick={handleClearAll}
               >
                 <X className="mr-1 h-3 w-3" />
@@ -129,7 +129,7 @@ export function MaisFiltrosReceberPopover({
 
           {/* Tipo (Recorrente/Avulsa) */}
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Tipo</Label>
+            <Label className={cn("text-caption text-muted-foreground")}>Tipo</Label>
             <Select
               value={tipoRecorrente || 'all'}
               onValueChange={(val) => onTipoRecorrenteChange(val === 'all' ? '' : val)}
@@ -150,7 +150,7 @@ export function MaisFiltrosReceberPopover({
 
           {/* Origem */}
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Origem</Label>
+            <Label className={cn("text-caption text-muted-foreground")}>Origem</Label>
             <Select
               value={origem || 'all'}
               onValueChange={(val) => onOrigemChange(val === 'all' ? '' : val)}
@@ -171,7 +171,7 @@ export function MaisFiltrosReceberPopover({
 
           {/* Conta Contábil */}
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Conta Contábil</Label>
+            <Label className={cn("text-caption text-muted-foreground")}>Conta Contábil</Label>
             <FiltroContaContabil
               value={contaContabilId}
               onChange={onContaContabilIdChange}
@@ -183,7 +183,7 @@ export function MaisFiltrosReceberPopover({
 
           {/* Centro de Custo */}
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-            <Label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Centro de Custo</Label>
+            <Label className={cn("text-caption text-muted-foreground")}>Centro de Custo</Label>
             <FiltroCentroCusto
               value={centroCustoId}
               onChange={onCentroCustoIdChange}

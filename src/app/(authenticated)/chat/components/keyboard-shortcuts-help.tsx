@@ -46,7 +46,7 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
                     {shortcut.keys.map((key) => (
                       <kbd
                         key={key}
-                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "px-2 py-1 text-xs font-semibold text-video-text bg-video-surface-hover border border-video-surface-hover rounded-md")}
+                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "px-2 py-1 text-caption font-semibold text-video-text bg-video-surface-hover border border-video-surface-hover rounded-md")}
                       >
                         {key}
                       </kbd>

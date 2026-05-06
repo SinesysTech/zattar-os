@@ -53,7 +53,7 @@ export function TemplateCard({
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base line-clamp-1")}>{template.titulo}</CardTitle>
               {template.categoria && (
-                <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                <Badge variant="secondary" className={cn("text-caption")}>
                   {template.categoria}
                 </Badge>
               )}
@@ -95,7 +95,7 @@ export function TemplateCard({
 
       <CardFooter className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-0 padding direcional sem Inset equiv. */ "flex flex-col items-stretch gap-3 pt-0")}>
         {/* Meta info */}
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs text-muted-foreground")}>
+        <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             {template.visibilidade === 'publico' ? (
               <>

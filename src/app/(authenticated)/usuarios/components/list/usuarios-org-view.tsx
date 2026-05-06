@@ -72,7 +72,7 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
           src={getAvatarUrl(usuario.avatarUrl) ?? undefined}
           alt={displayName}
         />
-        <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+        <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
           {getInitials(usuario)}
         </AvatarFallback>
       </Avatar>

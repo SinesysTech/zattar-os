@@ -220,7 +220,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             </div>
             <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
               {captura.resultado ? (
-                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-125 text-xs font-mono leading-relaxed")}>
+                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-125 text-caption font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (

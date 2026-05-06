@@ -111,7 +111,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
 
           <TabsContent value="transcricao" className={cn(/* design-system-escape: m-0 margin sem primitiva DS; p-0 → usar <Inset> */ "h-full m-0 p-0")}>
              <div className="h-full flex flex-col">
-              <div className={cn(/* design-system-escape: p-2 → usar <Inset>; text-xs → migrar para <Text variant="caption">; px-4 padding direcional sem Inset equiv. */ "flex items-center justify-between p-2 border-b text-xs text-muted-foreground bg-muted/20 px-4")}>
+              <div className={cn(/* design-system-escape: p-2 → usar <Inset>; px-4 padding direcional sem Inset equiv. */ "flex items-center justify-between p-2 border-b text-caption text-muted-foreground bg-muted/20 px-4")}>
                  <span>{chamada.transcricao.length} caracteres</span>
                  <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
                     <Button variant="ghost" size="icon" className="h-6 w-6" onClick={handleCopyTranscript} title="Copiar">

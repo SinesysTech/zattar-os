@@ -196,7 +196,7 @@ export function TipoDescricaoCell({
                 {badgeVariant === 'outline' ? (
                   <AppBadge
                     variant="outline"
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
+                    className={cn("w-fit text-caption shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
                   >
                     {tipoNome}
                   </AppBadge>
@@ -204,7 +204,7 @@ export function TipoDescricaoCell({
                   <SemanticBadge
                     category="expediente_tipo"
                     value={expediente.tipoExpedienteId}
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
+                    className={cn("w-fit text-caption shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
                   >
                     {tipoNome}
                   </SemanticBadge>
@@ -254,7 +254,7 @@ export function TipoDescricaoCell({
         <button
           type="button"
           onClick={() => setIsDescricaoDialogOpen(true)}
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; leading-relaxed sem token DS */ "text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
+          className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-caption text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
         >
           {descricaoExibicao}
         </button>
@@ -329,7 +329,7 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   const opacityClass = baixado ? 'opacity-50' : '';
 
   return (
-    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; gap-0.5 gap sem token DS */ "inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
+    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-0.5 gap sem token DS */ "inline-flex flex-col items-center text-caption font-medium shrink-0 gap-0.5", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-success/15 text-success px-2 py-0.5 rounded-full")}>
         {formatDate(dataInicio)}
@@ -575,7 +575,7 @@ export const columns: ColumnDef<Expediente>[] = [
           </div>
 
           {/* Linha 2: Número do processo */}
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-mono font-medium text-foreground break-all")} title={e.numeroProcesso}>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-mono font-medium text-foreground break-all")} title={e.numeroProcesso}>
             {e.numeroProcesso}
           </span>
 
@@ -583,13 +583,13 @@ export const columns: ColumnDef<Expediente>[] = [
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <ParteBadge
               polo="ATIVO"
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+              className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
             >
               {e.nomeParteAutoraOrigem || e.nomeParteAutora || '-'}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+              className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
             >
               {e.nomeParteReOrigem || e.nomeParteRe || '-'}
             </ParteBadge>

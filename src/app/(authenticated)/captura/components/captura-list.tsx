@@ -299,14 +299,14 @@ function criarColunas(
                 <TribunalSemanticBadge
                   key={`${info.tribunal}-${grau}-${idx}`}
                   value={info.tribunal}
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+                  className={cn("text-caption")}
                 >
                   {info.tribunal} {formatarGrauCurto(grau)}
                 </TribunalSemanticBadge>
               );
             })}
             {tribunaisUnicos.length > 3 && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="secondary" className={cn("text-caption")}>
                 +{tribunaisUnicos.length - 3}
               </Badge>
             )}
@@ -378,7 +378,7 @@ function criarColunas(
         if (tribunaisComErro.length === 0) {
           if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
             return (
-              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="destructive" className={cn("text-caption")}>
                 1 erro
               </Badge>
             );
@@ -396,7 +396,7 @@ function criarColunas(
 
           if (tribunaisInfo.length === 0) {
             return (
-              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="destructive" className={cn("text-caption")}>
                 1 erro
               </Badge>
             );
@@ -420,7 +420,7 @@ function criarColunas(
 
         if (tribunaisUnicos.length === 0) {
           return (
-            <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <Badge variant="destructive" className={cn("text-caption")}>
               1 erro
             </Badge>
           );
@@ -447,14 +447,14 @@ function criarColunas(
                 <Badge
                   key={`${info.tribunal}-${grau}-${idx}`}
                   variant="destructive"
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+                  className={cn("text-caption")}
                 >
                   {info.tribunal} {formatarGrauCurto(grau)}
                 </Badge>
               );
             })}
             {contagem.size > 2 && (
-              <Badge variant="destructive" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="destructive" className={cn("text-caption")}>
                 +{contagem.size - 2}
               </Badge>
             )}

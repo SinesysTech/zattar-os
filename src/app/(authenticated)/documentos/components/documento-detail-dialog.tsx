@@ -292,7 +292,7 @@ export function DocumentoDetailDialog({
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <Avatar className="size-8">
                   {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criadorNome} />}
-                  <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs bg-primary/10 text-primary")}>
+                  <AvatarFallback className={cn("text-caption bg-primary/10 text-primary")}>
                     {criadorNome.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>

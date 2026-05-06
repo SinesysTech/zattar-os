@@ -70,7 +70,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
                         <PlusIcon size={12} />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent side="right" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Novo evento</TooltipContent>
+                    <TooltipContent side="right" className={cn("text-caption")}>Novo evento</TooltipContent>
                   </Tooltip>
                 )}
               </div>

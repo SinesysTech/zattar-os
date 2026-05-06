@@ -201,7 +201,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
               <SemanticBadge
                 category="grau"
                 value={item.grauOrigem}
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs shrink-0")}
+                className={cn("text-caption shrink-0")}
               >
                 {formatarGrauComOrdinal(item.grauOrigem)}
               </SemanticBadge>

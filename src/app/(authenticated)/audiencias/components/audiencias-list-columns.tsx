@@ -348,7 +348,7 @@ function ModalidadeCell({
                       href={audiencia.urlAudienciaVirtual}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs text-primary underline truncate flex-1")}
+                      className={cn("text-caption text-primary underline truncate flex-1")}
                       title={audiencia.urlAudienciaVirtual}
                     >
                       {audiencia.urlAudienciaVirtual}
@@ -373,7 +373,7 @@ function ModalidadeCell({
                 value={urlValue}
                 onChange={(e) => setUrlValue(e.target.value)}
                 placeholder="https://..."
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                className={cn("h-8 text-caption")}
                 disabled={isSaving}
               />
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
@@ -420,7 +420,7 @@ function ModalidadeCell({
                 value={enderecoValue}
                 onChange={(e) => setEnderecoValue(e.target.value)}
                 placeholder="Endereço completo..."
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "min-h-16 resize-y text-xs")}
+                className={cn("min-h-16 resize-y text-caption")}
                 disabled={isSaving}
               />
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex justify-end gap-2")}>
@@ -592,13 +592,13 @@ export function getAudienciasColumns(
             <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
               <ParteBadge
                 polo="ATIVO"
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+                className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
               >
                 {a.poloAtivoOrigem || a.poloAtivoNome || '-'}
               </ParteBadge>
               <ParteBadge
                 polo="PASSIVO"
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+                className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
               >
                 {a.poloPassivoOrigem || a.poloPassivoNome || '-'}
               </ParteBadge>

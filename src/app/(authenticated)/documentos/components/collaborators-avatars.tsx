@@ -37,7 +37,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
                 style={{ borderColor: collab.color }}
               >
                 <AvatarFallback
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs text-white")}
+                  className={cn("text-caption text-white")}
                   style={{ backgroundColor: collab.color }}
                 >
                   {collab.name.substring(0, 2).toUpperCase()}
@@ -55,7 +55,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
           <Tooltip>
             <TooltipTrigger asChild>
               <Avatar className="border-2 border-background">
-                <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <AvatarFallback className={cn("text-caption")}>
                   +{collaborators.length - 5}
                 </AvatarFallback>
               </Avatar>

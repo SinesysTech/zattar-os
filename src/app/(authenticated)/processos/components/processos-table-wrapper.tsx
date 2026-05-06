@@ -163,13 +163,13 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   return (
     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start justify-center gap-1.5 py-2 min-w-0 group")}>
       <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
-        <SemanticBadge category="tribunal" value={trt} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "w-fit text-xs")}>
+        <SemanticBadge category="tribunal" value={trt} className={cn("w-fit text-caption")}>
           {trt}
         </SemanticBadge>
         {isUnificado ? (
           <GrauBadgesSimple grausAtivos={(processo as ProcessoUnificado).grausAtivos} />
         ) : (
-          <SemanticBadge category="grau" value={(processo as Processo).grau} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs")}>
+          <SemanticBadge category="grau" value={(processo as Processo).grau} className={cn("w-fit text-caption")}>
             {formatarGrau((processo as Processo).grau)}
           </SemanticBadge>
         )}
@@ -198,13 +198,13 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
       <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
         <ParteBadge
           polo="ATIVO"
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+          className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
         >
           {processo.nomeParteAutoraOrigem || processo.nomeParteAutora || '-'}
         </ParteBadge>
         <ParteBadge
           polo="PASSIVO"
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+          className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
         >
           {processo.nomeParteReOrigem || processo.nomeParteRe || '-'}
         </ParteBadge>
@@ -382,7 +382,7 @@ function criarColunas(
         const status = row.original.status;
         return (
           <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
-            <ProcessoStatusBadge status={status} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")} />
+            <ProcessoStatusBadge status={status} className={cn("text-caption")} />
           </div>
         );
       },
@@ -442,7 +442,7 @@ function criarColunas(
 
         const variant = prioridade >= 3 ? 'destructive' : prioridade >= 2 ? 'warning' : 'secondary';
         return (
-          <AppBadge variant={variant as 'destructive' | 'secondary'} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+          <AppBadge variant={variant as 'destructive' | 'secondary'} className={cn("text-caption")}>
             {prioridade}
           </AppBadge>
         );
@@ -561,7 +561,7 @@ function criarColunas(
           <AppBadge
             variant={isArquivado ? 'secondary' : 'default'}
             className={cn(
-              /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs',
+              'text-caption',
               !isArquivado && 'bg-success/15 text-success hover:bg-success/25'
             )}
           >

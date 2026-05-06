@@ -523,7 +523,7 @@ function CalendarViewPopover({
                 )}>
                 <Icon className="h-4 w-4" />
                 <span className="flex-1 text-left">{option.label}</span>
-                <kbd className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>{option.shortcut}</kbd>
+                <kbd className={cn("text-muted-foreground text-caption")}>{option.shortcut}</kbd>
                 {isSelected && <Check className="text-primary h-4 w-4" />}
               </button>
             );
@@ -543,7 +543,7 @@ function CalendarViewPopover({
           >
             <TAREFAS_VIEW_OPTION.icon className="h-4 w-4" />
             <span className="flex-1 text-left">{TAREFAS_VIEW_OPTION.label}</span>
-            <kbd className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>{TAREFAS_VIEW_OPTION.shortcut}</kbd>
+            <kbd className={cn("text-muted-foreground text-caption")}>{TAREFAS_VIEW_OPTION.shortcut}</kbd>
           </button>
         </div>
       </PopoverContent>

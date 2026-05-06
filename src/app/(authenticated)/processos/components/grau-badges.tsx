@@ -58,7 +58,7 @@ export function GrauBadges({ instances }: GrauBadgesProps) {
                 </SemanticBadge>
               </TooltipTrigger>
               <TooltipContent>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; space-y-1 sem token DS */ "text-xs space-y-1")}>
+                <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-caption space-y-1")}>
                   <div>
                     <strong>Grau:</strong> {label}
                   </div>

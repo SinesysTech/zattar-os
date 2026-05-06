@@ -146,7 +146,7 @@ function StatusFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -212,7 +212,7 @@ function TribunalFilter({
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder="Buscar tribunal..."
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
+              className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
@@ -227,7 +227,7 @@ function TribunalFilter({
                   key={sigla}
                   value={sigla}
                   onSelect={() => handleToggle(sigla)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
                 >
                   <div
                     className={cn(
@@ -302,7 +302,7 @@ function TipoFilter({
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder="Buscar tipo..."
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
+              className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
@@ -317,7 +317,7 @@ function TipoFilter({
                   key={tipo}
                   value={tipo}
                   onSelect={() => handleToggle(tipo)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-caption px-2 py-1.5")}
                 >
                   <div
                     className={cn(
@@ -385,7 +385,7 @@ function MeioFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',

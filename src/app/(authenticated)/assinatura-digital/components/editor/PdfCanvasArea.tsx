@@ -242,7 +242,7 @@ export default function PdfCanvasArea({
             : "flex items-center justify-center text-center"
         )}>
           <span className={cn(
-            /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground",
+            /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-foreground",
             isRichTextField
               ? /* design-system-escape: leading-tight sem token DS */ "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
               : "truncate"

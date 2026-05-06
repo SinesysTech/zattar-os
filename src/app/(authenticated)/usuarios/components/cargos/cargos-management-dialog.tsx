@@ -244,7 +244,7 @@ export function CargosManagementDialog({
                         <div className={cn('w-1 h-5 rounded-sm bg-linear-to-b shrink-0', getRoleBannerGradient(cargo.nome))} />
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{cargo.nome}</span>
                         {!cargo.ativo && (
-                          <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                          <Badge variant="secondary" className={cn("text-caption")}>
                             Inativo
                           </Badge>
                         )}

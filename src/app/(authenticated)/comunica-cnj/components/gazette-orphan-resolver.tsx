@@ -165,7 +165,7 @@ function NoMatchState({
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full max-w-60 flex-col items-center gap-2")}>
         <Button
           variant="outline"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption" as="div"> */ "w-full gap-2 text-xs")}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
           onClick={onBuscarManualmente}
         >
           <Search className="size-3.5" aria-hidden />
@@ -173,7 +173,7 @@ function NoMatchState({
         </Button>
         <Button
           variant="outline"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "w-full gap-2 text-xs")}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "w-full gap-2 text-caption")}
           onClick={onCriarNovo}
         >
           <Plus className="size-3.5" aria-hidden />
@@ -181,7 +181,7 @@ function NoMatchState({
         </Button>
         <button
           type="button"
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground")}
+          className={cn("mt-1 text-caption text-muted-foreground/60 transition-colors hover:text-muted-foreground")}
           onClick={onIgnorar}
         >
           Ignorar
@@ -416,7 +416,7 @@ export function GazetteOrphanResolver() {
               <Button
                 variant="outline"
                 size="sm"
-                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-xs text-success hover:bg-success/15")}
+                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv. */ "h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
                 onClick={handleAcceptHighConfidence}
               >
                 <Check className="size-3" aria-hidden />
@@ -426,7 +426,7 @@ export function GazetteOrphanResolver() {
             <Button
               variant="outline"
               size="sm"
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 px-3 text-xs")}
+              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 px-3 text-caption")}
               onClick={handleIgnoreAll}
             >
               Ignorar Todos
@@ -447,7 +447,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 gap-1 px-2 text-xs")}
+            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "h-7 gap-1 px-2 text-caption")}
             disabled={currentIndex === 0}
             onClick={goPrev}
           >
@@ -457,7 +457,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 gap-1 px-2 text-xs")}
+            className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv. */ "h-7 gap-1 px-2 text-caption")}
             disabled={currentIndex === orphans.length - 1}
             onClick={goNext}
           >
@@ -636,7 +636,7 @@ export function GazetteOrphanResolver() {
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-6 space-y-2")}>
                 <button
                   type="button"
-                  className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-xs font-medium text-success transition-colors hover:bg-success/15")}
+                  className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-caption font-medium text-success transition-colors hover:bg-success/15")}
                   onClick={() => handleVincular(current)}
                 >
                   Vincular a Este Expediente
@@ -645,7 +645,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
+                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-9 gap-1.5 text-caption")}
                     onClick={() => handleBuscarManualmente(current)}
                   >
                     <Search className="size-3" aria-hidden />
@@ -654,7 +654,7 @@ export function GazetteOrphanResolver() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-9 gap-1.5 text-xs")}
+                    className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "h-9 gap-1.5 text-caption")}
                     onClick={() => setIsExpedienteDialogOpen(true)}
                   >
                     <Plus className="size-3" aria-hidden />
@@ -663,7 +663,7 @@ export function GazetteOrphanResolver() {
                 </div>
                 <button
                   type="button"
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-full text-center text-xs text-muted-foreground/60 transition-colors hover:text-muted-foreground")}
+                  className={cn("w-full text-center text-caption text-muted-foreground/60 transition-colors hover:text-muted-foreground")}
                   onClick={() => handleIgnorar(current)}
                 >
                   <Ban className="mr-1 inline size-3" aria-hidden />

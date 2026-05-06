@@ -105,7 +105,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                 {metricas.indicesNaoUtilizados.slice(0, 8).map((indice) => (
                   <TableRow key={`${indice.relname}-${indice.indexrelname}`}>
                     <TableCell>{indice.relname}</TableCell>
-                    <TableCell className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs")}>{indice.indexrelname}</TableCell>
+                    <TableCell className={cn("font-mono text-caption")}>{indice.indexrelname}</TableCell>
                     <TableCell className="text-right">{indice.idx_scan}</TableCell>
                   </TableRow>
                 ))}
@@ -142,7 +142,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
               {metricas.queriesLentas.slice(0, 10).map((query, index) => (
                 <TableRow key={`${index}-${query.max_time}`}>
                   <TableCell>{query.rolname}</TableCell>
-                  <TableCell className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "max-w-xl truncate font-mono text-xs")}>{query.query}</TableCell>
+                  <TableCell className={cn("max-w-xl truncate font-mono text-caption")}>{query.query}</TableCell>
                   <TableCell className="text-right">{query.calls}</TableCell>
                   <TableCell className="text-right">{query.total_time.toFixed(0)}</TableCell>
                   <TableCell className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-right font-semibold")}>{query.max_time.toFixed(0)}</TableCell>
@@ -230,7 +230,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">{linha.tamanho_total}</TableCell>
-                    <TableCell className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                    <TableCell className={cn("text-caption text-muted-foreground")}>
                       <div>Vacuum: {linha.last_vacuum || "-"}</div>
                       <div>Autovacuum: {linha.last_autovacuum || "-"}</div>
                     </TableCell>

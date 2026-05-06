@@ -117,7 +117,7 @@ export function AgendaToolbar({
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className={cn(
-              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs border transition-colors cursor-pointer",
+              /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
               activeFilters > 0
                 ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
@@ -139,7 +139,7 @@ export function AgendaToolbar({
                     <button
                       key={src}
                       onClick={() => onToggleSource(src)}
-                      className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs hover:bg-foreground/4 transition-colors cursor-pointer")}
+                      className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
                     >
                       <div className={cn(
                         "size-3.5 rounded border flex items-center justify-center",

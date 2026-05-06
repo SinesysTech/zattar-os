@@ -152,7 +152,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           {/* Primeira linha: Instância (se disponível) + Título */}
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
             {grauOrigem && (
-              <SemanticBadge category="grau" value={grauOrigem} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs")}>
+              <SemanticBadge category="grau" value={grauOrigem} className={cn("w-fit text-caption")}>
                 {formatarGrauComOrdinal(grauOrigem)}
               </SemanticBadge>
             )}

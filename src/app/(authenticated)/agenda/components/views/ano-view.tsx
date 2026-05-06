@@ -172,7 +172,7 @@ const MonthGrid = React.memo(function MonthGrid({
                   )}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+              <TooltipContent side="top" className={cn("text-caption")}>
                 {format(new Date(year, monthIndex, day), "d 'de' MMMM", {
                   locale: ptBR,
                 })}{" "}
@@ -422,7 +422,7 @@ export function AnoView({
             <Button
               variant="ghost"
               size="sm"
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg")}
+              className={cn("text-caption border border-border/40 bg-primary/8 text-primary hover:bg-primary/14 rounded-lg")}
               onClick={() => onDateChange?.(new Date())}
             >
               Hoje

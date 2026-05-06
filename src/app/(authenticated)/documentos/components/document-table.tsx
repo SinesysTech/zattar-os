@@ -78,12 +78,12 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
                 {doc.tags && doc.tags.length > 0 ? (
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
                     {doc.tags.slice(0, 2).map((tag: string) => (
-                      <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                      <Badge key={tag} variant="secondary" className={cn("text-caption")}>
                         {tag}
                       </Badge>
                     ))}
                     {doc.tags.length > 2 && (
-                      <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                      <Badge variant="secondary" className={cn("text-caption")}>
                         +{doc.tags.length - 2}
                       </Badge>
                     )}

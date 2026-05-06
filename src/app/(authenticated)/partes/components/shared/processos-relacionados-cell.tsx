@@ -69,7 +69,7 @@ export function ProcessosRelacionadosCell({
             <Button
               variant="ghost"
               size="sm"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "h-6 px-2 text-xs text-muted-foreground hover:text-foreground")}
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption text-muted-foreground hover:text-foreground")}
             >
               +{processosRestantes.length} mais
             </Button>
@@ -130,7 +130,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
               e.stopPropagation();
               router.push(processoHref);
             }}
-            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center text-xs min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center text-caption min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0")}
           >
             <span className="break-all">{numeroFormatado}</span>
           </Link>
@@ -139,11 +139,11 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             {/* Header: Grau e Status */}
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-              <SemanticBadge category="grau" value={processo.grau} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <SemanticBadge category="grau" value={processo.grau} className={cn("text-caption")}>
                 {formatarGrau(processo.grau)}
               </SemanticBadge>
               {processo.codigo_status_processo && (
-                <SemanticBadge category="status" value={processo.codigo_status_processo} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <SemanticBadge category="status" value={processo.codigo_status_processo} className={cn("text-caption")}>
                   {processo.codigo_status_processo}
                 </SemanticBadge>
               )}

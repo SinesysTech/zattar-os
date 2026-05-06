@@ -138,7 +138,7 @@ function FilterDropdown({
               type="button"
               onClick={() => { onSelect(opt.value === selected ? null : opt.value); setOpen(false); }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'

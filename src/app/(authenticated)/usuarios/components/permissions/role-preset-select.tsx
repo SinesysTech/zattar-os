@@ -23,7 +23,7 @@ export function RolePresetSelect({ value, onValueChange, disabled }: RolePresetS
     <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
       <Text variant="caption" as="span" className="text-muted-foreground/40 shrink-0">Template de cargo:</Text>
       <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-        <SelectTrigger className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 w-56 text-xs bg-transparent")}>
+        <SelectTrigger className={cn("h-8 w-56 text-caption bg-transparent")}>
           <SelectValue placeholder="Selecionar preset..." />
         </SelectTrigger>
         <SelectContent>

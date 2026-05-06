@@ -324,7 +324,7 @@ function WeekDayCard({
     >
       {/* Row 1: Prazo date + Urgency indicators */}
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/80")}>
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption tabular-nums font-semibold text-foreground/80")}>
           {prazoLabel ?? <span className="italic text-muted-foreground/65">Sem prazo</span>}
         </span>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>

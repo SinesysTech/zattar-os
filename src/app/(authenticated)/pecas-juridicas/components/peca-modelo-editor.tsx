@@ -278,7 +278,7 @@ export function PecaModeloEditor({ modeloId }: PecaModeloEditorProps) {
             </div>
 
             {saving && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs shrink-0")}>
+              <Badge variant="secondary" className={cn("text-caption shrink-0")}>
                 Salvando...
               </Badge>
             )}

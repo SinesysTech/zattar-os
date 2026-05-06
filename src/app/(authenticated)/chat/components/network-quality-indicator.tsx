@@ -76,7 +76,7 @@ export function NetworkQualityIndicator({
               )} 
             />
             {showLabel && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium hidden md:inline-block", config.color)}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium hidden md:inline-block", config.color)}>
                 {config.label}
               </span>
             )}

@@ -133,7 +133,7 @@ export function TemplateTextoEditor({
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 rounded-lg border bg-muted/30 p-4")}>
         <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mb-2 text-sm")}>Inserir Variáveis</Heading>
         <Text variant="caption" className="mb-3">
-          Digite <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "rounded bg-muted px-1.5 py-0.5 font-mono text-xs")}>@</kbd> no editor para inserir variáveis dinâmicas.
+          Digite <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}>@</kbd> no editor para inserir variáveis dinâmicas.
         </Text>
 
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -146,7 +146,7 @@ export function TemplateTextoEditor({
                 {variables.slice(0, 3).map((v) => (
                   <span
                     key={v.key}
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "rounded bg-muted px-1.5 py-0.5 font-mono text-xs")}
+                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}
                   >
                     @{v.key}
                   </span>

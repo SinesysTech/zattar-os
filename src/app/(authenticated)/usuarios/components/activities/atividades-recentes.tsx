@@ -223,7 +223,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                               <p className={`font-medium ${colorClass}`}>{label}</p>
-                              <AppBadge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                              <AppBadge variant="outline" className={cn("text-caption")}>
                                 {entidadeLabel}
                               </AppBadge>
                             </div>

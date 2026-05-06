@@ -71,7 +71,7 @@ export function FileTypeIndicators({
                 className={cn(
                   /* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ 'font-medium uppercase tracking-wider transition-colors duration-500',
                   'text-muted-foreground group-hover/type:text-foreground',
-                  compact ? /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm'
+                  compact ? 'text-caption' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm'
                 )}
               >
                 {fileType.label}

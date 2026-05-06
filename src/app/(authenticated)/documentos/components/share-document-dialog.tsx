@@ -284,7 +284,7 @@ export function ShareDocumentDialog({
                         }}
                       >
                         <Avatar>
-                          <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                          <AvatarFallback className={cn("text-caption")}>
                             {getInitials(usuario.nomeCompleto)}
                           </AvatarFallback>
                         </Avatar>
@@ -309,7 +309,7 @@ export function ShareDocumentDialog({
                 <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex items-center justify-between rounded-md border bg-muted/50 p-2")}>
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                     <Avatar>
-                      <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                      <AvatarFallback className={cn("text-caption")}>
                         {getInitials(selectedUser.nomeCompleto)}
                       </AvatarFallback>
                     </Avatar>
@@ -366,7 +366,7 @@ export function ShareDocumentDialog({
                       >
                         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                           <Avatar size="lg">
-                            <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
+                            <AvatarFallback className={cn("text-caption")}>
                               {getInitials(compartilhamento.usuario.nomeCompleto)}
                             </AvatarFallback>
                           </Avatar>

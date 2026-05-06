@@ -175,7 +175,7 @@ export function MailList({ items }: MailListProps) {
                   })}
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption">; leading-5 sem token DS */ "grid w-full gap-1 text-xs leading-5")}>
+              <div className={cn(/* design-system-escape: gap-1 gap sem token DS; leading-5 sem token DS */ "grid w-full gap-1 text-caption leading-5")}>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground whitespace-normal wrap-break-word")}>
                   {item.subject}
                 </div>

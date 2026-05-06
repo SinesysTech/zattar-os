@@ -56,7 +56,7 @@ export function ExpedientesCapturaBanner({
         )}
         <Link
           href={`/app/captura/historico/${capturaId}`}
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-info/70 hover:text-info underline-offset-2 hover:underline mt-1 inline-block")}
+          className={cn("text-caption text-info/70 hover:text-info underline-offset-2 hover:underline mt-1 inline-block")}
         >
           ← Ver histórico de capturas
         </Link>

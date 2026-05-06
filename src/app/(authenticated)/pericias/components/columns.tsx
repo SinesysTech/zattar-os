@@ -258,7 +258,7 @@ export const columns: ColumnDef<Pericia>[] = [
           </div>
 
           {/* Linha 2: Número do processo */}
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-mono font-medium text-foreground break-all")} title={p.numeroProcesso}>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-mono font-medium text-foreground break-all")} title={p.numeroProcesso}>
             {p.numeroProcesso}
           </span>
 
@@ -266,13 +266,13 @@ export const columns: ColumnDef<Pericia>[] = [
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <ParteBadge
               polo="ATIVO"
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+              className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
             >
               {nomeParteAutora}
             </ParteBadge>
             <ParteBadge
               polo="PASSIVO"
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex whitespace-normal wrap-break-word text-left font-normal text-xs")}
+              className={cn("flex whitespace-normal wrap-break-word text-left font-normal text-caption")}
             >
               {nomeParteRe}
             </ParteBadge>

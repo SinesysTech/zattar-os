@@ -312,13 +312,13 @@ export default function TemplateInfoPopover({
               {!isCreating && (
                 <Badge
                   variant={STATUS_OPTIONS.find(s => s.value === formData.status)?.variant || 'default'}
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}
+                  className={cn("text-caption")}
                 >
                   {STATUS_OPTIONS.find(s => s.value === formData.status)?.label}
                 </Badge>
               )}
             </div>
-            <SheetDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <SheetDescription className={cn("text-caption")}>
               Editar nome, descrição e status do template
             </SheetDescription>
           </SheetHeader>
@@ -328,28 +328,28 @@ export default function TemplateInfoPopover({
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {/* Nome */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Label htmlFor="template-nome" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Label htmlFor="template-nome" className={cn("text-caption text-muted-foreground")}>
                 Nome do Template *
               </Label>
               <Input
                 id="template-nome"
                 value={formData.nome}
                 onChange={(e) => setFormData(prev => ({ ...prev, nome: e.target.value }))}
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                className={cn("h-8 text-caption")}
                 placeholder="Ex: Contrato Apps - Uber 2024"
               />
             </div>
 
             {/* Descricao */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Label htmlFor="template-descricao" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Label htmlFor="template-descricao" className={cn("text-caption text-muted-foreground")}>
                 Descrição
               </Label>
               <Textarea
                 id="template-descricao"
                 value={formData.descricao}
                 onChange={(e) => setFormData(prev => ({ ...prev, descricao: e.target.value }))}
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs resize-none")}
+                className={cn("text-caption resize-none")}
                 rows={3}
                 placeholder="Informações adicionais sobre o uso deste template (opcional)"
               />
@@ -359,7 +359,7 @@ export default function TemplateInfoPopover({
 
             {/* Conteudo Markdown */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Label htmlFor="template-markdown" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Label htmlFor="template-markdown" className={cn("text-caption text-muted-foreground")}>
                 Conteúdo Markdown (Opcional)
               </Label>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
@@ -367,7 +367,7 @@ export default function TemplateInfoPopover({
                   variant="outline"
                   size="sm"
                   onClick={() => setShowMarkdownEditor(true)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex-1 gap-2 text-xs")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2 text-caption")}
                 >
                   <Edit className="h-3.5 w-3.5" />
                   {formData.conteudo_markdown.trim() === '' ? 'Adicionar Conteúdo' : 'Editar Conteúdo'}
@@ -377,7 +377,7 @@ export default function TemplateInfoPopover({
                     variant="outline"
                     size="sm"
                     onClick={handleOpenPreview}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex-1 gap-2 text-xs")}
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2 text-caption")}
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Pré-visualizar
@@ -390,7 +390,7 @@ export default function TemplateInfoPopover({
 
             {/* Status */}
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Label htmlFor="template-status" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Label htmlFor="template-status" className={cn("text-caption text-muted-foreground")}>
                 Status *
               </Label>
               <Select
@@ -399,12 +399,12 @@ export default function TemplateInfoPopover({
                   setFormData(prev => ({ ...prev, status: value }))
                 }
               >
-                <SelectTrigger id="template-status" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}>
+                <SelectTrigger id="template-status" className={cn("h-8 text-caption")}>
                   <SelectValue placeholder="Selecione o status" />
                 </SelectTrigger>
                 <SelectContent>
                   {STATUS_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                    <SelectItem key={option.value} value={option.value} className={cn("text-caption")}>
                       {option.label}
                     </SelectItem>
                   ))}
@@ -417,7 +417,7 @@ export default function TemplateInfoPopover({
               <Button
                 variant="outline"
                 size="sm"
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex-1 text-xs")}
+                className={cn("flex-1 text-caption")}
                 onClick={handleCancel}
                 disabled={isSaving}
               >
@@ -425,7 +425,7 @@ export default function TemplateInfoPopover({
               </Button>
               <Button
                 size="sm"
-                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex-1 gap-2 text-xs")}
+                className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex-1 gap-2 text-caption")}
                 onClick={handleRequestSave}
                 disabled={!hasChanges || isSaving || desativacaoCheck.isChecking}
               >
@@ -543,7 +543,7 @@ export default function TemplateInfoPopover({
         <DialogContent className="max-w-4xl max-h-[85vh] overflow-auto">
           <DialogHeader>
             <DialogTitle>Preview do Markdown</DialogTitle>
-            <DialogDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <DialogDescription className={cn("text-caption")}>
               Visualização do conteúdo formatado (variáveis não são substituídas neste preview)
             </DialogDescription>
           </DialogHeader>

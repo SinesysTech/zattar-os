@@ -72,11 +72,11 @@ export function criarColunasAdvogados({
         return (
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}>{primaryOab.numero}</span>
-            <Badge variant="outline" tone="soft" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <Badge variant="outline" tone="soft" className={cn("text-caption")}>
               {primaryOab.uf}
             </Badge>
             {hasMultiple && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <Badge variant="secondary" className={cn("text-caption")}>
                 +{oabs.length - 1}
               </Badge>
             )}

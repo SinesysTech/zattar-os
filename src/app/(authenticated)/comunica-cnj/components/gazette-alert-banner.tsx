@@ -40,7 +40,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
           variant="outline"
           size="sm"
           onClick={onVerPrazos}
-          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 border-destructive/30 px-3 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive")}
+          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 border-destructive/30 px-3 text-caption text-destructive hover:bg-destructive/10 hover:text-destructive")}
         >
           Ver Prazos
         </Button>

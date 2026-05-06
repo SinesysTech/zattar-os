@@ -101,7 +101,7 @@ export default function CreateTemplateForm({
 
         {/* Nome */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+          <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
             Nome do Template *
           </Label>
           <Input
@@ -116,7 +116,7 @@ export default function CreateTemplateForm({
 
         {/* Descrição */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="template-desc-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+          <Label htmlFor="template-desc-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
             Descrição
           </Label>
           <Textarea
@@ -132,7 +132,7 @@ export default function CreateTemplateForm({
         {/* Conteúdo Markdown (condicional para tipoTemplate === 'markdown') */}
         {tipoTemplate === 'markdown' && (
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-            <Label htmlFor="template-markdown-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+            <Label htmlFor="template-markdown-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
               Conteúdo Markdown *
             </Label>
             <MarkdownRichTextEditor
@@ -142,7 +142,7 @@ export default function CreateTemplateForm({
               />
             <Alert>
               <Info className="h-4 w-4" />
-              <AlertDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <AlertDescription className={cn("text-caption")}>
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-2")}>Variáveis disponíveis (use entre chaves duplas):</p>
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <div>

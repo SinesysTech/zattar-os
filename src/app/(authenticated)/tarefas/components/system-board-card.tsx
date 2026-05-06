@@ -52,7 +52,7 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "p-3 pt-0")}>
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs text-muted-foreground")}>
+        <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {dueDate && (
               <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>

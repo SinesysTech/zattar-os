@@ -236,7 +236,7 @@ function CapturaCard({
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onView(); }}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-center gap-1.5 text-xs font-medium text-primary hover:bg-primary/5 rounded-lg py-1.5 transition-colors")}
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; font-medium → className de <Text>/<Heading>; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-center gap-1.5 text-caption font-medium text-primary hover:bg-primary/5 rounded-lg py-1.5 transition-colors")}
         >
           <Eye className="size-3.5" />
           Ver Detalhes

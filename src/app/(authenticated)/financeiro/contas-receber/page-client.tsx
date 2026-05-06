@@ -235,7 +235,7 @@ function criarColunas(
         return (
           <div className="min-h-10 flex items-center justify-center">
             {categoria ? (
-              <Badge variant="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "capitalize text-xs")}>
+              <Badge variant="outline" className={cn("capitalize text-caption")}>
                 {categoria.replace(/_/g, ' ')}
               </Badge>
             ) : (

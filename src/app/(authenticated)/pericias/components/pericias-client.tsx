@@ -467,13 +467,13 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             >
               <DropdownMenuItem
                 asChild
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-xs px-3 py-2 cursor-pointer")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-caption px-3 py-2 cursor-pointer")}
               >
                 <Link href="/pericias/especialidades">Especialidades</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 asChild
-                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-xs px-3 py-2 cursor-pointer")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-caption px-3 py-2 cursor-pointer")}
               >
                 <Link href="/pericias/peritos">Peritos</Link>
               </DropdownMenuItem>
@@ -512,7 +512,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             <Button
               variant="ghost"
               size="sm"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}
+              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption")}
               onClick={handleClearAllFilters}
             >
               Limpar todos

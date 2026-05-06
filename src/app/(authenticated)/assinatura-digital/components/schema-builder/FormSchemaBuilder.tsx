@@ -745,7 +745,7 @@ export function FormSchemaBuilder({
             <Textarea
               value={jsonContent}
               onChange={e => setJsonContent(e.target.value)}
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs h-96")}
+              className={cn("font-mono text-caption h-96")}
             />
           </div>
           <DialogFooter>

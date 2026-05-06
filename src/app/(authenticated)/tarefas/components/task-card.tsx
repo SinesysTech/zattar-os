@@ -140,7 +140,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
         <Separator />
 
         {/* Footer metadata */}
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs text-muted-foreground")}>
+        <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             {/* Due date */}
             {dueDate && (
