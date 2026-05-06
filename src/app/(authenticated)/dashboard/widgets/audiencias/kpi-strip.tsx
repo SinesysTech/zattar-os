@@ -57,7 +57,6 @@ export function KpiStrip() {
         <Stat
           label="Este Mes"
           value={fmtNum(audiencias.proximos30dias)}
-          small
         />
 
         <Stat
@@ -71,7 +70,6 @@ export function KpiStrip() {
                 : undefined
           }
           deltaType={audiencias.hoje > 0 ? 'alert' : 'neutral'}
-          small
         />
 
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col items-center gap-1")}>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { type LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   Card,
   CardContent,
@@ -53,9 +53,9 @@ function MetricCardContent({
       if (parts.length === 2) {
         return (
           <>
-            <span className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold font-heading text-foreground tabular-nums")}>
+            <Text variant="kpi-value">
               {parts[0]}
-            </span>
+            </Text>
             <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold font-heading text-muted-foreground tabular-nums")}>
               ,{parts[1]}
             </span>
@@ -64,9 +64,9 @@ function MetricCardContent({
       }
     }
     return (
-      <span className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold font-heading text-foreground tabular-nums")}>
+      <Text variant="kpi-value">
         {val}
-      </span>
+      </Text>
     );
   };
 

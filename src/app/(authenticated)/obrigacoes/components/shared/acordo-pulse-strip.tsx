@@ -127,14 +127,15 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Em atraso
             </p>
-            <p
+            <Text
+              variant="kpi-value"
               className={cn(
-                /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight mt-1',
+                'mt-1',
                 parcelasAtrasadas > 0 && 'text-destructive/80',
               )}
             >
               <AnimatedNumber value={parcelasAtrasadas} />
-            </p>
+            </Text>
             <p className="text-[10px] text-muted-foreground/45 mt-0.5">
               {parcelasAtrasadas === 0
                 ? 'Tudo em dia'

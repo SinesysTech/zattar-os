@@ -33,7 +33,7 @@ function StatCard({ title, value, icon, href, color }: StatCardProps) {
       </div>
       <div>
         <div className="flex items-baseline justify-between">
-          <AnimatedNumber value={value} className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")} />
+          <AnimatedNumber value={value} className="text-kpi-value" />
           {href && <ExternalLink className="h-4 w-4 text-muted-foreground" />}
         </div>
         {href && (

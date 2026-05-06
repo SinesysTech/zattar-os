@@ -33,6 +33,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -219,7 +220,7 @@ export function BlockedIpsContent() {
             <ShieldX className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.totalBlocked}</div>
+            <Text variant="kpi-value">{data.stats.totalBlocked}</Text>
           </CardContent>
         </Card>
 
@@ -229,7 +230,7 @@ export function BlockedIpsContent() {
             <Ban className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.permanent}</div>
+            <Text variant="kpi-value">{data.stats.permanent}</Text>
           </CardContent>
         </Card>
 
@@ -239,7 +240,7 @@ export function BlockedIpsContent() {
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.temporary}</div>
+            <Text variant="kpi-value">{data.stats.temporary}</Text>
           </CardContent>
         </Card>
 
@@ -249,7 +250,7 @@ export function BlockedIpsContent() {
             <ShieldCheck className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{data.stats.whitelisted}</div>
+            <Text variant="kpi-value">{data.stats.whitelisted}</Text>
           </CardContent>
         </Card>
       </div>

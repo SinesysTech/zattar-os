@@ -23,6 +23,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import type { ContratosResumo } from '../../domain';
+import { Text } from '@/components/ui/typography';
 
 type GaugeStatus = 'good' | 'warning' | 'danger' | 'neutral';
 
@@ -94,9 +95,9 @@ export function WidgetSaudeContratual() {
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center")}>
                 {item.label}
               </span>
-              <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold")}>
+              <Text variant="kpi-value">
                 {item.value}
-              </span>
+              </Text>
             </div>
           ))}
         </div>

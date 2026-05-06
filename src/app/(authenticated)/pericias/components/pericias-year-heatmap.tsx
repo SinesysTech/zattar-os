@@ -50,6 +50,7 @@ import {
 
 import type { Pericia } from '../domain';
 import { SituacaoPericiaCodigo } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -409,9 +410,9 @@ export function PericiasYearHeatmap({
               iconColor="text-primary"
               label="Total no Ano"
             >
-              <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {stats.total}
-              </div>
+              </Text>
               <div className="text-[11px] text-muted-foreground/60 mt-1">
                 perícia{stats.total !== 1 ? 's' : ''} programada{stats.total !== 1 ? 's' : ''}
               </div>
@@ -445,9 +446,9 @@ export function PericiasYearHeatmap({
               iconColor="text-success"
               label="Média Semanal"
             >
-              <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {stats.weekAvg}
-              </div>
+              </Text>
               <div className="text-[11px] text-muted-foreground/60 mt-1">
                 entregas / semana
               </div>
@@ -459,12 +460,12 @@ export function PericiasYearHeatmap({
               iconColor="text-primary"
               label="Taxa de Entrega"
             >
-              <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {stats.taxaEntrega}
                 <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base text-muted-foreground/60 ml-0.5")}>
                   %
                 </span>
-              </div>
+              </Text>
               <div className="mt-3 h-1.5 rounded-full bg-muted/30">
                 <div
                   className="h-1.5 rounded-full bg-primary transition-all duration-500"

@@ -25,7 +25,7 @@ export default function ErrorBoundary({
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2 max-w-md")}>
-                <Heading level="section" className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; tracking-tight sem token DS */ "text-2xl tracking-tight")}>Algo deu errado!</Heading>
+                <Heading level="page">Algo deu errado!</Heading>
                 <p className="text-muted-foreground">
                     Não foi possível carregar o editor de documentos.
                 </p>

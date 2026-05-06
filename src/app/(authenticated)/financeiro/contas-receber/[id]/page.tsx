@@ -71,6 +71,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes
@@ -321,9 +322,9 @@ export default function ContaReceberDetalhesPage() {
               icon={DollarSign}
               label="Valor Total"
               value={
-                <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-success")}>
+                <Text variant="kpi-value" className="text-success">
                   {formatarValor(contaReceber.valor)}
-                </span>
+                </Text>
               }
             />
             {/* Show received/pending amounts for partial payments */}

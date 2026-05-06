@@ -112,14 +112,14 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
               Prazos em 7d
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p
+              <Text
+                variant="kpi-value"
                 className={cn(
-                  /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                   stats.prazosCriticos7d > 0 && 'text-destructive/80',
                 )}
               >
                 <AnimatedNumber value={stats.prazosCriticos7d} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer
@@ -160,14 +160,14 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
               Sem Responsável
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p
+              <Text
+                variant="kpi-value"
                 className={cn(
-                  /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                   stats.semResponsavel > 0 && 'text-warning/80',
                 )}
               >
                 <AnimatedNumber value={stats.semResponsavel} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-warning/8">

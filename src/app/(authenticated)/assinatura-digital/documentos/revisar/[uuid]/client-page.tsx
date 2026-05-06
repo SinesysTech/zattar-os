@@ -28,6 +28,7 @@ import type { AssinaturaDigitalDocumentoAssinanteTipo } from '@/shared/assinatur
 import { GlassPanel } from "@/components/shared/glass-panel";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 // ─── Types ─────────────────────────────────────────────────────────────
 
 interface DocumentoRevisar {
@@ -124,14 +125,15 @@ function KpiCard({
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
             {label}
           </p>
-          <p
+          <Text
+            variant="kpi-value"
             className={cn(
-              /* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-heading text-xl font-bold leading-none mt-1 tabular-nums",
+              "mt-1",
               t.valueColor,
             )}
           >
             {value}
-          </p>
+          </Text>
         </div>
         <span
           className={cn(

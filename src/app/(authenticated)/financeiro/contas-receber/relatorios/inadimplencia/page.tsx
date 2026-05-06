@@ -46,6 +46,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ContaReceberComDetalhes } from '@/app/(authenticated)/financeiro';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Types
@@ -235,7 +236,7 @@ export default function RelatorioInadimplenciaPage() {
             <AlertCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{relatorio?.resumo.totalContas || 0}</div>
+            <Text variant="kpi-value">{relatorio?.resumo.totalContas || 0}</Text>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               contas pendentes em atraso
             </p>
@@ -248,9 +249,9 @@ export default function RelatorioInadimplenciaPage() {
             <DollarSign className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold text-destructive")}>
+            <Text variant="kpi-value" className="text-destructive">
               {formatarValor(relatorio?.resumo.valorTotal || 0)}
-            </div>
+            </Text>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               em valores a receber vencidos
             </p>
@@ -263,9 +264,9 @@ export default function RelatorioInadimplenciaPage() {
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>
+            <Text variant="kpi-value">
               {Math.round(relatorio?.resumo.diasMediaAtraso || 0)} dias
-            </div>
+            </Text>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               média de atraso nas contas
             </p>
@@ -278,9 +279,9 @@ export default function RelatorioInadimplenciaPage() {
             <Users className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>
+            <Text variant="kpi-value">
               {relatorio?.resumo.clientesInadimplentes || 0}
-            </div>
+            </Text>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
               clientes com contas vencidas
             </p>

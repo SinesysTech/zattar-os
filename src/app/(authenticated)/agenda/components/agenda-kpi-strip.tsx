@@ -198,12 +198,11 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
               Conflitos
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(
-                /* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none",
+              <Text variant="kpi-value" className={cn(
                 data.conflitos > 0 && "text-warning",
               )}>
                 {data.conflitos}
-              </p>
+              </Text>
             </div>
           </div>
           <div className="size-8 rounded-lg bg-warning/8 flex items-center justify-center shrink-0">

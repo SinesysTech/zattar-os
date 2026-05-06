@@ -55,12 +55,12 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
       <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
         {data.map((item, index) => (
           <div key={item.ano} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid auto-rows-min gap-2")}>
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-2xl → migrar para <Heading level="...">; leading-none sem token DS; font-semibold → className de <Text>/<Heading> */ "flex items-baseline gap-1 text-2xl leading-none font-semibold tabular-nums")}>
+            <Text variant="kpi-value" className="flex items-baseline gap-1">
               {item.totalConcluidos}
               <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs font-normal")}>
                 projetos
               </span>
-            </div>
+            </Text>
             <ChartContainer
               config={{
                 steps: {

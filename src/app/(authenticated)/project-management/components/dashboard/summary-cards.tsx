@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { DashboardSummary } from "../../domain";
+import { Text } from '@/components/ui/typography';
 
 interface SummaryCardsProps {
   data: DashboardSummary;
@@ -65,9 +66,9 @@ export function SummaryCards({ data }: SummaryCardsProps) {
             </CardAction>
           </CardHeader>
           <CardContent>
-            <div className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; lg:text-3xl sem equivalente DS */ "font-display text-2xl lg:text-3xl")}>
+            <Text variant="kpi-value">
               {card.value}
-            </div>
+            </Text>
           </CardContent>
         </Card>
       ))}

@@ -59,6 +59,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes
@@ -304,9 +305,9 @@ export default function ContaPagarDetalhesPage() {
               icon={DollarSign}
               label="Valor"
               value={
-                <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold")}>
+                <Text variant="kpi-value">
                   {formatarValor(contaPagar.valor)}
-                </span>
+                </Text>
               }
             />
             <DetalheItem

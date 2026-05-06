@@ -15,6 +15,7 @@
 
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { Text } from '@/components/ui/typography';
 
 // ─── Re-export: Glass Panel & Widget Container ─────────────────────────
 // Canonical location: @/components/shared/glass-panel
@@ -251,13 +252,11 @@ export function Stat({
   value,
   delta,
   deltaType = 'neutral',
-  small = false,
 }: {
   label: string;
   value: string | number;
   delta?: string;
   deltaType?: 'positive' | 'negative' | 'neutral' | 'alert';
-  small?: boolean;
 }) {
   const deltaColors = {
     positive: 'text-success/70',
@@ -269,7 +268,7 @@ export function Stat({
   return (
     <div>
       <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{label}</p>
-      <p className={`font-display font-bold mt-0.5 ${small ? /* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ 'text-lg' : /* design-system-escape: text-xl → migrar para <Heading level="..."> */ 'text-xl'}`}>{value}</p>
+      <Text variant="kpi-value" className="mt-0.5">{value}</Text>
       {delta && (
         <p className={`text-[11px] mt-0.5 ${deltaColors[deltaType]}`}>{delta}</p>
       )}
@@ -542,7 +541,7 @@ export function GaugeMeter({
         />
       </svg>
       <div className="flex flex-col items-center -mt-5">
-        <span className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold")}>{value}</span>
+        <Text variant="kpi-value">{value}</Text>
         {label && <span className="text-[9px] text-muted-foreground/60">{label}</span>}
       </div>
     </div>

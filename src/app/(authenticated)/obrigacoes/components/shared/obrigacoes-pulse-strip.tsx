@@ -7,6 +7,7 @@ import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitiv
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { ResumoObrigacoesDB } from '../../repository';
+import { Text } from '@/components/ui/typography';
 
 interface ObrigacoesPulseStripProps {
   resumo: ResumoObrigacoesDB | null;
@@ -125,9 +126,9 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
                   {metric.label}
                 </p>
                 <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-                  <p
+                  <Text
+                    variant="kpi-value"
                     className={cn(
-                      /* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ 'font-display text-2xl font-bold tabular-nums leading-none tracking-tight',
                       metric.highlight && metric.quantidade > 0 && 'text-destructive/80',
                       isSaldo && metric.negativeOnNegative && 'text-destructive/80',
                     )}
@@ -140,7 +141,7 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
                     ) : (
                       <AnimatedNumber value={metric.quantidade} />
                     )}
-                  </p>
+                  </Text>
                 </div>
                 {!isSaldo && metric.showValue && (
                   <p className="text-[10px] text-muted-foreground/45 tabular-nums mt-0.5">
