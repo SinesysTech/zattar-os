@@ -35,12 +35,23 @@ let lockNoiseFilterInstalled = false;
  *  - `visibilitychange` concorrente ao `_autoRefreshTokenTick`.
  *  - Múltiplas abas do mesmo usuário.
  *
- * O Next.js 16 encaminha `console.warn/error` e `unhandledrejection` do browser
- * para o terminal via bridge de dev (browserDebugInfoInTerminal), portanto
- * `event.preventDefault()` no listener de rejection não basta — o Next já
- * capturou e reencaminhou. Precisamos filtrar nas três camadas:
+ * O Next.js 16 trata `unhandledrejection` em duas frentes:
+ *   a) Dev Overlay (Runtime Error) — `app-dev-overlay-setup` chama
+ *      `handleGlobalErrors()` que registra `addEventListener('unhandledrejection',
+ *      onUnhandledRejection)` em capture: false (bubble phase). O handler
+ *      empilha o erro em `rejectionQueue` e dispara o overlay.
+ *   b) Bridge para o terminal — `forwardLogs`/`logUnhandledRejection` é chamado
+ *      dentro do mesmo `onUnhandledRejection`, então é blocked pelo mesmo path.
  *
- *   - `unhandledrejection` com `capture: true` (prioridade sobre handlers do Next).
+ * Pela spec DOM, listeners com `capture: true` em `window` são processados na
+ * capture phase antes dos listeners com `capture: false` (bubble phase). Isso
+ * garante que o nosso filtro execute primeiro. Para impedir que o handler do
+ * Next.js receba o evento depois, usamos `event.stopImmediatePropagation()`
+ * em vez de só `event.preventDefault()` — preventDefault apenas marca o
+ * evento como tratado pelo agente, NÃO interrompe propagação para outros
+ * listeners no mesmo target.
+ *
+ * Filtros adicionais para a forma "log-only" do auth-js:
  *   - `console.warn` patched para descartar "was not released within Nms".
  *   - `console.error` patched para descartar "was released because another request stole it".
  *
@@ -67,6 +78,9 @@ function installLockNoiseFilter() {
       const matchesByMessage = isBenignLockMessage(reason?.message);
       if (matchesByFlag || matchesByMessage) {
         event.preventDefault();
+        // Sem isso, o `onUnhandledRejection` do Dev Overlay (registrado em
+        // capture: false) ainda recebe o evento e mostra o Runtime Error.
+        event.stopImmediatePropagation();
       }
     },
     { capture: true },
