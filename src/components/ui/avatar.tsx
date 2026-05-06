@@ -10,14 +10,14 @@ function Avatar({
   size = "default",
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Root> & {
-  size?: "xs" | "sm" | "default" | "lg" | "xl" | "2xl" | "3xl"
+  size?: "default" | "sm" | "lg"
 }) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
       data-size={size}
       className={cn(
-        "group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=xs]:size-5 data-[size=sm]:size-6 data-[size=lg]:size-10 data-[size=xl]:size-12 data-[size=2xl]:size-14 data-[size=3xl]:size-16 dark:after:mix-blend-lighten",
+        "group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten",
         className
       )}
       {...props}
@@ -102,36 +102,6 @@ function AvatarGroupCount({
   )
 }
 
-interface AvatarIndicatorProps extends React.ComponentProps<"span"> {
-  variant?: "online" | "away" | "offline" | "success";
-}
-
-function AvatarIndicator({
-  className,
-  variant = "offline",
-  ...props
-}: AvatarIndicatorProps) {
-  const variantStyles = {
-    online: "bg-success border-success",
-    away: "bg-warning border-warning",
-    offline: "bg-gray-400 border-gray-500",
-    success: "bg-info border-info",
-  };
-
-  return (
-    <span
-      data-slot="avatar-indicator"
-      data-variant={variant}
-      className={cn(
-        "absolute bottom-0 right-0 z-10 flex items-center justify-center rounded-full border-2 size-3 group-data-[size=lg]/avatar:size-4 group-data-[size=sm]/avatar:size-2",
-        variantStyles[variant],
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
 export {
   Avatar,
   AvatarImage,
@@ -139,5 +109,4 @@ export {
   AvatarGroup,
   AvatarGroupCount,
   AvatarBadge,
-  AvatarIndicator,
 }

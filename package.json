@@ -226,6 +226,7 @@
     "@supabase/postgrest-js": "^2.86.0",
     "@supabase/ssr": "0.10.2",
     "@supabase/supabase-js": "2.103.0",
+    "@tabler/icons-react": "3.42.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.13",
     "@udecode/cn": "^52.0.0",
