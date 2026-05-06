@@ -9,7 +9,13 @@
 
 import * as React from 'react';
 import { Clock, AlertTriangle } from 'lucide-react';
-import { PageShell } from '@/components/shared/page-shell';
+import {
+  PageShell,
+  PageHeader,
+  PageHeaderTitle,
+  PageHeaderDescription,
+  PageContent,
+} from '@/components/shared/page-shell';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -72,10 +78,14 @@ export function TransitoriasListClient() {
   };
 
   return (
-    <PageShell
-      title="Cadastros pendentes"
-      description="Partes contrárias que aguardam preenchimento completo para serem vinculadas aos seus contratos."
-    >
+    <PageShell>
+      <PageHeader>
+        <PageHeaderTitle>Cadastros pendentes</PageHeaderTitle>
+        <PageHeaderDescription>
+          Partes contrárias que aguardam preenchimento completo para serem vinculadas aos seus contratos.
+        </PageHeaderDescription>
+      </PageHeader>
+      <PageContent>
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4")}>
         <SearchInput
           value={search}
@@ -173,6 +183,7 @@ export function TransitoriasListClient() {
           </CardContent>
         </GlassPanel>
       </div>
+      </PageContent>
 
       <PromoverTransitoriaDialog
         open={dialogOpen}

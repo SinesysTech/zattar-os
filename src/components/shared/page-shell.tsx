@@ -35,70 +35,14 @@ import { Heading, Text } from '@/components/ui/typography'
  *
  * Tipografia mora dentro dos subcomponentes. Container nunca dita estilo do
  * conteúdo — `PageShell` é puramente layout.
- *
- * ────────────────────────────────────────────────────────────────────────────
- * API LEGADA (deprecated)
- *
- * Para zero-quebra durante a migração, `PageShell` ainda aceita as props
- * `title`, `description`, `actions`, `badge`. Quando passadas, geram um
- * `<PageHeader>` automático internamente. Migre para a forma composta.
- *
- * ```tsx
- * // ❌ Deprecated
- * <PageShell title="Processos" description="..." actions={<Button>Novo</Button>}>
- *   <DataShell>...</DataShell>
- * </PageShell>
- *
- * // ✅ Canônico
- * <PageShell>
- *   <PageHeader>
- *     <PageHeaderTitle>Processos</PageHeaderTitle>
- *     <PageHeaderDescription>...</PageHeaderDescription>
- *     <PageHeaderAction><Button>Novo</Button></PageHeaderAction>
- *   </PageHeader>
- *   <PageContent>...</PageContent>
- * </PageShell>
- * ```
  */
-
-interface PageShellProps extends Omit<React.ComponentProps<'main'>, 'title'> {
-  /** @deprecated Use `<PageHeaderTitle>` dentro de `<PageHeader>`. */
-  title?: string
-  /** @deprecated Use `<PageHeaderDescription>` dentro de `<PageHeader>`. */
-  description?: string
-  /** @deprecated Use `<PageHeaderAction>` dentro de `<PageHeader>`. */
-  actions?: React.ReactNode
-  /** @deprecated Use `<PageHeaderBadge>` dentro de `<PageHeader>`. */
-  badge?: React.ReactNode
-}
-
-function PageShell({
-  className,
-  children,
-  title,
-  description,
-  actions,
-  badge,
-  ...props
-}: PageShellProps) {
-  const hasLegacyHeader = Boolean(title || description || actions || badge)
-
+function PageShell({ className, ...props }: React.ComponentProps<'main'>) {
   return (
     <main
       data-slot="page-shell"
       className={cn('flex flex-1 flex-col gap-6', className)}
       {...props}
-    >
-      {hasLegacyHeader && (
-        <PageHeader>
-          {badge && <PageHeaderBadge>{badge}</PageHeaderBadge>}
-          {title && <PageHeaderTitle>{title}</PageHeaderTitle>}
-          {description && <PageHeaderDescription>{description}</PageHeaderDescription>}
-          {actions && <PageHeaderAction>{actions}</PageHeaderAction>}
-        </PageHeader>
-      )}
-      {hasLegacyHeader ? <PageContent>{children}</PageContent> : children}
-    </main>
+    />
   )
 }
 
@@ -223,4 +167,3 @@ export {
   PageHeaderAction,
   PageContent,
 }
-export type { PageShellProps }

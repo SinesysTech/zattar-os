@@ -1,5 +1,10 @@
 import { Suspense } from "react";
-import { PageShell } from "@/components/shared/page-shell";
+import {
+  PageShell,
+  PageHeader,
+  PageHeaderTitle,
+  PageContent,
+} from "@/components/shared/page-shell";
 import { requireAuth } from "@/lib/auth/server";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
@@ -25,10 +30,15 @@ export default async function AvaliarUpgradePage() {
   }
 
   return (
-    <PageShell title="Avaliação de Upgrade de Compute">
-      <Suspense fallback={<div>Carregando...</div>}>
-        <AvaliarUpgradeContent />
-      </Suspense>
+    <PageShell>
+      <PageHeader>
+        <PageHeaderTitle>Avaliação de Upgrade de Compute</PageHeaderTitle>
+      </PageHeader>
+      <PageContent>
+        <Suspense fallback={<div>Carregando...</div>}>
+          <AvaliarUpgradeContent />
+        </Suspense>
+      </PageContent>
     </PageShell>
   );
 }

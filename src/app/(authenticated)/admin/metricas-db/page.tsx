@@ -1,7 +1,12 @@
 import { redirect } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
-import { PageShell } from "@/components/shared/page-shell";
+import {
+  PageShell,
+  PageHeader,
+  PageHeaderTitle,
+  PageContent,
+} from "@/components/shared/page-shell";
 import { actionObterMetricasDB } from "@/app/(authenticated)/admin";
 import { MetricasDBContent } from "./components/metricas-db-content";
 
@@ -14,8 +19,13 @@ export default async function MetricasDBPage() {
     }
 
     return (
-      <PageShell title="Métricas do Banco de Dados">
-        <div className="text-destructive">{result.error || "Erro ao carregar métricas"}</div>
+      <PageShell>
+        <PageHeader>
+          <PageHeaderTitle>Métricas do Banco de Dados</PageHeaderTitle>
+        </PageHeader>
+        <PageContent>
+          <div className="text-destructive">{result.error || "Erro ao carregar métricas"}</div>
+        </PageContent>
       </PageShell>
     );
   }
