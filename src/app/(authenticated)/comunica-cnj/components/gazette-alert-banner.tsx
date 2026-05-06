@@ -18,7 +18,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
   if (dismissed || count === 0) return null;
 
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium border-b border-destructive/15 bg-destructive/5 px-4 py-2.5")}>
+    <div className={cn("flex items-center inline-medium border-b border-destructive/15 bg-destructive/5 px-4 py-2.5")}>
       {/* Icon */}
       <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "flex shrink-0 items-center justify-center rounded-lg bg-destructive/10 p-1.5")}>
         <AlertTriangle className="size-3.5 text-destructive" aria-hidden />
@@ -29,7 +29,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
         <Text variant="caption" className="font-medium leading-none text-destructive">
           {count} prazo{count !== 1 ? 's' : ''} crítico{count !== 1 ? 's' : ''}
         </Text>
-        <Text variant="micro-caption" className={cn(/* design-system-escape: leading-tight sem token DS */ "mt-0.5 leading-tight text-destructive/70")}>
+        <Text variant="micro-caption" className={cn("mt-0.5 leading-tight text-destructive/70")}>
           {descricao}
         </Text>
       </div>
@@ -40,7 +40,7 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
           variant="outline"
           size="sm"
           onClick={onVerPrazos}
-          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 border-destructive/30 px-3 text-caption text-destructive hover:bg-destructive/10 hover:text-destructive")}
+          className={cn("h-7 border-destructive/30 px-3 text-caption text-destructive hover:bg-destructive/10 hover:text-destructive")}
         >
           Ver Prazos
         </Button>

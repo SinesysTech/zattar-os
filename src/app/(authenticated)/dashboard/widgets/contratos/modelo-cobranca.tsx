@@ -31,7 +31,7 @@ export function WidgetModeloCobranca() {
   if (!data) {
     return (
       <WidgetContainer title="Modelo de Cobrança" icon={Activity} subtitle="Pro Labore vs Pro Êxito" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -47,7 +47,7 @@ export function WidgetModeloCobranca() {
   if (!contratos) {
     return (
       <WidgetContainer title="Modelo de Cobrança" icon={Activity} subtitle="Pro Labore vs Pro Êxito" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -77,7 +77,7 @@ export function WidgetModeloCobranca() {
                 <span className="text-[9px] text-muted-foreground/50">contratos</span>
               </div>
               <div>
-                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Faturado</p>
+                <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Faturado</p>
                 <p className={cn( "text-[12px] font-semibold tabular-nums text-success/80")}>
                   {fmtMoeda(proLabore.faturado)}
                 </p>
@@ -96,7 +96,7 @@ export function WidgetModeloCobranca() {
                 <span className="text-[9px] text-muted-foreground/50">contratos</span>
               </div>
               <div>
-                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Potencial</p>
+                <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Potencial</p>
                 <p className={cn( "text-[12px] font-semibold tabular-nums text-primary/80")}>
                   {fmtMoeda(proExito.potencial)}
                 </p>
@@ -106,7 +106,7 @@ export function WidgetModeloCobranca() {
         </div>
 
         {/* Taxa de Realização */}
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center inline-default pt-3 border-t border-border/10")}>
+        <div className={cn("flex items-center inline-default pt-3 border-t border-border/10")}>
           <ProgressRing
             percent={proExito.taxaRealizacao}
             size={48}

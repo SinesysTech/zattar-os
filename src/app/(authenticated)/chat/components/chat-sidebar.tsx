@@ -43,7 +43,7 @@ export function ChatSidebar({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv. */ "px-5 pt-5 stack-default")}>
+      <div className={cn("px-5 pt-5 stack-default")}>
         {/* Title row */}
         <div className="flex items-center justify-between">
           <div>
@@ -74,7 +74,7 @@ export function ChatSidebar({
       </div>
 
       {/* Conversation list */}
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-2 scrollbar-thin")}>
+      <div className={cn("flex-1 overflow-y-auto px-2 scrollbar-thin")}>
         {fixadas.length > 0 && (
           <>
             <p className={cn(/* design-system-escape: tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
@@ -109,7 +109,7 @@ export function ChatSidebar({
             icon={MessageCircle}
             title="Nenhuma conversa"
             description="Nenhuma conversa encontrada. Inicie uma nova conversa."
-            className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8")}
+            className={cn("py-8")}
           />
         ) : null}
       </div>

@@ -103,7 +103,7 @@ export function ComposeMailDialog({ children }: ComposeMailDialogProps) {
           <DialogTitle>Novo E-mail</DialogTitle>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "grid inline-medium py-2")}>
+        <div className={cn("grid inline-medium py-2")}>
           <div className={cn("grid inline-tight")}>
             <div className="flex items-center justify-between">
               <Label htmlFor="compose-to">Para</Label>

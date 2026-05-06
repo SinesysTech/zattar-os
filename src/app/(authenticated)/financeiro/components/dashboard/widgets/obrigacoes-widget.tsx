@@ -68,7 +68,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <Skeleton className="h-5 w-36" />
         </CardHeader>
         <CardContent>
@@ -92,7 +92,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <Scale className="h-4 w-4 text-muted-foreground" />
           Obrigações e Prazos

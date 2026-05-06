@@ -141,7 +141,7 @@ export function TemplateLibraryDialog({
         showCloseButton={false}
         className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset>; px-6 py-4 → usar <Inset> */ "sm:max-w-4xl  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
-        <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
+        <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5" />
             Biblioteca de Templates
@@ -170,7 +170,7 @@ export function TemplateLibraryDialog({
                     placeholder="Buscar templates..."
                     value={busca}
                     onChange={(e) => setBusca(e.target.value)}
-                    className={cn(/* design-system-escape: pl-9 padding direcional sem Inset equiv. */ "pl-9")}
+                    className={cn("pl-9")}
                   />
                 </div>
 
@@ -241,7 +241,7 @@ export function TemplateLibraryDialog({
                     </p>
                   </div>
                 ) : (
-                  <div className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 inline-default pr-4")}>
+                  <div className={cn("grid grid-cols-2 lg:grid-cols-3 inline-default pr-4")}>
                     {templates.map((template) => (
                       <TemplateCard
                         key={template.id}
@@ -265,7 +265,7 @@ export function TemplateLibraryDialog({
                     </p>
                   </div>
                 ) : (
-                  <div className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "grid grid-cols-2 lg:grid-cols-3 inline-default pr-4")}>
+                  <div className={cn("grid grid-cols-2 lg:grid-cols-3 inline-default pr-4")}>
                     {maisUsados.map((template) => (
                       <TemplateCard
                         key={template.id}

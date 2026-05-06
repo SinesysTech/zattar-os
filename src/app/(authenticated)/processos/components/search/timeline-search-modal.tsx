@@ -119,7 +119,7 @@ export function TimelineSearchModal({
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-120 p-0 gap-0 overflow-hidden")}>
         {/* Campo de busca */}
         <div
-          className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex items-center px-4 border-b h-16")}
+          className={cn("flex items-center px-4 border-b h-16")}
           onKeyDown={(e) =>
             handleKeyDown(
               e,
@@ -140,7 +140,7 @@ export function TimelineSearchModal({
             placeholder="Buscar na linha do tempo..."
             className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex-1 bg-transparent border-none text-body-lg placeholder:text-muted-foreground p-0 outline-none focus:ring-0")}
           />
-          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-tight sem token DS */ "hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-caption text-muted-foreground font-mono tracking-tight")}>
+          <kbd className={cn("hidden sm:flex items-center ml-3 px-1.5 py-0.5 rounded border bg-muted text-caption text-muted-foreground font-mono tracking-tight")}>
             ESC
           </kbd>
         </div>
@@ -159,7 +159,7 @@ export function TimelineSearchModal({
           aria-label="Resultados da busca"
         >
           {results.length === 0 ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 text-center")}>
+            <div className={cn("py-8 text-center")}>
               <Text variant="caption" className="text-muted-foreground">
                 {query.trim() || activeFilters.size > 0
                   ? 'Nenhum resultado encontrado'
@@ -180,7 +180,7 @@ export function TimelineSearchModal({
         </div>
 
         {/* Rodapé com contagem e atalhos */}
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 border-t bg-muted/30 flex justify-between items-center text-[12px] text-muted-foreground")}>
+        <div className={cn("px-4 py-2 border-t bg-muted/30 flex justify-between items-center text-[12px] text-muted-foreground")}>
           <span>
             <strong className="text-foreground">{results.length}</strong>{' '}
             {results.length === 1 ? 'resultado' : 'resultados'}

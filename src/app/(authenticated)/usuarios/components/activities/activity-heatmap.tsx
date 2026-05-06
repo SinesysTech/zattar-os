@@ -232,7 +232,7 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
           className="fixed z-50 pointer-events-none -translate-x-1/2 -translate-y-full"
           style={{ left: tooltip.x, top: tooltip.y }}
         >
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2 py-1 rounded-md text-[11px] bg-popover text-popover-foreground border border-border/30 shadow-md whitespace-nowrap")}>
+          <div className={cn("px-2 py-1 rounded-md text-[11px] bg-popover text-popover-foreground border border-border/30 shadow-md whitespace-nowrap")}>
             {tooltip.text}
           </div>
         </div>

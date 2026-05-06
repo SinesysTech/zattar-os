@@ -58,7 +58,7 @@ export function ProcessosRelacionadosCell({
   const processosRestantes = processos.slice(maxExibidos);
 
   return (
-    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "min-h-10 flex flex-col inline-micro py-1 min-w-0")}>
+    <div className={cn("min-h-10 flex flex-col inline-micro py-1 min-w-0")}>
       {processosExibidos.map((processo) => (
         <ProcessoItem key={processo.processo_id} processo={processo} />
       ))}
@@ -69,7 +69,7 @@ export function ProcessosRelacionadosCell({
             <Button
               variant="ghost"
               size="sm"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption text-muted-foreground hover:text-foreground")}
+              className={cn("h-6 px-2 text-caption text-muted-foreground hover:text-foreground")}
             >
               +{processosRestantes.length} mais
             </Button>
@@ -130,7 +130,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
               e.stopPropagation();
               router.push(processoHref);
             }}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center text-caption min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0")}
+            className={cn("inline-flex items-center text-caption min-h-6 px-2 py-0.5 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-w-0")}
           >
             <span className="break-all">{numeroFormatado}</span>
           </Link>

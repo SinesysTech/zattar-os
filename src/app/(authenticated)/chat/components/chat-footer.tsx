@@ -218,10 +218,10 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
   };
 
   return (
-    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv. */ "px-5 pb-4 pt-3 bg-chat-thread")}>
+    <div className={cn("px-5 pb-4 pt-3 bg-chat-thread")}>
       {/* Typing Indicator */}
       {typingIndicatorText && !isRecording && (
-        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex items-center inline-snug text-[0.65rem] text-muted-foreground/70 px-2 mb-1.5")}>
+        <div className={cn("flex items-center inline-snug text-[0.65rem] text-muted-foreground/70 px-2 mb-1.5")}>
           <div className={cn("flex inline-nano")}>
             {[0, 1, 2].map((i) => (
               <span
@@ -251,7 +251,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
       <div className={cn("flex items-end inline-tight")}>
         {/* Glass input wrapper */}
         <div
-          className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ "flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-foreground/8 bg-foreground/2 dark:bg-foreground/4")}
+          className={cn("flex-1 flex items-end rounded-2xl border transition-all duration-200 px-3.5 pb-1 pt-1 min-h-11 focus-within:border-primary/25 focus-within:shadow-[0_0_0_3px_rgba(139,92,246,0.06)] border-border/50 dark:border-foreground/8 bg-foreground/2 dark:bg-foreground/4")}
         >
           {isRecording ? (
             // Recording UI — unchanged
@@ -266,7 +266,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               </div>
 
               <div className={cn("flex items-center inline-tight")}>
-                <Button variant="ghost" size="sm" onClick={cancelRecording} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4")}>
+                <Button variant="ghost" size="sm" onClick={cancelRecording} className={cn("text-muted-foreground hover:text-destructive hover:bg-destructive/15 dark:hover:text-destructive rounded-full px-4")}>
                   Cancelar
                 </Button>
                 <Button size="icon" aria-label="Enviar" onClick={handleSendAudio} className="rounded-full bg-destructive hover:bg-destructive dark:bg-destructive dark:hover:bg-destructive text-white h-9 w-9">
@@ -284,7 +284,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                 disabled={isUploading}
                 placeholder={isUploading ? "Enviando arquivo..." : "Digite uma mensagem..."}
                 rows={1}
-                className={cn(/* design-system-escape: leading-relaxed sem token DS; py-1 padding direcional sem Inset equiv.; px-0 padding direcional sem Inset equiv. */ "flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/65")}
+                className={cn("flex-1 bg-transparent border-none shadow-none ring-0 focus-visible:ring-0 resize-none min-h-8 max-h-30 overflow-y-auto text-[0.825rem] leading-relaxed py-1 px-0 placeholder:text-muted-foreground/65")}
               />
 
               {/* Hidden File Input */}
@@ -297,7 +297,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
               />
 
               {/* Action buttons — desktop inline, mobile dropdown */}
-              <div className={cn(/* design-system-escape: pb-0.5 padding direcional sem Inset equiv. */ "flex items-center self-end pb-0.5")}>
+              <div className={cn("flex items-center self-end pb-0.5")}>
                 {/* Mobile: dropdown */}
                 <div className="block lg:hidden">
                   <DropdownMenu>

@@ -267,7 +267,7 @@ export function Stat({
 
   return (
     <div>
-      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{label}</p>
+      <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>{label}</p>
       <Text variant="kpi-value" className="mt-0.5">{value}</Text>
       {delta && (
         <p className={`text-[11px] mt-0.5 ${deltaColors[deltaType]}`}>{delta}</p>
@@ -345,7 +345,7 @@ export function GallerySection({
   return (
     <section>
       <div className="mb-5">
-        <h2 className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-card-title tracking-tight")}>{title}</h2>
+        <h2 className={cn("text-card-title tracking-tight")}>{title}</h2>
         {description && <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{description}</p>}
       </div>
       <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 inline-default auto-rows-auto")}>
@@ -669,7 +669,7 @@ export function ComparisonStat({
 
   return (
     <div className={cn("flex flex-col inline-micro")}>
-      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
+      <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
       <div className={cn("flex items-baseline inline-tight")}>
         <span className={cn( "font-display text-body-lg font-bold")}>{fmt(current)}</span>
         <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>

@@ -124,7 +124,7 @@ export function ClienteDocumentosViewer({
 
   if (loading) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
+      <div className={cn("flex items-center justify-center py-8")}>
         <LoadingSpinner className="size-6 text-muted-foreground" />
         <span className="ml-2 text-muted-foreground">
           Carregando documentos...
@@ -135,7 +135,7 @@ export function ClienteDocumentosViewer({
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
+      <div className={cn("flex flex-col items-center justify-center py-8 text-center")}>
         <FolderOpen className="h-12 w-12 text-muted-foreground/50 mb-2" />
         <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
       </div>
@@ -144,7 +144,7 @@ export function ClienteDocumentosViewer({
 
   if (documentos.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
+      <div className={cn("flex flex-col items-center justify-center py-8 text-center")}>
         <FolderOpen className="h-12 w-12 text-muted-foreground/50 mb-2" />
         <p className={cn("text-body-sm text-muted-foreground")}>
           Nenhum documento encontrado para este cliente.

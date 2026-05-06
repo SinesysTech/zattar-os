@@ -260,11 +260,11 @@ describe("DocumentFlowShell", () => {
       expect(content).toHaveClass("inset-dialog");
     });
 
-    it(/* design-system-escape: -m-6 sem equivalente DS */ "deve aplicar layout full-height com -m-6", () => {
+    it("deve aplicar layout full-height com -m-6", () => {
       const { container } = renderShell();
 
       const wrapper = container.firstElementChild!;
-      expect(wrapper).toHaveClass(/* design-system-escape: -m-6 sem equivalente DS */ "-m-6");
+      expect(wrapper).toHaveClass("-m-6");
       expect(wrapper).toHaveClass("flex");
       expect(wrapper).toHaveClass("flex-col");
     });

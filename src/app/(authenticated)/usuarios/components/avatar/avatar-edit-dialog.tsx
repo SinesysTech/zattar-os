@@ -111,7 +111,7 @@ export function AvatarEditDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex justify-center py-6")}>
+        <div className={cn("flex justify-center py-6")}>
           <AvatarUpload
             avatarUrl={currentAvatarUrl}
             fallbackInitials={getInitials(nomeExibicao)}

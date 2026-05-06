@@ -98,7 +98,7 @@ export function WidgetProdutividadeSemanal() {
     >
       <div className={cn("flex items-end justify-between inline-tight mb-3")}>
         <div className={cn("flex flex-col inline-nano")}>
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+          <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Total semana
           </span>
           <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
@@ -106,7 +106,7 @@ export function WidgetProdutividadeSemanal() {
           </span>
         </div>
         <div className={cn("flex flex-col items-end inline-nano")}>
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+          <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Média diária
           </span>
           <span className={cn( "font-display text-body font-bold tabular-nums text-primary/80")}>
@@ -118,7 +118,7 @@ export function WidgetProdutividadeSemanal() {
       <MiniBar data={barData} height={64} barColor="bg-primary/60" />
 
       {melhorDia && (
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10 flex items-center justify-between")}>
+        <div className={cn("mt-3 pt-3 border-t border-border/10 flex items-center justify-between")}>
           <span className="text-[9px] text-muted-foreground/60">
             Melhor dia: {getDiaSemanaLabel(melhorDia.data)}
           </span>

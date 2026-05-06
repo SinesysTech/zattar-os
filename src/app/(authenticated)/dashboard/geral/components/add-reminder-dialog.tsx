@@ -91,7 +91,7 @@ export function AddReminderDialog() {
             <form
               id="add-reminder-form"
               onSubmit={handleSubmit}
-              className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "stack-default px-6 py-4")}
+              className={cn("stack-default px-6 py-4")}
             >
               <div className={cn("grid inline-tight")}>
                 <Label htmlFor="reminder-text">Nota</Label>
@@ -123,22 +123,22 @@ export function AddReminderDialog() {
                       prioridade: value as PrioridadeLembrete,
                     })
                   }
-                  className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default"> */ "flex space-x-4")}
+                  className={cn("flex space-x-4")}
                   disabled={isPending}
                 >
-                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                  <div className={cn("flex items-center space-x-2")}>
                     <RadioGroupItem value="low" id="priority-low" />
                     <Label htmlFor="priority-low" className="cursor-pointer">
                       Baixa
                     </Label>
                   </div>
-                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                  <div className={cn("flex items-center space-x-2")}>
                     <RadioGroupItem value="medium" id="priority-medium" />
                     <Label htmlFor="priority-medium" className="cursor-pointer">
                       Média
                     </Label>
                   </div>
-                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                  <div className={cn("flex items-center space-x-2")}>
                     <RadioGroupItem value="high" id="priority-high" />
                     <Label htmlFor="priority-high" className="cursor-pointer">
                       Alta

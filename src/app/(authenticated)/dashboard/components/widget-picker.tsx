@@ -81,7 +81,7 @@ export function WidgetPicker({
         side="right"
         className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ "w-full sm:w-96 flex flex-col gap-0 p-0 bg-background/95 backdrop-blur-xl border-l border-border/20")}
       >
-        <SheetHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-5 pt-6 pb-4 border-b border-border/10")}>
+        <SheetHeader className={cn("px-5 pt-6 pb-4 border-b border-border/10")}>
           <SheetTitle className={cn( "font-heading text-body font-semibold")}>
             Personalizar Dashboard
           </SheetTitle>
@@ -91,7 +91,7 @@ export function WidgetPicker({
         </SheetHeader>
 
         {/* Resumo + reset */}
-        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-5 py-3 border-b border-border/10")}>
+        <div className={cn("flex items-center justify-between px-5 py-3 border-b border-border/10")}>
           <Text variant="caption" className="text-muted-foreground/60">
             <span className={cn( "font-semibold text-foreground")}>{activeCount}</span>
             {' '}de{' '}
@@ -102,7 +102,7 @@ export function WidgetPicker({
             variant="ghost"
             size="sm"
             onClick={onResetDefaults}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "inline-snug text-caption text-muted-foreground/60 hover:text-foreground h-7 px-2")}
+            className={cn("inline-snug text-caption text-muted-foreground/60 hover:text-foreground h-7 px-2")}
             aria-label="Restaurar configuração padrão"
           >
             <RotateCcw className="size-3" />
@@ -119,7 +119,7 @@ export function WidgetPicker({
                 <label
                   key={widget.id}
                   htmlFor={`widget-toggle-${widget.id}`}
-                  className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "flex items-center inline-default px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150")}
+                  className={cn("flex items-center inline-default px-5 py-3.5 cursor-pointer hover:bg-foreground/3 transition-colors duration-150")}
                 >
                   <Switch
                     id={`widget-toggle-${widget.id}`}
@@ -142,7 +142,7 @@ export function WidgetPicker({
           )}
 
           {availableWidgets.length === 0 && (
-            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 px-5 text-center")}>
+            <div className={cn("flex flex-col items-center justify-center py-16 px-5 text-center")}>
               <LayoutGrid className="size-8 text-muted-foreground/45 mb-3" />
               <p className={cn("text-body-sm text-muted-foreground/50")}>
                 Nenhum widget disponivel para o seu perfil.

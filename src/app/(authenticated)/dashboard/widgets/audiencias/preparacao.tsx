@@ -82,7 +82,7 @@ export function WidgetPreparacao() {
       depth={1}
     >
       {audiencias.length === 0 ? (
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-6 inline-tight")}>
           <p className="text-[11px] text-muted-foreground/60">
             Nenhuma audiência próxima registrada.
           </p>
@@ -97,7 +97,7 @@ export function WidgetPreparacao() {
             return (
               <div
                 key={audiencia.id}
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; -mx-2 sem equivalente DS */ "flex items-center inline-medium px-2 py-2 -mx-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150")}
+                className={cn("flex items-center inline-medium px-2 py-2 -mx-2 rounded-xl hover:bg-foreground/4 transition-colors duration-150")}
               >
                 <ProgressRing
                   percent={prepScore}
@@ -111,16 +111,16 @@ export function WidgetPreparacao() {
                     {audiencia.tipo_audiencia ?? 'Audiência'}
                   </p>
                   {partesTexto && (
-                    <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
+                    <p className={cn("text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
                       {partesTexto}
                     </p>
                   )}
                   {contextoProcesso && (
-                    <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[9px] text-foreground/55 mt-0.5 leading-tight")}>
+                    <p className={cn("text-[9px] text-foreground/55 mt-0.5 leading-tight")}>
                       {contextoProcesso}
                     </p>
                   )}
-                  <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
+                  <p className={cn("text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
                     {audiencia.numero_processo}
                   </p>
                   <div className={cn("flex items-center inline-medium mt-1")}>

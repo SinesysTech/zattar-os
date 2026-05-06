@@ -79,7 +79,7 @@ export function WidgetLembretesAtivos() {
           {ativos.slice(0, 5).map((lembrete) => (
             <ListItem key={lembrete.id}>
               <UrgencyDot level={prioridadeParaNivel(lembrete.prioridade)} />
-              <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[10px] text-foreground/75 flex-1 truncate leading-snug")}>
+              <span className={cn("text-[10px] text-foreground/75 flex-1 truncate leading-snug")}>
                 {lembrete.texto}
               </span>
               <span className="text-[9px] text-muted-foreground/60 shrink-0 tabular-nums">
@@ -89,7 +89,7 @@ export function WidgetLembretesAtivos() {
           ))}
 
           {ativos.length > 5 && (
-            <p className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "text-[9px] text-muted-foreground/55 mt-1 pl-1")}>
+            <p className={cn("text-[9px] text-muted-foreground/55 mt-1 pl-1")}>
               +{ativos.length - 5} lembrete{ativos.length - 5 > 1 ? 's' : ''} adicionais
             </p>
           )}

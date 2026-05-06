@@ -211,7 +211,7 @@ const MonthGrid = React.memo(function MonthGrid({
           )}
           aria-label={tooltipText}
         >
-          <TooltipContent side="top" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "text-micro-caption px-2 py-1")}>
+          <TooltipContent side="top" className={cn("text-micro-caption px-2 py-1")}>
             {tooltipText}
           </TooltipContent>
         </button>
@@ -254,7 +254,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
+    <div className={cn("rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
@@ -320,7 +320,7 @@ export function ObrigacoesYearHeatmap({
             </Button>
             <Button
               size="sm"
-              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "ml-2 rounded-full px-4")}
+              className={cn("ml-2 rounded-full px-4")}
               onClick={() => onDateChange(new Date())}
             >
               Hoje
@@ -354,7 +354,7 @@ export function ObrigacoesYearHeatmap({
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
               <span className="text-micro-caption">Mais</span>
-              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-micro-caption")}>·</span>
+              <span className={cn("text-muted-foreground/40 mx-2 text-micro-caption")}>·</span>
               <div className={cn("flex items-center inline-snug")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-micro-caption">Hoje</span>

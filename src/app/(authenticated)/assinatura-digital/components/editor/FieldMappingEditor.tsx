@@ -641,7 +641,7 @@ export default function FieldMappingEditor({
   };
 
   return (
-    <div className={cn(/* design-system-escape: -m-6 sem equivalente DS */ "-m-6 flex flex-col overflow-hidden")} style={{ height: 'calc(100vh - 3.5rem)' }}>
+    <div className={cn("-m-6 flex flex-col overflow-hidden")} style={{ height: 'calc(100vh - 3.5rem)' }}>
       {/* Mobile Toolbar (horizontal at top) */}
       <EditorToolbarMobile {...toolbarProps} />
 

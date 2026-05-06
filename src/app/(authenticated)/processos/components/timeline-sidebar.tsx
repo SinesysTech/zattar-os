@@ -93,7 +93,7 @@ export function TimelineSidebar({
             placeholder="Buscar na timeline..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "h-8 pl-8 text-caption")}
+            className={cn("h-8 pl-8 text-caption")}
           />
         </div>
       </div>
@@ -108,7 +108,7 @@ export function TimelineSidebar({
           grouped.map((group) => (
             <div key={group.label}>
               {/* Date separator */}
-              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-3 py-1.5 border-b")}>
+              <div className={cn("sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-3 py-1.5 border-b")}>
                 <span className={cn( "text-[11px] font-medium text-muted-foreground uppercase")}>
                   {group.label}
                 </span>

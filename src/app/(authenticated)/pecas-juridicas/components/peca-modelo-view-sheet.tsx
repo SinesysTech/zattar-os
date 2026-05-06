@@ -99,7 +99,7 @@ export function PecaModeloViewSheet({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] p-0 flex flex-col")}>
-        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
+        <DialogHeader className={cn("px-6 pt-6 pb-4 border-b border-border/30 shrink-0")}>
           <DialogTitle className={cn("flex items-center inline-tight")}>
             <Eye className="h-5 w-5" />
             Visualizar Modelo
@@ -183,7 +183,7 @@ export function PecaModeloViewSheet({
 
             {/* Botão de Edição */}
             {onEdit && (
-              <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "pt-4")}>
+              <div className={cn("pt-4")}>
                 <Button
                   variant="outline"
                   className="w-full"

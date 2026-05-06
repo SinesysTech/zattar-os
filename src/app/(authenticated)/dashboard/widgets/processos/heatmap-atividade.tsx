@@ -94,7 +94,7 @@ export function WidgetHeatmapAtividade() {
         <CalendarHeatmap data={heatmapData} colorScale="primary" />
 
         {/* Legenda + Stats */}
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-3 border-t border-border/10")}>
+        <div className={cn("flex items-center justify-between pt-3 border-t border-border/10")}>
           <div className={cn("flex items-center inline-snug")}>
             <span className="text-[8px] text-muted-foreground/50">Menos</span>
             <div className={cn("flex items-center inline-nano")}>

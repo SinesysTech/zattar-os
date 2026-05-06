@@ -30,7 +30,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
 
   return (
     <div
-      className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/6 backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]")}
+      className={cn("relative z-10 flex items-center justify-between px-5 py-3 border-b border-border/40 dark:border-white/6 backdrop-blur-[20px] bg-white/85 dark:bg-[rgba(22,18,34,0.8)]")}
     >
       <div className={cn("flex inline-medium items-center")}>
         <Button
@@ -44,7 +44,7 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
         <button
           type="button"
           onClick={() => toggleProfileSheet(!showProfileSheet)}
-          className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center inline-medium cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1")}
+          className={cn("flex items-center inline-medium cursor-pointer hover:opacity-80 transition-opacity duration-150 rounded-lg px-1 -mx-1")}
           aria-label="Ver perfil"
         >
           <Avatar className="size-8 rounded-full overflow-visible shrink-0">

@@ -236,7 +236,7 @@ export default function PdfCanvasArea({
         data-state={field.isSelected ? "selected" : "idle"}
       >
         <div className={cn(
-          /* design-system-escape: px-1 padding direcional sem Inset equiv. */ "absolute inset-0 px-1 overflow-hidden",
+          "absolute inset-0 px-1 overflow-hidden",
           isRichTextField
             ? /* design-system-escape: p-1.5 → usar <Inset> */ "flex items-start p-1.5 text-left"
             : "flex items-center justify-center text-center"
@@ -244,7 +244,7 @@ export default function PdfCanvasArea({
           <span className={cn(
              "text-caption font-medium text-foreground",
             isRichTextField
-              ? /* design-system-escape: leading-tight sem token DS */ "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
+              ? "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
               : "truncate"
           )}>{displayText}</span>
         </div>
@@ -255,7 +255,7 @@ export default function PdfCanvasArea({
         )}
         {field.isSelected && (
           <>
-            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "pointer-events-none absolute flex items-center inline-micro rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
+            <AppBadge variant="secondary" className={cn("pointer-events-none absolute flex items-center inline-micro rounded-full px-2 py-0 text-[11px] shadow-sm", signer ? "-top-12 left-0" : "-top-6 left-0")}>
               {isImageField ? <ImageIcon className="h-3 w-3" aria-hidden="true" /> : isRichTextField ? <AlignLeft className="h-3 w-3" aria-hidden="true" /> : <Type className="h-3 w-3" aria-hidden="true" />}
               {typeLabel}
             </AppBadge>

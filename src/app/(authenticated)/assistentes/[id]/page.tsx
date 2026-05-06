@@ -66,7 +66,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     return (
       <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "flex-1 inset-card-compact md:p-6 h-full flex flex-col")}>
         <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center inline-medium border-b px-4 py-3 shrink-0")}>
+          <div className={cn("flex items-center inline-medium border-b px-4 py-3 shrink-0")}>
             <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
               <Link href="/assistentes">
                 <ChevronLeft className="h-4 w-4" />
@@ -86,7 +86,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
   return (
     <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "flex-1 inset-card-compact md:p-6 h-full flex flex-col")}>
       <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center inline-medium border-b px-4 py-3 shrink-0")}>
+        <div className={cn("flex items-center inline-medium border-b px-4 py-3 shrink-0")}>
           <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
             <Link href="/assistentes">
               <ChevronLeft className="h-4 w-4" />

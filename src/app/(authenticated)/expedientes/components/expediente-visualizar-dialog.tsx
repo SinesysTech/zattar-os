@@ -137,13 +137,13 @@ function DataRow({
   editable?: boolean;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-medium px-3 py-2")}>
+    <div className={cn("flex items-start justify-between inline-medium px-3 py-2")}>
       <Text
         variant="caption"
         as="dt"
         className={cn(
           'shrink-0 text-muted-foreground/65',
-          editable && /* design-system-escape: pt-1 padding direcional sem Inset equiv. */ 'pt-1',
+          editable && 'pt-1',
         )}
       >
         {label}
@@ -191,7 +191,7 @@ function MetaItem({
 }) {
   return (
     <div className={cn("flex flex-col inline-micro min-w-0")}>
-      <Text variant="micro-caption" className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/55")}>
+      <Text variant="micro-caption" className={cn("uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </Text>
       <div className={cn("flex items-center inline-snug text-body-sm")}>{children}</div>
@@ -207,7 +207,7 @@ function Audit({
   updatedAt: string | null;
 }) {
   return (
-    <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-medium pt-3 text-muted-foreground/55")}>
+    <div className={cn("flex items-center justify-between inline-medium pt-3 text-muted-foreground/55")}>
       <Text variant="micro-caption">Criado em {formatarDataHora(createdAt)}</Text>
       <Text variant="micro-caption">Atualizado em {formatarDataHora(updatedAt)}</Text>
     </div>
@@ -260,7 +260,7 @@ export function ExpedienteVisualizarDialog({
             <DialogTitle>Expediente</DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-            <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center inline-medium px-6 py-12 text-center")}>
+            <div className={cn("flex flex-col items-center justify-center inline-medium px-6 py-12 text-center")}>
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
                 <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
               </div>

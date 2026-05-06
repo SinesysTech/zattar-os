@@ -83,7 +83,7 @@ export function ResponsavelPopover({
             e.stopPropagation();
           }}
           className={cn(
-            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; -mx-1.5 sem equivalente DS; -my-0.5 sem equivalente DS */ 'flex items-center inline-snug rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
+            'flex items-center inline-snug rounded-md px-1.5 py-0.5 -mx-1.5 -my-0.5',
             'transition-colors hover:bg-muted/50 cursor-pointer',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none'
@@ -100,7 +100,7 @@ export function ResponsavelPopover({
         onKeyDown={(e) => e.stopPropagation()}
       >
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
               Responsável
             </p>
@@ -109,9 +109,9 @@ export function ResponsavelPopover({
               className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
-              <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-micro py-3")}>
+              <div className={cn("flex flex-col items-center inline-micro py-3")}>
                 <Search className="size-4 text-muted-foreground/55" />
                 <Text variant="caption" as="span" className="text-muted-foreground/65">Nenhum usuário encontrado</Text>
               </div>
@@ -120,7 +120,7 @@ export function ResponsavelPopover({
               <CommandItem
                 value="sem-responsavel"
                 onSelect={() => handleSelect(null)}
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
+                className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
               >
                 <UserX className="size-3.5 text-muted-foreground/65" />
                 <span>Sem responsável</span>
@@ -133,7 +133,7 @@ export function ResponsavelPopover({
                   key={usuario.id}
                   value={usuario.nomeExibicao}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
+                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />

@@ -146,7 +146,7 @@ export function ClienteSelect({
           <CommandList>
             <CommandEmpty>
               {loading ? (
-                <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-tight py-4")}>
+                <div className={cn("flex items-center justify-center inline-tight py-4")}>
                   <RefreshCw className="h-4 w-4 animate-spin" />
                   <span>Carregando...</span>
                 </div>

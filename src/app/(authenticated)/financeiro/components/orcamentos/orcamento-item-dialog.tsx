@@ -167,7 +167,7 @@ export function OrcamentoItemDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
+          <div className={cn("grid inline-default py-4")}>
             {/* Conta Contábil */}
             <div className={cn("grid inline-tight")}>
               <Label htmlFor="contaContabilId">Conta Contábil *</Label>
@@ -207,7 +207,7 @@ export function OrcamentoItemDialog({
                   onChange={(e) =>
                     setFormData({ ...formData, valorPrevisto: formatCurrency(e.target.value) })
                   }
-                  className={cn(/* design-system-escape: pl-10 padding direcional sem Inset equiv. */ "pl-10")}
+                  className={cn("pl-10")}
                   placeholder="0,00"
                   disabled={isLoading}
                 />

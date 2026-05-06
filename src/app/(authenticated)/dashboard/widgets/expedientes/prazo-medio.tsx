@@ -44,7 +44,7 @@ export function PrazoMedio() {
         depth={1}
         className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de prazo medio nao disponiveis.
         </p>
       </WidgetContainer>
@@ -83,7 +83,7 @@ export function PrazoMedio() {
 
           {tempoResposta !== undefined && (
             <div className="mt-2">
-              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
+              <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Tempo Resposta
               </p>
               <p className={cn( "font-display text-body-sm font-bold mt-0.5")}>
@@ -93,7 +93,7 @@ export function PrazoMedio() {
           )}
         </div>
 
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2")}>
+        <div className={cn("pt-2")}>
           <Sparkline
             data={prazoMedio}
             alert={isAlert}
@@ -103,7 +103,7 @@ export function PrazoMedio() {
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
+      <div className={cn("mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
         <div className={cn("flex inline-default")}>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Min</span>

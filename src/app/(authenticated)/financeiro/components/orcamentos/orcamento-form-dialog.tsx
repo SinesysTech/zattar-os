@@ -220,7 +220,7 @@ export function OrcamentoFormDialog({
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
+                    <div className={cn("grid inline-default py-4")}>
                         {/* Nome */}
                         <div className={cn("grid inline-tight")}>
                             <Label htmlFor="nome">Nome *</Label>

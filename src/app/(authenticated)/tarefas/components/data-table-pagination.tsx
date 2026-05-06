@@ -17,13 +17,13 @@ interface DataTablePaginationProps<TData> {
 
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   return (
-    <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-2")}>
+    <div className={cn("flex items-center justify-between px-2")}>
       <div className={cn("text-muted-foreground hidden flex-1 text-body-sm lg:inline")}>
         {table.getFilteredSelectedRowModel().rows.length} de{" "}
         {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
       </div>
-      <div className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default">; lg:space-x-8 sem equivalente DS */ "flex items-center space-x-4 lg:space-x-8")}>
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+      <div className={cn("flex items-center space-x-4 lg:space-x-8")}>
+        <div className={cn("flex items-center space-x-2")}>
           <p className={cn( "hidden text-body-sm font-medium lg:inline")}>Linhas por página</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
@@ -45,7 +45,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
         <div className={cn( "flex w-25 items-center justify-center text-body-sm font-medium")}>
           Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </div>
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+        <div className={cn("flex items-center space-x-2")}>
           <Button
             variant="outline"
             size="icon" aria-label="Ir para a primeira página"

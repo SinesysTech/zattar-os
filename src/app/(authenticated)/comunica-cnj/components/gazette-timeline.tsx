@@ -33,7 +33,7 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
       />
 
       {items.map((item) => (
-        <div key={item.id} className={cn(/* design-system-escape: pl-5 padding direcional sem Inset equiv. */ "relative flex items-start inline-medium pl-5")}>
+        <div key={item.id} className={cn("relative flex items-start inline-medium pl-5")}>
           {/* Dot */}
           <div
             className={cn(

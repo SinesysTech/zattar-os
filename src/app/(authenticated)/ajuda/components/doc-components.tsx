@@ -135,7 +135,7 @@ export function DocSteps({ steps }: { steps: StepDef[] }) {
           <span className={cn( "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-body-sm font-bold")}>
             {i + 1}
           </span>
-          <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "pt-0.5")}>
+          <div className={cn("pt-0.5")}>
             <p className={cn( "font-medium")}>{s.titulo}</p>
             <p className={cn("text-muted-foreground text-body-sm")}>{s.descricao}</p>
           </div>

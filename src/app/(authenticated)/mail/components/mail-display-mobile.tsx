@@ -253,7 +253,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
               </Button>
             </div>
 
-            <Separator orientation="vertical" className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "mx-2 h-6")} />
+            <Separator orientation="vertical" className={cn("mx-2 h-6")} />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

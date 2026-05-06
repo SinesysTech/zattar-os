@@ -166,7 +166,7 @@ export function ExpedienteDetalhesClient({
   ];
 
   return (
-    <div className={cn(/* design-system-escape: pb-12 padding direcional sem Inset equiv. */ "relative flex flex-col inline-extra-loose pb-12")}>
+    <div className={cn("relative flex flex-col inline-extra-loose pb-12")}>
       <AmbientBackdrop blurIntensity={18} grid baseGradient />
 
       <div className={cn("relative z-10 flex flex-col inline-extra-loose")}>
@@ -190,11 +190,11 @@ export function ExpedienteDetalhesClient({
             </span>
           </Text>
           <div className={cn("flex items-center inline-snug")}>
-            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "rounded-full h-8 px-3 text-caption inline-snug")}>
+            <Button variant="outline" size="sm" className={cn("rounded-full h-8 px-3 text-caption inline-snug")}>
               <Download className="size-3" />
               PDF
             </Button>
-            <Button size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "rounded-full h-8 px-3 text-caption inline-snug")}>
+            <Button size="sm" className={cn("rounded-full h-8 px-3 text-caption inline-snug")}>
               <Edit3 className="size-3" />
               Editar
             </Button>
@@ -313,7 +313,7 @@ function HeroBlock({
             <div className={cn("flex items-baseline inline-medium")}>
               <span
                 className={cn(
-                  /* design-system-escape: tracking-tighter sem token DS */ 'font-black leading-[0.85] tracking-tighter tabular-nums',
+                  'font-black leading-[0.85] tracking-tighter tabular-nums',
                   'text-[7rem] md:text-[8.5rem] lg:text-[9.5rem]',
                   style.accent,
                 )}
@@ -322,7 +322,7 @@ function HeroBlock({
               </span>
               <Text
                 variant="overline"
-                className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "tracking-[0.2em] text-foreground/75 self-end pb-4")}
+                className={cn("tracking-[0.2em] text-foreground/75 self-end pb-4")}
               >
                 {heroUnit}
               </Text>
@@ -331,7 +331,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className={cn(/* design-system-escape: tracking-wider sem token DS */ "flex items-center inline-tight uppercase tracking-wider text-muted-foreground/70")}
+                className={cn("flex items-center inline-tight uppercase tracking-wider text-muted-foreground/70")}
               >
                 <Clock className="size-3" />
                 <span>{prazoFormatted}</span>
@@ -352,7 +352,7 @@ function HeroBlock({
                 <Text
                   variant="micro-badge"
                   className={cn(
-                    /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; tracking-wider sem token DS */ 'inline-flex items-center rounded-full px-2.5 py-1 uppercase tracking-wider',
+                    'inline-flex items-center rounded-full px-2.5 py-1 uppercase tracking-wider',
                     'bg-primary/10 text-primary ring-1 ring-inset ring-primary/20',
                   )}
                 >
@@ -376,7 +376,7 @@ function HeroBlock({
               >
                 {partyNames.autora || 'Parte autora ausente'}
               </Heading>
-              <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium py-0.5")}>
+              <div className={cn("flex items-center inline-medium py-0.5")}>
                 <Text
                   variant="micro-caption"
                   className="uppercase tracking-[0.3em] text-muted-foreground/70"
@@ -393,7 +393,7 @@ function HeroBlock({
               </Heading>
             </div>
 
-            <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap items-center gap-x-5 gap-y-2 pt-1")}>
+            <div className={cn("flex flex-wrap items-center gap-x-5 gap-y-2 pt-1")}>
               <MetaPill label="Tribunal" value={expediente.trt} />
               <MetaPill
                 label="Grau"
@@ -422,7 +422,7 @@ function HeroBlock({
               <Text
                 variant="micro-caption"
                 as="div"
-                className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "text-muted-foreground/70 stack-nano pt-1")}
+                className={cn("text-muted-foreground/70 stack-nano pt-1")}
               >
                 {expediente.classeJudicial && (
                   <div>{expediente.classeJudicial}</div>
@@ -462,7 +462,7 @@ function EditorialTabs({
               key={tab.id}
               onClick={() => onChange(tab.id)}
               className={cn(
-                /* design-system-escape: pb-3 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ 'relative pb-3 pt-1 transition-colors whitespace-nowrap',
+                'relative pb-3 pt-1 transition-colors whitespace-nowrap',
                 /* design-system-escape: tracking-tight sem token DS */ 'font-heading text-body-sm font-semibold tracking-tight',
                 isActive
                   ? 'text-foreground'
@@ -475,7 +475,7 @@ function EditorialTabs({
                   <Text
                     variant="micro-caption"
                     className={cn(
-                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'tabular-nums rounded-full px-1.5 py-0.5',
+                      'tabular-nums rounded-full px-1.5 py-0.5',
                       isActive
                         ? 'bg-primary/12 text-primary'
                         : 'bg-muted/40 text-muted-foreground/60',
@@ -551,7 +551,7 @@ function DadosTab({
           >
             Texto oficial publicado no PJE
           </Text>
-          <div className={cn(/* design-system-escape: pl-6 padding direcional sem Inset equiv. */ "relative pl-6 border-l-2 border-primary/30")}>
+          <div className={cn("relative pl-6 border-l-2 border-primary/30")}>
             <EditableTextCell
               value={expediente.descricaoArquivos}
               onSave={onSaveDescricao}
@@ -577,7 +577,7 @@ function DadosTab({
           >
             Resumo interno, estratégia, pontos de atenção
           </Text>
-          <div className={cn(/* design-system-escape: pl-6 padding direcional sem Inset equiv. */ "relative pl-6 border-l-2 border-foreground/15")}>
+          <div className={cn("relative pl-6 border-l-2 border-foreground/15")}>
             <EditableTextCell
               value={expediente.observacoes}
               onSave={onSaveObservacoes}
@@ -710,7 +710,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
 
   return (
     <div className={cn("stack-micro")}>
-      <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "flex items-end justify-between pb-3 border-b border-border/20")}>
+      <div className={cn("flex items-end justify-between pb-3 border-b border-border/20")}>
         <div>
           <Text
             variant="overline"
@@ -728,7 +728,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             <span className="text-muted-foreground/70 font-normal">documentos</span>
           </Heading>
         </div>
-        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "rounded-full h-8 px-3 text-caption inline-snug")}>
+        <Button variant="outline" size="sm" className={cn("rounded-full h-8 px-3 text-caption inline-snug")}>
           <Plus className="size-3" />
           Adicionar
         </Button>
@@ -757,7 +757,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
                   </Text>
                   <Text
                     variant="micro-badge"
-                    className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/65")}
+                    className={cn("uppercase tracking-wider text-muted-foreground/65")}
                   >
                     · {arq.tipo}
                   </Text>
@@ -819,7 +819,7 @@ function HistoricoTab({
         return (
           <li
             key={evt.id}
-            className={cn(/* design-system-escape: pl-10 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "relative pl-10 py-5")}
+            className={cn("relative pl-10 py-5")}
             style={{ animationDelay: `${idx * 40}ms` }}
           >
             <span
@@ -843,7 +843,7 @@ function HistoricoTab({
                 {format(parseISO(evt.data), "dd MMM · HH:mm", { locale: ptBR })}
               </Text>
             </div>
-            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "font-headline text-[15px] text-foreground/90 leading-relaxed")}>
+            <p className={cn("font-headline text-[15px] text-foreground/90 leading-relaxed")}>
               {evt.descricao}
             </p>
             {autor && (
@@ -888,7 +888,7 @@ function EditorialBlock({
 }) {
   return (
     <section className="group">
-      <header className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-end justify-between inline-default pb-4 mb-5 border-b border-border/20")}>
+      <header className={cn("flex items-end justify-between inline-default pb-4 mb-5 border-b border-border/20")}>
         <div className={cn("flex items-baseline inline-default min-w-0")}>
           <Text
             variant="overline"
@@ -910,7 +910,7 @@ function EditorialBlock({
         {hint && (
           <Text
             variant="micro-badge"
-            className={cn(/* design-system-escape: tracking-wider sem token DS */ "inline-flex items-center inline-snug uppercase tracking-wider text-muted-foreground/70 shrink-0")}
+            className={cn("inline-flex items-center inline-snug uppercase tracking-wider text-muted-foreground/70 shrink-0")}
           >
             <Pencil className="size-2.5" />
             {hint}
@@ -941,7 +941,7 @@ function StatusChip({
     <Text
       variant="micro-badge"
       className={cn(
-        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-micro rounded-full px-2.5 py-1',
+        'inline-flex items-center inline-micro rounded-full px-2.5 py-1',
         /* design-system-escape: tracking-wider sem token DS */ 'font-semibold uppercase tracking-wider',
         'ring-1 ring-inset',
         tones[tone],
@@ -1037,7 +1037,7 @@ function ResponsavelCard({
         </Text>
         <Text
           variant="micro-badge"
-          className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/65")}
+          className={cn("uppercase tracking-wider text-muted-foreground/65")}
         >
           reatribuir ↗
         </Text>
@@ -1065,7 +1065,7 @@ function ResponsavelCard({
                 <Text
                   variant="micro-caption"
                   as="p"
-                  className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/60 mt-0.5")}
+                  className={cn("uppercase tracking-wider text-muted-foreground/60 mt-0.5")}
                 >
                   {usuario.cargo}
                 </Text>
@@ -1073,7 +1073,7 @@ function ResponsavelCard({
             </div>
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium w-full text-left py-1")}>
+          <div className={cn("flex items-center inline-medium w-full text-left py-1")}>
             <div className="size-12 rounded-full bg-muted/40 flex items-center justify-center ring-2 ring-dashed ring-border/40">
               <User className="size-5 text-muted-foreground/65" />
             </div>
@@ -1084,7 +1084,7 @@ function ResponsavelCard({
               <Text
                 variant="micro-caption"
                 as="p"
-                className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/70 mt-0.5")}
+                className={cn("uppercase tracking-wider text-muted-foreground/70 mt-0.5")}
               >
                 clique para atribuir
               </Text>
@@ -1128,7 +1128,7 @@ function CronologiaRow({
   muted?: boolean;
 }) {
   return (
-    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-baseline justify-between inline-medium py-1")}>
+    <div className={cn("flex items-baseline justify-between inline-medium py-1")}>
       <Text variant="caption" as="span" className="text-muted-foreground/65 shrink-0">
         {label}
       </Text>
@@ -1136,7 +1136,7 @@ function CronologiaRow({
         variant={emphasis ? 'caption' : muted ? 'micro-caption' : 'caption'}
         as="span"
         className={cn(
-          /* design-system-escape: leading-tight sem token DS */ 'text-right tabular-nums leading-tight font-headline',
+          'text-right tabular-nums leading-tight font-headline',
           emphasis
             ?  'font-bold text-foreground'
             : muted
@@ -1162,7 +1162,7 @@ function FlagChip({
   return (
     <div
       className={cn(
-        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center justify-between inline-tight px-3 py-2 rounded-lg',
+        'flex items-center justify-between inline-tight px-3 py-2 rounded-lg',
         active
           ? 'bg-primary/6 ring-1 ring-inset ring-primary/15 text-foreground'
           : 'bg-transparent ring-1 ring-inset ring-border/20 text-muted-foreground/45',
@@ -1218,7 +1218,7 @@ function InlineTipoEditor({
         <button
           type="button"
           className={cn(
-            /* design-system-escape: py-1 padding direcional sem Inset equiv. */ 'group inline-flex items-center inline-tight py-1 rounded-lg',
+            'group inline-flex items-center inline-tight py-1 rounded-lg',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
             isPending && 'opacity-60 pointer-events-none',
           )}
@@ -1237,7 +1237,7 @@ function InlineTipoEditor({
       </PopoverTrigger>
       <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 p-0 rounded-2xl glass-dropdown overflow-hidden")} align="start">
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <Text
               variant="micro-badge"
               as="p"
@@ -1247,13 +1247,13 @@ function InlineTipoEditor({
             </Text>
             <CommandInput placeholder="Buscar tipo…" className={cn("h-8 text-caption rounded-lg")} />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-64 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-64 px-1.5 pb-1.5")}>
             <CommandEmpty>Nenhum tipo encontrado</CommandEmpty>
             <CommandGroup>
               <CommandItem
                 value="sem-tipo"
                 onSelect={() => handleSelect(null)}
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-2")}
+                className={cn("inline-tight rounded-lg text-caption px-2 py-2")}
               >
                 <span className="italic text-muted-foreground/60 font-headline">Sem tipo</span>
               </CommandItem>
@@ -1262,7 +1262,7 @@ function InlineTipoEditor({
                   key={tipo.id}
                   value={tipo.tipo_expediente}
                   onSelect={() => handleSelect(tipo.id)}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-2")}
+                  className={cn("inline-tight rounded-lg text-caption px-2 py-2")}
                 >
                   <span className={cn( "font-headline text-[13px] font-medium")}>
                     {tipo.tipo_expediente}

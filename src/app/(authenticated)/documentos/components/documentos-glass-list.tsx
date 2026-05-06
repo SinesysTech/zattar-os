@@ -338,7 +338,7 @@ function ListSkeleton() {
 
 function GlassEmptyState({ hasSearch }: { hasSearch: boolean }) {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>
         {hasSearch ? 'Nenhum item encontrado' : 'Pasta vazia'}

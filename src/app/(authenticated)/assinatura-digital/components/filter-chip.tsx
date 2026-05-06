@@ -116,7 +116,7 @@ export function FilterChipMulti({
       <PopoverContent className={cn(POPOVER_CLASSES, popoverWidth)} align="start" side="bottom">
         <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano max-h-72 overflow-y-auto")}>
           {options.length === 0 ? (
-            <div className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/50 px-2.5 py-2")}>
+            <div className={cn("text-[11px] text-muted-foreground/50 px-2.5 py-2")}>
               Nenhuma opção disponível
             </div>
           ) : (
@@ -128,7 +128,7 @@ export function FilterChipMulti({
                   type="button"
                   onClick={() => toggle(opt.value)}
                   className={cn(
-                    /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                    'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                     isSelected
                       ? 'bg-primary/8 text-primary'
                       : 'hover:bg-muted/30 text-muted-foreground/70',

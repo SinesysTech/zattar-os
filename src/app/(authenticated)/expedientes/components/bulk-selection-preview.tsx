@@ -38,7 +38,7 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
           return (
             <li
               key={expediente.id}
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-medium px-3 py-2 text-body-sm")}
+              className={cn("flex items-start justify-between inline-medium px-3 py-2 text-body-sm")}
             >
               <span className={cn( "font-medium text-foreground truncate")}>
                 {expediente.numeroProcesso}

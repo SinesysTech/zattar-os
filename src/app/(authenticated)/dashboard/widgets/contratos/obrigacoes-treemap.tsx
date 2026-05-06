@@ -74,7 +74,7 @@ export function WidgetObrigacoesTreemap() {
                 return (
                   <div
                     key={item.label}
-                    className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex items-end justify-center pb-2 transition-all duration-500")}
+                    className={cn("flex items-end justify-center pb-2 transition-all duration-500")}
                     style={{
                       backgroundColor: item.color,
                       width: `${Math.max(pct, 8)}%`,

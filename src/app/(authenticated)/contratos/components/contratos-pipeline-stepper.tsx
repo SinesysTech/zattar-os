@@ -112,7 +112,7 @@ export function ContratosPipelineStepper({
         const clickable = typeof onStatusClick === 'function';
 
         const inner = (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-1 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-tight py-2 px-1 w-full")}>
+          <div className={cn("flex flex-col items-center inline-tight py-2 px-1 w-full")}>
             <div className={cn("flex items-center inline-snug")}>
               <Icon className={cn('size-3.5', cfg.textColor)} />
               <span
@@ -128,7 +128,7 @@ export function ContratosPipelineStepper({
               as="p"
               variant="kpi-value"
               className={cn(
-                /* design-system-escape: leading-none sem token DS */ 'leading-none',
+                'leading-none',
                 isActive ? 'text-foreground' : 'text-foreground/85',
               )}
             >

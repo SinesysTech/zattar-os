@@ -162,7 +162,7 @@ export function CapturadasDetailDialog({
             </Section>
           )}
 
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex flex-col inline-tight border-t border-border/40 pt-4 sm:flex-row sm:justify-end")}>
+          <div className={cn("flex flex-col inline-tight border-t border-border/40 pt-4 sm:flex-row sm:justify-end")}>
             <Button
               variant="outline"
               size="sm"

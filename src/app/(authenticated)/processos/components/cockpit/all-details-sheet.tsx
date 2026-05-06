@@ -106,7 +106,7 @@ export function AllDetailsSheet({
                     value={totalExpedientes}
                     variantOverride="secondary"
                     toneOverride="soft"
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}
+                    className={cn("ml-1 text-[10px] px-1.5 py-0")}
                   >
                     {totalExpedientes}
                   </SemanticBadge>
@@ -121,7 +121,7 @@ export function AllDetailsSheet({
                     value={totalAudiencias}
                     variantOverride="secondary"
                     toneOverride="soft"
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}
+                    className={cn("ml-1 text-[10px] px-1.5 py-0")}
                   >
                     {totalAudiencias}
                   </SemanticBadge>
@@ -136,7 +136,7 @@ export function AllDetailsSheet({
                     value={totalPericias}
                     variantOverride="secondary"
                     toneOverride="soft"
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}
+                    className={cn("ml-1 text-[10px] px-1.5 py-0")}
                   >
                     {totalPericias}
                   </SemanticBadge>
@@ -146,13 +146,13 @@ export function AllDetailsSheet({
 
             <TabsContent value="expedientes" className="mt-3">
               {totalExpedientes === 0 ? (
-                <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground/60 py-6 text-center")}>
+                <p className={cn("text-body-sm text-muted-foreground/60 py-6 text-center")}>
                   Nenhum expediente.
                 </p>
               ) : (
-                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn("stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {expedientes.map((exp) => (
-                    <GlassPanel key={exp.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
+                    <GlassPanel key={exp.id} depth={1} className={cn("px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">Expediente</Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                         {exp.dataCriacaoExpediente
@@ -169,13 +169,13 @@ export function AllDetailsSheet({
 
             <TabsContent value="audiencias" className="mt-3">
               {totalAudiencias === 0 ? (
-                <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground/60 py-6 text-center")}>
+                <p className={cn("text-body-sm text-muted-foreground/60 py-6 text-center")}>
                   Nenhuma audiência.
                 </p>
               ) : (
-                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn("stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {audiencias.map((aud) => (
-                    <GlassPanel key={aud.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
+                    <GlassPanel key={aud.id} depth={1} className={cn("px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">
                         {aud.tipoDescricao || 'Audiência'}
                       </Text>
@@ -191,13 +191,13 @@ export function AllDetailsSheet({
 
             <TabsContent value="pericias" className="mt-3">
               {totalPericias === 0 ? (
-                <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground/60 py-6 text-center")}>
+                <p className={cn("text-body-sm text-muted-foreground/60 py-6 text-center")}>
                   Nenhuma perícia.
                 </p>
               ) : (
-                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
+                <div className={cn("stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {pericias.map((per) => (
-                    <GlassPanel key={per.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
+                    <GlassPanel key={per.id} depth={1} className={cn("px-3 py-2.5")}>
                       <Text variant="caption" className="font-medium">
                         {per.especialidade?.descricao || 'Perícia'}
                       </Text>

@@ -44,13 +44,13 @@ export function DataTableFacetedFilter<TData, TValue>({
           {title}
           {selectedValues?.size > 0 && (
             <>
-              <Separator orientation="vertical" className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "mx-2 h-4")} />
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal lg:hidden")}>
+              <Separator orientation="vertical" className={cn("mx-2 h-4")} />
+              <Badge variant="secondary" className={cn("rounded-sm px-1 font-normal lg:hidden")}>
                 {selectedValues.size}
               </Badge>
               <div className={cn("hidden inline-micro lg:flex")}>
                 {selectedValues.size > 2 ? (
-                  <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal")}>
+                  <Badge variant="secondary" className={cn("rounded-sm px-1 font-normal")}>
                     {selectedValues.size} selecionados
                   </Badge>
                 ) : (
@@ -60,7 +60,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <Badge
                         variant="secondary"
                         key={option.value}
-                        className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "rounded-sm px-1 font-normal")}>
+                        className={cn("rounded-sm px-1 font-normal")}>
                         {option.label}
                       </Badge>
                     ))

@@ -118,19 +118,19 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
           </p>
           <div className={cn("flex flex-wrap inline-snug")}>
             {contagemPorTipo.timeout && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5 text-warning-foreground")}>
+              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5 text-warning-foreground")}>
                 <Clock className="h-3 w-3 text-warning" />
                 {contagemPorTipo.timeout} timeout{contagemPorTipo.timeout !== 1 ? 's' : ''}
               </Badge>
             )}
             {contagemPorTipo.auth && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 inline-micro border-destructive/30 bg-destructive/5")}>
+              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 inline-micro border-destructive/30 bg-destructive/5")}>
                 <AlertTriangle className="h-3 w-3 text-destructive" />
                 {contagemPorTipo.auth} autenticação
               </Badge>
             )}
             {contagemPorTipo.network && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5")}>
+              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 inline-micro border-warning/30 bg-warning/5")}>
                 <Wifi className="h-3 w-3 text-warning" />
                 {contagemPorTipo.network} conexão de rede
               </Badge>
@@ -145,7 +145,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
           <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3")}>
             <div className={cn("mb-2.5 flex items-center inline-tight")}>
               <p className={cn( "text-body-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
+              <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0 font-normal")}>
                 {grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''}
               </Badge>
             </div>
@@ -156,23 +156,23 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
                   <div className="min-w-0 flex-1">
                     <div className={cn("flex flex-wrap items-center inline-snug mb-1")}>
                       {e.grau && (
-                        <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
+                        <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0 font-normal")}>
                           {formatarGrau(e.grau)}
                         </Badge>
                       )}
                       {e.filtro && (
-                        <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
+                        <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 font-normal")}>
                           {formatarFiltro(e.filtro)}
                         </Badge>
                       )}
                       {e.credencialId && (
                         <span className="text-muted-foreground font-mono">#{e.credencialId}</span>
                       )}
-                      <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal text-muted-foreground")}>
+                      <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 font-normal text-muted-foreground")}>
                         {TIPO_ERRO_LABELS[e.tipo]}
                       </Badge>
                     </div>
-                    <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground leading-relaxed")}>{e.mensagem}</p>
+                    <p className={cn("text-muted-foreground leading-relaxed")}>{e.mensagem}</p>
                   </div>
                 </div>
               ))}

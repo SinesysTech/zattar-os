@@ -258,7 +258,7 @@ function MailEditorContent({
     <Editor
       variant="none"
       className={cn(
-        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "overflow-y-auto px-3 py-2 text-body-sm",
+        "overflow-y-auto px-3 py-2 text-body-sm",
         variant === 'default' && "min-h-30 max-h-75",
         variant === 'inline' && "min-h-40",
         variant === 'compose' && "min-h-0 flex-1"

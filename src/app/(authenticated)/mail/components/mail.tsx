@@ -132,7 +132,7 @@ export function Mail({
       {/* Skip link for keyboard accessibility */}
       <a
         href="#mail-list"
-        className={cn(/* design-system-escape: focus:px-4 sem equivalente DS; focus:py-2 sem equivalente DS */ "sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground")}>
+        className={cn("sr-only focus:not-sr-only focus:absolute focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground")}>
         Ir para lista de e-mails
       </a>
 
@@ -172,7 +172,7 @@ export function Mail({
             defaultValue="all"
             className={cn(/* design-system-escape: gap-0 gap sem token DS */ "flex h-full flex-col gap-0 bg-card")}
             onValueChange={(value) => setTab(value)}>
-            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center inline-tight px-4")}>
+            <div className={cn("flex h-13 shrink-0 items-center inline-tight px-4")}>
               {hasSelection ? (
                 <>
                   <Checkbox
@@ -230,7 +230,7 @@ export function Mail({
                       <TooltipContent>Excluir</TooltipContent>
                     </Tooltip>
 
-                    <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-4")} />
+                    <Separator orientation="vertical" className={cn("mx-1 h-4")} />
 
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -247,7 +247,7 @@ export function Mail({
                       <TooltipContent>Marcar como lido</TooltipContent>
                     </Tooltip>
 
-                    <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-4")} />
+                    <Separator orientation="vertical" className={cn("mx-1 h-4")} />
 
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -280,10 +280,10 @@ export function Mail({
                   )}
 
                   <TabsList className="ml-auto h-7">
-                    <TabsTrigger value="all" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "text-caption px-2 h-5")}>
+                    <TabsTrigger value="all" className={cn("text-caption px-2 h-5")}>
                       Todos
                     </TabsTrigger>
-                    <TabsTrigger value="unread" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "text-caption px-2 h-5")}>
+                    <TabsTrigger value="unread" className={cn("text-caption px-2 h-5")}>
                       Não lidos
                     </TabsTrigger>
                   </TabsList>

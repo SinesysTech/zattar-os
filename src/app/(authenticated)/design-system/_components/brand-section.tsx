@@ -14,7 +14,7 @@ export function BrandSection() {
           <BrandMark variant="light" size="xl" />
         </div>
       </div>
-      <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "mt-3 flex justify-between px-1")}>
+      <div className={cn("mt-3 flex justify-between px-1")}>
         <Text variant="meta-label">LIGHT SURFACE</Text>
         <Text variant="meta-label">DARK SURFACE · SIDEBAR</Text>
       </div>

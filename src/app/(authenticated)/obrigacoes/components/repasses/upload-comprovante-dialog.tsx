@@ -61,7 +61,7 @@ export function UploadComprovanteDialog({ open, onOpenChange, parcelaId, valorRe
     <Dialog open={open} onOpenChange={onOpenChange}>
        <DialogContent className="sm:max-w-md">
            <DialogHeader><DialogTitle>Registrar Repasse</DialogTitle></DialogHeader>
-           <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+           <div className={cn("stack-default py-4")}>
                <div>Valor: <b>{formatCurrency(valorRepasse)}</b></div>
                <Input type="file" onChange={e => setFile(e.target.files?.[0] || null)} disabled={isUploading} />
            </div>

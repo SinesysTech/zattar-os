@@ -70,7 +70,7 @@ export function AdvogadosFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 value === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -83,14 +83,14 @@ export function AdvogadosFilter({
           ))}
           {isActive && (
             <>
-              <div className={cn(/* design-system-escape: my-1 margin sem primitiva DS */ "border-t border-border/10 my-1")} />
+              <div className={cn("border-t border-border/10 my-1")} />
               <button
                 type="button"
                 onClick={() => {
                   onValueChange('all');
                   setOpen(false);
                 }}
-                className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "w-full text-center text-[10px] text-muted-foreground/50 hover:text-muted-foreground py-1.5 cursor-pointer")}
+                className={cn("w-full text-center text-[10px] text-muted-foreground/50 hover:text-muted-foreground py-1.5 cursor-pointer")}
               >
                 Limpar filtros
               </button>

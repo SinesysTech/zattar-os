@@ -61,7 +61,7 @@ function fmtDataAudiencia(dateStr: string): string {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
+    <div className={cn("flex flex-col items-center justify-center py-8 inline-tight")}>
       <Calendar className="size-8 text-muted-foreground/45" />
       <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma audiência agendada nos próximos 30 dias
@@ -107,11 +107,11 @@ function AudienciaItem({
           </div>
           <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] font-medium mt-1 leading-tight")}>{parte}</p>
           {contextoProcesso && (
-            <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/60 mt-0.5 leading-tight")}>
+            <p className={cn("text-[10px] text-foreground/60 mt-0.5 leading-tight")}>
               {contextoProcesso}
             </p>
           )}
-          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
+          <p className={cn("text-[9px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
             {audiencia.numero_processo}
           </p>
         </div>
@@ -161,7 +161,7 @@ export function ProximasAudiencias() {
         icon={Calendar}
         subtitle="Agenda dos próximos 30 dias"
       >
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar as audiências.
         </p>
       </WidgetContainer>

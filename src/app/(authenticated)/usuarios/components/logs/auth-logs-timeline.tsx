@@ -158,7 +158,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                     </div>
 
                     {/* Conteúdo */}
-                    <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
+                    <div className={cn("flex-1 pb-6")}>
                       <div className={cn("bg-muted/4 border-border/15 rounded-xl inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
                           <div className={cn("stack-micro")}>

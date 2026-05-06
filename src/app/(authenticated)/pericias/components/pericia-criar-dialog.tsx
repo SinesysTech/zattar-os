@@ -109,13 +109,13 @@ function SearchableCombobox({
         align="start"
       >
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder={searchPlaceholder}
               className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-60 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-60 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <span className="text-[11px] text-muted-foreground/40">
                 {emptyMessage}
@@ -132,7 +132,7 @@ function SearchableCombobox({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
+                    className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
                   >
                     <span className="truncate flex-1">{opt.label}</span>
                     {isSelected && (
@@ -420,7 +420,7 @@ export function PericiaCriarDialog({
 
         {/* Error banner */}
         {error && (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "md:col-span-2 flex items-start inline-tight px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive")}>
+          <div className={cn("md:col-span-2 flex items-start inline-tight px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive")}>
             <AlertCircle className="size-4 shrink-0 mt-0.5" />
             <Text variant="caption">{error}</Text>
           </div>

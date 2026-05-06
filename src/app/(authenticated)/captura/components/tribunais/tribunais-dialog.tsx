@@ -87,7 +87,7 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
         {!tribunal ? (
           <div className={cn("text-body-sm text-muted-foreground")}>Nenhum tribunal selecionado.</div>
         ) : (
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
+          <div className={cn("grid inline-default py-4")}>
             <div className={cn("grid inline-tight")}>
               <Label htmlFor="url-base">URL Base</Label>
               <Input

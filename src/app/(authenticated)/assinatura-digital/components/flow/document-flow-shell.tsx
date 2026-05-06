@@ -169,12 +169,12 @@ export function DocumentFlowShell({
 
   return (
     <div
-      className={cn(/* design-system-escape: -m-6 sem equivalente DS */ "-m-6 flex flex-col overflow-hidden")}
+      className={cn("-m-6 flex flex-col overflow-hidden")}
       style={{ height: "calc(100% + 3rem)", minHeight: "calc(100% + 3rem)" }}
     >
       {/* Header transparente — integrado ao AmbientBackdrop global */}
       <header className="shrink-0">
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ /* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ "px-6 sm:px-8 pt-5 pb-4 sm:pb-5")}>
+        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; sm:px-8 sem equivalente DS; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; sm:pb-5 sem equivalente DS */ "px-6 sm:px-8 pt-5 pb-4 sm:pb-5")}>
           <div className={cn("flex items-center justify-between inline-default")}>
             <Button
               type="button"
@@ -182,7 +182,7 @@ export function DocumentFlowShell({
               onClick={() =>
                 router.push("/app/assinatura-digital/documentos/lista")
               }
-              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "h-10 inline-tight rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
+              className={cn("h-10 inline-tight rounded-full border-outline-variant/40 bg-surface-container-lowest/60 px-4 text-muted-foreground backdrop-blur-sm hover:border-outline-variant/70 hover:bg-surface-container-lowest hover:text-foreground cursor-pointer transition-colors")}
             >
               <ArrowLeft className="size-4" />
               <span>Voltar</span>

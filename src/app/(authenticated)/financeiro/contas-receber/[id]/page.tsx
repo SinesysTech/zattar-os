@@ -526,7 +526,7 @@ export default function ContaReceberDetalhesPage() {
                         </div>
 
                         {/* Content */}
-                        <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex-1 pb-4")}>
+                        <div className={cn("flex-1 pb-4")}>
                           <div className={cn("flex items-start justify-between inline-default")}>
                             <div>
                               <p className={cn( "font-medium")}>

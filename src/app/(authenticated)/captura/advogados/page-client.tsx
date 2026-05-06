@@ -287,7 +287,7 @@ export default function AdvogadosPage() {
                     )}
                   </div>
 
-                  <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
+                  <div className={cn("border-t border-border/10 my-2")} />
 
                   {/* CPF */}
                   <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/75 mb-1.5">
@@ -295,7 +295,7 @@ export default function AdvogadosPage() {
                     <span className="truncate">{advogado.cpf}</span>
                   </Text>
 
-                  <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
+                  <div className={cn("border-t border-border/10 my-2")} />
 
                   {/* Credenciais count */}
                   <Text variant="caption" className="flex items-center gap-1.5">
@@ -305,7 +305,7 @@ export default function AdvogadosPage() {
                         <span className={cn( "text-success font-medium")}>{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
                         {inativas > 0 && (
                           <>
-                            <span className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "text-muted-foreground/55 mx-1")}>/</span>
+                            <span className={cn("text-muted-foreground/55 mx-1")}>/</span>
                             <span className={cn( "text-warning font-medium")}>{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
                           </>
                         )}
@@ -315,7 +315,7 @@ export default function AdvogadosPage() {
                     )}
                   </Text>
 
-                  <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
+                  <div className={cn("border-t border-border/10 mt-3 pt-3")} />
 
                   {/* Actions */}
                   <div className={cn("flex items-center inline-tight")}>

@@ -337,7 +337,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+          <div className={cn("py-4")}>
             {/* Credentials list */}
             {!showForm && (
               <>
@@ -350,16 +350,16 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                 </div>
 
                 {isLoading ? (
-                  <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
+                  <div className={cn("flex items-center justify-center py-8")}>
                     <LoadingSpinner className="size-6 text-muted-foreground" />
                   </div>
                 ) : credenciais.length === 0 ? (
-                  <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
+                  <div className={cn("text-center py-8 text-muted-foreground")}>
                     <p>Nenhuma credencial cadastrada.</p>
                     <p className={cn("text-body-sm")}>Clique em &quot;Adicionar&quot; para cadastrar a primeira.</p>
                   </div>
                 ) : (
-                  <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-75 pr-4")}>
+                  <ScrollArea className={cn("h-75 pr-4")}>
                     <div className={cn("stack-medium")}>
                       {credenciais.map((credencial) => (
                         <div
@@ -444,17 +444,17 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       <table className={cn("w-full text-body-sm")}>
                         <thead>
                           <tr className="border-b">
-                            <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Tribunal</th>
-                            <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Grau</th>
-                            <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Status</th>
+                            <th className={cn("text-left py-2")}>Tribunal</th>
+                            <th className={cn("text-left py-2")}>Grau</th>
+                            <th className={cn("text-left py-2")}>Status</th>
                           </tr>
                         </thead>
                         <tbody>
                           {loteResultado.detalhes.map((d, i) => (
                             <tr key={i} className="border-b last:border-0">
-                              <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>{d.tribunal}</td>
-                              <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>{GRAUS_LABELS[d.grau]}</td>
-                              <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
+                              <td className={cn("py-2")}>{d.tribunal}</td>
+                              <td className={cn("py-2")}>{GRAUS_LABELS[d.grau]}</td>
+                              <td className={cn("py-2")}>
                                 <span className={`flex items-center gap-1 ${d.status === 'criada' ? 'text-success' :
                                   d.status === 'atualizada' ? 'text-info' :
                                     d.status === 'pulada' ? 'text-warning' : 'text-destructive'
@@ -474,7 +474,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </table>
                     </ScrollArea>
 
-                    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
+                    <div className={cn("flex justify-end inline-tight pt-4")}>
                       <Button onClick={resetForm}>Fechar</Button>
                     </div>
                   </div>
@@ -552,13 +552,13 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                           value={formData.senha}
                           onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
                           placeholder="********"
-                          className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+                          className={cn("pr-10")}
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon" aria-label="Ocultar"
-                          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "absolute right-0 top-0 h-full px-3")}
+                          className={cn("absolute right-0 top-0 h-full px-3")}
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -566,7 +566,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </div>
                     </div>
 
-                    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
+                    <div className={cn("flex justify-end inline-tight pt-4")}>
                       <Button variant="outline" onClick={resetForm} disabled={isSaving}>
                         Cancelar
                       </Button>
@@ -609,7 +609,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-35 border rounded-md p-3")}>
                         <div className={cn("grid grid-cols-4 inline-tight")}>
                           {TRIBUNAIS_ATIVOS.map((trt) => (
-                            <div key={trt} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                            <div key={trt} className={cn("flex items-center space-x-2")}>
                               <Checkbox
                                 id={`trt-${trt}`}
                                 checked={loteFormData.tribunais.includes(trt)}
@@ -675,14 +675,14 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                           value={loteFormData.senha}
                           onChange={(e) => setLoteFormData({ ...loteFormData, senha: e.target.value })}
                           placeholder="Senha única para todas as credenciais"
-                          className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+                          className={cn("pr-10")}
                           disabled={isSaving}
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon" aria-label="Ocultar"
-                          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "absolute right-0 top-0 h-full px-3")}
+                          className={cn("absolute right-0 top-0 h-full px-3")}
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -702,13 +702,13 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                         className={cn("flex inline-default")}
                         disabled={isSaving}
                       >
-                        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                        <div className={cn("flex items-center space-x-2")}>
                           <RadioGroupItem value="pular" id="modo-pular" />
                           <label htmlFor="modo-pular" className={cn("text-body-sm cursor-pointer")}>
                             Pular
                           </label>
                         </div>
-                        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                        <div className={cn("flex items-center space-x-2")}>
                           <RadioGroupItem value="sobrescrever" id="modo-sobrescrever" />
                           <label htmlFor="modo-sobrescrever" className={cn("text-body-sm cursor-pointer")}>
                             Atualizar senha
@@ -729,7 +729,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       </Alert>
                     )}
 
-                    <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
+                    <div className={cn("flex justify-end inline-tight pt-4")}>
                       <Button variant="outline" onClick={resetForm} disabled={isSaving}>
                         Cancelar
                       </Button>

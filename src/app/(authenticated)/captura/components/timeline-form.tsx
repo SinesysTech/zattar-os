@@ -224,7 +224,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                 Apenas números (ID do processo no PJE)
               </Text>
             </div>
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Checkbox
                 id="baixar-documentos"
                 checked={baixarDocumentos}
@@ -247,8 +247,8 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                   />
                   Filtros Avançados
                 </CollapsibleTrigger>
-                <CollapsibleContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "stack-default pt-4")}>
-                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                <CollapsibleContent className={cn("stack-default pt-4")}>
+                  <div className={cn("flex items-center space-x-2")}>
                     <Checkbox
                       id="apenas-assinados"
                       checked={apenasAssinados}
@@ -257,13 +257,13 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                     <Label
                       htmlFor="apenas-assinados"
-                      className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
+                      className={cn("text-body-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
                     >
                       Apenas documentos assinados
                     </Label>
                   </div>
 
-                  <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                  <div className={cn("flex items-center space-x-2")}>
                     <Checkbox
                       id="apenas-nao-sigilosos"
                       checked={apenasNaoSigilosos}
@@ -272,7 +272,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                     <Label
                       htmlFor="apenas-nao-sigilosos"
-                      className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
+                      className={cn("text-body-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
                     >
                       Apenas documentos não sigilosos
                     </Label>

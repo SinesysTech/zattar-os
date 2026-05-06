@@ -59,7 +59,7 @@ export function UploadDeclaracaoDialog({ open, onOpenChange, parcelaId, onSucces
             <DialogTitle>Anexar Declaração</DialogTitle>
             <DialogDescription>Upload da declaração assinada.</DialogDescription>
          </DialogHeader>
-         <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+         <div className={cn("stack-default py-4")}>
              <Input type="file" accept=".pdf,.jpg,.png" onChange={handleFileChange} disabled={isUploading} />
              {file && <Text variant="caption" as="div">{file.name}</Text>}
          </div>

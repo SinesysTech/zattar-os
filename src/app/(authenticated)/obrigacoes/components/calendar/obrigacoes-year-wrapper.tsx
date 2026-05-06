@@ -139,7 +139,7 @@ export function ObrigacoesYearWrapper({
                   key={idx}
                   depth={1}
                   className={cn(
-                    /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3 transition-colors',
+                    'px-4 py-3 transition-colors',
                     item.parcela.status === 'atrasada' && 'border-destructive/20',
                   )}
                 >

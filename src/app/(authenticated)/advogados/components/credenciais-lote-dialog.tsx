@@ -142,7 +142,7 @@ export function CredenciaisLoteDialog({
           <DialogDescription className="sr-only">Selecione tribunais, graus e configure a senha para criar credenciais em lote</DialogDescription>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-      <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-6 py-4 stack-loose")}>
+      <div className={cn("px-6 py-4 stack-loose")}>
         <p className={cn("text-body-sm text-muted-foreground")}>
           Advogado: {advogado.nome_completo} (CPF: {formatCpf(advogado.cpf)})
         </p>
@@ -182,7 +182,7 @@ export function CredenciaisLoteDialog({
               <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
                 <div className={cn("grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 inline-tight")}>
                   {TRIBUNAIS_ATIVOS.map((trt) => (
-                    <div key={trt} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                    <div key={trt} className={cn("flex items-center space-x-2")}>
                       <Checkbox
                         id={`trt-${trt}`}
                         checked={tribunais.includes(trt)}
@@ -256,7 +256,7 @@ export function CredenciaisLoteDialog({
                 className={cn("flex inline-default")}
                 disabled={isSaving}
               >
-                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                <div className={cn("flex items-center space-x-2")}>
                   <RadioGroupItem value="pular" id="modo-pular" />
                   <label
                     htmlFor="modo-pular"
@@ -265,7 +265,7 @@ export function CredenciaisLoteDialog({
                     Pular (manter existente)
                   </label>
                 </div>
-                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                <div className={cn("flex items-center space-x-2")}>
                   <RadioGroupItem value="sobrescrever" id="modo-sobrescrever" />
                   <label
                     htmlFor="modo-sobrescrever"
@@ -300,7 +300,7 @@ export function CredenciaisLoteDialog({
             )}
 
             {/* Botões */}
-            <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex items-center inline-tight pt-4 border-t")}>
+            <div className={cn("flex items-center inline-tight pt-4 border-t")}>
               <Button
                 type="button"
                 variant="outline"
@@ -369,17 +369,17 @@ function ResultadoView({
         <table className={cn("w-full text-body-sm")}>
           <thead>
             <tr className="border-b">
-              <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Tribunal</th>
-              <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Grau</th>
-              <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Status</th>
+              <th className={cn("text-left py-2")}>Tribunal</th>
+              <th className={cn("text-left py-2")}>Grau</th>
+              <th className={cn("text-left py-2")}>Status</th>
             </tr>
           </thead>
           <tbody>
             {resultado.detalhes.map((d, i) => (
               <tr key={i} className="border-b last:border-0">
-                <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>{d.tribunal}</td>
-                <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>{d.grau}° Grau</td>
-                <td className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
+                <td className={cn("py-2")}>{d.tribunal}</td>
+                <td className={cn("py-2")}>{d.grau}° Grau</td>
+                <td className={cn("py-2")}>
                   <StatusBadge status={d.status} mensagem={d.mensagem} />
                 </td>
               </tr>
@@ -388,7 +388,7 @@ function ResultadoView({
         </table>
       </ScrollArea>
 
-      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end pt-4 border-t")}>
+      <div className={cn("flex justify-end pt-4 border-t")}>
         <Button onClick={onClose}>Fechar</Button>
       </div>
     </div>

@@ -137,7 +137,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
           ))}
 
           {semResponsavel > 0 && (
-            <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-1 border-t border-border/8")}>
+            <div className={cn("flex items-center justify-between pt-1 border-t border-border/8")}>
               <span className="text-micro-caption text-warning/60">Sem responsável</span>
               <span className={cn( "text-micro-caption font-bold tabular-nums text-warning/60")}>{semResponsavel}</span>
             </div>

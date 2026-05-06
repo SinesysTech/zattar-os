@@ -196,7 +196,7 @@ export function ProcessoTagsDialog({
               variant="ghost"
               size="sm"
               onClick={() => setShowNewTagForm(!showNewTagForm)}
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2")}
+              className={cn("h-7 px-2")}
             >
               <Plus className="h-4 w-4 mr-1" />
               Nova
@@ -281,7 +281,7 @@ export function ProcessoTagsDialog({
 
           {/* Lista de tags */}
           {isLoading ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
+            <div className={cn("flex items-center justify-center py-8")}>
               <LoadingSpinner className="size-6 text-muted-foreground" />
             </div>
           ) : (

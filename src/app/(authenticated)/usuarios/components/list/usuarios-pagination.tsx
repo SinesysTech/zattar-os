@@ -37,7 +37,7 @@ export function UsuariosPagination({
   };
 
   return (
-    <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between px-2 py-4")}>
+    <div className={cn("flex items-center justify-between px-2 py-4")}>
       <div className={cn("flex items-center inline-tight")}>
         <p className="text-sm text-muted-foreground">
           Mostrando {pageIndex * pageSize + 1} a{' '}

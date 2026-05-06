@@ -141,7 +141,7 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
 
   return (
     <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5")}>
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
+      <div className={cn('flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
         <span className={cn(/* design-system-escape: tracking-wider sem token DS */ 'text-[11px] font-semibold uppercase tracking-wider', config.color)}>
           {config.label}
@@ -184,7 +184,7 @@ function MissionItem({
       type="button"
       onClick={onSelect}
       className={cn(
-        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full cursor-pointer items-center inline-medium rounded-xl border bg-card px-3 py-2.5 text-left shadow-sm transition-all duration-150',
+        'flex w-full cursor-pointer items-center inline-medium rounded-xl border bg-card px-3 py-2.5 text-left shadow-sm transition-all duration-150',
         'border-border/40 hover:border-primary/30 hover:bg-accent/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         'border-l-[3px]',
         borderColor,
@@ -203,7 +203,7 @@ function MissionItem({
           {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
             <p className={cn( "text-body-sm font-medium text-foreground")}>
               <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
-              <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5 font-normal text-muted-foreground/60")}>vs</span>
+              <span className={cn("mx-1.5 font-normal text-muted-foreground/60")}>vs</span>
               <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
             </p>
           )}
@@ -222,23 +222,23 @@ function MissionItem({
 
           {/* Corpo: Resumo (descrição IA) — só renderiza se houver */}
           {expediente.descricaoArquivos && (
-            <p className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv.; leading-relaxed sem token DS */ "pt-1.5 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap")}>
+            <p className={cn("pt-1.5 text-[12px] leading-relaxed text-foreground/85 whitespace-pre-wrap")}>
               {expediente.descricaoArquivos}
             </p>
           )}
 
           {/* Corpo: Observações — só renderiza se houver */}
           {expediente.observacoes && (
-            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap")}>
+            <p className={cn("text-[11px] leading-relaxed text-muted-foreground/75 whitespace-pre-wrap")}>
               {expediente.observacoes}
             </p>
           )}
         </div>
         <div className={cn("hidden items-center inline-tight sm:flex")}>
           {expediente.trt && (
-            <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "px-1.5 text-[10px]")}>{expediente.trt}</AppBadge>
+            <AppBadge variant="outline" className={cn("px-1.5 text-[10px]")}>{expediente.trt}</AppBadge>
           )}
-          <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "px-1.5 text-[10px]")}>{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
+          <AppBadge variant="outline" className={cn("px-1.5 text-[10px]")}>{GRAU_TRIBUNAL_LABELS[expediente.grau]}</AppBadge>
         </div>
         {responsavelNome && (
           <p className="hidden max-w-32 truncate text-[11px] text-muted-foreground/65 lg:block">{responsavelNome}</p>
@@ -430,10 +430,10 @@ export function ExpedientesWeekMission({
           { label: 'Baixados', value: kpis.baixados, icon: CheckCircle2, color: 'text-success/60' },
           { label: 'Pendentes', value: kpis.pendentes, icon: CalendarClock, color: 'text-primary/60' },
         ].map((kpi) => (
-          <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3', kpi.highlight && 'border-destructive/15')}>
+          <GlassPanel key={kpi.label} depth={kpi.highlight ? 2 : 1} className={cn('px-4 py-3', kpi.highlight && 'border-destructive/15')}>
             <div className={cn("flex items-center justify-between inline-tight")}>
               <div>
-                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>{kpi.label}</p>
+                <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/65")}>{kpi.label}</p>
                 <Text variant="kpi-value" className={cn('mt-1', kpi.highlight && 'text-destructive/80')}>
                   <AnimatedNumber value={kpi.value} />
                 </Text>

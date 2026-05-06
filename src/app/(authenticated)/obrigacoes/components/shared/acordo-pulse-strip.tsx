@@ -62,7 +62,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
   return (
     <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {/* 1. Saldo devedor */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel depth={1} className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
@@ -82,7 +82,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       </GlassPanel>
 
       {/* 2. Parcelas pagas (progresso) */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel depth={1} className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
@@ -118,7 +118,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       <GlassPanel
         depth={parcelasAtrasadas > 0 ? 2 : 1}
         className={cn(
-          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
+          'px-4 py-3.5',
           parcelasAtrasadas > 0 && 'border-destructive/15',
         )}
       >
@@ -157,7 +157,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
       </GlassPanel>
 
       {/* 4. Próxima parcela */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel depth={1} className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>

@@ -93,7 +93,7 @@ function SummaryMetric({
   value: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-border/60 bg-muted/30 px-4 py-3")}>
+    <div className={cn("rounded-lg border border-border/60 bg-muted/30 px-4 py-3")}>
       <p className={cn( "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
         {label}
       </p>
@@ -112,7 +112,7 @@ function MetadataItem({
   mono?: boolean;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-border/50 bg-background px-4 py-3")}>
+    <div className={cn("rounded-lg border border-border/50 bg-background px-4 py-3")}>
       <p className={cn( "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
         {label}
       </p>
@@ -184,8 +184,8 @@ export function DocumentoVerificacaoClient({
 
   return (
     <div className="flex min-h-0 flex-col lg:h-[calc(100dvh-9rem)]">
-      <Card className={cn(/* design-system-escape: py-0 padding direcional sem Inset equiv. */ "flex min-h-0 flex-1 flex-col overflow-hidden py-0 shadow-sm")}>
-        <CardHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS */ "border-b border-border/60 px-5 py-4 lg:px-6")}>
+      <Card className={cn("flex min-h-0 flex-1 flex-col overflow-hidden py-0 shadow-sm")}>
+        <CardHeader className={cn("border-b border-border/60 px-5 py-4 lg:px-6")}>
           <div className={cn("flex flex-col inline-default lg:flex-row lg:items-center lg:justify-between")}>
             <div className={cn("flex min-w-0 items-start inline-medium md:items-center")}>
               <Button
@@ -342,7 +342,7 @@ export function DocumentoVerificacaoClient({
 
             <ScrollArea
               className="h-full min-h-0"
-              viewportClassName=/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS; lg:pb-6 sem equivalente DS; lg:pt-6 sem equivalente DS */ "px-5 pb-5 pt-6 lg:px-6 lg:pb-6 lg:pt-6"
+              viewportClassName="px-5 pb-5 pt-6 lg:px-6 lg:pb-6 lg:pt-6"
             >
               <section className={cn("stack-default")}>
                 <CardTitle className={cn("flex items-center inline-tight text-body-lg")}>
@@ -401,7 +401,7 @@ export function DocumentoVerificacaoClient({
 
               {(data.hashOriginal || data.hashFinal) && (
                 <>
-                  <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
+                  <Separator className={cn("my-6")} />
                   <section className={cn("stack-medium")}>
                     <div className={cn("flex items-center inline-tight")}>
                       <ShieldCheck className="h-4 w-4 text-muted-foreground" />
@@ -433,7 +433,7 @@ export function DocumentoVerificacaoClient({
                 </>
               )}
 
-              <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
+              <Separator className={cn("my-6")} />
 
               <section className={cn("stack-medium")}>
                 <div className={cn("flex items-center justify-between inline-medium")}>

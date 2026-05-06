@@ -111,7 +111,7 @@ export function TrendMensal() {
         icon={TrendingUp}
         subtitle="Evolucao de audiencias"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-6 inline-tight")}>
           <TrendingUp className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de tendencia indisponiveis
@@ -140,7 +140,7 @@ export function TrendMensal() {
         {/* Stats row */}
         <div className={cn("flex items-baseline inline-default")}>
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Mes Atual
             </p>
             <Text variant="kpi-value">
@@ -162,7 +162,7 @@ export function TrendMensal() {
             </p>
           </div>
           <div className="ml-auto text-right">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Media
             </p>
             <p className={cn( "text-[14px] font-semibold tabular-nums")}>

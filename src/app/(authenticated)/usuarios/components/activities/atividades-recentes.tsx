@@ -217,7 +217,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                     </div>
 
                     {/* Conteúdo */}
-                    <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
+                    <div className={cn("flex-1 pb-6")}>
                       <div className={cn("rounded-lg border bg-card inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
                           <div className={cn("stack-micro")}>
@@ -245,7 +245,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
 
             {/* Botão Carregar mais */}
             {temMais && (
-              <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-center pt-2")}>
+              <div className={cn("flex justify-center pt-2")}>
                 <Button
                   variant="outline"
                   size="sm"

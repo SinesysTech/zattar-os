@@ -77,7 +77,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
               <div className="w-2 h-2 rounded-full bg-muted-foreground" />
             </div>
           </div>
-          <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex-1 pb-4")}>
+          <div className={cn("flex-1 pb-4")}>
             <p className={cn("text-body-sm text-muted-foreground italic")}>
               Início do processo
             </p>

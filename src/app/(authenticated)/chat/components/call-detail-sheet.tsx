@@ -122,7 +122,7 @@ export function CallDetailSheet({
         </DialogHeader>
 
         {isLoading ? (
-          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-1 items-center justify-center py-10")}>
+          <div className={cn("flex flex-1 items-center justify-center py-10")}>
             <LoadingSpinner className="size-8 text-muted-foreground" />
           </div>
         ) : chamada ? (
@@ -188,7 +188,7 @@ export function CallDetailSheet({
                 </div>
 
                 {chamada.iniciador && (
-                  <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-between items-center pt-2 border-t border-border/20")}>
+                  <div className={cn("flex justify-between items-center pt-2 border-t border-border/20")}>
                     <span className={cn( "text-body-sm font-medium")}>Iniciado por</span>
                     <div className={cn("flex items-center inline-tight")}>
                       <Avatar size="sm">
@@ -248,7 +248,7 @@ export function CallDetailSheet({
               value="participantes"
               className="mt-4 flex-1 overflow-hidden"
             >
-              <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-full pr-4")}>
+              <ScrollArea className={cn("h-full pr-4")}>
                 <div className={cn("stack-tight")}>
                   {chamada.participantes.map((p) => (
                     <GlassPanel
@@ -300,7 +300,7 @@ export function CallDetailSheet({
             </TabsContent>
           </Tabs>
         ) : (
-          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "py-10 text-center text-muted-foreground")}>
+          <div className={cn("py-10 text-center text-muted-foreground")}>
             Chamada não encontrada.
           </div>
         )}

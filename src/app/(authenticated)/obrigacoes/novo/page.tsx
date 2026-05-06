@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 function FormLoading() {
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-loose max-w-4xl mx-auto")}>
+    <div className={cn("py-8 stack-loose max-w-4xl mx-auto")}>
       <div className={cn("flex items-center inline-default")}>
         <Skeleton className="h-10 w-10" />
         <div className={cn("stack-tight")}>

@@ -172,7 +172,7 @@ function PrazoColumn({
         >
           <span
             className={cn(
-              /* design-system-escape: data ciência — text-[13px] tabular-nums, peso normal pois é dado contextual (não-KPI) */ 'text-[13px] leading-tight whitespace-nowrap tabular-nums text-foreground/85',
+              'text-[13px] leading-tight whitespace-nowrap tabular-nums text-foreground/85',
             )}
           >
             {format(parseISO(expediente.dataCienciaParte!), 'dd/MM/yyyy')}
@@ -332,7 +332,7 @@ function IdentidadeProcessual({
         inlineSegments.length > 0 && (
           <p
             className={cn(
-              /* design-system-escape: text-[11.5px] font-mono tabular-nums — sobe de 10px para 11.5px (legibilidade WCAG); contraste /80 supera o /55 antigo que ficava abaixo de 4.5:1 */ 'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/80',
+              'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/80',
             )}
           >
             {inlineSegments.join(' · ')}
@@ -343,7 +343,7 @@ function IdentidadeProcessual({
           {baseIdentSegments.length > 0 && (
             <p
               className={cn(
-                /* design-system-escape: text-[11.5px] font-mono tabular-nums — bump de 10px para 11.5px alinha com a versão inline e melhora legibilidade da identificação processual */ 'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/80',
+                'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/80',
               )}
             >
               {baseIdentSegments.join(' · ')}
@@ -352,7 +352,7 @@ function IdentidadeProcessual({
           {(orgao || expediente.dataCienciaParte) && (
             <p
               className={cn(
-                /* design-system-escape: text-[11.5px] font-mono tabular-nums — linha terciária com órgão + ciência, contraste /60 mais suave que a identificação principal */ 'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/60',
+                'truncate text-[11.5px] font-mono tabular-nums text-muted-foreground/60',
               )}
             >
               {[
@@ -383,7 +383,7 @@ function CorpoEditavel({
   const containerClass =
     layout === 'stacked'
       ? /* design-system-escape: space-y-3 entre Descrição e Observações empilhadas (variant comfortable) */ 'space-y-3'
-      : /* design-system-escape: gap-x-4/gap-y-2 entre cells de Descrição/Observações no grid 2-col (variant compact) */ 'grid gap-x-4 gap-y-2 sm:grid-cols-2';
+      : 'grid gap-x-4 gap-y-2 sm:grid-cols-2';
 
   return (
     <div className={containerClass}>
@@ -541,7 +541,7 @@ export function ExpedienteCard({
               expediente.dataPrazoLegalParte ? (
                 <span
                   className={cn(
-                    /* design-system-escape: font-mono/text-[10px]/tabular-nums — mirror exato do QueueCard original; text-mono-num conflitava em cascata com URGENCY_TEXT no Tailwind v4 */ 'shrink-0 font-mono text-[10px] tabular-nums',
+                    'shrink-0 font-mono text-[10px] tabular-nums',
                     URGENCY_TEXT[urgency],
                   )}
                 >
@@ -550,7 +550,7 @@ export function ExpedienteCard({
               ) : (
                 <span
                   className={cn(
-                    /* design-system-escape: font-mono/text-[10px]/tabular-nums — label de "sem prazo" no canto direito do header comfortable */ 'shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground/55',
+                    'shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground/55',
                   )}
                 >
                   —
@@ -561,21 +561,21 @@ export function ExpedienteCard({
           />
           <div
             className={cn(
-              /* design-system-escape: pt-3 separador interno entre seções do card vertical */ 'mt-3 border-t border-border/10 pt-3',
+              'mt-3 border-t border-border/10 pt-3',
             )}
           >
             <IdentidadeProcessual expediente={expediente} />
           </div>
           <div
             className={cn(
-              /* design-system-escape: pt-3 separador interno entre seções do card vertical */ 'mt-3 border-t border-border/10 pt-3',
+              'mt-3 border-t border-border/10 pt-3',
             )}
           >
             <CorpoEditavel expediente={expediente} onSuccess={onSuccess} layout="stacked" />
           </div>
           <div
             className={cn(
-              /* design-system-escape: pt-3 separador interno entre seções do card vertical */ 'mt-3 border-t border-border/10 pt-3',
+              'mt-3 border-t border-border/10 pt-3',
             )}
           >
             <FooterAcoes
@@ -623,14 +623,14 @@ export function ExpedienteCard({
           </div>
           <div
             className={cn(
-              /* design-system-escape: pt-3 separador interno entre identidade e corpo editável */ 'mt-3 border-t border-border/40 pt-3',
+              'mt-3 border-t border-border/40 pt-3',
             )}
           >
             <CorpoEditavel expediente={expediente} onSuccess={onSuccess} layout="grid" />
           </div>
           <div
             className={cn(
-              /* design-system-escape: pt-3 separador interno entre corpo editável e footer */ 'mt-3 border-t border-border/40 pt-3',
+              'mt-3 border-t border-border/40 pt-3',
             )}
           >
             <FooterAcoes

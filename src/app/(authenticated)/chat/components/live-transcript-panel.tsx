@@ -45,7 +45,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
       <ScrollArea className={cn("flex-1 inset-card-compact")} ref={scrollRef}>
         <div className={cn("flex flex-col inline-medium")}>
           {transcripts.length === 0 ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-video-muted text-body-sm py-8")}>
+            <div className={cn("text-center text-video-muted text-body-sm py-8")}>
               Aguardando fala...
             </div>
           ) : (
@@ -60,7 +60,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
                   </span>
                 </div>
                 <p className={cn(
-                  /* design-system-escape: leading-relaxed sem token DS */ "text-body-sm leading-relaxed wrap-break-word",
+                  "text-body-sm leading-relaxed wrap-break-word",
                   segment.isFinal ? "text-video-text" : "text-video-muted italic"
                 )}>
                   {segment.text}

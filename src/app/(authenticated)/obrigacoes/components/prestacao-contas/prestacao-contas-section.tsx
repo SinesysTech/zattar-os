@@ -50,7 +50,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   if (loading) {
     return (
-      <Text variant="caption" className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-muted-foreground py-2")}>
+      <Text variant="caption" className={cn("text-muted-foreground py-2")}>
         Carregando status de prestação de contas…
       </Text>
     );

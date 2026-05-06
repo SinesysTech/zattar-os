@@ -54,7 +54,7 @@ export function TimelineLoading({
           </div>
         </div>
 
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "rounded-2xl border bg-card px-6 py-8")}>
+        <div className={cn("rounded-2xl border bg-card px-6 py-8")}>
           <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <div className={cn("text-center stack-tight")}>
@@ -101,7 +101,7 @@ export function TimelineLoading({
 
       {/* Timeline Loading Message */}
       <Card className={cn("inset-dialog stack-default")}>
-        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-medium py-8")}>
+        <div className={cn("flex items-center justify-center inline-medium py-8")}>
           <LoadingSpinner className="size-6 text-primary" />
           <div className={cn("text-center stack-tight")}>
             <p className={cn( "text-body font-medium")}>{message}</p>

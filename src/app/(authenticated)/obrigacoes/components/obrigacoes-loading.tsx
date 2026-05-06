@@ -7,7 +7,7 @@ function TableSkeleton({ rows = 8 }: { rows?: number }) {
   return (
     <div className="rounded-xl border border-border/30 bg-card/30 overflow-hidden">
       {/* Header */}
-      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center inline-default px-4 py-3 border-b border-border/30 bg-muted/20")}>
+      <div className={cn("flex items-center inline-default px-4 py-3 border-b border-border/30 bg-muted/20")}>
         <Skeleton className="h-3 w-24" />
         <Skeleton className="h-3 w-32" />
         <Skeleton className="h-3 w-20" />
@@ -17,7 +17,7 @@ function TableSkeleton({ rows = 8 }: { rows?: number }) {
       {/* Rows */}
       <div className="divide-y divide-border/20">
         {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center inline-default px-4 py-3")}>
+          <div key={i} className={cn("flex items-center inline-default px-4 py-3")}>
             <Skeleton className="size-8 rounded-lg" />
             <div className={cn("flex-1 stack-tight min-w-0")}>
               <Skeleton className="h-3.5 w-2/3" />

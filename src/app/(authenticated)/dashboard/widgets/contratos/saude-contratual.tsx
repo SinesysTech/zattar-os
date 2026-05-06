@@ -85,14 +85,14 @@ export function WidgetSaudeContratual() {
           />
         </div>
 
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "grid grid-cols-3 inline-default w-full pt-3 border-t border-border/10")}>
+        <div className={cn("grid grid-cols-3 inline-default w-full pt-3 border-t border-border/10")}>
           {[
             { label: 'Contratos Ativos', value: fmtNum(ativos) },
             { label: 'Novos no Mês', value: fmtNum(novosMes) },
             { label: 'Em Contratação', value: fmtNum(emContratacao) },
           ].map((item) => (
             <div key={item.label} className={cn("flex flex-col items-center inline-nano")}>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center")}>
+              <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider text-center")}>
                 {item.label}
               </span>
               <Text variant="kpi-value">

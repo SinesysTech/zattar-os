@@ -174,7 +174,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
         getItemValue={(item: SystemBoardEventItem) => item.id}
         flatCursor={!board.dndEnabled}
       >
-        <Kanban.KanbanBoard className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "overflow-x-auto pb-4")}>
+        <Kanban.KanbanBoard className={cn("overflow-x-auto pb-4")}>
           {board.columns.map((col) => (
             <Kanban.KanbanColumn
               key={col.id}
@@ -202,7 +202,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
                   </Kanban.KanbanItem>
                 ))}
                 {(columns[col.id]?.length ?? 0) === 0 && (
-                  <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-muted-foreground text-body-sm text-center py-4")}>
+                  <div className={cn("text-muted-foreground text-body-sm text-center py-4")}>
                     Nenhum item.
                   </div>
                 )}

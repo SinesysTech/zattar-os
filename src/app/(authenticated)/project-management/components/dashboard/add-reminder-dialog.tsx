@@ -74,27 +74,27 @@ export function AddReminderDialog() {
             <RadioGroup
               value={prioridade}
               onValueChange={(v) => setPrioridade(v as Prioridade)}
-              className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default"> */ "flex space-x-4")}
+              className={cn("flex space-x-4")}
             >
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <div className={cn("flex items-center space-x-2")}>
                 <RadioGroupItem value="baixa" id="baixa" />
                 <Label htmlFor="baixa" className="cursor-pointer">
                   Baixa
                 </Label>
               </div>
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <div className={cn("flex items-center space-x-2")}>
                 <RadioGroupItem value="media" id="media" />
                 <Label htmlFor="media" className="cursor-pointer">
                   Média
                 </Label>
               </div>
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <div className={cn("flex items-center space-x-2")}>
                 <RadioGroupItem value="alta" id="alta" />
                 <Label htmlFor="alta" className="cursor-pointer">
                   Alta
                 </Label>
               </div>
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <div className={cn("flex items-center space-x-2")}>
                 <RadioGroupItem value="urgente" id="urgente" />
                 <Label htmlFor="urgente" className="cursor-pointer">
                   Urgente

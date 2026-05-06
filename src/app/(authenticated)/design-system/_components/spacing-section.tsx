@@ -21,7 +21,7 @@ function SpacingScale() {
   ];
   return (
     <SpecimenCard eyebrow="SPACING · GRID 4PX">
-      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-end inline-default py-2")}>
+      <div className={cn("flex items-end inline-default py-2")}>
         {steps.map((s) => (
           <div key={s.t} className={cn("flex flex-col items-center inline-tight")}>
             <div
@@ -39,7 +39,7 @@ function SpacingScale() {
         {usage.map((u) => (
           <div
             key={u.lbl}
-            className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-card px-3.5 py-3")}
+            className={cn("flex flex-col inline-micro rounded-xl border border-border bg-card px-3.5 py-3")}
           >
             <span className="font-mono text-[10px] text-muted-foreground">
               {u.lbl}
@@ -96,7 +96,7 @@ function ShadowScale() {
   ];
   return (
     <SpecimenCard eyebrow="SHADOW · ELEVAÇÃO">
-      <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "grid grid-cols-2 inline-default pb-6 sm:grid-cols-5")}>
+      <div className={cn("grid grid-cols-2 inline-default pb-6 sm:grid-cols-5")}>
         {tiles.map((t) => (
           <div
             key={t.lbl}
@@ -112,7 +112,7 @@ function ShadowScale() {
         ))}
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/[0.08] px-3 py-2.5 text-[12px] text-destructive")}>
-        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-destructive/[0.12] px-1.5 py-0.5 font-mono text-[10px]")}>
+        <span className={cn("rounded bg-destructive/[0.12] px-1.5 py-0.5 font-mono text-[10px]")}>
           proibido
         </span>
         <span>{`shadow-${"xl"} · shadow-${"2xl"} — sempre usar lg como teto`}</span>

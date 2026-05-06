@@ -175,7 +175,7 @@ export function AudienciasMissaoContent({
             </div>
 
             {dayAudiencias.length === 0 ? (
-              <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
+              <div className={cn("py-12 text-center")}>
                 <CalendarDays className="size-8 text-muted-foreground/10 mx-auto mb-2" />
                 <Text variant="caption" as="p" className="text-muted-foreground/60">Nenhuma audiência neste dia</Text>
               </div>
@@ -194,7 +194,7 @@ export function AudienciasMissaoContent({
                 )}
 
                 {morning.length > 0 && afternoon.length > 0 && (
-                  <div className={cn(/* design-system-escape: py-3 px-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-3 px-2")}>
+                  <div className={cn("flex items-center inline-tight py-3 px-2")}>
                     <div className="flex-1 h-px bg-border/8" />
                     <span className="text-overline text-muted-foreground/65">Intervalo</span>
                     <div className="flex-1 h-px bg-border/8" />
@@ -224,7 +224,7 @@ export function AudienciasMissaoContent({
 
                 {finalizadas.length > 0 && (
                   <>
-                    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-2 mt-2")}>
+                    <div className={cn("flex items-center inline-tight py-2 mt-2")}>
                       <div className="flex-1 h-px bg-border/8" />
                       <span className="text-overline text-muted-foreground/60">Concluídas</span>
                       <div className="flex-1 h-px bg-border/8" />
@@ -253,7 +253,7 @@ export function AudienciasMissaoContent({
 
 function SectionHeader({ label, icon: Icon }: { label: string; icon: typeof Sun }) {
   return (
-    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-2")}>
+    <div className={cn("flex items-center inline-tight py-2")}>
       <Icon className="size-3 text-muted-foreground/65" />
       <h3 className="text-overline">{label}</h3>
       <div className="flex-1 h-px bg-border/6" />
@@ -265,7 +265,7 @@ function renderBuffer(prevEnd: string, nextStart: string) {
   const buffer = getBufferMinutes(prevEnd, nextStart);
   if (buffer <= 0 || buffer >= 180) return null;
   return (
-    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv.; pl-16 padding direcional sem Inset equiv. */ "flex items-center inline-tight py-1 pl-16")}>
+    <div className={cn("flex items-center inline-tight py-1 pl-16")}>
       <div className="w-px h-4 bg-border/10 ml-0.5" />
       <span className="text-micro-caption text-muted-foreground/65">{getBufferLabel(buffer)} buffer</span>
     </div>
@@ -286,15 +286,15 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
   const prepStatus = prepScore >= 80 ? 'good' : prepScore >= 50 ? 'warning' : 'danger';
 
   return (
-    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
-      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-12 shrink-0 flex flex-col items-end pt-2.5")}>
+    <div className={cn("flex items-stretch inline-medium py-1 group")}>
+      <div className={cn("w-12 shrink-0 flex flex-col items-end pt-2.5")}>
         <span className={cn( 'text-caption tabular-nums font-medium', isPast ? 'text-muted-foreground/55' : 'text-foreground/60')}>
           {fmtTime(audiencia.dataInicio)}
         </span>
         <span className="text-micro-caption tabular-nums text-muted-foreground/60">{fmtTime(audiencia.dataFim)}</span>
       </div>
 
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex flex-col items-center pt-3 shrink-0")}>
+      <div className={cn("flex flex-col items-center pt-3 shrink-0")}>
         <div className={cn('size-2 rounded-full', isOngoing ? 'bg-success animate-pulse' : isPast ? 'bg-muted-foreground/20' : 'bg-primary/50')} />
         <div className="flex-1 w-px bg-border/8 mt-1" />
       </div>

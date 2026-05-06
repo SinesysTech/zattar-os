@@ -117,7 +117,7 @@ export function AgendaToolbar({
           <button
             onClick={() => setFilterOpen(!filterOpen)}
             className={cn(
-              /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
+              "flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-caption border transition-colors cursor-pointer",
               activeFilters > 0
                 ? "border-primary/20 bg-primary/6 text-primary"
                 : "border-border/15 text-muted-foreground/50 hover:text-muted-foreground/70",
@@ -125,7 +125,7 @@ export function AgendaToolbar({
           >
             Tipo
             {activeFilters > 0 && (
-              <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1 py-0.5 rounded-full bg-primary/15 tabular-nums")}>{activeFilters}</span>
+              <span className={cn("text-[9px] px-1 py-0.5 rounded-full bg-primary/15 tabular-nums")}>{activeFilters}</span>
             )}
           </button>
           {filterOpen && (

@@ -30,7 +30,7 @@ function getSegmentColor(index: number): string {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
+    <div className={cn("flex flex-col items-center justify-center py-8 inline-tight")}>
       <BarChart2 className="size-8 text-muted-foreground/45" />
       <p className="text-[11px] text-muted-foreground/60 text-center">
         Nenhuma despesa por categoria disponível
@@ -55,7 +55,7 @@ export function WidgetDespesasTreemap() {
         subtitle="Proporção visual por categoria"
         icon={BarChart2}
       >
-        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de despesas indisponíveis.
         </p>
       </WidgetContainer>
@@ -95,7 +95,7 @@ export function WidgetDespesasTreemap() {
         <Treemap segments={segments} height={100} />
       </div>
 
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10 flex items-end justify-between inline-default")}>
+      <div className={cn("mt-4 pt-3 border-t border-border/10 flex items-end justify-between inline-default")}>
         <ComparisonStat
           label="Total mês"
           current={totalAtual}

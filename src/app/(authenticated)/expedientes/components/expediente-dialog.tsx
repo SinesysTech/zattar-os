@@ -629,7 +629,7 @@ export function ExpedienteDialog({
               </Label>
 
               {loadingProcessos ? (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
+                <div className={cn("flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                   <LoadingSpinner />
                   <span className={cn("text-body-sm text-muted-foreground")}>
                     Carregando processos...
@@ -744,7 +744,7 @@ export function ExpedienteDialog({
                   Tipo de expediente
                 </Label>
                 {loadingTipos ? (
-                  <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
+                  <div className={cn("flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
                     <span className={cn("text-body-sm text-muted-foreground")}>
                       Carregando tipos...
@@ -852,7 +852,7 @@ export function ExpedienteDialog({
                   value={horaPrazoValue}
                   onChange={(e) => setHoraPrazoValue(e.target.value)}
                   disabled={isPending || !dataPrazoValue}
-                  className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "h-10 w-full pl-2")}
+                  className={cn("h-10 w-full pl-2")}
                   aria-invalid={
                     !!(getErrors()?.dataPrazoLegalParte || getErrors()?.horaPrazo)
                   }
@@ -884,7 +884,7 @@ export function ExpedienteDialog({
                   Responsável
                 </Label>
                 {loadingUsuarios ? (
-                  <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
+                  <div className={cn("flex items-center inline-tight h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
                     <span className={cn("text-body-sm text-muted-foreground")}>
                       Carregando usuários...

@@ -56,7 +56,7 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
   // Estado vazio: nenhuma entrevista existe
   if (view === 'empty') {
     return (
-      <GlassPanel className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center inline-default py-16 text-center")}>
+      <GlassPanel className={cn("flex flex-col items-center justify-center inline-default py-16 text-center")}>
         <IconContainer size="lg" className="bg-muted/50">
           <ClipboardList className="size-5 text-muted-foreground/50" />
         </IconContainer>

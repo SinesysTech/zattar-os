@@ -114,12 +114,12 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   return (
     <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info dark:text-info px-2 py-0.5 rounded-l-full")}>
+      <span className={cn("bg-info/15 text-info dark:text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
       <span className={cn(
-        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
         grauColorClasses[grau] || 'bg-muted text-muted-foreground'
       )}>
         {grauLabel}
@@ -184,7 +184,7 @@ function ObservacoesCell({
         <button
           type="button"
           className={cn(
-            /* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ 'text-body-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
+            'text-body-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
             'hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1',
             hasObservacoes ? 'text-foreground' : 'text-muted-foreground'
           )}
@@ -391,7 +391,7 @@ function ModalidadeCell({
           {/* Seção Presencial */}
           {isPresencial && (
             <div className={cn("stack-tight")}>
-              {isVirtual && <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t pt-3")} />}
+              {isVirtual && <div className={cn("border-t pt-3")} />}
               <Heading level="subsection" className={cn("text-body-sm flex items-center inline-tight")}>
                 <MapPin className="h-4 w-4 text-primary" />
                 Endereço Presencial
@@ -545,7 +545,7 @@ export function getAudienciasColumns(
           (audiencia.ataAudienciaId || audiencia.urlAtaAudiencia);
 
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-start inline-tight py-2")}>
+          <div className={cn("flex items-start inline-tight py-2")}>
             {/* Botão de Ata (aparece apenas se disponível) */}
             {hasAta && <AtaAudienciaButton audiencia={audiencia} />}
 
@@ -577,7 +577,7 @@ export function getAudienciasColumns(
       cell: ({ row }) => {
         const a = row.original;
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
+          <div className={cn("flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
             {/* Linha 1: Badge Tribunal + Grau */}
             <div className={cn("flex items-center inline-snug flex-wrap")}>
               <TribunalGrauBadge trt={a.trt} grau={a.grau} />
@@ -624,7 +624,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug py-2 min-w-0")}>
+          <div className={cn("flex flex-col inline-snug py-2 min-w-0")}>
             {/* Modalidade - clicável com popover para link/endereço */}
             {audiencia.modalidade ? (
               <ModalidadeCell audiencia={audiencia} onSuccessAction={onSuccessAction} />
@@ -660,7 +660,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
+          <div className={cn("py-2")}>
             <ObservacoesCell
               audiencia={audiencia}
               onSuccessAction={onSuccessAction}
@@ -687,7 +687,7 @@ export function getAudienciasColumns(
         const onSuccessAction = meta?.onSuccessAction;
 
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+          <div className={cn("flex items-center py-2")}>
             <ResponsavelCell
               audiencia={audiencia}
               usuarios={usuarios}
@@ -709,7 +709,7 @@ export function getAudienciasColumns(
       },
       size: 100,
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <AudienciaActions
             audiencia={row.original}
             onView={onView}

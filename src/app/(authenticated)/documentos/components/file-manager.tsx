@@ -173,7 +173,7 @@ function NovoPopover({
               </span>
             </span>
           </button>
-          <div className={cn(/* design-system-escape: my-1 margin sem primitiva DS; mx-1 margin sem primitiva DS */ "h-px bg-border/30 my-1 mx-1")} />
+          <div className={cn("h-px bg-border/30 my-1 mx-1")} />
           <button
             type="button"
             onClick={wrap(onUpload)}
@@ -458,7 +458,7 @@ export function FileManager() {
 
       {/* ── Breadcrumbs (dentro de pasta) ──────────────────── */}
       {currentPastaId && (
-        <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
+        <GlassPanel className={cn("px-4 py-2.5")}>
           <nav className={cn("flex items-center inline-snug text-caption")} aria-label="Breadcrumb">
             <button
               type="button"

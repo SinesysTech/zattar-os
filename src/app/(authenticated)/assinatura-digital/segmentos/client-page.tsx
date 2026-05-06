@@ -173,7 +173,7 @@ export function SegmentosClient() {
       {/* Stats Cards */}
       <div className={cn("grid grid-cols-2 inline-medium lg:grid-cols-4")}>
         {statCards.map(({ label, value, Icon, tint, iconColor }) => (
-          <GlassPanel key={label} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+          <GlassPanel key={label} className={cn("px-4 py-3")}>
             <div className={cn("flex items-start justify-between inline-tight")}>
               <div className="min-w-0">
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>

@@ -72,7 +72,7 @@ export function SaudePrazos() {
 
         <div className={cn("flex-1 stack-tight")}>
           <div className={cn("flex items-baseline inline-tight")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <span className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Vencidos
             </span>
             <AnimatedNumber
@@ -82,7 +82,7 @@ export function SaudePrazos() {
           </div>
 
           <div className={cn("flex items-baseline inline-tight")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <span className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Vencem Hoje
             </span>
             <AnimatedNumber
@@ -93,7 +93,7 @@ export function SaudePrazos() {
 
           {tempoResposta !== undefined && (
             <div className={cn("flex items-baseline inline-tight")}>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+              <span className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Prazo Medio
               </span>
               <span className={cn( "font-display text-body-sm font-bold")}>

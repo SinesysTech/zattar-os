@@ -165,7 +165,7 @@ export function PostHearingFlow({
         {/* Result selector */}
         {!isFinalized && (
           <div className="mb-4">
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Resultado</span>
+            <span className={cn("text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Resultado</span>
             <div className={cn("flex items-center inline-snug mt-1.5")}>
               {RESULT_OPTIONS.map((opt) => (
                 <button
@@ -189,7 +189,7 @@ export function PostHearingFlow({
         {/* Post-action checklist */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Ações pós-audiência</span>
+            <span className={cn("text-micro-caption text-muted-foreground/75 uppercase tracking-wider")}>Ações pós-audiência</span>
             <span className="text-micro-caption tabular-nums text-muted-foreground/75">{completedCount}/{postActions.length}</span>
           </div>
 
@@ -208,7 +208,7 @@ export function PostHearingFlow({
                 onClick={() => !action.done && handleActionClick(action.id)}
                 disabled={action.done}
                 className={cn(
-                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
+                  "w-full flex items-center inline-tight px-2.5 py-1.5 rounded-lg text-micro-caption transition-all",
                   action.done
                     ? "text-muted-foreground/55"
                     : "text-foreground/75 hover:bg-foreground/4or-pointer",

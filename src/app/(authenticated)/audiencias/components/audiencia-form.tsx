@@ -343,7 +343,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value ?? undefined}
-                      className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-row inline-default pt-1")}
+                      className={cn("flex flex-row inline-default pt-1")}
                     >
                       <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
                         <FormControl>
@@ -463,7 +463,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
         </div>
 
         {/* Footer fixo na parte inferior do dialog */}
-        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-medium pt-4 mt-4 border-t")}>
+        <div className={cn("flex justify-end inline-medium pt-4 mt-4 border-t")}>
           <Button
             type="button"
             variant="outline"

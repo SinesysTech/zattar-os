@@ -75,7 +75,7 @@ export function EvolucaoMensalChart({ data }: EvolucaoMensalChartProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
           Evolução Mensal (12 meses)

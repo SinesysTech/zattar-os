@@ -35,7 +35,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
   return (
     <div className="flex flex-col h-full w-full">
       {/* Panel header — "Detalhes" per mock */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between px-5 py-4 border-b border-border/40 dark:border-white/6 shrink-0")}>
+      <div className={cn("flex items-center justify-between px-5 py-4 border-b border-border/40 dark:border-white/6 shrink-0")}>
         <span className={cn( "text-[0.75rem] font-semibold text-foreground")}>Detalhes</span>
         <Button
           size="icon"
@@ -51,7 +51,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
       {/* Scrollable body */}
       <ScrollArea className="flex-1">
         {/* Profile section — 72px avatar centered per mock */}
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-medium py-6 px-5")}>
+        <div className={cn("flex flex-col items-center inline-medium py-6 px-5")}>
           <Avatar className="size-18 rounded-2xl overflow-visible">
             <AvatarImage src={user.avatar} alt={displayName} className="rounded-2xl" />
             <AvatarFallback className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; */ "bg-primary/10 text-primary text-xl font-semibold rounded-2xl")}>
@@ -75,7 +75,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         </div>
 
         {/* Informacoes section — icon + label + value per mock */}
-        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
+        <div className={cn("px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
           <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
             Informacoes
           </Text>
@@ -121,7 +121,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Media section — 3-column grid per mock */}
         {user.medias && user.medias.length > 0 && (
-          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
+          <div className={cn("px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
             <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
               Midia Compartilhada
             </Text>
@@ -147,7 +147,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
 
         {/* Website */}
         {user.website && (
-          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
+          <div className={cn("px-5 py-3.5 border-t border-border/40 dark:border-white/6")}>
             <Text variant="overline" as="h5" className="text-muted-foreground/55 mb-3">
               Website
             </Text>

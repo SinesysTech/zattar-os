@@ -46,7 +46,7 @@ export function PeritosPageClient() {
               asChild
               variant="ghost"
               size="sm"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-muted-foreground/70")}
+              className={cn("h-7 px-2 text-muted-foreground/70")}
             >
               <Link href="/pericias">
                 <ArrowLeft className="size-3.5" />
@@ -69,7 +69,7 @@ export function PeritosPageClient() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar perito..."
-              className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "h-9 w-64 pl-8 bg-card")}
+              className={cn("h-9 w-64 pl-8 bg-card")}
             />
           </div>
           <Button asChild size="sm" variant="outline" className="rounded-xl">
@@ -84,7 +84,7 @@ export function PeritosPageClient() {
       {/* ── Info banner ───────────────────────────────────── */}
       <GlassPanel
         depth={1}
-        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 flex items-start inline-medium border-info/20")}
+        className={cn("px-4 py-3 flex items-start inline-medium border-info/20")}
       >
         <IconContainer size="md" className="bg-info/10">
           <User className="size-4 text-info/70" />
@@ -142,7 +142,7 @@ export function PeritosPageClient() {
                 <p className={cn( "text-body-sm font-semibold text-foreground/90 truncate")}>
                   {p.nome}
                 </p>
-                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
+                <p className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
                   Perito Judicial
                 </p>
               </div>

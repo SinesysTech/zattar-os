@@ -217,7 +217,7 @@ export function PericiasCalendarMonth({
                               ev.stopPropagation();
                               handlePericiaClick(p);
                             }}
-                            className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-caption px-1.5 py-0.5 rounded cursor-pointer truncate border bg-primary/10 text-primary border-primary/20")}
+                            className={cn("text-caption px-1.5 py-0.5 rounded cursor-pointer truncate border bg-primary/10 text-primary border-primary/20")}
                             title={p.numeroProcesso}
                           >
                             {p.numeroProcesso}

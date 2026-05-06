@@ -119,7 +119,7 @@ function KpiCard({
   const t = toneMap[tone];
 
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+    <GlassPanel depth={2} className={cn("px-4 py-3")}>
       <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="min-w-0">
           <p className={cn( "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
@@ -370,7 +370,7 @@ function PdfPreviewSection({
 
       <div className="h-px bg-linear-to-r from-transparent via-border/50 to-transparent" />
 
-      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-2.5")}>
+      <div className={cn("flex items-center justify-between px-4 py-2.5")}>
         <Button
           variant="ghost"
           size="sm"
@@ -672,8 +672,8 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         </div>
 
         {/* ── Ambient divider + voltar ───────────────── */}
-        <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "h-px bg-linear-to-r from-transparent via-border/50 to-transparent my-2")} />
-        <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center justify-between pb-4")}>
+        <div className={cn("h-px bg-linear-to-r from-transparent via-border/50 to-transparent my-2")} />
+        <div className={cn("flex items-center justify-between pb-4")}>
           <Button
             variant="ghost"
             size="sm"

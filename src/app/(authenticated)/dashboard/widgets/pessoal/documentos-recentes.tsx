@@ -35,7 +35,7 @@ export function WidgetDocumentosRecentes() {
       depth={1}
     >
       {documentos.length > 0 ? (
-        <div className={cn(/* design-system-escape: -mx-1 sem equivalente DS */ "flex flex-col inline-nano -mx-1")}>
+        <div className={cn("flex flex-col inline-nano -mx-1")}>
           {documentos.slice(0, 5).map((doc) => {
             const config = TIPO_CONFIG[doc.tipo];
             const Icon = config.icon;
@@ -67,13 +67,13 @@ export function WidgetDocumentosRecentes() {
           })}
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4 text-center")}>
+        <div className={cn("py-4 text-center")}>
           <p className="text-[10px] text-muted-foreground/40">Nenhum documento editado recentemente</p>
         </div>
       )}
 
-      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
-        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{documentos.length} recentes</span>
+      <div className={cn("mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
+        <span className={cn("text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{documentos.length} recentes</span>
         <Link href="/documentos" className={cn( "text-[9px] text-primary/50 font-medium hover:text-primary/70 transition-colors cursor-pointer")}>
           abrir todos
         </Link>

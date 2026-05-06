@@ -102,7 +102,7 @@ export function CapturadasGlassCards({
               )}
 
               {c.nomeOrgao && (
-                <Text variant="micro-caption" className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "truncate border-t border-border/30 pt-2")}>
+                <Text variant="micro-caption" className={cn("truncate border-t border-border/30 pt-2")}>
                   {c.nomeOrgao}
                 </Text>
               )}

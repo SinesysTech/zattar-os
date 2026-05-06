@@ -151,14 +151,14 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
 
                 {/* Timeline visualization */}
                 {conflict.type === "overlap" && (
-                  <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "px-2 py-1.5 rounded-lg bg-border/5")}>
+                  <div className={cn("px-2 py-1.5 rounded-lg bg-border/5")}>
                     {allAudiencias.map((a) => (
                       <TimelineBar key={a.id} audiencia={a} minStart={minTime} maxEnd={maxTime} />
                     ))}
                     {conflict.overlapMinutes && conflict.overlapMinutes > 0 && (
                       <div className={cn("flex items-center inline-micro mt-1")}>
                         <div className="flex-1 h-px bg-destructive/15" />
-                        <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "text-micro-badge text-destructive/50 tabular-nums px-1")}>
+                        <span className={cn("text-micro-badge text-destructive/50 tabular-nums px-1")}>
                           ▲ {conflict.overlapMinutes}min sobreposição
                         </span>
                         <div className="flex-1 h-px bg-destructive/15" />

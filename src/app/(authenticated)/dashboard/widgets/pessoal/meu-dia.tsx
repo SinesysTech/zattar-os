@@ -190,7 +190,7 @@ export function WidgetMeuDia() {
       subtitle={subtitleStr}
       depth={2}
     >
-      <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "relative isolate pt-1")}>
+      <div className={cn("relative isolate pt-1")}>
         {/* Linha vertical conectora corrigida */}
         <div
           className="absolute left-5 top-4 bottom-4 w-px bg-border/40 -z-10"
@@ -270,7 +270,7 @@ export function WidgetMeuDia() {
                   </div>
 
                   {/* Horário à direita */}
-                  <div className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "flex flex-col items-end shrink-0 pl-2")}>
+                  <div className={cn("flex flex-col items-end shrink-0 pl-2")}>
                     {evento.hora && (
                       <span
                         className={`text-xs font-display tabular-nums font-semibold ${isDone ? 'text-muted-foreground/70' : state === 'near' ? 'text-warning' : 'text-foreground/90'

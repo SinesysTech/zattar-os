@@ -33,7 +33,7 @@ export function WidgetInadimplencia() {
         subtitle="Sobre carteira a receber"
         icon={AlertTriangle}
       >
-        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de inadimplência indisponíveis.
         </p>
       </WidgetContainer>
@@ -64,7 +64,7 @@ export function WidgetInadimplencia() {
         />
         <div className={cn("flex flex-col inline-micro")}>
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
               Em atraso
             </p>
             <p
@@ -75,7 +75,7 @@ export function WidgetInadimplencia() {
             </p>
           </div>
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
               Carteira total
             </p>
             <p className={cn( "text-body-sm font-semibold font-display tabular-nums text-muted-foreground/70")}>
@@ -94,7 +94,7 @@ export function WidgetInadimplencia() {
       )}
 
       {!isAlert && totalAReceber > 0 && (
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10")}>
+        <div className={cn("mt-4 pt-3 border-t border-border/10")}>
           <div className={cn("flex items-center inline-snug text-success/60")}>
             <TrendingDown className="size-3.5" />
             <span className="text-[10px]">Dentro da meta de 10%</span>
@@ -103,7 +103,7 @@ export function WidgetInadimplencia() {
       )}
 
       {totalAReceber === 0 && (
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10")}>
+        <div className={cn("mt-4 pt-3 border-t border-border/10")}>
           <p className="text-[9px] text-muted-foreground/55 text-center">
             Sem receitas pendentes no período.
           </p>

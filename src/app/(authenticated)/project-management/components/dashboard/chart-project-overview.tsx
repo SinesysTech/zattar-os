@@ -58,7 +58,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
         <CardHeader>
           <CardTitle>Visão Geral dos Projetos</CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
+        <CardContent className={cn("flex items-center justify-center py-12")}>
           <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível para o período.
           </Text>
@@ -111,7 +111,7 @@ export function ChartProjectOverview({ data }: ChartProjectOverviewProps) {
           </Select>
         </CardAction>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS; sm:pt-6 sem equivalente DS */ "px-2 pt-4 sm:px-6 sm:pt-6")}>
+      <CardContent className={cn("px-2 pt-4 sm:px-6 sm:pt-6")}>
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-50 w-full lg:h-62.5"

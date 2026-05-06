@@ -40,7 +40,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             <Icon className={`size-5 ${cfg.color}`} />
           </IconContainer>
           <div className="min-w-0">
-            <Heading level="section" className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm leading-tight")}>
+            <Heading level="section" className={cn("text-body-sm leading-tight")}>
               {doc.titulo}
             </Heading>
             <div className={cn("flex items-center inline-tight mt-1")}>
@@ -152,7 +152,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             );
           })}
           {doc.assinantes.length === 0 && (
-            <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[10px] text-muted-foreground/55 text-center py-4")}>
+            <p className={cn("text-[10px] text-muted-foreground/55 text-center py-4")}>
               Sem assinantes configurados
             </p>
           )}
@@ -162,13 +162,13 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       {/* Metadata */}
       <div className={cn("grid grid-cols-2 inline-tight mb-4 text-[10px]")}>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
+          <p className={cn("text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado por
           </p>
           <p className={cn( "font-medium mt-0.5")}>{doc.criadoPor}</p>
         </div>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
+          <p className={cn("text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado em
           </p>
           <p className={cn( "font-medium mt-0.5")}>
@@ -176,13 +176,13 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           </p>
         </div>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
+          <p className={cn("text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Atualizado
           </p>
           <p className={cn( "font-medium mt-0.5")}>{timeAgo(doc.atualizadoEm)}</p>
         </div>
         <div>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
+          <p className={cn("text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Verificação
           </p>
           <p className={cn( "font-medium mt-0.5 flex items-center inline-micro text-success/60")}>
@@ -192,7 +192,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       </div>
 
       {/* Actions */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex inline-tight pt-3 border-t border-border/10")}>
+      <div className={cn("flex inline-tight pt-3 border-t border-border/10")}>
         {doc.status === "pronto" &&
           doc.assinantes.some((a) => a.status === "pendente") && (
             <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
@@ -204,10 +204,10 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <ExternalLink className="size-3" />
           Ver documento
         </button>
-        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 hover:bg-foreground/6 transition-colors cursor-pointer")}>
+        <button className={cn("flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Download className="size-3" />
         </button>
-        <button className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 hover:bg-foreground/6 transition-colors cursor-pointer")}>
+        <button className={cn("flex items-center justify-center px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 hover:bg-foreground/6 transition-colors cursor-pointer")}>
           <Copy className="size-3" />
         </button>
       </div>

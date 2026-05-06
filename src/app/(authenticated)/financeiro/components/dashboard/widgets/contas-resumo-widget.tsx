@@ -66,7 +66,7 @@ function ContaSection({
           </div>
           <Text variant="caption" className="font-medium">{title}</Text>
         </div>
-        <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption")}>
+        <Button variant="ghost" size="sm" asChild className={cn("h-6 px-2 text-caption")}>
           <Link href={href}>
             Ver <ArrowRight className="h-3 w-3 ml-1" />
           </Link>
@@ -90,7 +90,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <Skeleton className="h-5 w-40" />
         </CardHeader>
         <CardContent>
@@ -108,7 +108,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn( "text-body-sm font-medium")}>
           Contas a Pagar / Receber
         </CardTitle>

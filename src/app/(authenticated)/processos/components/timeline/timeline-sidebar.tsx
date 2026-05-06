@@ -65,7 +65,7 @@ export function TimelineSidebar({
   return (
     <div className={cn('flex h-full flex-col overflow-hidden bg-background', className)}>
       {/* Header com contagem e atalho CMD+K */}
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex-none border-b px-3 py-2.5")}>
+      <div className={cn("flex-none border-b px-3 py-2.5")}>
         <div className={cn("flex items-center justify-between inline-tight")}>
           <Text variant="caption" className="flex items-center gap-3">
             <span className={cn("inline-flex items-center inline-micro")}>
@@ -84,9 +84,9 @@ export function TimelineSidebar({
       </div>
 
       {/* Lista de itens com scroll */}
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-16 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv. */ "min-h-0 flex-1 overflow-y-auto px-2 pb-16 pt-3")}>
+      <div className={cn("min-h-0 flex-1 overflow-y-auto px-2 pb-16 pt-3")}>
         {itensOrdenados.length === 0 ? (
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "px-4 py-6 text-center")}>
+          <div className={cn("px-4 py-6 text-center")}>
             <Text variant="caption" className="text-muted-foreground italic">
               Nenhum item na timeline.
             </Text>
@@ -105,7 +105,7 @@ export function TimelineSidebar({
             ))}
 
             {/* Marcador de início do processo */}
-            <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] px-2 pb-6 pt-4 opacity-70")}>
+            <div className={cn("grid grid-cols-[48px_1fr] px-2 pb-6 pt-4 opacity-70")}>
               <div className={cn("flex flex-col items-center inline-micro")}>
                 <div className="h-2 w-px bg-border" aria-hidden="true" />
                 <div
@@ -114,7 +114,7 @@ export function TimelineSidebar({
                 />
                 <div className="h-8 w-px bg-transparent" aria-hidden="true" />
               </div>
-              <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center border-b border-dashed border-border/70 pb-4")}>
+              <div className={cn("flex items-center border-b border-dashed border-border/70 pb-4")}>
                 <Text variant="caption" className="font-medium italic">
                   Início do processo
                 </Text>

@@ -268,7 +268,7 @@ export default function FieldPropertiesPanel({
   if (!field) {
     return (
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv. */ "text-center stack-tight px-6")}>
+        <div className={cn("text-center stack-tight px-6")}>
           <Info className="size-8 text-muted-foreground/60 mx-auto" />
           <Text variant="caption" className="font-medium">Nenhum campo selecionado</Text>
           <p className="text-[11px] text-muted-foreground/70">
@@ -287,8 +287,8 @@ export default function FieldPropertiesPanel({
 
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "shrink-0 px-3 pt-3 pb-2 border-b")}>
-        <Heading level="card" className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-caption uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
+      <div className={cn("shrink-0 px-3 pt-3 pb-2 border-b")}>
+        <Heading level="card" className={cn("text-caption uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
         <Text variant="caption" className="text-foreground mt-0.5 truncate font-medium">{field.label}</Text>
       </div>
 
@@ -301,7 +301,7 @@ export default function FieldPropertiesPanel({
               open={expandedSections.has('basico')}
               onOpenChange={() => toggleSection('basico')}
             >
-              <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
+              <CollapsibleTrigger className={cn("flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
                 <Text variant="caption" className="font-semibold flex-1 text-left">Básico</Text>
                 <ChevronDown
                   className={cn(
@@ -310,7 +310,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
+              <CollapsibleContent className={cn("pt-2 stack-medium")}>
                 <FormField
                   control={form.control}
                   name="label"
@@ -436,7 +436,7 @@ export default function FieldPropertiesPanel({
                             onChange={(v) => formField.onChange(v || undefined)}
                           />
                         ) : fieldType === FormFieldType.CHECKBOX ? (
-                          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                          <div className={cn("flex items-center space-x-2")}>
                             <Checkbox
                               checked={Boolean(formField.value)}
                               onCheckedChange={(checked) => formField.onChange(checked)}
@@ -488,7 +488,7 @@ export default function FieldPropertiesPanel({
                           onCheckedChange={formField.onChange}
                         />
                       </FormControl>
-                      <div className={cn(/* design-system-escape: leading-none sem token DS */ "stack-micro leading-none")}>
+                      <div className={cn("stack-micro leading-none")}>
                         <FormLabel>Campo Oculto</FormLabel>
                         <FormDescription className={cn("text-caption")}>
                           Campo não será exibido no formulário público, mas estará no schema
@@ -507,7 +507,7 @@ export default function FieldPropertiesPanel({
               open={expandedSections.has('validacao')}
               onOpenChange={() => toggleSection('validacao')}
             >
-              <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
+              <CollapsibleTrigger className={cn("flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
                 <Text variant="caption" className="font-semibold flex-1 text-left">Validação</Text>
                 <ChevronDown
                   className={cn(
@@ -516,7 +516,7 @@ export default function FieldPropertiesPanel({
                   )}
                 />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
+              <CollapsibleContent className={cn("pt-2 stack-medium")}>
                 <FormField
                   control={form.control}
                   name="required"
@@ -528,7 +528,7 @@ export default function FieldPropertiesPanel({
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <div className={cn(/* design-system-escape: leading-none sem token DS */ "stack-micro leading-none")}>
+                      <div className={cn("stack-micro leading-none")}>
                         <FormLabel>Campo Obrigatório</FormLabel>
                       </div>
                     </FormItem>
@@ -661,7 +661,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
+                  <CollapsibleContent className={cn("pt-2 stack-medium")}>
                     <FormField
                       control={form.control}
                       name="conditionalField"
@@ -770,7 +770,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-tight")}>
+                  <CollapsibleContent className={cn("pt-2 stack-tight")}>
                     {options.map((option, index) => (
                       <div key={index} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 border rounded-lg")}>
                         <div className={cn("flex flex-col inline-micro shrink-0")}>
@@ -810,7 +810,7 @@ export default function FieldPropertiesPanel({
                             placeholder="Valor"
                             className="h-8"
                           />
-                          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                          <div className={cn("flex items-center space-x-2")}>
                             <Checkbox
                               checked={option.disabled || false}
                               onCheckedChange={checked => updateOption(index, 'disabled', checked as boolean)}
@@ -863,7 +863,7 @@ export default function FieldPropertiesPanel({
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 stack-medium")}>
+                  <CollapsibleContent className={cn("pt-2 stack-medium")}>
                     <div className={cn("stack-tight")}>
                       <Label className={cn("text-caption text-muted-foreground")}>Buscar por</Label>
                       <div className={cn("stack-tight")}>
@@ -875,7 +875,7 @@ export default function FieldPropertiesPanel({
                           if (!isRelevant) return null;
 
                           return (
-                            <div key={searchType} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                            <div key={searchType} className={cn("flex items-center space-x-2")}>
                               <Checkbox
                                 checked={searchBy.includes(searchType)}
                                 onCheckedChange={(checked) => {
@@ -979,7 +979,7 @@ export default function FieldPropertiesPanel({
           </div>
           </ScrollArea>
 
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "shrink-0 border-t px-3 py-2.5 flex inline-tight")}>
+          <div className={cn("shrink-0 border-t px-3 py-2.5 flex inline-tight")}>
             <Button
               type="submit"
               size="sm"

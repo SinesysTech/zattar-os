@@ -167,7 +167,7 @@ function SimpleSelect<TValue extends string>({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer text-left',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer text-left',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -230,13 +230,13 @@ function SearchableSelect({
         side="bottom"
       >
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder={placeholder}
               className={cn("h-8 text-caption rounded-lg")}
             />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-56 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-56 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <span className="text-[11px] text-muted-foreground/40">
                 Nenhum resultado
@@ -253,7 +253,7 @@ function SearchableSelect({
                       onChange(isSelected ? '' : opt.value);
                       setOpen(false);
                     }}
-                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
+                    className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
                   >
                     <span className="truncate">{opt.label}</span>
                     {isSelected && (

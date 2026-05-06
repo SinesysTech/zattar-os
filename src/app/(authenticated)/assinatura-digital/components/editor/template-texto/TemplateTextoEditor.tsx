@@ -124,7 +124,7 @@ export function TemplateTextoEditor({
           <Editor
             variant="default"
             placeholder={placeholder}
-            className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "min-h-100 px-6 py-4")}
+            className={cn("min-h-100 px-6 py-4")}
           />
         </EditorContainer>
       </Plate>
@@ -133,7 +133,7 @@ export function TemplateTextoEditor({
       <div className={cn("mt-4 rounded-lg border bg-muted/30 inset-card-compact")}>
         <Heading level="subsection" className={cn("mb-2 text-body-sm")}>Inserir Variáveis</Heading>
         <Text variant="caption" className="mb-3">
-          Digite <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}>@</kbd> no editor para inserir variáveis dinâmicas.
+          Digite <kbd className={cn("rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}>@</kbd> no editor para inserir variáveis dinâmicas.
         </Text>
 
         <div className={cn("stack-tight")}>
@@ -146,7 +146,7 @@ export function TemplateTextoEditor({
                 {variables.slice(0, 3).map((v) => (
                   <span
                     key={v.key}
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}
+                    className={cn("rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}
                   >
                     @{v.key}
                   </span>

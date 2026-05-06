@@ -232,11 +232,11 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           </DialogDescription>
         </DialogHeader>
         {error && (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "bg-destructive/15 text-destructive rounded-md px-3 py-2 text-body-sm")}>
+          <div className={cn("bg-destructive/15 text-destructive rounded-md px-3 py-2 text-body-sm")}>
             {error}
           </div>
         )}
-        <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "grid inline-default py-4")}>
+        <div className={cn("grid inline-default py-4")}>
           <div className="*:not-first:mt-1.5">
             <Label htmlFor="title">Título</Label>
             <Input
@@ -273,7 +273,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     variant={"outline"}
                     disabled={readOnly}
                     className={cn(
-                      /* design-system-escape: px-3 padding direcional sem Inset equiv. */ "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
                       !startDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !startDate && "text-muted-foreground")}>
@@ -342,7 +342,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     variant={"outline"}
                     disabled={readOnly}
                     className={cn(
-                      /* design-system-escape: px-3 padding direcional sem Inset equiv. */ "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
+                      "group bg-background hover:bg-background border-input w-full justify-between px-3 font-normal outline-offset-0 outline-none focus-visible:outline-[3px]",
                       !endDate && "text-muted-foreground"
                     )}>
                     <span className={cn("truncate", !endDate && "text-muted-foreground")}>

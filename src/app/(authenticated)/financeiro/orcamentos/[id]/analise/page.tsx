@@ -132,7 +132,7 @@ function ResumoGeralCards({
   return (
     <div className={cn("grid inline-default md:grid-cols-4")}>
       <Card>
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <CardDescription>Total Previsto</CardDescription>
           <CardTitle className="text-page-title font-mono">
             {formatarValor(resumo.totalPrevisto)}
@@ -141,13 +141,13 @@ function ResumoGeralCards({
       </Card>
 
       <Card>
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <CardDescription>Total Realizado</CardDescription>
           <CardTitle className="text-page-title font-mono">
             {formatarValor(resumo.totalRealizado)}
           </CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+        <CardContent className={cn("pt-0")}>
           <Progress value={resumo.percentualExecutado} className="h-2" />
           <Text variant="caption" className="mt-1">
             {resumo.percentualExecutado.toFixed(1)}% executado
@@ -156,13 +156,13 @@ function ResumoGeralCards({
       </Card>
 
       <Card>
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <CardDescription>Variação</CardDescription>
           <CardTitle className={`text-2xl ${getVariacaoColor(variacaoPercentual)}`}>
             {formatarPercentual(variacaoPercentual)}
           </CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+        <CardContent className={cn("pt-0")}>
           <Text variant="caption">
             {variacaoPercentual > 0 ? 'Acima do previsto' : 'Abaixo do previsto'}
           </Text>
@@ -170,10 +170,10 @@ function ResumoGeralCards({
       </Card>
 
       <Card>
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <CardDescription>Status dos Itens</CardDescription>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0 stack-tight")}>
+        <CardContent className={cn("pt-0 stack-tight")}>
           {resumo.itensAcimaMeta > 0 && (
             <div className={cn("flex items-center inline-tight")}>
               <AlertTriangle className="h-4 w-4 text-destructive" />
@@ -205,7 +205,7 @@ function ResumoGeralCards({
 function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
   if (itens.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-muted-foreground py-8")}>
+      <p className={cn("text-center text-muted-foreground py-8")}>
         Nenhum item para análise.
       </p>
     );
@@ -282,7 +282,7 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
 function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
   if (alertas.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
+      <div className={cn("flex flex-col items-center justify-center py-8 text-center")}>
         <CheckCircle2 className="h-12 w-12 text-success mb-4" />
         <p className="text-muted-foreground">
           Nenhum alerta de desvio identificado.
@@ -358,7 +358,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
 function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
   if (itens.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-muted-foreground py-8")}>
+      <p className={cn("text-center text-muted-foreground py-8")}>
         Dados insuficientes para projeção.
       </p>
     );
@@ -734,7 +734,7 @@ export default function AnaliseOrcamentariaPage() {
               {loadingProjecao ? (
                 <Skeleton className="h-64" />
               ) : errorProjecao ? (
-                <p className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-destructive py-8")}>{errorProjecao}</p>
+                <p className={cn("text-center text-destructive py-8")}>{errorProjecao}</p>
               ) : (
                 <ProjecaoTable itens={projecao} />
               )}

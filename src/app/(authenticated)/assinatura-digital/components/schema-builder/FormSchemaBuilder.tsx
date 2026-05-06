@@ -484,7 +484,7 @@ export function FormSchemaBuilder({
         : fieldType;
 
       return (
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
+        <div className={cn("flex items-center inline-tight rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
           <span className={cn( "text-body-sm font-medium capitalize")}>{label}</span>
         </div>
@@ -497,7 +497,7 @@ export function FormSchemaBuilder({
       const Icon = getFieldIcon(field.type);
 
       return (
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
+        <div className={cn("flex items-center inline-tight rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
           <span className={cn( "text-body-sm font-medium")}>{field.label}</span>
         </div>
@@ -510,7 +510,7 @@ export function FormSchemaBuilder({
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5")}>
+      <div className={cn("shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5")}>
         <div className={cn("flex items-center inline-tight")}>
           <Heading level="section" className={cn("text-body-sm")}>{formularioNome}</Heading>
           {isDirty && <Badge variant="outline" className="text-[10px]">Não salvo</Badge>}
@@ -581,7 +581,7 @@ export function FormSchemaBuilder({
       </div>
 
       {/* Content */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex-1 min-h-0 pt-3")}>
+      <div className={cn("flex-1 min-h-0 pt-3")}>
         {mode === 'edit' ? (
           <DndContext
             sensors={sensors}
@@ -679,7 +679,7 @@ export function FormSchemaBuilder({
               Configure o título e descrição da seção
             </DialogDescription>
           </DialogHeader>
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             <div className={cn("stack-tight")}>
               <Label>Título *</Label>
               <Input
@@ -741,7 +741,7 @@ export function FormSchemaBuilder({
               Visualize ou edite o schema em formato JSON
             </DialogDescription>
           </DialogHeader>
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+          <div className={cn("py-4")}>
             <Textarea
               value={jsonContent}
               onChange={e => setJsonContent(e.target.value)}

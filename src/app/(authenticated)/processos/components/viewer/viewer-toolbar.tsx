@@ -66,7 +66,7 @@ export function ViewerToolbar({
     <div className={cn("absolute top-3 left-3 right-3 z-10 flex items-center inline-tight pointer-events-none")}>
       {/* Título do documento atual */}
       {title && (
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center inline-tight rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
+        <div className={cn("pointer-events-auto flex items-center inline-tight rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
           <Text variant="caption" className="truncate font-medium text-foreground">{title}</Text>
           {date && (
             <>
@@ -79,7 +79,7 @@ export function ViewerToolbar({
 
       {/* Ações */}
       <TooltipProvider>
-        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center inline-micro rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5 ml-auto shrink-0")}>
+        <div className={cn("pointer-events-auto flex items-center inline-micro rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-1 py-0.5 ml-auto shrink-0")}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

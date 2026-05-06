@@ -62,7 +62,7 @@ export function AssistenteForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+    <form onSubmit={handleSubmit(onFormSubmit)} className={cn("stack-default py-4")}>
       {/* Nome */}
       <div className={cn("grid inline-tight")}>
         <Label htmlFor="nome">
@@ -115,7 +115,7 @@ export function AssistenteForm({
       {isEditing && (
         <div className={cn("grid inline-tight")}>
           <Label htmlFor="ativo">Status</Label>
-          <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+          <div className={cn("flex items-center space-x-2")}>
             <Switch
               id="ativo"
               checked={Boolean(ativo)}
@@ -129,7 +129,7 @@ export function AssistenteForm({
         </div>
       )}
 
-      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex justify-end inline-tight pt-4")}>
+      <div className={cn("flex justify-end inline-tight pt-4")}>
         <Button 
           type="button" 
           variant="outline" 

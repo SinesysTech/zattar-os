@@ -142,7 +142,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                   return (
                     <div
                       key={membro.id}
-                      className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-3")}
+                      className={cn("flex items-center justify-between py-3")}
                     >
                       <div className={cn("flex items-center inline-medium")}>
                         <Avatar size="lg">
@@ -215,7 +215,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
 
       {membros.length === 0 && (
         <Card>
-          <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
+          <CardContent className={cn("py-12 text-center")}>
             <p className="text-muted-foreground">
               Nenhum membro na equipe. Clique em &quot;Adicionar Membro&quot;
               para começar.

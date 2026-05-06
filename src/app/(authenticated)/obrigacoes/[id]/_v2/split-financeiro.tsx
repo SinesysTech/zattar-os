@@ -100,7 +100,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
       </ul>
 
       {sucumbencia > 0 && (
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/15 flex items-center justify-between")}>
+        <div className={cn("mt-4 pt-3 border-t border-border/15 flex items-center justify-between")}>
           <Text variant="meta-label" className="text-muted-foreground/60">
             Total escritório
           </Text>

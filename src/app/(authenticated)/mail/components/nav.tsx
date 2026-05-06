@@ -27,11 +27,11 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; data-[collapsed=true]:py-2 sem equivalente DS */ "group flex flex-col inline-default py-2 data-[collapsed=true]:py-2")}>
+      className={cn("group flex flex-col inline-default py-2 data-[collapsed=true]:py-2")}>
       <nav
         role="navigation"
         aria-label="Pastas de e-mail"
-        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; group-data-[collapsed=true]:px-2 sem equivalente DS */ "grid inline-micro px-2 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2")}>
+        className={cn("grid inline-micro px-2 group-data-[collapsed=true]:justify-center group-data-[collapsed=true]:px-2")}>
         {links.map((link) =>
           isCollapsed ? (
             <Tooltip key={link.folder ?? link.title} delayDuration={0}>

@@ -198,7 +198,7 @@ function DayCell({
       </div>
 
       {count > 0 && count < 3 && (
-        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5 flex-wrap")}>
+        <div className={cn("flex inline-micro mt-auto pt-1.5 flex-wrap")}>
           {itens.map((item) => (
             <div
               key={item.parcela.id}
@@ -212,7 +212,7 @@ function DayCell({
       )}
 
       {count >= 3 && (
-        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
+        <div className={cn("flex inline-micro mt-auto pt-1.5")}>
           <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
@@ -395,7 +395,7 @@ export function ObrigacoesGlassMonth({
       </div>
 
       {/* Legend */}
-      <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center inline-default mb-4 px-1 flex-wrap")}>
+      <div className={cn("flex items-center inline-default mb-4 px-1 flex-wrap")}>
         {(['critico', 'alto', 'medio', 'baixo'] as Urgency[]).map((level) => (
           <div key={level} className={cn("flex items-center inline-snug")}>
             <div className={cn('w-1.75 h-1.75 rounded-full', URGENCY_DOT[level])} />

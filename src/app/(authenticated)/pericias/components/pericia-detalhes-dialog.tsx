@@ -95,7 +95,7 @@ function Section({
           {title}
         </h3>
       </header>
-      <div className={cn(/* design-system-escape: pl-5.5 padding direcional sem Inset equiv. */ "pl-5.5")}>{children}</div>
+      <div className={cn("pl-5.5")}>{children}</div>
     </section>
   );
 }
@@ -108,7 +108,7 @@ function InfoRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "grid grid-cols-[120px_1fr] inline-medium py-1.5 text-body-sm")}>
+    <div className={cn("grid grid-cols-[120px_1fr] inline-medium py-1.5 text-body-sm")}>
       <dt className="text-[12px] text-muted-foreground/60">{label}</dt>
       <dd className={cn( "font-medium text-foreground/90")}>{children}</dd>
     </div>
@@ -124,7 +124,7 @@ function MetaItem({
 }) {
   return (
     <div className={cn("flex flex-col inline-micro min-w-0")}>
-      <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
+      <span className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </span>
       <div className={cn("flex items-center inline-snug text-body-sm")}>{children}</div>
@@ -242,7 +242,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
     ?.avatarUrl;
 
   return (
-    <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "stack-loose pb-6")}>
+    <div className={cn("stack-loose pb-6")}>
       {/* Meta Grid */}
       <GlassPanel depth={1} className={cn("inset-card-compact bg-muted/20")}>
         <div className={cn("grid grid-cols-3 inline-medium")}>
@@ -301,7 +301,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
           icon={<ListTodo className="size-3.5 text-muted-foreground/50" />}
           title="Observações"
         >
-          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground/80 whitespace-pre-wrap leading-relaxed")}>
+          <p className={cn("text-body-sm text-foreground/80 whitespace-pre-wrap leading-relaxed")}>
             {pericia.observacoes}
           </p>
         </Section>
@@ -373,7 +373,7 @@ export function PericiaDetalhesDialog({
         </DialogHeader>
 
         {/* Scrollable content */}
-        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-1 pt-2")}>
+        <div className={cn("flex-1 overflow-y-auto px-1 pt-2")}>
           {exibirLista ? (
             <div className={cn("stack-micro")}>
               {pericias!.map((p) => (

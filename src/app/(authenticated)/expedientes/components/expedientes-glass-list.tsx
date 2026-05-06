@@ -91,7 +91,7 @@ function GlassEmptyState() {
   return (
     <div
       className={cn(
-        /* design-system-escape: py-16 vertical breathing room do empty state — mirror do estado de captura/audiências */ 'flex flex-col items-center justify-center py-16 opacity-60',
+        'flex flex-col items-center justify-center py-16 opacity-60',
       )}
     >
       <FileSearch className="mb-4 size-10 text-muted-foreground/55" />

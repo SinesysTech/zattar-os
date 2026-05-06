@@ -80,7 +80,7 @@ export function ProfileSidebar({
           size="sm"
           variant="outline"
           onClick={onEditCover}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "absolute top-2 right-2 h-7 px-2 inline-micro text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
+          className={cn("absolute top-2 right-2 h-7 px-2 inline-micro text-[11px] bg-black/30 backdrop-blur-sm border-foreground/10 text-white/70 hover:bg-black/50 hover:text-white/90")}
         >
           <Camera className="size-3" />
           Editar
@@ -88,7 +88,7 @@ export function ProfileSidebar({
       </div>
 
       {/* 2. Avatar section */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center -mt-11 px-5 relative z-2")}>
+      <div className={cn("flex flex-col items-center -mt-11 px-5 relative z-2")}>
         <div
           className="group relative cursor-pointer"
           onClick={onEditAvatar}
@@ -101,7 +101,7 @@ export function ProfileSidebar({
             strokeWidth={2.5}
           />
           <Avatar
-            className={cn(/* design-system-escape: m-1.5 margin sem primitiva DS */ "border-4 border-background m-1.5")}
+            className={cn("border-4 border-background m-1.5")}
             style={{ width: 88, height: 88 }}
           >
             {avatarUrl && <AvatarImage src={avatarUrl} alt={usuario.nomeCompleto} />}
@@ -163,7 +163,7 @@ export function ProfileSidebar({
       )}
 
       {/* 6. Completeness section */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3 border-t border-border/10")}>
+      <div className={cn("px-5 py-3 border-t border-border/10")}>
         <div className="flex justify-between items-center mb-1.5">
           <Text variant="meta-label" className="text-muted-foreground/40 uppercase">Perfil</Text>
           <Text variant="meta-label" className={cn('font-semibold', colorCss.text)}>
@@ -201,7 +201,7 @@ export function ProfileSidebar({
       </div>
 
       {/* 7. Quick Actions */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "px-5 py-4 border-t border-border/10 flex flex-col inline-snug")}>
+      <div className={cn("px-5 py-4 border-t border-border/10 flex flex-col inline-snug")}>
         <Button
           variant="outline"
           size="sm"

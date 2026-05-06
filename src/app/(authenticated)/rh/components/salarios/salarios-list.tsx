@@ -554,7 +554,7 @@ export function SalariosList() {
               <strong>{salarioSelecionado?.usuario?.nomeExibicao}</strong>
             </DialogDescription>
           </DialogHeader>
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+          <div className={cn("py-4")}>
             <Label htmlFor="dataFimVigencia">Data de Fim</Label>
             <Input
               id="dataFimVigencia"

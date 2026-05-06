@@ -282,7 +282,7 @@ function GlassCard({
       )}
 
       {/* Footer: captura + status */}
-      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
+      <div className={cn("flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
         <div className={cn("flex items-center inline-snug")}>
           {formulario.foto_necessaria && (
             <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro bg-info/10 border border-info/25 text-info rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
@@ -477,7 +477,7 @@ function CardsSkeleton() {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <ClipboardList className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>Nenhum formulário encontrado</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">Tente ajustar os filtros ou criar um novo formulário</Text>

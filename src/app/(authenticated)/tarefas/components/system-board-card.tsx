@@ -37,12 +37,12 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
       <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
         <div className={cn("flex items-center inline-snug flex-wrap")}>
           {sourceLabel && (
-            <AppBadge variant="outline" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
+            <AppBadge variant="outline" className={cn("text-[10px] px-1 py-0")}>
               {sourceLabel}
             </AppBadge>
           )}
           {event.prazoVencido && (
-            <AppBadge variant="destructive" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
+            <AppBadge variant="destructive" className={cn("text-[10px] px-1 py-0")}>
               Vencido
             </AppBadge>
           )}

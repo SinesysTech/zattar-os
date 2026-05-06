@@ -112,7 +112,7 @@ export function WidgetKpiPulse() {
         />
       </div>
 
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center inline-default pt-3 border-t border-border/10")}>
+      <div className={cn("flex items-center inline-default pt-3 border-t border-border/10")}>
         <div className={cn("flex items-center inline-medium")}>
           <ProgressRing
             percent={taxaResolucao}
@@ -120,7 +120,7 @@ export function WidgetKpiPulse() {
             color="hsl(142 60% 45%)"
           />
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Taxa de Resolucao
             </p>
             <p className="text-[10px] text-muted-foreground/60 mt-0.5">
@@ -130,7 +130,7 @@ export function WidgetKpiPulse() {
         </div>
         {tendenciaData.length >= 2 && (
           <div className={cn("flex-1 flex flex-col items-end inline-micro")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendencia {tendenciaData.length}m
             </p>
             <Sparkline

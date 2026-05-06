@@ -45,7 +45,7 @@ export function WidgetComparativoMensal() {
         icon={BarChart3}
         subtitle="Comparacao entre os ultimos 2 meses"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-6 inline-tight")}>
           <BarChart3 className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Necessario pelo menos 2 meses de dados

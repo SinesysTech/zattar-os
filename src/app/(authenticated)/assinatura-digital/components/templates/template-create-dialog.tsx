@@ -246,7 +246,7 @@ export function TemplateCreateDialog({
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           {isLoadingSegmentos ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
+            <div className={cn("flex items-center justify-center py-8")}>
               <LoadingSpinner className="size-8 text-muted-foreground" />
             </div>
           ) : (

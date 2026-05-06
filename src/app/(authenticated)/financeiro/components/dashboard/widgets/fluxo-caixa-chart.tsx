@@ -74,7 +74,7 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent className="min-h-72">
@@ -97,7 +97,7 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <BarChart3 className="h-4 w-4 text-muted-foreground" />
           Fluxo de Caixa

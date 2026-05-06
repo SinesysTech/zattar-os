@@ -59,7 +59,7 @@ export function WidgetScorePessoal() {
       >
         <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes pendentes
             </span>
             <Text variant="kpi-value">
@@ -125,7 +125,7 @@ export function WidgetScorePessoal() {
         {/* Stats em linha */}
         <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-1 min-w-0 flex-wrap")}>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Baixas hoje
             </span>
             <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
@@ -135,7 +135,7 @@ export function WidgetScorePessoal() {
           </div>
 
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes
             </span>
             <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
@@ -145,7 +145,7 @@ export function WidgetScorePessoal() {
           </div>
 
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Audiências
             </span>
             <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
@@ -155,7 +155,7 @@ export function WidgetScorePessoal() {
           </div>
 
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Documentos
             </span>
             <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>

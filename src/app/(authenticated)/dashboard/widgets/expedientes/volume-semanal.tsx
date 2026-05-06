@@ -43,7 +43,7 @@ export function VolumeSemanal() {
         depth={1}
         className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de volume semanal nao disponiveis.
         </p>
       </WidgetContainer>
@@ -76,7 +76,7 @@ export function VolumeSemanal() {
         />
       </div>
 
-      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
+      <div className={cn("mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
         <div className={cn("flex items-center inline-medium")}>
           <div className={cn("flex items-center inline-snug")}>
             <div className="size-2 rounded-full bg-primary/60" />

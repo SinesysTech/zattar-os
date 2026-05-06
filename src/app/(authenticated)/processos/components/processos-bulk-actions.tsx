@@ -97,7 +97,7 @@ export function ProcessosBulkActions({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             <div className={cn("stack-tight")}>
               <Label htmlFor="responsavel-lote">Responsável</Label>
               <Select

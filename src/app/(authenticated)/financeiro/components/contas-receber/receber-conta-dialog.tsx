@@ -264,7 +264,7 @@ export function ReceberContaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             {/* Resumo da conta */}
             <div className={cn("rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
               <div className="flex justify-between items-start">

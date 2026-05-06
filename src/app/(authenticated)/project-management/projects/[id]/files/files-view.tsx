@@ -150,7 +150,7 @@ export function FilesView({
 
       {anexos.length === 0 ? (
         <Card>
-          <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
+          <CardContent className={cn("py-12 text-center")}>
             <FileIcon className="mx-auto size-10 text-muted-foreground mb-2" />
             <p className="text-muted-foreground">
               Nenhum arquivo enviado. Clique em &quot;Upload&quot; para
@@ -165,7 +165,7 @@ export function FilesView({
               {anexos.map((anexo) => (
                 <div
                   key={anexo.id}
-                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3")}
+                  className={cn("flex items-center justify-between px-4 py-3")}
                 >
                   <div className={cn("flex items-center inline-medium min-w-0")}>
                     <FileIcon className="size-5 text-muted-foreground shrink-0" />

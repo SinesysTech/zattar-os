@@ -49,7 +49,7 @@ function SidebarItem({ entry, level = 0 }: { entry: DocEntry; level?: number }) 
     <Link
       href={href}
       className={cn(
-        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'flex items-center rounded-md px-2 py-1.5 text-body-sm transition-colors hover:bg-accent',
+        'flex items-center rounded-md px-2 py-1.5 text-body-sm transition-colors hover:bg-accent',
         isActive ?  'bg-accent text-primary font-medium' : 'text-muted-foreground',
       )}
       style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -94,7 +94,7 @@ export function DocsSidebar() {
             placeholder="Buscar na documentação..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "pl-8 h-9")}
+            className={cn("pl-8 h-9")}
           />
           {search && (
             <Button
@@ -114,7 +114,7 @@ export function DocsSidebar() {
             <SidebarItem key={entry.slug} entry={entry} />
           ))}
           {filteredEntries.length === 0 && (
-            <p className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground px-2 py-4")}>
+            <p className={cn("text-body-sm text-muted-foreground px-2 py-4")}>
               Nenhum resultado encontrado.
             </p>
           )}

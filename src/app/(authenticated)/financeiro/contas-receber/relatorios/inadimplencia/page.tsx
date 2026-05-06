@@ -344,7 +344,7 @@ export default function RelatorioInadimplenciaPage() {
                 </TableBody>
               </Table>
             ) : (
-              <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 text-center text-muted-foreground")}>
+              <div className={cn("py-8 text-center text-muted-foreground")}>
                 Nenhum cliente inadimplente no período
               </div>
             )}
@@ -391,7 +391,7 @@ export default function RelatorioInadimplenciaPage() {
                 ))}
               </div>
             ) : (
-              <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 text-center text-muted-foreground")}>
+              <div className={cn("py-8 text-center text-muted-foreground")}>
                 Nenhuma conta vencida no período
               </div>
             )}
@@ -468,7 +468,7 @@ export default function RelatorioInadimplenciaPage() {
               </TableBody>
             </Table>
           ) : (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 text-center text-muted-foreground")}>
+            <div className={cn("py-8 text-center text-muted-foreground")}>
               Nenhuma conta vencida no período selecionado
             </div>
           )}

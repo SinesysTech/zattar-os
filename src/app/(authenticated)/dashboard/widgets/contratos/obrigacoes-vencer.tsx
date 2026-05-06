@@ -62,7 +62,7 @@ export function WidgetObrigacoesVencer() {
   if (!data) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -78,7 +78,7 @@ export function WidgetObrigacoesVencer() {
   if (!contratos) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -90,7 +90,7 @@ export function WidgetObrigacoesVencer() {
   if (obrigacoesVencer.length === 0) {
     return (
       <WidgetContainer title="Obrigações a Vencer" icon={Wallet} subtitle="Próximos 30 dias" depth={1}>
-        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-8 inline-tight")}>
           <Wallet className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Nenhuma obrigação a vencer no período

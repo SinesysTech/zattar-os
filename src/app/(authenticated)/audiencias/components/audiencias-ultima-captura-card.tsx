@@ -52,7 +52,7 @@ function MetricColumn({
 
 function UltimaCapturaCardSkeleton() {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 animate-pulse")}>
+    <GlassPanel depth={1} className={cn("px-4 py-3.5 animate-pulse")}>
       <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="h-4 w-28 bg-muted/30 rounded" />
         <div className="size-8 bg-muted/20 rounded-lg" />
@@ -81,7 +81,7 @@ export function AudienciasUltimaCapturaCard({
 
   if (!resumo) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 opacity-50")}>
+      <GlassPanel depth={1} className={cn("px-4 py-3.5 opacity-50")}>
         <p className="text-meta-label text-muted-foreground/70">
           ÚLTIMA CAPTURA
         </p>
@@ -102,7 +102,7 @@ export function AudienciasUltimaCapturaCard({
     <GlassPanel
       depth={1}
       className={cn(
-        /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5 cursor-pointer select-none',
+        'px-4 py-3.5 cursor-pointer select-none',
         'transition-all duration-200 hover:scale-[1.01] hover:shadow-lg',
         'focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none',
       )}

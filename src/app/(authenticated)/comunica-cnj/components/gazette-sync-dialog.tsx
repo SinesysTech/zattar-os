@@ -186,8 +186,8 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
         {/* ── Section: Sincronizar ── */}
         {section === 'sincronizar' && (
-          <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-col inline-default pt-1")}>
-            <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground leading-relaxed")}>
+          <div className={cn("flex flex-col inline-default pt-1")}>
+            <Text variant="caption" className={cn("text-muted-foreground leading-relaxed")}>
               Dispare uma sincronização manual para buscar novas publicações
               do Comunicação CNJ.
             </Text>
@@ -227,13 +227,13 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
 
         {/* ── Section: Histórico ── */}
         {section === 'historico' && (
-          <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-col inline-medium pt-1")}>
+          <div className={cn("flex flex-col inline-medium pt-1")}>
             {syncLogs.length === 0 ? (
-              <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-4 text-center")}>
+              <p className={cn("text-body-sm text-muted-foreground py-4 text-center")}>
                 Nenhuma sincronização registrada
               </p>
             ) : (
-              <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "max-h-80 overflow-y-auto pr-1")}>
+              <div className={cn("max-h-80 overflow-y-auto pr-1")}>
                 <GazetteTimeline items={timelineItems} />
               </div>
             )}

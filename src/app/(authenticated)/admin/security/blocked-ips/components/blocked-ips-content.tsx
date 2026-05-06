@@ -187,7 +187,7 @@ export function BlockedIpsContent() {
 
   if (loading) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
+      <div className={cn("flex items-center justify-center py-12")}>
         <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );
@@ -195,7 +195,7 @@ export function BlockedIpsContent() {
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 inline-default")}>
+      <div className={cn("flex flex-col items-center justify-center py-12 inline-default")}>
         <AlertTriangle className="h-12 w-12 text-destructive" />
         <p className="text-destructive">{error}</p>
         <Button onClick={fetchData} variant="outline">
@@ -272,7 +272,7 @@ export function BlockedIpsContent() {
         </CardHeader>
         <CardContent>
           {data.blocked.length === 0 ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
+            <div className={cn("text-center py-8 text-muted-foreground")}>
               Nenhum IP bloqueado no momento
             </div>
           ) : (
@@ -370,7 +370,7 @@ export function BlockedIpsContent() {
         </CardHeader>
         <CardContent>
           {data.whitelist.length === 0 ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
+            <div className={cn("text-center py-8 text-muted-foreground")}>
               Nenhum IP na whitelist
             </div>
           ) : (
@@ -481,7 +481,7 @@ export function BlockedIpsContent() {
               Insira o IP que deseja bloquear e o motivo.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             <div className={cn("stack-tight")}>
               <Label htmlFor="ip">Endereço IP</Label>
               <Input
@@ -500,7 +500,7 @@ export function BlockedIpsContent() {
                 onChange={(e) => setBlockDialog((prev) => ({ ...prev, reason: e.target.value }))}
               />
             </div>
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <input
                 type="checkbox"
                 id="permanent"

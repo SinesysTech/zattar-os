@@ -273,7 +273,7 @@ export function PangeaPageContent() {
     <div className={cn("stack-loose")}>
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn("stack-default")}>
         {/* Hero minimalista */}
-        <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center text-center inline-extra-loose py-10")}>
+        <div className={cn("flex flex-col items-center text-center inline-extra-loose py-10")}>
           <Image
             src="/assets/pangea.png"
             alt="Pangea — Banco Nacional de Precedentes"
@@ -430,7 +430,7 @@ export function PangeaPageContent() {
                                   key={o.codigo}
                                   value={`${o.codigo} ${o.nome}`}
                                   onSelect={() => handleToggleOrgao(o.codigo)}
-                                  className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "py-1.5")}
+                                  className={cn("py-1.5")}
                                 >
                                   <Check
                                     className={cn(
@@ -482,7 +482,7 @@ export function PangeaPageContent() {
                                   key={tipo}
                                   value={`${tipo} ${PANGEA_TIPO_LABELS[tipo]}`}
                                   onSelect={() => handleToggleTipo(tipo)}
-                                  className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "py-1.5")}
+                                  className={cn("py-1.5")}
                                 >
                                   <Check
                                     className={cn(
@@ -532,7 +532,7 @@ export function PangeaPageContent() {
                   </Select>
                 </div>
 
-                <div className={cn(/* design-system-escape: pt-7 padding direcional sem Inset equiv. */ "flex items-center inline-tight md:col-span-4 pt-7")}>
+                <div className={cn("flex items-center inline-tight md:col-span-4 pt-7")}>
                   <Switch checked={cancelados} onCheckedChange={setCancelados} id="cancelados" />
                   <Label htmlFor="cancelados">Exibir cancelados</Label>
                 </div>

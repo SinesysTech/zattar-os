@@ -355,7 +355,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
       <div className={cn("flex items-center inline-default")}>
 
         {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
-        <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
+        <div className={cn("flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
           <div className={cn(/* design-system-escape: leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
             {fmtTime(audiencia.dataInicio)}<span className="text-[10px] font-normal ml-px">h</span>
@@ -416,7 +416,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* Identidade Processual */}
           {(audiencia.poloAtivoNome || audiencia.poloPassivoNome || audiencia.trt || audiencia.numeroProcesso) && (
-            <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 stack-micro")}>
+            <div className={cn("mt-3 border-t border-border/40 pt-3 stack-micro")}>
               {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
                 <p className="text-caption font-semibold text-foreground leading-snug">
                   {audiencia.poloAtivoNome || '—'}
@@ -438,7 +438,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* Observações */}
           {audiencia.observacoes && (
-            <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3")}>
+            <div className={cn("mt-3 border-t border-border/40 pt-3")}>
               <Text variant="overline" as="p" className="mb-1">Observações</Text>
               <p className="text-caption text-foreground/75 line-clamp-2">{audiencia.observacoes}</p>
             </div>
@@ -446,7 +446,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
 
           {/* Footer */}
           <div
-            className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 flex items-center inline-snug")}
+            className={cn("mt-3 border-t border-border/40 pt-3 flex items-center inline-snug")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >

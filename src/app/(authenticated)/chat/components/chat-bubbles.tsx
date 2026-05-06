@@ -113,7 +113,7 @@ function TextChatBubble({
       {/* Bubble */}
       <div
         className={cn(
-          /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 text-[0.8125rem] leading-normal",
+          "px-4 py-2 text-[0.8125rem] leading-normal",
           bubbleCornerClass(!!message.ownMessage, isFirstInGroup),
           // Received bubble
           !message.ownMessage && "bg-chat-bubble-received border border-border/30 dark:border-white/5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-none",
@@ -460,7 +460,7 @@ export function ChatBubble({
       );
     case "sistema":
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-[0.625rem] text-muted-foreground/65 text-center py-2")}>
+        <div className={cn("text-[0.625rem] text-muted-foreground/65 text-center py-2")}>
           {message.conteudo}
         </div>
       );

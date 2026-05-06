@@ -123,7 +123,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
               <div key={monthLabel}>
                 <Text
                   variant="meta-label"
-                  className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pl-10 padding direcional sem Inset equiv. */ "block pt-1.5 pb-3 pl-10 text-muted-foreground/70")}
+                  className={cn("block pt-1.5 pb-3 pl-10 text-muted-foreground/70")}
                 >
                   {monthLabel}
                 </Text>
@@ -140,7 +140,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                       key={item.id}
                       className={cn(
                         'flex inline-medium relative',
-                        idx === items.length - 1 ? /* design-system-escape: pb-4 padding direcional sem Inset equiv. */ 'pb-4' : /* design-system-escape: pb-4 padding direcional sem Inset equiv. */ 'pb-4',
+                        idx === items.length - 1 ? 'pb-4' : 'pb-4',
                       )}
                     >
                       {!isLast ? (
@@ -159,7 +159,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                         <Icon className="size-3" />
                       </div>
 
-                      <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex-1 min-w-0 pt-0.5")}>
+                      <div className={cn("flex-1 min-w-0 pt-0.5")}>
                         <div className={cn("flex items-center flex-wrap inline-snug")}>
                           <Text variant="label" className={cn( "font-medium")}>
                             {isCreation
@@ -181,10 +181,10 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
                         </Text>
 
                         {item.reason ? (
-                          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "mt-2 px-3 py-2 rounded-lg bg-muted/40")}>
+                          <div className={cn("mt-2 px-3 py-2 rounded-lg bg-muted/40")}>
                             <Text
                               variant="caption"
-                              className={cn(/* design-system-escape: leading-relaxed sem token DS */ "leading-relaxed text-muted-foreground")}
+                              className={cn("leading-relaxed text-muted-foreground")}
                             >
                               {item.reason}
                             </Text>

@@ -376,7 +376,7 @@ export default function CredenciaisPage() {
         <PulseStrip items={kpiItems} />
 
         {/* Filter Bar */}
-        <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-4 py-2.5")}>
+        <GlassPanel depth={1} className={cn("px-4 py-2.5")}>
           <div className={cn("flex flex-col sm:flex-row items-start sm:items-center inline-medium")}>
             <div className={cn("flex items-center inline-tight flex-wrap")}>
               <AdvogadosFilter
@@ -419,7 +419,7 @@ export default function CredenciaisPage() {
         {viewMode === 'tabela' && (
           <>
             <GlassPanel depth={1} className="overflow-hidden relative">
-              <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center px-4 py-2.5 border-b border-foreground/5")}>
+              <div className={cn("flex items-center px-4 py-2.5 border-b border-foreground/5")}>
                 <Text variant="caption" className="text-muted-foreground/60">
                   {credenciaisFiltradas.length} credenciais
                 </Text>
@@ -441,7 +441,7 @@ export default function CredenciaisPage() {
 
               {/* Sticky Bulk Actions Bar */}
               {selectedCount > 0 && (
-                <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "sticky bottom-0 left-0 right-0 flex items-center inline-medium bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl")}>
+                <div className={cn("sticky bottom-0 left-0 right-0 flex items-center inline-medium bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl")}>
                   <span className={cn( "text-body-sm font-semibold flex-1")}>{selectedCount} selecionada(s)</span>
                   <Button
                     variant="secondary"
@@ -503,7 +503,7 @@ export default function CredenciaisPage() {
                     </div>
                   </div>
 
-                  <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
+                  <div className={cn("border-t border-border/10 my-2")} />
 
                   {/* Advogado info */}
                   <div className={cn("stack-micro")}>
@@ -519,7 +519,7 @@ export default function CredenciaisPage() {
                     )}
                   </div>
 
-                  <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
+                  <div className={cn("border-t border-border/10 mt-3 pt-3")} />
 
                   {/* Actions */}
                   <div className={cn("flex items-center inline-tight")}>
@@ -561,7 +561,7 @@ export default function CredenciaisPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+          <div className={cn("py-4")}>
             <div className={cn("grid inline-tight")}>
               <Label>Advogado</Label>
               <AdvogadoCombobox

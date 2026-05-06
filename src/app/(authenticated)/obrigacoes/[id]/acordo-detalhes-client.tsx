@@ -262,7 +262,7 @@ export function AcordoDetalhesClient({
       />
 
       {/* ==================== TAB CONTENT ==================== */}
-      <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "flex-1 min-h-0 overflow-y-auto pr-1")}>
+      <div className={cn("flex-1 min-h-0 overflow-y-auto pr-1")}>
         {activeTab === 'resumo' && <ResumoTab acordo={acordo} />}
 
         {activeTab === 'parcelas' && (
@@ -406,7 +406,7 @@ function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
           />
         </dl>
         {acordo.observacoes && (
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/15")}>
+          <div className={cn("mt-5 pt-4 border-t border-border/15")}>
             <Text variant="label" className="mb-1.5">
               Observações
             </Text>

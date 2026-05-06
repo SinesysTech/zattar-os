@@ -302,7 +302,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
   return (
     <div className="flex h-full flex-col">
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center inline-tight px-2")}>
+      <div className={cn("flex h-13 shrink-0 items-center inline-tight px-2")}>
         <div className={cn("flex items-center inline-tight")}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -359,7 +359,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </Tooltip>
         </div>
 
-        <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-6")} />
+        <Separator orientation="vertical" className={cn("mx-1 h-6")} />
 
         <Tooltip>
           <Popover>
@@ -372,8 +372,8 @@ export function MailDisplay({ mail }: MailDisplayProps) {
               </TooltipTrigger>
             </PopoverTrigger>
             <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex w-[calc(100vw-2rem)] sm:w-133.75 p-0")}>
-              <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex flex-col inline-tight border-r px-2 py-4")}>
-                <Text variant="label" className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "px-4")}>Adiar até</Text>
+              <div className={cn("flex flex-col inline-tight border-r px-2 py-4")}>
+                <Text variant="label" className={cn("px-4")}>Adiar até</Text>
                 <div className={cn("grid min-w-62.5 inline-micro")}>
                   <Button
                     variant="ghost"
@@ -440,7 +440,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             </TooltipContent>
           </Tooltip>
 
-          <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-6")} />
+          <Separator orientation="vertical" className={cn("mx-1 h-6")} />
 
           <Tooltip>
             <TooltipTrigger asChild>
@@ -495,7 +495,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           )}
         </div>
 
-        <Separator orientation="vertical" className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "mx-1 h-6")} />
+        <Separator orientation="vertical" className={cn("mx-1 h-6")} />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -44,7 +44,7 @@ export function ResultadoDecisao() {
         depth={1}
         className={cn(/* design-system-escape: p-4! → usar <Inset> */ "h-auto! self-start p-4!")}
       >
-        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-6 text-center")}>
           Dados de resultado nao disponiveis.
         </p>
       </WidgetContainer>

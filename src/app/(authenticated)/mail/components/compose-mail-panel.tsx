@@ -96,7 +96,7 @@ export function ComposeMailPanel() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center justify-between px-4")}>
+      <div className={cn("flex h-13 shrink-0 items-center justify-between px-4")}>
         <Heading level="card" className={cn("text-body-sm")}>Novo E-mail</Heading>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -116,7 +116,7 @@ export function ComposeMailPanel() {
       <Separator />
 
       {/* Fields */}
-      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 grid inline-medium px-4 py-3")}>
+      <div className={cn("shrink-0 grid inline-medium px-4 py-3")}>
         <div className={cn("grid inline-tight")}>
           <div className="flex items-center justify-between">
             <Label htmlFor="compose-panel-to">Para</Label>

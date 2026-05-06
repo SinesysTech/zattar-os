@@ -86,7 +86,7 @@ export function LinkGeradoDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "stack-default py-2")}>
+        <div className={cn("stack-default py-2")}>
           <div className={cn("flex inline-tight items-center")}>
             <Input readOnly value={fullUrl} className={cn("text-caption")} />
             <Button

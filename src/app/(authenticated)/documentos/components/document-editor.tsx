@@ -38,7 +38,7 @@ import { LoadingSpinner } from "@/components/ui/loading-state"
  */
 function PlateEditorSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-4xl stack-default py-8")}>
+    <div className={cn("mx-auto w-full max-w-4xl stack-default py-8")}>
       <Skeleton className="h-8 w-3/4" />
       <Skeleton className="h-6 w-full" />
       <Skeleton className="h-6 w-full" />
@@ -216,7 +216,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
     <div className="flex h-full flex-col">
       {/* Header/Toolbar */}
       <div className="border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-14 items-center justify-between px-4 inline-default")}>
+        <div className={cn("flex h-14 items-center justify-between px-4 inline-default")}>
           {/* Left */}
           <div className={cn("flex items-center inline-tight flex-1 min-w-0")}>
             <Button

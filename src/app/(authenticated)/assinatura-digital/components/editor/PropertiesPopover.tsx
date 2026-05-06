@@ -146,7 +146,7 @@ export default function PropertiesPopover({
           </SheetDescription>
         </SheetHeader>
 
-        <Separator className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "my-3")} />
+        <Separator className={cn("my-3")} />
 
         <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
           {/* Informacoes Gerais */}
@@ -158,7 +158,7 @@ export default function PropertiesPopover({
               </div>
               <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
-            <CollapsibleContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "stack-medium px-2 pt-2")}>
+            <CollapsibleContent className={cn("stack-medium px-2 pt-2")}>
               {/* Variavel selector (ocultar para texto_composto) */}
               {selectedField.tipo !== 'texto_composto' && (
                 <div className={cn("stack-snug")}>
@@ -212,7 +212,7 @@ export default function PropertiesPopover({
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] leading-tight text-muted-foreground")}>
+                  <p className={cn("text-[11px] leading-tight text-muted-foreground")}>
                     O nome será definido automaticamente pela variável
                   </p>
                 </div>
@@ -230,7 +230,7 @@ export default function PropertiesPopover({
                   className={cn("h-8 text-caption")}
                   placeholder="1, 2, 3..."
                 />
-                <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] leading-tight text-muted-foreground")}>
+                <p className={cn("text-[11px] leading-tight text-muted-foreground")}>
                   Define a ordem em que o campo aparece no PDF
                 </p>
               </div>
@@ -246,7 +246,7 @@ export default function PropertiesPopover({
               </div>
               <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
             </CollapsibleTrigger>
-            <CollapsibleContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "stack-medium px-2 pt-2")}>
+            <CollapsibleContent className={cn("stack-medium px-2 pt-2")}>
               <div className={cn("grid grid-cols-2 inline-tight")}>
                 <div className={cn("stack-snug")}>
                   <Label htmlFor="field-pos-x" className={cn("text-caption text-muted-foreground")}>Posição X</Label>
@@ -332,7 +332,7 @@ export default function PropertiesPopover({
                 </div>
                 <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
               </CollapsibleTrigger>
-              <CollapsibleContent className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "stack-medium px-2 pt-2")}>
+              <CollapsibleContent className={cn("stack-medium px-2 pt-2")}>
                 <div className={cn("stack-snug")}>
                   <Label htmlFor="field-font-size" className={cn("text-caption text-muted-foreground")}>Tamanho da fonte</Label>
                   <Input

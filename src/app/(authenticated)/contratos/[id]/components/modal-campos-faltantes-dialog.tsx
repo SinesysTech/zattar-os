@@ -66,7 +66,7 @@ export function ModalCamposFaltantesDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "stack-default max-h-100rflow-y-auto pr-2")}>
+        <form onSubmit={handleSubmit} className={cn("stack-default max-h-100rflow-y-auto pr-2")}>
           {camposFaltantes.map((campo) => (
             <div key={campo.chave} className={cn("stack-micro")}>
               <Label htmlFor={campo.chave}>{campo.label}</Label>

@@ -197,7 +197,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
                 {/* Level */}
                 <div className={cn("flex flex-col items-center inline-tight")}>
                   {/* Level label */}
-                  <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/40")}>
+                  <span className={cn("text-[10px] uppercase tracking-wider text-muted-foreground/40")}>
                     {cargoNome}
                   </span>
 

@@ -153,7 +153,7 @@ function GlassRow({
     >
       <div className={cn("flex items-start inline-default")}>
         {/* COLUNA ESQUERDA (âncora): data + badge de tipo */}
-        <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-start inline-snug w-24 shrink-0 pt-0.5")}>
+        <div className={cn("flex flex-col items-start inline-snug w-24 shrink-0 pt-0.5")}>
           <div className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap")}>
             {dataDisponibilizacao
               ? format(dataDisponibilizacao, 'dd MMM yyyy', { locale: ptBR })
@@ -193,7 +193,7 @@ function GlassRow({
                 <span className="tabular-nums">{numeroProcesso}</span>
               )}
             </h3>
-            <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "shrink-0 pt-0.5")}>
+            <div className={cn("shrink-0 pt-0.5")}>
               <StatusOrCountdown
                 status={comunicacao.statusVinculacao}
                 dias={comunicacao.diasParaPrazo}

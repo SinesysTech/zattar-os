@@ -270,7 +270,7 @@ function PericiaMissionCard({
           </div>
 
           {/* ── 2. Info grid: Tribunal | Processo ─────────────────── */}
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-3 inline-medium rounded-lg bg-border/5 px-3 py-2.5")}>
+          <div className={cn("grid grid-cols-3 inline-medium rounded-lg bg-border/5 px-3 py-2.5")}>
             <div className={cn("flex flex-col inline-nano min-w-0")}>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Tribunal
@@ -294,7 +294,7 @@ function PericiaMissionCard({
 
           {/* ── 3. Partes: Autor vs Réu ──────────────────────────── */}
           {(parteAutora || parteRe) && (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg bg-border/5 px-3 py-2")}>
+            <div className={cn("flex items-center inline-tight rounded-lg bg-border/5 px-3 py-2")}>
               <div className="flex-1 min-w-0">
                 <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
                   Autor
@@ -303,7 +303,7 @@ function PericiaMissionCard({
                   {parteAutora || '—'}
                 </span>
               </div>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/40 shrink-0 uppercase tracking-wider")}>
+              <span className={cn("text-[9px] text-muted-foreground/40 shrink-0 uppercase tracking-wider")}>
                 vs
               </span>
               <div className="flex-1 min-w-0 text-right">
@@ -321,7 +321,7 @@ function PericiaMissionCard({
           {perito && (
             <div className={cn("flex items-start inline-snug text-[12px] text-foreground/75 wrap-break-word")}>
               <Briefcase className="size-3 text-muted-foreground/50 shrink-0 mt-0.5" />
-              <span className={cn(/* design-system-escape: leading-snug sem token DS */ "wrap-break-word leading-snug")}>
+              <span className={cn("wrap-break-word leading-snug")}>
                 <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55 mr-1.5")}>
                   Perito
                 </span>

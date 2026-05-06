@@ -93,7 +93,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     <div data-slot="month-view" className="contents">
       <div className="border-border/70 grid grid-cols-7 border-b">
         {weekdays.map((day) => (
-          <div key={day} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-muted-foreground/70 py-2 text-center text-body-sm")}>
+          <div key={day} className={cn("text-muted-foreground/70 py-2 text-center text-body-sm")}>
             {day}
           </div>
         ))}

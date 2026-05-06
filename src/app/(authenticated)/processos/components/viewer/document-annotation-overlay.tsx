@@ -57,7 +57,7 @@ export function DocumentAnnotationOverlay({
 
   return (
     <aside className="pointer-events-auto absolute inset-y-3 right-3 z-20 hidden w-72 rounded-2xl border bg-background/96 shadow-lg backdrop-blur lg:flex lg:flex-col">
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "border-b px-3 py-2.5")}>
+      <div className={cn("border-b px-3 py-2.5")}>
         <div className={cn("flex items-center inline-tight")}>
           <div className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-primary">
             <StickyNote className="size-3.5" />
@@ -69,8 +69,8 @@ export function DocumentAnnotationOverlay({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "border-b px-3 py-2.5 stack-tight")}>
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-xl border bg-muted/25 px-3 py-2")}>
+      <div className={cn("border-b px-3 py-2.5 stack-tight")}>
+        <div className={cn("rounded-xl border bg-muted/25 px-3 py-2")}>
           <Text variant="caption" className="truncate font-medium text-foreground">
             {itemTitle || 'Nenhum evento selecionado'}
           </Text>
@@ -85,11 +85,11 @@ export function DocumentAnnotationOverlay({
             className="min-h-22 resize-none bg-background"
           />
           <div className={cn("flex items-center justify-between inline-tight")}>
-            <p className={cn(/* design-system-escape: leading-4 sem token DS */ "line-clamp-2 text-[10px] leading-4 text-muted-foreground")}>{helperText}</p>
+            <p className={cn("line-clamp-2 text-[10px] leading-4 text-muted-foreground")}>{helperText}</p>
             <Button
               type="button"
               size="sm"
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-8 inline-snug px-3")}
+              className={cn("h-8 inline-snug px-3")}
               onClick={() => {
                 const trimmedDraft = draft.trim();
                 if (!trimmedDraft) return;
@@ -105,12 +105,12 @@ export function DocumentAnnotationOverlay({
         </div>
       </div>
 
-      <ScrollArea className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "min-h-0 flex-1 px-3 py-2.5")}>
-        <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight pr-1")}>
+      <ScrollArea className={cn("min-h-0 flex-1 px-3 py-2.5")}>
+        <div className={cn("stack-tight pr-1")}>
           {annotations.length === 0 ? (
-            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center")}>
+            <div className={cn("rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center")}>
               <p className={cn( "text-body-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>
-              <p className={cn(/* design-system-escape: leading-4 sem token DS */ "mt-1 text-[11px] leading-4 text-muted-foreground")}>
+              <p className={cn("mt-1 text-[11px] leading-4 text-muted-foreground")}>
                 Use este painel sem sair do documento.
               </p>
             </div>
@@ -119,7 +119,7 @@ export function DocumentAnnotationOverlay({
               <article
                 key={annotation.id}
                 className={cn(
-                  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'rounded-xl border px-3 py-2.5 shadow-sm',
+                  'rounded-xl border px-3 py-2.5 shadow-sm',
                   index === 0 ? 'bg-primary/5 border-primary/20' : 'bg-background'
                 )}
               >
@@ -141,7 +141,7 @@ export function DocumentAnnotationOverlay({
                     <Trash2 className="size-3.5" />
                   </Button>
                 </div>
-                <p className={cn(/* design-system-escape: leading-5 sem token DS */ "text-body-sm leading-5 text-foreground")}>{annotation.content}</p>
+                <p className={cn("text-body-sm leading-5 text-foreground")}>{annotation.content}</p>
               </article>
             ))
           )}

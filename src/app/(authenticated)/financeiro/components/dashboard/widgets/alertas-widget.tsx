@@ -58,7 +58,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <div className={cn("flex items-center inline-tight")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
             <span className={cn( "text-body-sm font-medium")}>Alertas</span>
@@ -84,7 +84,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className="flex items-center justify-between">
           <div className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
@@ -122,7 +122,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
                   )}
                 >
                   <Icon className={cn('h-4 w-4 shrink-0 mt-0.5', config.iconClass)} />
-                  <span className={cn(/* design-system-escape: leading-snug sem token DS */ "flex-1 leading-snug")}>{alerta.mensagem}</span>
+                  <span className={cn("flex-1 leading-snug")}>{alerta.mensagem}</span>
                 </div>
               );
             })}

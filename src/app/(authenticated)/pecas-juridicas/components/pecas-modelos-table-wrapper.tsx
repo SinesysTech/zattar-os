@@ -437,7 +437,7 @@ export function PecasModelosTableWrapper({
           isLoading={isLoading}
           emptyMessage="Nenhum modelo encontrado"
           emptyComponent={
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-tight py-8")}>
+            <div className={cn("flex flex-col items-center inline-tight py-8")}>
               <FileText className="h-12 w-12 text-muted-foreground" />
               <span className="text-muted-foreground">Nenhum modelo encontrado</span>
             </div>

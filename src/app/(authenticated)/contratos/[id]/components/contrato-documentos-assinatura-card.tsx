@@ -188,7 +188,7 @@ export function ContratoDocumentosAssinaturaCard({
     >
       <DetailSectionCard>
         {documentos.length === 0 ? (
-          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
+          <div className={cn("flex flex-col items-center justify-center py-8 text-center")}>
             <div className="inline-flex size-10 items-center justify-center rounded-xl bg-muted/40 text-muted-foreground mb-2">
               <FileSignature className="size-4" aria-hidden="true" />
             </div>
@@ -201,7 +201,7 @@ export function ContratoDocumentosAssinaturaCard({
           </div>
         ) : (
           <div className={cn("stack-tight")}>
-            <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-1 pb-1")}>
+            <div className={cn("flex items-center inline-medium px-1 pb-1")}>
               <p className="text-[11px] text-muted-foreground">
                 <span className={cn( "font-medium text-foreground")}>{totalAssinados}</span>{' '}
                 assinado{totalAssinados === 1 ? '' : 's'}
@@ -257,7 +257,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
   const podeBaixar = doc.pdf_final_url !== null || doc.pdf_original_url !== null;
 
   return (
-    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-3 py-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors")}>
+    <div className={cn("flex items-center inline-medium px-3 py-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors")}>
       <div className="inline-flex size-8 items-center justify-center rounded-[10px] bg-background shrink-0">
         {statusIcon}
       </div>
@@ -269,7 +269,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
           <SemanticBadge
             category="document_signature_status"
             value={doc.status}
-            className={cn(/* design-system-escape: py-0 padding direcional sem Inset equiv.; px-1.5 padding direcional sem Inset equiv. */ "text-[10px] py-0 px-1.5 h-4 shrink-0")}
+            className={cn("text-[10px] py-0 px-1.5 h-4 shrink-0")}
           >
             {STATUS_LABELS[doc.status]}
           </SemanticBadge>
@@ -304,7 +304,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
             size="sm"
             asChild
             title="Abrir link de assinatura"
-            className={cn(/* design-system-escape: px-0 padding direcional sem Inset equiv. */ "h-7 w-7 px-0 rounded-lg")}
+            className={cn("h-7 w-7 px-0 rounded-lg")}
           >
             <a
               href={`/assinatura/${doc.assinantes[0].token}`}

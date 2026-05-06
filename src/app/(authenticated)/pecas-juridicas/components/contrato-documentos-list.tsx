@@ -203,7 +203,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
   // Empty state
   if (documentos.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 text-center")}>
+      <div className={cn("py-12 text-center")}>
         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
         <p className="text-muted-foreground">Nenhum documento vinculado a este contrato</p>
         <p className={cn("text-body-sm text-muted-foreground mt-1")}>

@@ -202,7 +202,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
+    <div className={cn("rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn("size-3.5", iconColor)} />
@@ -247,7 +247,7 @@ function DayDetailDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "stack-tight pr-2")}>
+          <div className={cn("stack-tight pr-2")}>
             {sorted.map((evt) => {
               const colors = getSourceColors(evt.source);
               const cfg = SOURCE_CONFIGS[evt.source as AgendaSource];
@@ -540,7 +540,7 @@ export function AnoView({
 
             {/* Ranking por Volume */}
             {topMonths.length > 0 && (
-              <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "pt-1")}>
+              <div className={cn("pt-1")}>
                 <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
                   Ranking por Volume
                 </span>
@@ -600,7 +600,7 @@ export function AnoView({
               <span className="text-[9px] text-muted-foreground/40 ml-1">
                 Mais
               </span>
-              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-[9px]")}>·</span>
+              <span className={cn("text-muted-foreground/40 mx-2 text-[9px]")}>·</span>
               <div className={cn("flex items-center inline-snug")}>
                 <div className="size-3 rounded-[2px] bg-muted/50 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-[9px] text-muted-foreground/50">Hoje</span>

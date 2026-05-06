@@ -37,7 +37,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent>
@@ -60,7 +60,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   if (!data || !data.resumo) {
     return (
       <Card className="h-full flex flex-col">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
             <Target className="h-4 w-4 text-muted-foreground" />
             Orçamento vs Realizado
@@ -89,7 +89,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <Target className="h-4 w-4 text-muted-foreground" />
           Orçamento vs Realizado

@@ -35,7 +35,7 @@ export function EventAttachmentsList({
   const temArquivo = temBackblaze || temGoogleDrive;
 
   return (
-    <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "px-6 py-6")}>
+    <div className={cn("px-6 py-6")}>
       <Heading level="card" className={cn("text-body-sm mb-4")}>Arquivos Anexos</Heading>
 
       {!temArquivo ? (
@@ -61,7 +61,7 @@ export function EventAttachmentsList({
                 }
               }}
               className={cn(
-                /* design-system-escape: px-3 padding direcional sem Inset equiv. */ 'group flex items-center justify-between h-10 px-3',
+                'group flex items-center justify-between h-10 px-3',
                 'rounded-lg border hover:border-primary/30 hover:bg-primary/5',
                 'transition-all cursor-pointer bg-card',
                 isLoading && 'opacity-50 cursor-not-allowed'
@@ -76,7 +76,7 @@ export function EventAttachmentsList({
               </div>
 
               {/* Lado direito: ícone de download (visível ao hover) */}
-              <div className={cn(/* design-system-escape: pl-3 padding direcional sem Inset equiv. */ "shrink-0 pl-3")}>
+              <div className={cn("shrink-0 pl-3")}>
                 <Download className="size-4.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </div>
@@ -94,7 +94,7 @@ export function EventAttachmentsList({
                 onOpen(item.googleDrive!.fileId);
               }}
               className={cn(
-                /* design-system-escape: px-3 padding direcional sem Inset equiv. */ 'group flex items-center justify-between h-10 px-3',
+                'group flex items-center justify-between h-10 px-3',
                 'rounded-lg border hover:border-primary/30 hover:bg-primary/5',
                 'transition-all cursor-pointer bg-card no-underline'
               )}
@@ -108,7 +108,7 @@ export function EventAttachmentsList({
               </div>
 
               {/* Lado direito: ícone externo (visível ao hover) */}
-              <div className={cn(/* design-system-escape: pl-3 padding direcional sem Inset equiv. */ "shrink-0 pl-3")}>
+              <div className={cn("shrink-0 pl-3")}>
                 <ExternalLink className="size-4.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </a>

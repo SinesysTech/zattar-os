@@ -90,7 +90,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
             <Building2 className="size-3.5 text-muted-foreground/50 mt-0.5 shrink-0" />
             <Text
               variant="caption"
-              className={cn(/* design-system-escape: leading-snug sem token DS */ "text-foreground/80 leading-snug")}
+              className={cn("text-foreground/80 leading-snug")}
             >
               {processo.descricao_orgao_julgador}
             </Text>
@@ -98,7 +98,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
         )}
 
         {(parteAutora || parteRe) && (
-          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t border-border/15 stack-snug")}>
+          <div className={cn("pt-3 border-t border-border/15 stack-snug")}>
             {parteAutora && (
               <PartesRow polo="Autor" nome={parteAutora} />
             )}

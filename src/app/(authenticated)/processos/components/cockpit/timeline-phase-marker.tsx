@@ -24,7 +24,7 @@ export function TimelinePhaseMarker({ phase, className }: TimelinePhaseMarkerPro
 
   return (
     <div
-      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center inline-tight px-4 py-2', className)}
+      className={cn('flex items-center inline-tight px-4 py-2', className)}
       aria-label={`Fase: ${config.label}`}
     >
       <div className="h-px flex-1 bg-border/8" />

@@ -369,7 +369,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
 
             {/* Lista de Segmentos */}
             {isLoading ? (
-              <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center py-8")}>
+              <div className={cn("flex items-center justify-center py-8")}>
                 <LoadingSpinner className="size-6 text-muted-foreground" />
               </div>
             ) : segmentos.length === 0 ? (
@@ -386,7 +386,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                 {segmentos.map((segmento) => (
                   <div
                     key={segmento.id}
-                    className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded")}
+                    className={cn("flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded")}
                   >
                     <div className={cn("flex items-center inline-tight flex-1 min-w-0")}>
                       <span className={cn( "font-medium")}>{segmento.nome}</span>

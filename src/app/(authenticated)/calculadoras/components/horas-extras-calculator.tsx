@@ -22,14 +22,14 @@ export function HorasExtrasCalculator() {
   const totalBruto = totalHorasExtras + dsr;
 
   return (
-    <div className={cn(/* design-system-escape: pb-20 padding direcional sem Inset equiv. */ "max-w-6xl mx-auto stack-section animate-in fade-in duration-700 w-full pb-20")}>
+    <div className={cn("max-w-6xl mx-auto stack-section animate-in fade-in duration-700 w-full pb-20")}>
       
       {/* Header */}
       <div className="mb-12">
         <Text variant="caption" className="font-label uppercase tracking-[0.2em] text-primary mb-2 block">
           Labor Law Suite
         </Text>
-        <h1 className={cn(/* design-system-escape: tracking-tighter sem token DS */ "font-headline font-extrabold text-5xl md:text-6xl tracking-tighter text-on-surface mb-6 max-w-3xl")}>
+        <h1 className={cn("font-headline font-extrabold text-5xl md:text-6xl tracking-tighter text-on-surface mb-6 max-w-3xl")}>
           Calculadora de <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">Horas Extras</span>
         </h1>
         <p className={cn(/* design-system-escape: md:text-xl sem equivalente DS */ "text-on-surface-variant text-body-lg md:text-xl max-w-2xl font-body")}>
@@ -91,8 +91,8 @@ export function HorasExtrasCalculator() {
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: pt-8 padding direcional sem Inset equiv. */ "mt-10 pt-8 border-t border-foreground/5")}>
-              <button className={cn(/* design-system-escape: py-5 padding direcional sem Inset equiv.; tracking-widest sem token DS */ "w-full py-5 bg-linear-to-r from-primary to-primary-dim text-on-primary-fixed rounded-lg font-black uppercase tracking-widest flex items-center justify-center inline-medium hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] transition-all active:scale-95")}>
+            <div className={cn("mt-10 pt-8 border-t border-foreground/5")}>
+              <button className={cn("w-full py-5 bg-linear-to-r from-primary to-primary-dim text-on-primary-fixed rounded-lg font-black uppercase tracking-widest flex items-center justify-center inline-medium hover:shadow-[0_0_30px_rgba(204,151,255,0.3)] transition-all active:scale-95")}>
                 <Calculator className="w-5 h-5" />
                 Recalcular
               </button>
@@ -105,7 +105,7 @@ export function HorasExtrasCalculator() {
             </div>
             <div>
               <h4 className={cn( "text-on-surface font-bold mb-1")}>Conformidade com a CLT</h4>
-              <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-on-surface-variant text-body-sm leading-relaxed")}>Nossos algoritmos são atualizados com as últimas reformas trabalhistas, garantindo que seus cálculos sejam embasados para procedimentos legais.</p>
+              <p className={cn("text-on-surface-variant text-body-sm leading-relaxed")}>Nossos algoritmos são atualizados com as últimas reformas trabalhistas, garantindo que seus cálculos sejam embasados para procedimentos legais.</p>
             </div>
           </div>
         </div>
@@ -121,16 +121,16 @@ export function HorasExtrasCalculator() {
               </div>
             </div>
             
-            <div className={cn(/* design-system-escape: px-8 padding direcional sem Inset equiv. */ "px-8 stack-default mb-8")}>
-              <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3 border-b border-foreground/5")}>
+            <div className={cn("px-8 stack-default mb-8")}>
+              <div className={cn("flex justify-between items-center py-3 border-b border-foreground/5")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>Valor da Hora Base</span>
                 <span className={cn( "text-on-surface font-medium")}>R$ {valorHora.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
-              <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3 border-b border-foreground/5")}>
+              <div className={cn("flex justify-between items-center py-3 border-b border-foreground/5")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>Valor da Hora Extra ({percentual}%)</span>
                 <span className={cn( "text-on-surface font-medium")}>R$ {valorHoraExtra.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
-              <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3")}>
+              <div className={cn("flex justify-between items-center py-3")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>DSR (Repouso Remunerado)</span>
                 <span className={cn( "text-primary font-medium")}>R$ {dsr.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>

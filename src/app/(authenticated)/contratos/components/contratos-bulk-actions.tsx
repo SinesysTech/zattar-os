@@ -77,7 +77,7 @@ export function ContratosBulkActionsBar({
     /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-snug rounded-lg border border-border/15 bg-background/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground/80 transition-colors hover:border-border/40 hover:bg-muted/30 hover:text-foreground cursor-pointer';
 
   return (
-    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center inline-tight rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5")}>
+    <div className={cn("flex flex-wrap items-center inline-tight rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5")}>
       <Text variant="caption" as="div" className={cn( "inline-flex items-center inline-snug font-semibold text-primary whitespace-nowrap")}>
         <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
@@ -114,7 +114,7 @@ export function ContratosBulkActionsBar({
       <button
         type="button"
         onClick={onClearSelection}
-        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "ml-auto inline-flex items-center inline-micro rounded-lg px-2 py-1 text-[11px] text-muted-foreground/60 transition-colors hover:bg-muted/30 hover:text-foreground cursor-pointer")}
+        className={cn("ml-auto inline-flex items-center inline-micro rounded-lg px-2 py-1 text-[11px] text-muted-foreground/60 transition-colors hover:bg-muted/30 hover:text-foreground cursor-pointer")}
       >
         <X className="size-3" />
         Limpar

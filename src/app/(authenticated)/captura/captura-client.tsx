@@ -260,7 +260,7 @@ export function CapturaClient() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+          <div className={cn("py-4")}>
             <div className={cn("grid inline-tight")}>
               <Label>Advogado</Label>
               <AdvogadoCombobox

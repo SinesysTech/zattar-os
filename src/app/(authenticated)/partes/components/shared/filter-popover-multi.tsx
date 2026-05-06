@@ -55,12 +55,12 @@ export function FilterPopoverMulti({
             <>
               {selectedLabels.length <= 2 ? (
                 selectedLabels.map((opt) => (
-                  <AppBadge key={opt.value} variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
+                  <AppBadge key={opt.value} variant="secondary" className={cn("ml-1 rounded-sm px-1.5 font-normal")}>
                     {opt.label}
                   </AppBadge>
                 ))
               ) : (
-                <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
+                <AppBadge variant="secondary" className={cn("ml-1 rounded-sm px-1.5 font-normal")}>
                   {selectedLabels.length} selecionados
                 </AppBadge>
               )}
@@ -87,12 +87,12 @@ export function FilterPopoverMulti({
                       onValueChange(next);
                     }}
                   >
-                    <div className={cn(/* design-system-escape: space-x-3 sem token DS; py-1 padding direcional sem Inset equiv. */ "flex items-center space-x-3 py-1")}>
+                    <div className={cn("flex items-center space-x-3 py-1")}>
                       <Checkbox
                         checked={isSelected}
                         className="pointer-events-none data-[state=checked]:text-white [&>span]:text-white"
                       />
-                      <Text variant="label" as="span" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>{option.label}</Text>
+                      <Text variant="label" as="span" className={cn("leading-none")}>{option.label}</Text>
                     </div>
                   </CommandItem>
                 );

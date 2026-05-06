@@ -49,13 +49,13 @@ export function EventMetadata({ item }: EventMetadataProps) {
   })();
 
   return (
-    <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "px-6 py-6 border-b")}>
+    <div className={cn("px-6 py-6 border-b")}>
       <div className={cn("flex flex-col inline-default")}>
         {/* ID */}
         <MetadataRow label="ID">
           <span
             className={cn(
-              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'font-mono bg-muted px-2 py-0.5 rounded-lg border text-caption'
+              'font-mono bg-muted px-2 py-0.5 rounded-lg border text-caption'
             )}
           >
             {item.id}

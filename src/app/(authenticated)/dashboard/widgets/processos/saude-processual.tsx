@@ -121,7 +121,7 @@ export function WidgetSaudeProcessual() {
           />
           {stats.taxaResolucao !== undefined && (
             <div className={cn("flex flex-col inline-micro")}>
-              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+              <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Taxa resolução
               </p>
               <div className={cn("flex items-baseline inline-micro")}>

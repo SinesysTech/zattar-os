@@ -23,7 +23,7 @@ export default function NovaObrigacaoClient() {
   };
 
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-loose max-w-4xl mx-auto")}>
+    <div className={cn("py-8 stack-loose max-w-4xl mx-auto")}>
       {/* Header */}
       <div className={cn("flex items-center inline-default")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>

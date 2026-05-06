@@ -188,7 +188,7 @@ export default function TribunaisPage() {
                 </div>
 
                 {/* Divider */}
-                <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
+                <div className={cn("border-t border-border/10 my-2")} />
 
                 {/* Meta rows */}
                 <div className={cn("stack-snug")}>
@@ -216,7 +216,7 @@ export default function TribunaisPage() {
                 </div>
 
                 {/* Action */}
-                <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")}>
+                <div className={cn("border-t border-border/10 mt-3 pt-3")}>
                   {(credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0) > 0 ? (
                     <Button variant="ghost" size="sm" className={cn("w-full text-caption h-7 text-primary")}>
                       <Settings className="size-3 mr-1" />

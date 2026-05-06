@@ -193,7 +193,7 @@ export function DocumentList() {
                   placeholder="Buscar documentos..."
                   value={busca}
                   onChange={(e) => setBusca(e.target.value)}
-                  className={cn(/* design-system-escape: pl-9 padding direcional sem Inset equiv. */ "pl-9")}
+                  className={cn("pl-9")}
                 />
                 {busca && (
                   <Button
@@ -228,10 +228,10 @@ export function DocumentList() {
                 onValueChange={(v) => setViewMode(v as 'grid' | 'list')}
               >
                 <TabsList>
-                  <TabsTrigger value="list" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "px-3")}>
+                  <TabsTrigger value="list" className={cn("px-3")}>
                     <LayoutList className="h-4 w-4" />
                   </TabsTrigger>
-                  <TabsTrigger value="grid" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "px-3")}>
+                  <TabsTrigger value="grid" className={cn("px-3")}>
                     <LayoutGrid className="h-4 w-4" />
                   </TabsTrigger>
                 </TabsList>
@@ -266,7 +266,7 @@ export function DocumentList() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption")}
+                className={cn("h-6 px-2 text-caption")}
                 onClick={() => setTagsAtivas([])}
               >
                 Limpar
@@ -328,7 +328,7 @@ export function DocumentList() {
 
         {/* Paginação */}
         {!loading && documentos.length > 0 && total > ITEMS_PER_PAGE && (
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "border-t px-4 py-3")}>
+          <div className={cn("border-t px-4 py-3")}>
             <div className="flex items-center justify-between">
               <p className={cn("text-body-sm text-muted-foreground")}>
                 Mostrando {(params.offset || 0) + 1} -{' '}

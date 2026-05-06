@@ -32,7 +32,7 @@ export function WidgetParcelasStatus() {
   if (!data) {
     return (
       <WidgetContainer title="Parcelas" icon={BarChart3} subtitle="Status de pagamento" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -48,7 +48,7 @@ export function WidgetParcelasStatus() {
   if (!contratos) {
     return (
       <WidgetContainer title="Parcelas" icon={BarChart3} subtitle="Status de pagamento" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -72,7 +72,7 @@ export function WidgetParcelasStatus() {
   if (totalCount === 0) {
     return (
       <WidgetContainer title="Parcelas" icon={BarChart3} subtitle="Status de pagamento" depth={1}>
-        <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-6 text-center italic")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-6 text-center italic")}>
           Nenhuma parcela registrada.
         </p>
       </WidgetContainer>
@@ -109,9 +109,9 @@ export function WidgetParcelasStatus() {
           })}
         </div>
 
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex justify-between pt-3 border-t border-border/10")}>
+        <div className={cn("flex justify-between pt-3 border-t border-border/10")}>
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
             <p className={cn( "text-body-sm font-semibold font-display tabular-nums")}>
@@ -119,7 +119,7 @@ export function WidgetParcelasStatus() {
             </p>
           </div>
           <div className="text-right">
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Pendente
             </p>
             <p className={cn( "text-body-sm font-semibold font-display tabular-nums text-warning/80")}>

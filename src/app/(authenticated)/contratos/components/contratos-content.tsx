@@ -194,7 +194,7 @@ export function ContratosContent({
                 <opt.icon className="size-3.5" />
               </button>
             ))}
-            <span className={cn(/* design-system-escape: mx-0.5 margin sem primitiva DS */ "mx-0.5 h-4 w-px bg-border/40")} aria-hidden="true" />
+            <span className={cn("mx-0.5 h-4 w-px bg-border/40")} aria-hidden="true" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button

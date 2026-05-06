@@ -102,11 +102,11 @@ export function SegmentosManagerDialog({
               )}
 
               {state.isLoading ? (
-                <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
+                <div className={cn("flex items-center justify-center py-10")}>
                   <LoadingSpinner className="size-6 text-muted-foreground" />
                 </div>
               ) : state.segmentos.length === 0 ? (
-                <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "py-10 text-center text-body-sm text-muted-foreground")}>
+                <div className={cn("py-10 text-center text-body-sm text-muted-foreground")}>
                   Nenhum segmento encontrado.
                 </div>
               ) : (

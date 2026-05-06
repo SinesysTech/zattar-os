@@ -39,7 +39,7 @@ export default function DesignSystemPage() {
 
       <nav
         aria-label="Navegação do design system"
-        className={cn(/* design-system-escape: -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "sticky top-0 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/20 bg-background/80 px-1 py-2 backdrop-blur")}
+        className={cn("sticky top-0 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/20 bg-background/80 px-1 py-2 backdrop-blur")}
       >
         <ul className={cn("flex inline-snug")}>
           {SECTIONS.map((s) => (
@@ -60,7 +60,7 @@ export default function DesignSystemPage() {
           key={id}
           id={id}
           aria-labelledby={`${id}-title`}
-          className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "scroll-mt-20 stack-default pt-4")}
+          className={cn("scroll-mt-20 stack-default pt-4")}
         >
           <Heading
             level="section"

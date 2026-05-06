@@ -46,7 +46,7 @@ export function DepartmentGroupHeader({
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-medium px-4 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-150")}
+          className={cn("w-full flex items-center inline-medium px-4 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors duration-150")}
         >
           {/* Color bar */}
           <div
@@ -70,7 +70,7 @@ export function DepartmentGroupHeader({
           <div className="flex-1" />
 
           {/* Avatar stack */}
-          <div className={cn(/* design-system-escape: -space-x-2 sem equivalente DS */ "flex items-center -space-x-2 shrink-0")}>
+          <div className={cn("flex items-center -space-x-2 shrink-0")}>
             {visibleMembers.map((member) => (
               <Avatar
                 key={member.id}

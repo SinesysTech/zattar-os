@@ -73,20 +73,20 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
       <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-3 pb-1")}>
         <div className={cn("flex items-center inline-snug flex-wrap")}>
           {/* Label badge */}
-          <AppBadge variant="outline" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 capitalize")}>
+          <AppBadge variant="outline" className={cn("text-[10px] px-1 py-0 capitalize")}>
             {tarefa.label}
           </AppBadge>
 
           {/* Virtual event indicator */}
           {tarefa.isVirtual && (
-            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
+            <AppBadge variant="secondary" className={cn("text-[10px] px-1 py-0")}>
               Evento
             </AppBadge>
           )}
 
           {/* Overdue indicator */}
           {tarefa.prazoVencido && (
-            <AppBadge variant="destructive" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0")}>
+            <AppBadge variant="destructive" className={cn("text-[10px] px-1 py-0")}>
               Vencido
             </AppBadge>
           )}
@@ -112,7 +112,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
         {/* Assignees */}
         {tarefa.assignees.length > 0 && (
-          <div className={cn(/* design-system-escape: -space-x-2 sem equivalente DS */ "flex -space-x-2 overflow-hidden")}>
+          <div className={cn("flex -space-x-2 overflow-hidden")}>
             {tarefa.assignees.slice(0, 3).map((assignee, index) => (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
@@ -213,7 +213,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
 
         {/* Priority badge */}
         <div className="flex items-center justify-between">
-          <AppBadge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0.5")}>
+          <AppBadge variant="outline" className={cn("text-[10px] px-1.5 py-0.5")}>
             {PRIORITY_LABELS[tarefa.priority]}
           </AppBadge>
         </div>

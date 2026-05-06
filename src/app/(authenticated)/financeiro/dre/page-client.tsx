@@ -243,7 +243,7 @@ function ResumoCards({
 
   if (!resumo) {
     return (
-      <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-center py-6 text-body-sm text-muted-foreground")}>
+      <div className={cn("text-center py-6 text-body-sm text-muted-foreground")}>
         Selecione um período para visualizar o DRE.
       </div>
     );
@@ -280,7 +280,7 @@ function ResumoCards({
                 {isLucroLiquido && (
                   <Badge
                     variant={valor > 0 ? 'success' : valor < 0 ? 'destructive' : 'secondary'}
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}
+                    className={cn("text-[10px] px-1.5 py-0")}
                   >
                     {valor > 0 ? 'Lucro' : valor < 0 ? 'Prejuízo' : 'Neutro'}
                   </Badge>
@@ -389,7 +389,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
               >
                 <td
                   className={`p-2.5 px-4 text-sm ${linha.bold ?  'font-semibold' : ''
-                    } ${(linha.indent || 0) === 1 ? /* design-system-escape: pl-8 padding direcional sem Inset equiv. */ 'pl-8' : ''
+                    } ${(linha.indent || 0) === 1 ? 'pl-8' : ''
                     }`}
                 >
                   {linha.descricao}
@@ -485,7 +485,7 @@ function CategoriaTab({
 }) {
   return (
     <Card>
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn("text-body")}>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
@@ -498,7 +498,7 @@ function CategoriaTab({
             <div className={cn("stack-snug")}>
               <Text variant="caption" className="font-medium uppercase tracking-wider mb-2">Detalhamento</Text>
               {categorias.map((cat: CategoriaDRE, i: number) => (
-                <div key={cat.categoria} className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
+                <div key={cat.categoria} className={cn("flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
                   <div className={cn("flex items-center inline-tight")}>
                     <div
                       className="w-2.5 h-2.5 rounded-full shrink-0"
@@ -517,7 +517,7 @@ function CategoriaTab({
             </div>
           </div>
         ) : (
-          <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-center py-6 text-body-sm text-muted-foreground")}>
+          <p className={cn("text-center py-6 text-body-sm text-muted-foreground")}>
             {emptyMessage}
           </p>
         )}
@@ -855,19 +855,19 @@ export default function DREClient() {
         {/* Tabs */}
         <Tabs defaultValue="estrutura" className={cn("mt-4 stack-medium")}>
           <TabsList>
-            <TabsTrigger value="estrutura" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
+            <TabsTrigger value="estrutura" className={cn("inline-snug px-3")}>
               <List className="h-3.5 w-3.5" />
               Estrutura
             </TabsTrigger>
-            <TabsTrigger value="receitas" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
+            <TabsTrigger value="receitas" className={cn("inline-snug px-3")}>
               <TrendingUp className="h-3.5 w-3.5" />
               Receitas
             </TabsTrigger>
-            <TabsTrigger value="despesas" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
+            <TabsTrigger value="despesas" className={cn("inline-snug px-3")}>
               <TrendingDown className="h-3.5 w-3.5" />
               Despesas
             </TabsTrigger>
-            <TabsTrigger value="evolucao" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "inline-snug px-3")}>
+            <TabsTrigger value="evolucao" className={cn("inline-snug px-3")}>
               <BarChart3 className="h-3.5 w-3.5" />
               Evolução
             </TabsTrigger>
@@ -875,7 +875,7 @@ export default function DREClient() {
 
           <TabsContent value="estrutura">
             <Card>
-              <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+              <CardHeader className={cn("pb-2")}>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className={cn("text-body")}>Estrutura do DRE</CardTitle>
@@ -895,7 +895,7 @@ export default function DREClient() {
                 ) : dre?.resumo ? (
                   <DRETable resumo={dre.resumo} />
                 ) : (
-                  <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-center py-6 text-body-sm text-muted-foreground")}>
+                  <p className={cn("text-center py-6 text-body-sm text-muted-foreground")}>
                     Selecione um período para visualizar o DRE
                   </p>
                 )}
@@ -925,7 +925,7 @@ export default function DREClient() {
 
           <TabsContent value="evolucao">
             <Card>
-              <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+              <CardHeader className={cn("pb-2")}>
                 <CardTitle className={cn("text-body")}>Evolução Anual</CardTitle>
                 <CardDescription>
                   Evolução mensal — {anoAtual}

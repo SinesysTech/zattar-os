@@ -144,7 +144,7 @@ export function ExpedientesBaixarDialog({
         <div className={cn("stack-tight")}>
           <Label>Forma de Baixa</Label>
           <div className={cn("flex inline-default")}>
-            <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 cursor-pointer")}>
+            <label className={cn("flex items-center space-x-2 cursor-pointer")}>
               <input
                 type="radio"
                 name="modo"
@@ -155,7 +155,7 @@ export function ExpedientesBaixarDialog({
               />
               <span className={cn("text-body-sm")}>Com Protocolo</span>
             </label>
-            <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 cursor-pointer")}>
+            <label className={cn("flex items-center space-x-2 cursor-pointer")}>
               <input
                 type="radio"
                 name="modo"
@@ -201,7 +201,7 @@ export function ExpedientesBaixarDialog({
               disabled={isPending}
               rows={4}
               required={modo === 'justificativa'}
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50")}
+              className={cn("flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50")}
             />
             {justificativaBaixaError && (
               <p role="alert" className={cn( "text-body-sm font-medium text-destructive")}>{justificativaBaixaError}</p>
@@ -214,7 +214,7 @@ export function ExpedientesBaixarDialog({
 
         {/* Informações da Decisão — obrigatório para tipos recursais */}
         {requiresDecisao && (
-          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-medium pt-2 border-t")}>
+          <div className={cn("stack-medium pt-2 border-t")}>
             <Text variant="caption" className="flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3">
               <Info className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
               <span>

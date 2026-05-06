@@ -68,7 +68,7 @@ export function QuadroSelector({
           <LayoutGrid className="h-4 w-4" />
           <span>Quadro</span>
           {selectedQuadro && (
-            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
+            <AppBadge variant="secondary" className={cn("ml-1 rounded-sm px-1.5 font-normal")}>
               {selectedQuadro.titulo}
             </AppBadge>
           )}

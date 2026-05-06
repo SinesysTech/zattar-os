@@ -104,15 +104,15 @@ function PaletteNeutrals() {
         ))}
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "mt-4 grid gap-2.5 sm:grid-cols-3")}>
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-card px-4 py-3")}>
+        <div className={cn("flex flex-col inline-micro rounded-xl border border-border bg-card px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--card</span>
           <span className={cn( "text-[13px] font-semibold")}>Card surface</span>
         </div>
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-muted px-4 py-3")}>
+        <div className={cn("flex flex-col inline-micro rounded-xl border border-border bg-muted px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--muted</span>
           <span className={cn( "text-[13px] font-semibold")}>Muted</span>
         </div>
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground")}>
+        <div className={cn("flex flex-col inline-micro rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground")}>
           <span className="font-mono text-[10px] opacity-70">--sidebar</span>
           <span className={cn( "text-[13px] font-semibold")}>Sidebar (always dark)</span>
         </div>

@@ -33,7 +33,7 @@ export function TimelineMonthGroup({
       <button
         type="button"
         onClick={() => setIsExpanded((prev) => !prev)}
-        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "sticky top-0 z-10 flex items-center inline-tight w-full px-4 py-1.5 backdrop-blur-sm bg-background/80 cursor-pointer group")}
+        className={cn("sticky top-0 z-10 flex items-center inline-tight w-full px-4 py-1.5 backdrop-blur-sm bg-background/80 cursor-pointer group")}
       >
         <div className="h-px flex-1 bg-border/10" />
         <Text variant="overline" as="span" className="text-muted-foreground/65 whitespace-nowrap shrink-0">

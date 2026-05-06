@@ -103,7 +103,7 @@ export function WidgetSegmento() {
           })}
         </div>
       </div>
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
+      <div className={cn("mt-3 pt-3 border-t border-border/10")}>
         <StackedBar segments={segments} height={8} />
       </div>
     </WidgetContainer>

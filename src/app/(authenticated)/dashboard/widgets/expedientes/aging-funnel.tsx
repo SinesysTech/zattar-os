@@ -127,8 +127,8 @@ export function AgingFunnel() {
         ))}
       </div>
 
-      <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
-        <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[9px] uppercase tracking-wide text-muted-foreground/60")}>
+      <div className={cn("mt-3 flex items-center justify-between border-t border-border/10 pt-2.5")}>
+        <span className={cn("text-[9px] uppercase tracking-wide text-muted-foreground/60")}>
           Total
         </span>
         <span className={cn( "text-[13px] font-bold")}>{fmtNum(totalExibido)}</span>

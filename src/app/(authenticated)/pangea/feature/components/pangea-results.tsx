@@ -55,7 +55,7 @@ function renderSafeMarkedText(text: string): React.ReactNode {
     if (!token) continue;
     if (inMark) {
       nodes.push(
-        <mark key={`m-${key++}`} className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1 py-0.5")}>
+        <mark key={`m-${key++}`} className={cn("rounded bg-muted px-1 py-0.5")}>
           {token}
         </mark>
       );
@@ -162,7 +162,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-medium pt-2")}>
+                      <div className={cn("stack-medium pt-2")}>
                         {g.resultados.map((r) => {
                           const { titulo, subtitulo } = getResumoTexto(r);
 
@@ -180,7 +180,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                   {r.alertaSituacao && <AppBadge variant="warning">{r.alertaSituacao}</AppBadge>}
                                 </div>
                                 <div className={cn("stack-tight")}>
-                                  <Heading level="card" className={cn(/* design-system-escape: leading-6 sem token DS */ "text-body leading-6")}>{titulo}</Heading>
+                                  <Heading level="card" className={cn("text-body leading-6")}>{titulo}</Heading>
                                   {subtitulo && (
                                     <p className={cn(/* design-system-escape: leading-6 sem token DS */ "text-sm text-muted-foreground leading-6")}>{subtitulo}</p>
                                   )}
@@ -188,7 +188,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                               </CardHeader>
 
                               {r.processosParadigma?.length ? (
-                                <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+                                <CardContent className={cn("pt-0")}>
                                   <p className="text-sm text-muted-foreground mb-2">Processos paradigma</p>
                                   <div className={cn("flex flex-col inline-micro")}>
                                     {r.processosParadigma.map((p) => (

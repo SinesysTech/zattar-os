@@ -248,7 +248,7 @@ export default async function ProjectDetailPage({ params }: Props) {
                     {projeto.tags.map((tag) => (
                       <span
                         key={tag}
-                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-muted rounded-md px-2 py-0.5 text-caption")}
+                        className={cn("bg-muted rounded-md px-2 py-0.5 text-caption")}
                       >
                         {tag}
                       </span>

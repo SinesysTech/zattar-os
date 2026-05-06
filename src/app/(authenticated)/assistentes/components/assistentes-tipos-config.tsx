@@ -263,7 +263,7 @@ export function AssistentesTiposConfig({
         </CardHeader>
         <CardContent>
           {relacoes.length === 0 ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
+            <div className={cn("text-center py-8 text-muted-foreground")}>
               <p>Nenhuma configuração encontrada.</p>
               <p className={cn("text-body-sm mt-2")}>
                 Crie uma configuração para habilitar a geração automática de peças.

@@ -53,7 +53,7 @@ function MetricColumn({
 
 function UltimaCapturaCardSkeleton() {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 animate-pulse")}>
+    <GlassPanel depth={1} className={cn("px-4 py-3.5 animate-pulse")}>
       <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="h-4 w-28 bg-muted/30 rounded" />
         <div className="size-8 bg-muted/20 rounded-lg" />
@@ -82,7 +82,7 @@ export function ExpedientesUltimaCapturaCard({
 
   if (!resumo) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5 opacity-50")}>
+      <GlassPanel depth={1} className={cn("px-4 py-3.5 opacity-50")}>
         <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
           ÚLTIMA CAPTURA
         </p>
@@ -103,7 +103,7 @@ export function ExpedientesUltimaCapturaCard({
     <GlassPanel
       depth={1}
       className={cn(
-        /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5 cursor-pointer select-none',
+        'px-4 py-3.5 cursor-pointer select-none',
         'transition-all duration-200 hover:scale-[1.01] hover:shadow-lg',
         'focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:outline-none',
       )}
@@ -131,7 +131,7 @@ export function ExpedientesUltimaCapturaCard({
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
               ÚLTIMA CAPTURA
             </p>
-            <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-info/70 leading-tight")}>{tempoRelativo}</p>
+            <p className={cn("text-[10px] text-info/70 leading-tight")}>{tempoRelativo}</p>
           </div>
         </div>
         <ArrowRight className="size-3 text-info/70 shrink-0 mt-1" />

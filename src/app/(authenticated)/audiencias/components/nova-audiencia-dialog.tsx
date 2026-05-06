@@ -86,7 +86,7 @@ function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.R
 
 function InlineLoader({ label }: { label: string }) {
   return (
-    <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2.5 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+    <div className={cn("flex items-center inline-tight px-3 py-2.5 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
       <LoadingSpinner size="sm" className="shrink-0" />
       <span className={cn("text-body-sm")}>{label}</span>
     </div>
@@ -448,9 +448,9 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
         <Stack gap="default">
           {/* ── Erro ─────────────────────────────────────────────────────── */}
           {error && (
-            <Inline align="start" gap="tight" className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
+            <Inline align="start" gap="tight" className={cn("rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
               <AlertCircle className="size-4 shrink-0 mt-0.5" />
-              <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-body-sm leading-snug")}>{error}</span>
+              <span className={cn("text-body-sm leading-snug")}>{error}</span>
             </Inline>
           )}
 
@@ -494,7 +494,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
             <div>
               <FieldLabel htmlFor="processo">Processo *</FieldLabel>
               {!trt || !grau ? (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/70 text-body-sm")}>
+                <div className={cn("flex items-center inline-tight px-3 py-2.5 rounded-lg border border-dashed border-border/40 bg-muted/20 text-muted-foreground/70 text-body-sm")}>
                   Selecione o TRT e Grau para listar os processos
                 </div>
               ) : loadingProcessos ? (
@@ -634,7 +634,7 @@ export function NovaAudienciaDialog({ open, onOpenChange, onSuccess }: NovaAudie
                   />
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "stack-medium pt-1")}>
+                <div className={cn("stack-medium pt-1")}>
                   <Text variant="overline" as="p" className="text-muted-foreground">
                     Endereço Presencial
                   </Text>

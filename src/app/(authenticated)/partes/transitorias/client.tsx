@@ -122,7 +122,7 @@ export function TransitoriasListClient() {
                 ))}
               </div>
             ) : rows.length === 0 ? (
-              <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-10 text-center")}>
+              <div className={cn("flex flex-col items-center justify-center py-10 text-center")}>
                 <AlertTriangle
                   aria-hidden="true"
                   className="size-10 text-muted-foreground/65 mb-3"
@@ -139,7 +139,7 @@ export function TransitoriasListClient() {
                   <li
                     key={t.id}
                     className={cn(
-                      /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-center justify-between inline-medium rounded-xl border px-3 py-2.5',
+                      'flex items-center justify-between inline-medium rounded-xl border px-3 py-2.5',
                       'transition-colors hover:bg-muted/40'
                     )}
                   >

@@ -71,7 +71,7 @@ function ContextPanel() {
       </Text>
 
       <div
-        className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "h-px my-4 bg-linear-to-r from-transparent via-border/50 to-transparent")}
+        className={cn("h-px my-4 bg-linear-to-r from-transparent via-border/50 to-transparent")}
         aria-hidden="true"
       />
 
@@ -99,7 +99,7 @@ function ContextPanel() {
       </div>
 
       <div
-        className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "h-px my-4 bg-linear-to-r from-transparent via-border/50 to-transparent")}
+        className={cn("h-px my-4 bg-linear-to-r from-transparent via-border/50 to-transparent")}
         aria-hidden="true"
       />
 
@@ -128,7 +128,7 @@ export function NovoDocumentoClient() {
         </div>
 
         {/* Context panel — lateral no desktop, abaixo no mobile */}
-        <div className={cn(/* design-system-escape: lg:py-2 sem equivalente DS */ "w-full lg:w-80 shrink-0 lg:py-2")}>
+        <div className={cn("w-full lg:w-80 shrink-0 lg:py-2")}>
           <ContextPanel />
         </div>
       </div>

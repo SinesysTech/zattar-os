@@ -116,7 +116,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
                 <Camera className="size-3 text-muted-foreground/70" />
               )}
               {doc.origem === "formulario" && (
-                <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/65")}>
+                <span className={cn("text-[8px] px-1 py-0.5 rounded bg-info/6 text-info/65")}>
                   formulário
                 </span>
               )}
@@ -152,7 +152,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
           </div>
         )}
 
-        <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-3 pt-2.5 border-t border-border/10")}>
+        <div className={cn("flex items-center justify-between mt-3 pt-2.5 border-t border-border/10")}>
           <span className="text-[9px] text-muted-foreground/55">
             {doc.criadoPor}
           </span>

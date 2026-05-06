@@ -132,7 +132,7 @@ export function UploadDialog({
         showCloseButton={false}
         className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
-        <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
+        <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle>Upload de arquivo</DialogTitle>
           <DialogDescription>
             Faça upload de imagens, PDFs ou outros arquivos para este documento

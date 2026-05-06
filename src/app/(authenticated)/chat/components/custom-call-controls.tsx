@@ -145,7 +145,7 @@ export function CustomCallControls({
             <TooltipContent><p>{videoEnabled ? "Desativar câmera" : "Ativar câmera"}</p></TooltipContent>
           </Tooltip>
 
-          <div className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "w-px h-8 bg-video-surface-hover mx-2")} />
+          <div className={cn("w-px h-8 bg-video-surface-hover mx-2")} />
 
           {/* Screenshare */}
           <Tooltip>
@@ -187,7 +187,7 @@ export function CustomCallControls({
             <PopoverContent className="w-72 bg-video-surface border-video-border text-video-text" side="top">
               <div className={cn("grid inline-default")}>
                 <div className={cn("stack-tight")}>
-                  <Heading level="subsection" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>Efeitos de Vídeo</Heading>
+                  <Heading level="subsection" className={cn("leading-none")}>Efeitos de Vídeo</Heading>
                   <Text variant="caption">
                     Escolha um efeito para sua câmera
                   </Text>
@@ -220,7 +220,7 @@ export function CustomCallControls({
                   </div>
                 </RadioGroup>
                 {activeEffect !== 'none' && (
-                  <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t border-video-border")}>
+                  <div className={cn("pt-2 border-t border-video-border")}>
                     <Text variant="caption">
                       Efeito ativo: <span className={cn( "text-video-text font-medium capitalize")}>{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
                     </Text>
@@ -296,7 +296,7 @@ export function CustomCallControls({
             </Tooltip>
           )}
 
-          <div className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "w-px h-8 bg-video-surface-hover mx-2")} />
+          <div className={cn("w-px h-8 bg-video-surface-hover mx-2")} />
 
           {/* Leave */}
           <Tooltip>

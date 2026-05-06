@@ -464,13 +464,13 @@ export default function OrcamentoDetalhesPage() {
       {/* Cards de Informações */}
       <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Ano</CardDescription>
             <CardTitle className="text-page-title">{orcamento.ano}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Período</CardDescription>
             <CardTitle className="text-page-title">
               {PERIODO_LABELS[orcamento.periodo] || orcamento.periodo}
@@ -478,7 +478,7 @@ export default function OrcamentoDetalhesPage() {
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Vigência</CardDescription>
             <CardTitle className={cn("text-body-lg")}>
               {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
@@ -486,7 +486,7 @@ export default function OrcamentoDetalhesPage() {
           </CardHeader>
         </Card>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Total Previsto</CardDescription>
             <CardTitle className="text-page-title font-mono">{formatarValor(totalPrevisto)}</CardTitle>
           </CardHeader>

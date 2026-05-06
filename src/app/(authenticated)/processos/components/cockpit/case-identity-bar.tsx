@@ -91,7 +91,7 @@ export function CaseIdentityBar({
   if (isReadingFocused) {
     return (
       <GlassPanel
-        className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center inline-medium shrink-0")}
+        className={cn("rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center inline-medium shrink-0")}
       >
         <Text variant="caption" className="font-mono">{numeroProcesso}</Text>
         <span className="w-px h-4 bg-border/10" />
@@ -102,13 +102,13 @@ export function CaseIdentityBar({
 
   return (
     <GlassPanel
-      className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-none border-0 border-b border-border/20 px-4 py-2.5 flex-row items-center inline-medium shrink-0")}
+      className={cn("rounded-none border-0 border-b border-border/20 px-4 py-2.5 flex-row items-center inline-medium shrink-0")}
     >
       <Button variant="ghost" size="icon-sm" onClick={onVoltar} title="Voltar">
         <ArrowLeft className="size-4" />
       </Button>
 
-      <Heading level="page" className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body tracking-tight truncate max-w-[35%] min-w-0")}>
+      <Heading level="page" className={cn("text-body tracking-tight truncate max-w-[35%] min-w-0")}>
         {tituloPartes}
       </Heading>
 
@@ -151,7 +151,7 @@ export function CaseIdentityBar({
       )}
 
       {instancias && instancias.length > 1 && (
-        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro rounded-full border bg-muted/20 px-2 py-0.5 text-[10px] text-muted-foreground shrink-0")}>
+        <span className={cn("inline-flex items-center inline-micro rounded-full border bg-muted/20 px-2 py-0.5 text-[10px] text-muted-foreground shrink-0")}>
           <Layers className="size-3" />
           {instancias.length}
         </span>

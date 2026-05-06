@@ -195,7 +195,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             <ScrollText className="size-3.5" />
             Logs por tribunal
             {rawLogs.length > 0 && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}>
+              <Badge variant="secondary" className={cn("ml-1 text-[10px] px-1.5 py-0")}>
                 {rawLogs.length}
               </Badge>
             )}
@@ -212,7 +212,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
 
         <TabsContent value="dados-brutos" className="mt-4">
           <div className="flex flex-col">
-            <div className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight mb-2.5 px-0.5")}>
+            <div className={cn("flex items-center inline-tight mb-2.5 px-0.5")}>
               <AlertTriangle className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
               <h4 className={cn( "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
                 Payload JSON da execução — dados técnicos para auditoria
@@ -220,7 +220,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             </div>
             <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
               {captura.resultado ? (
-                <pre className={cn(/* design-system-escape: leading-relaxed sem token DS */ "inset-card-compact overflow-auto max-h-125 text-caption font-mono leading-relaxed")}>
+                <pre className={cn("inset-card-compact overflow-auto max-h-125 text-caption font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (

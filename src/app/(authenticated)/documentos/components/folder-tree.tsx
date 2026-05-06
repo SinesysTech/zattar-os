@@ -75,7 +75,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
           variant="ghost"
           size="sm"
           className={cn(
-            /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'w-full justify-start inline-micro px-2 py-1.5 font-normal',
+            'w-full justify-start inline-micro px-2 py-1.5 font-normal',
             isSelected && 'bg-accent'
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -129,7 +129,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
         variant="ghost"
         size="sm"
         className={cn(
-          /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'w-full justify-start inline-tight px-2 py-1.5 font-normal',
+          'w-full justify-start inline-tight px-2 py-1.5 font-normal',
           selectedFolderId === null && 'bg-accent'
         )}
         onClick={() => onFolderSelect(null)}

@@ -193,7 +193,7 @@ function CapturaCard({
         </span>
       </div>
 
-      <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
+      <div className={cn("border-t border-border/10 my-2")} />
 
       {/* Details */}
       <div className={cn("stack-snug")}>
@@ -232,7 +232,7 @@ function CapturaCard({
       </div>
 
       {/* Action */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")}>
+      <div className={cn("border-t border-border/10 mt-3 pt-3")}>
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onView(); }}

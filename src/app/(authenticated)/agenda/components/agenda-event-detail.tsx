@@ -98,7 +98,7 @@ export function AgendaEventDetail({
         <DialogDescription className="sr-only">Detalhes do evento de agenda</DialogDescription>
         <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
           {/* ── Header ── */}
-          <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-0 padding direcional sem Inset equiv. */ "px-7 pt-6 pb-0 shrink-0")}>
+          <div className={cn("px-7 pt-6 pb-0 shrink-0")}>
             {/* Top row */}
             <div className={cn("flex items-start justify-between inline-default mb-4")}>
               <div className={cn(/* design-system-escape: gap-3.5 gap sem token DS */ "flex items-start gap-3.5 flex-1 min-w-0")}>
@@ -150,7 +150,7 @@ export function AgendaEventDetail({
                   {fmtTime(event.start)} – {fmtTime(event.end)}
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: mx-4 margin sem primitiva DS */ "w-px bg-border/15 mx-4")} />
+              <div className={cn("w-px bg-border/15 mx-4")} />
               {/* Modalidade */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Modalidade</Text>
@@ -165,7 +165,7 @@ export function AgendaEventDetail({
                   )}
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: mx-4 margin sem primitiva DS */ "w-px bg-border/15 mx-4")} />
+              <div className={cn("w-px bg-border/15 mx-4")} />
               {/* Tribunal */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Tribunal</Text>
@@ -174,7 +174,7 @@ export function AgendaEventDetail({
                   {event.trt ?? "—"}{event.grau ? ` · ${event.grau}` : ""}
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: mx-4 margin sem primitiva DS */ "w-px bg-border/15 mx-4")} />
+              <div className={cn("w-px bg-border/15 mx-4")} />
               {/* Responsável */}
               <div className="flex-1">
 <Text variant="overline" as="span" className="text-muted-foreground/40">Responsável</Text>
@@ -212,7 +212,7 @@ export function AgendaEventDetail({
           </div>
 
           {/* ── Scrollable Body ── */}
-          <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "overflow-y-auto flex-1 px-7 py-5")} style={{ scrollbarWidth: "thin" }}>
+          <div className={cn("overflow-y-auto flex-1 px-7 py-5")} style={{ scrollbarWidth: "thin" }}>
             {/* Processo Section */}
             {event.processo && (
               <div className="mb-5">
@@ -236,7 +236,7 @@ export function AgendaEventDetail({
                   </div>
                   {event.partes && (
                     <>
-                      <div className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "h-px bg-border/10 my-3")} />
+                      <div className={cn("h-px bg-border/10 my-3")} />
                       <div className={cn("flex inline-loose")}>
                         <div>
                           <div className={cn("flex items-center inline-snug mb-1")}>
@@ -274,7 +274,7 @@ export function AgendaEventDetail({
                 </div>
                 <div className="rounded-xl border border-border/15 bg-muted/4 divide-y divide-border/10">
                   {checklist.map((item, i) => (
-                    <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-4 py-2.5")}>
+                    <div key={i} className={cn("flex items-center inline-medium px-4 py-2.5")}>
                       <div className={cn(
                         "size-5 rounded border-2 flex items-center justify-center shrink-0",
                         item.done
@@ -303,7 +303,7 @@ export function AgendaEventDetail({
                   <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Observações</Text>
                 </div>
                 <div className={cn("rounded-xl border border-border/15 bg-muted/4 inset-card-compact")}>
-                  <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>
+                  <p className={cn("text-[13px] text-muted-foreground/60 leading-relaxed")}>
                     {event.descricao}
                   </p>
                 </div>
@@ -312,7 +312,7 @@ export function AgendaEventDetail({
           </div>
 
           {/* ── Footer ── */}
-          <div className={cn(/* design-system-escape: px-7 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between px-7 py-4 border-t border-border/15 shrink-0")}>
+          <div className={cn("flex items-center justify-between px-7 py-4 border-t border-border/15 shrink-0")}>
             <button
               onClick={onClose}
               className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-tight px-4 py-2 border border-border/30 text-foreground/70 rounded-xl text-[13px] font-medium hover:bg-muted/10 transition-colors cursor-pointer")}

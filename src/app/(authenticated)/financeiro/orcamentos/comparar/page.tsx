@@ -120,7 +120,7 @@ function OrcamentoSelector({
       const statusConfig = STATUS_CONFIG[orcamento.status];
       return (
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <div className="flex items-center justify-between">
               <CardTitle className={cn("text-body-lg")}>{orcamento.nome}</CardTitle>
               <Button variant="ghost" size="icon" aria-label="Fechar" onClick={onRemove}>
@@ -176,7 +176,7 @@ function ComparacaoCards({
 }) {
   if (orcamentos.length < 2) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 text-center")}>
+      <div className={cn("flex flex-col items-center justify-center py-12 text-center")}>
         <p className="text-muted-foreground">
           Selecione pelo menos 2 orçamentos para comparar
         </p>
@@ -208,13 +208,13 @@ function ComparacaoCards({
       {/* Cards de resumo */}
       <div className={cn("grid inline-default md:grid-cols-3")}>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Maior Orçamento</CardDescription>
             <CardTitle className="text-page-title font-mono text-success">
               {formatarValor(maiorValor)}
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+          <CardContent className={cn("pt-0")}>
             <Text variant="caption">
               {dadosComparacao.find((d) => d.totalOrcado === maiorValor)?.nome}
             </Text>
@@ -222,13 +222,13 @@ function ComparacaoCards({
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Menor Orçamento</CardDescription>
             <CardTitle className="text-page-title font-mono text-info">
               {formatarValor(menorValor)}
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+          <CardContent className={cn("pt-0")}>
             <Text variant="caption">
               {dadosComparacao.find((d) => d.totalOrcado === menorValor)?.nome}
             </Text>
@@ -236,13 +236,13 @@ function ComparacaoCards({
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <CardDescription>Média</CardDescription>
             <CardTitle className="text-page-title font-mono">
               {formatarValor(mediaValor)}
             </CardTitle>
           </CardHeader>
-          <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+          <CardContent className={cn("pt-0")}>
             <Text variant="caption">
               Entre {orcamentos.length} orçamentos
             </Text>

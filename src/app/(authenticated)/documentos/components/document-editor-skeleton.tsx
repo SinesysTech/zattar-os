@@ -32,7 +32,7 @@ export function DocumentEditorSkeleton() {
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-5/6" />
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")} />
+          <div className={cn("py-4")} />
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-4/5" />

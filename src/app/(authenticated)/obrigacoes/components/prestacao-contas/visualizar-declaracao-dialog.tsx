@@ -29,7 +29,7 @@ export function VisualizarDeclaracaoDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-4xl max-h-[90vh] flex flex-col p-0 overflow-hidden")}>
-        <DialogHeader className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "inset-dialog pb-3 shrink-0")}>
+        <DialogHeader className={cn("inset-dialog pb-3 shrink-0")}>
           <DialogTitle>Declaração de prestação de contas assinada</DialogTitle>
           <DialogDescription>
             {tituloProcesso
@@ -38,7 +38,7 @@ export function VisualizarDeclaracaoDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv. */ "flex-1 px-6 min-h-0")}>
+        <div className={cn("flex-1 px-6 min-h-0")}>
           <iframe
             src={pdfUrl}
             className="w-full h-full min-h-[60vh] rounded-lg border border-border"
@@ -46,7 +46,7 @@ export function VisualizarDeclaracaoDialog({
           />
         </div>
 
-        <DialogFooter className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "inset-dialog pt-3 shrink-0 inline-tight")}>
+        <DialogFooter className={cn("inset-dialog pt-3 shrink-0 inline-tight")}>
           <Button
             variant="outline"
             size="sm"

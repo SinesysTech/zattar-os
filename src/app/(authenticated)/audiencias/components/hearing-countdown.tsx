@@ -76,7 +76,7 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
   }
 
   return (
-    <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro px-2 py-1 rounded-lg", urgencyBg, className)}>
+    <div className={cn("inline-flex items-center inline-micro px-2 py-1 rounded-lg", urgencyBg, className)}>
       <div className={cn("flex items-center inline-nano tabular-nums")}>
         {timeLeft.hours > 0 && (
           <>

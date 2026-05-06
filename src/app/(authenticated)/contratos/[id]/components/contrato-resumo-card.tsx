@@ -50,15 +50,15 @@ export function ContratoResumoCard({
       <div className={cn("stack-loose")}>
         {/* Estatisticas */}
         <div className={cn("grid grid-cols-3 inline-tight")}>
-          <GlassPanel depth={2} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-3 py-3 text-center")}>
+          <GlassPanel depth={2} className={cn("px-3 py-3 text-center")}>
             <p className={cn( "font-display text-body-lg font-bold tabular-nums")}>{stats.totalPartes}</p>
             <Text variant="meta-label">Partes</Text>
           </GlassPanel>
-          <GlassPanel depth={2} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-3 py-3 text-center")}>
+          <GlassPanel depth={2} className={cn("px-3 py-3 text-center")}>
             <p className={cn( "font-display text-body-lg font-bold tabular-nums")}>{stats.totalProcessos}</p>
             <Text variant="meta-label">Processos</Text>
           </GlassPanel>
-          <GlassPanel depth={2} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-3 py-3 text-center")}>
+          <GlassPanel depth={2} className={cn("px-3 py-3 text-center")}>
             <p className={cn( "font-display text-body-lg font-bold tabular-nums")}>{stats.totalDocumentos}</p>
             <Text variant="meta-label">Documentos</Text>
           </GlassPanel>

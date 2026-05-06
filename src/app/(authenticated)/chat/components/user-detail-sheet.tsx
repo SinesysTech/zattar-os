@@ -53,15 +53,15 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
   return (
     <Dialog open={showProfileSheet} onOpenChange={toggleProfileSheet}>
       <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-lg max-h-[90vh] p-0 flex flex-col")}>
-        <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-6 pt-6 pb-2 shrink-0")}>
+        <DialogHeader className={cn("px-6 pt-6 pb-2 shrink-0")}>
           <DialogTitle className="text-page-title">Perfil</DialogTitle>
           <DialogDescription className="sr-only">
             Informacoes de perfil, presenca e midias compartilhadas do usuario.
           </DialogDescription>
         </DialogHeader>
 
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 pb-6")}>
-          <div className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "my-4 flex flex-col items-center justify-end")}>
+        <div className={cn("flex-1 overflow-y-auto px-6 pb-6")}>
+          <div className={cn("my-4 flex flex-col items-center justify-end")}>
             <Avatar className="mb-4 size-32 overflow-visible">
               <AvatarImage src={user.avatar} alt="avatar image" />
               <AvatarIndicator
@@ -89,25 +89,25 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
 
           <div className={cn("stack-tight divide-y divide-border/20")}>
             {user.about && (
-              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
+              <div className={cn("stack-medium py-4")}>
                 <Text variant="overline" as="h5">Sobre</Text>
                 <div className="text-muted-foreground">{user.about}</div>
               </div>
             )}
             {user.phone && (
-              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
+              <div className={cn("stack-medium py-4")}>
                 <Text variant="overline" as="h5">Telefone</Text>
                 <div className="text-muted-foreground">{user.phone}</div>
               </div>
             )}
             {user.country && (
-              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
+              <div className={cn("stack-medium py-4")}>
                 <Text variant="overline" as="h5">País</Text>
                 <div className="text-muted-foreground">{user.country}</div>
               </div>
             )}
             {user.medias?.length && (
-              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
+              <div className={cn("stack-medium py-4")}>
                 <Text variant="overline" as="h5">Mídia</Text>
                 <div>
                   <ScrollArea className="w-full">
@@ -135,7 +135,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.website && (
-              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
+              <div className={cn("stack-medium py-4")}>
                 <Text variant="overline" as="h5">Website</Text>
                 <div>
                   <a
@@ -150,7 +150,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </div>
             )}
             {user.socialLinks?.length && (
-              <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-medium py-4")}>
+              <div className={cn("stack-medium py-4")}>
                 <Text variant="overline" as="h5">
                   Redes Sociais
                 </Text>

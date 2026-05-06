@@ -184,7 +184,7 @@ export function MissionCard({
 
           {/* Countdown */}
           {!isPast && diff > 0 && (
-            <div className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-micro px-2.5 py-1.5 rounded-lg', urgency.bg)}>
+            <div className={cn('inline-flex items-center inline-micro px-2.5 py-1.5 rounded-lg', urgency.bg)}>
               <div className={cn("flex items-center inline-nano tabular-nums")}>
                 {hours > 0 && (
                   <>
@@ -203,13 +203,13 @@ export function MissionCard({
         {/* Info grid */}
         <div className={cn("grid grid-cols-2 sm:grid-cols-4 inline-medium mb-4")}>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Horário</span>
+            <span className={cn("text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Horário</span>
             <span className={cn( "text-body-sm font-medium tabular-nums")}>
               {format(dataInicio, 'HH:mm', { locale: ptBR })} – {format(dataFim, 'HH:mm', { locale: ptBR })}
             </span>
           </div>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Tribunal</span>
+            <span className={cn("text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Tribunal</span>
             <div className={cn("flex items-center inline-snug")}>
               <span className={cn( "text-body-sm font-medium")}>{audiencia.trt || '–'}</span>
               {audiencia.grau && (
@@ -220,13 +220,13 @@ export function MissionCard({
             </div>
           </div>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Processo</span>
+            <span className={cn("text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Processo</span>
             <span className="text-mono-num text-foreground/70 truncate">
               {audiencia.numeroProcesso}
             </span>
           </div>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Modalidade</span>
+            <span className={cn("text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Modalidade</span>
             <div className={cn("flex items-center inline-snug")}>
               <ModalIcon className="size-3 text-muted-foreground/60" />
               <span className={cn( "text-body-sm font-medium")}>{modalidadeLabel || '–'}</span>
@@ -236,15 +236,15 @@ export function MissionCard({
 
         {/* Órgão jurisdicional */}
         {audiencia.orgaoJulgadorOrigem && (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "mb-2 px-3 py-1.5 rounded-lg bg-border/5")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Órgão Jurisdicional</span>
+          <div className={cn("mb-2 px-3 py-1.5 rounded-lg bg-border/5")}>
+            <span className={cn("text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Órgão Jurisdicional</span>
             <Text variant="caption" as="p" className="mt-0.5 text-foreground/70">{audiencia.orgaoJulgadorOrigem}</Text>
           </div>
         )}
 
         {/* Parties */}
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight mb-4 px-3 py-2 rounded-lg bg-border/5")}>
+          <div className={cn("flex items-center inline-tight mb-4 px-3 py-2 rounded-lg bg-border/5")}>
             <span className="text-micro-caption text-foreground/70 truncate">{audiencia.poloAtivoNome || '–'}</span>
             <span className="text-micro-caption text-muted-foreground/55 shrink-0">vs</span>
             <span className="text-micro-caption text-foreground/70 truncate">{audiencia.poloPassivoNome || '–'}</span>
@@ -253,8 +253,8 @@ export function MissionCard({
 
         {/* Observações */}
         {audiencia.observacoes && (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "mb-4 px-3 py-2 rounded-lg bg-border/5")}>
-            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Observações</span>
+          <div className={cn("mb-4 px-3 py-2 rounded-lg bg-border/5")}>
+            <span className={cn("text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Observações</span>
             <Text variant="caption" as="p" className="mt-0.5 line-clamp-2 italic text-foreground/60">{audiencia.observacoes}</Text>
           </div>
         )}

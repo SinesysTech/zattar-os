@@ -89,7 +89,7 @@ function ObservacoesSection({ texto }: { texto: string }) {
   return (
     <DetailSection icon={StickyNote} label="Observações">
       <DetailSectionCard>
-        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-caption text-foreground/90 leading-relaxed whitespace-pre-wrap")}>
+        <p className={cn("text-caption text-foreground/90 leading-relaxed whitespace-pre-wrap")}>
           {texto}
         </p>
       </DetailSectionCard>
@@ -353,7 +353,7 @@ export function ContratoDetalhesClient({
         </TabsContent>
 
         {/* ───────────────── Tab Financeiro ───────────── */}
-        <TabsContent value="financeiro" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "m-0")}>
+        <TabsContent value="financeiro" className={cn("m-0")}>
           <ContratoFinanceiroCard lancamentos={lancamentos} />
         </TabsContent>
 
@@ -374,12 +374,12 @@ export function ContratoDetalhesClient({
         </TabsContent>
 
         {/* ───────────────── Tab Histórico ─────────────── */}
-        <TabsContent value="historico" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "m-0")}>
+        <TabsContent value="historico" className={cn("m-0")}>
           <ContratoTimeline historico={contrato.statusHistorico} />
         </TabsContent>
 
         {/* ───────────────── Tab Entrevista ────────────── */}
-        <TabsContent value="entrevista" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "m-0")}>
+        <TabsContent value="entrevista" className={cn("m-0")}>
           <EntrevistaTab
             contratoId={contrato.id}
             entrevista={entrevista}

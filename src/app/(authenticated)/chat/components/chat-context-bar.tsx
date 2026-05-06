@@ -35,7 +35,7 @@ export function ChatContextBar({ documentoId }: ChatContextBarProps) {
 
   return (
     <div
-      className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "relative z-[9] flex items-center inline-medium px-5 py-2 border-b border-border/40 dark:border-white/[0.06]")}
+      className={cn("relative z-[9] flex items-center inline-medium px-5 py-2 border-b border-border/40 dark:border-white/[0.06]")}
       style={{ background: "rgba(139,92,246,0.03)" }}
     >
       <span

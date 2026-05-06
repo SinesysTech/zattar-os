@@ -140,14 +140,14 @@ export function WidgetHeatmapProdutividade() {
       </div>
 
       {/* Estatisticas */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10 flex items-start justify-between inline-default")}>
+      <div className={cn("mt-3 pt-3 border-t border-border/10 flex items-start justify-between inline-default")}>
         <ComparisonStat
           label="Media semanal"
           current={semanaAtual}
           previous={semanaAnterior}
         />
         <div className={cn("flex flex-col inline-micro items-end")}>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+          <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Melhor dia
           </p>
           <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>

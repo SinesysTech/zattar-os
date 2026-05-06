@@ -109,7 +109,7 @@ function ResponsavelChip({
           e.stopPropagation();
           setDialogOpen(true);
         }}
-        className={cn(/* design-system-escape: -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-snug min-w-0 rounded-lg -mx-1 px-1 py-0.5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
+        className={cn("inline-flex items-center inline-snug min-w-0 rounded-lg -mx-1 px-1 py-0.5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
         title={nome ? `Alterar responsável: ${nome}` : 'Atribuir responsável'}
       >
         {nome ? (
@@ -354,7 +354,7 @@ function GlassCard({
       </div>
 
       {/* Processos vinculados */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20")}>
+      <div className={cn("relative mt-3 pt-3 border-t border-border/20")}>
         <div className={cn("flex items-center inline-snug mb-1.5")}>
           <Scale className="size-3 text-muted-foreground/70" />
           <Text variant="micro-caption" className={cn( "font-medium text-muted-foreground/70")}>
@@ -368,7 +368,7 @@ function GlassCard({
             <Link
               href={`/app/processos/${firstProcesso.processoId}`}
               onClick={(e) => e.stopPropagation()}
-              className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors")}
+              className={cn("inline-flex items-center inline-micro px-1.5 py-0.5 rounded bg-primary/5 text-primary border border-primary/15 hover:bg-primary/10 transition-colors")}
             >
               <Text variant="micro-caption" className="tabular-nums text-primary">
                 {firstProcesso.processo.numeroProcesso ??
@@ -383,7 +383,7 @@ function GlassCard({
       </div>
 
       {/* Rodapé: responsável + cadastro + ações */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20 flex items-center justify-between inline-tight")}>
+      <div className={cn("relative mt-3 pt-3 border-t border-border/20 flex items-center justify-between inline-tight")}>
         <ResponsavelChip
           contrato={contrato}
           usuariosMap={usuariosMap}
@@ -430,11 +430,11 @@ function CardSkeleton() {
         <Skeleton className="h-4 w-14 rounded" />
         <Skeleton className="h-4 w-20 rounded" />
       </div>
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/20 stack-tight")}>
+      <div className={cn("mt-3 pt-3 border-t border-border/20 stack-tight")}>
         <Skeleton className="h-2 w-32" />
         <Skeleton className="h-4 w-40 rounded" />
       </div>
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/20 flex justify-between")}>
+      <div className={cn("mt-3 pt-3 border-t border-border/20 flex justify-between")}>
         <Skeleton className="h-4 w-24 rounded" />
         <Skeleton className="h-3 w-12" />
       </div>
@@ -448,7 +448,7 @@ function CardSkeleton() {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("col-span-full flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado

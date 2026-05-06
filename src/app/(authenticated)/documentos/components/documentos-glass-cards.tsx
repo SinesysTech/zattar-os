@@ -239,7 +239,7 @@ function GlassCard({
       </div>
 
       {/* Footer: criador + data */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between inline-tight")}>
+      <div className={cn("relative mt-4 pt-3 border-t border-border/30 flex items-center justify-between inline-tight")}>
         <div className={cn("flex items-center inline-snug min-w-0")}>
           <Avatar className="size-5">
             {criadorAvatar && <AvatarImage src={criadorAvatar} alt={criador.nome} />}
@@ -271,7 +271,7 @@ function CardsSkeleton() {
           <Skeleton className="size-10 rounded-2xl" />
           <Skeleton className="h-3.5 w-full mt-3.5" />
           <Skeleton className="h-3 w-20 mt-2" />
-          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/30 flex items-center inline-snug")}>
+          <div className={cn("mt-4 pt-3 border-t border-border/30 flex items-center inline-snug")}>
             <Skeleton className="size-5 rounded-full" />
             <Skeleton className="h-2.5 w-16" />
           </div>
@@ -287,7 +287,7 @@ function CardsSkeleton() {
 
 function CardsEmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
       <Text variant="caption" className="text-muted-foreground/40 mt-1">

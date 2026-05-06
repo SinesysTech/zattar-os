@@ -91,7 +91,7 @@ export function CreateDocumentDialog({
         showCloseButton={false}
         className={cn(/* design-system-escape: p-0 gap-0 → usar <Inset> */ "sm:max-w-lg  overflow-hidden p-0 gap-0 max-h-[90vh] flex flex-col")}
       >
-        <DialogHeader className={cn(/* design-system-escape: px-6 py-4 → usar <Inset> */ "px-6 py-4 border-b border-border/20 shrink-0")}>
+        <DialogHeader className={cn("px-6 py-4 border-b border-border/20 shrink-0")}>
           <DialogTitle>Criar novo documento</DialogTitle>
           <DialogDescription>
             Crie um novo documento jurídico. Você será redirecionado para o editor.

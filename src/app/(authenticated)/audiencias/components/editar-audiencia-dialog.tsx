@@ -499,12 +499,12 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         {error && (
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
             <span className="shrink-0 mt-0.5">⚠️</span>
-            <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-body-sm leading-snug")}>{error}</span>
+            <span className={cn("text-body-sm leading-snug")}>{error}</span>
           </div>
         )}
 
         {isCapturada && (
-          <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-info/25 bg-info/8 px-3.5 py-3 text-info")}>
+          <div className={cn("rounded-lg border border-info/25 bg-info/8 px-3.5 py-3 text-info")}>
             <Text variant="caption">
               <strong>Origem PJE:</strong> processo, datas, tipo e sala vêm do tribunal
               e continuam sincronizados. Modalidade, link, endereço e presença híbrida
@@ -559,12 +559,12 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 <Text variant="label">Processo *</Text>
               </Label>
               {!trt || !grau ? (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75 text-body-sm")}>
+                <div className={cn("flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75 text-body-sm")}>
                   <span className="shrink-0">⏳</span>
                   <Text variant="caption">Selecione o TRT e Grau primeiro</Text>
                 </div>
               ) : loadingProcessos ? (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+                <div className={cn("flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
                   <LoadingSpinner size="sm" />
                   <Text variant="caption">Carregando processos...</Text>
                 </div>
@@ -639,7 +639,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 <Text variant="label">Tipo de Audiência</Text>
               </Label>
               {loadingTipos ? (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+                <div className={cn("flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
                   <LoadingSpinner size="sm" />
                   <Text variant="caption">Carregando tipos...</Text>
                 </div>
@@ -671,7 +671,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 <Text variant="label">Sala de Audiência</Text>
               </Label>
               {loadingSalas ? (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+                <div className={cn("flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
                   <LoadingSpinner size="sm" />
                   <Text variant="caption">Carregando salas...</Text>
                 </div>
@@ -821,7 +821,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
             <Text variant="label">Responsável (opcional)</Text>
           </Label>
           {loadingUsuarios ? (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
+            <div className={cn("flex items-center inline-tight px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75")}>
               <LoadingSpinner size="sm" />
               <Text variant="caption">Carregando usuários...</Text>
             </div>

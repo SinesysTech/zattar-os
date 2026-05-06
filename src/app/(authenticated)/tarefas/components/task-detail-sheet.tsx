@@ -349,17 +349,17 @@ export function TaskDetailSheet() {
 
                                 {tarefa.description && (
                                     <>
-                                        <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
+                                        <Separator className={cn("my-6")} />
                                         <div className={cn("stack-tight")}>
                                             <Text variant="caption" className="font-medium uppercase tracking-wider">Descrição</Text>
-                                            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
+                                            <p className={cn("text-body-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
                                                 {tarefa.description}
                                             </p>
                                         </div>
                                     </>
                                 )}
 
-                                <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
+                                <Separator className={cn("my-6")} />
 
                                 {/* Subtasks Section */}
                                 <div className={cn("stack-default")}>
@@ -398,7 +398,7 @@ export function TaskDetailSheet() {
                                             </div>
                                         ))}
 
-                                        <form onSubmit={handleAddSubtask} className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight pt-2")}>
+                                        <form onSubmit={handleAddSubtask} className={cn("flex items-center inline-tight pt-2")}>
                                             <Input
                                                 placeholder="Adicionar subtarefa..."
                                                 value={newSubtask}
@@ -412,7 +412,7 @@ export function TaskDetailSheet() {
                                     </div>
                                 </div>
 
-                                <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
+                                <Separator className={cn("my-6")} />
 
                                 {/* Attachments Section */}
                                 <div className={cn("stack-default")}>
@@ -477,7 +477,7 @@ export function TaskDetailSheet() {
                                     </div>
                                 </div>
 
-                                <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
+                                <Separator className={cn("my-6")} />
 
                                 {/* Comments Section */}
                                 <div className={cn("stack-default")}>
@@ -486,7 +486,7 @@ export function TaskDetailSheet() {
                                         <Heading level="card" className={cn( "text-body-sm font-semibold")}>Comentários</Heading>
                                     </div>
 
-                                    <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "stack-default pb-4")}>
+                                    <div className={cn("stack-default pb-4")}>
                                         <form onSubmit={handleAddComment} className={cn("stack-tight")}>
                                             <Textarea
                                                 placeholder="Escreva um comentário..."
@@ -501,7 +501,7 @@ export function TaskDetailSheet() {
                                             </div>
                                         </form>
 
-                                        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-loose pt-2")}>
+                                        <div className={cn("stack-loose pt-2")}>
                                             {tarefa.comments?.map((comment) => (
                                                 <div key={comment.id} className={cn("group relative flex inline-default")}>
                                                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
@@ -514,13 +514,13 @@ export function TaskDetailSheet() {
                                                                 {format(new Date(comment.createdAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                                             </span>
                                                         </div>
-                                                        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground/90 leading-relaxed")}>
+                                                        <p className={cn("text-body-sm text-foreground/90 leading-relaxed")}>
                                                             {comment.body}
                                                         </p>
                                                         <Button
                                                             variant="ghost"
                                                             size="sm"
-                                                            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity")}
+                                                            className={cn("h-6 px-2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity")}
                                                             onClick={() => handleDeleteComment(comment.id)}
                                                         >
                                                             Excluir

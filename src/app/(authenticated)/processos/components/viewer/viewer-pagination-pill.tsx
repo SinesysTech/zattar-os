@@ -138,7 +138,7 @@ export function ViewerPaginationPill({
         </button>
 
         {/* Divisor vertical */}
-        <div className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "w-px h-4 bg-border mx-2 shrink-0")} aria-hidden="true" />
+        <div className={cn("w-px h-4 bg-border mx-2 shrink-0")} aria-hidden="true" />
 
         {/* Botão zoom out */}
         <button

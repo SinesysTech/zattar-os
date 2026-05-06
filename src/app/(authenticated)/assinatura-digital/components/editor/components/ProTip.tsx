@@ -47,7 +47,7 @@ export function ProTipLabel({ children }: { children: React.ReactNode }) {
  */
 export function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "px-1.5 py-0.5 bg-muted rounded text-caption font-mono")}>
+    <kbd className={cn("px-1.5 py-0.5 bg-muted rounded text-caption font-mono")}>
       {children}
     </kbd>
   );

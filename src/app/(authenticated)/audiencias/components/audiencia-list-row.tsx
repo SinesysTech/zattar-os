@@ -117,7 +117,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
     <button
       onClick={() => onClick?.(audiencia)}
       className={cn(
-        /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-medium px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
+        'w-full flex items-center inline-medium px-4 py-2.5 rounded-xl cursor-pointer transition-all outline-none text-left',
         'focus-visible:ring-1 focus-visible:ring-primary/55 hover:bg-foreground/4',
         selected && 'bg-primary/6',
         (isPast || isFinalizada || isCancelada) && 'opacity-55',

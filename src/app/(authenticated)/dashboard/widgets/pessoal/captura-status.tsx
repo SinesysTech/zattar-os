@@ -166,7 +166,7 @@ export function WidgetCapturaStatus() {
 
       {/* Erro detalhado (se houver) */}
       {totalErro > 0 && (
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/10")}>
+        <div className={cn("mt-3 pt-3 border-t border-border/10")}>
           {capturas
             .filter((c) => c.status === 'erro' && c.mensagemErro)
             .slice(0, 2)

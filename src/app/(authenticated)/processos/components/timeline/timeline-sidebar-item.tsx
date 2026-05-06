@@ -97,7 +97,7 @@ export function TimelineSidebarItem({
       )}
 
       {/* Grid: coluna do ícone + linha | coluna do conteúdo */}
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] w-full px-2 py-3")}>
+      <div className={cn("grid grid-cols-[48px_1fr] w-full px-2 py-3")}>
 
         {/* Coluna esquerda: linha superior + ícone + linha inferior */}
         <div className={cn("flex flex-col items-center inline-micro")}>
@@ -130,7 +130,7 @@ export function TimelineSidebarItem({
         </div>
 
         {/* Coluna direita: badge + data + título */}
-        <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
+        <div className={cn("flex flex-col justify-center pb-1")}>
           {/* Linha 1: badge de tipo + grau + data */}
           <div className={cn("flex items-center inline-tight mb-1")}>
             <TimelineTypeBadge

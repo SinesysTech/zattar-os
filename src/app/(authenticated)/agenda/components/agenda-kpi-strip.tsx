@@ -64,7 +64,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
     <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 inline-medium", className)}>
 
       {/* ── Eventos ────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
@@ -84,7 +84,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       </GlassPanel>
 
       {/* ── Audiências Hoje ────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
@@ -103,7 +103,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       </GlassPanel>
 
       {/* ── Prazos 7d ─────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
@@ -123,7 +123,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       </GlassPanel>
 
       {/* ── Horas Ocupadas ────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
@@ -155,7 +155,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       </GlassPanel>
 
       {/* ── Preparo ───────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
@@ -191,7 +191,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       </GlassPanel>
 
       {/* ── Conflitos ─────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>

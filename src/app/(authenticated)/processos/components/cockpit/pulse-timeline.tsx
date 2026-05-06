@@ -128,10 +128,10 @@ export function PulseTimeline({
         onGrauChange={setActiveGrau}
       />
 
-      <div className={cn(/* design-system-escape: pb-16 padding direcional sem Inset equiv. */ "min-h-0 flex-1 overflow-y-auto pb-16")}>
+      <div className={cn("min-h-0 flex-1 overflow-y-auto pb-16")}>
         {futureItems.length > 0 && (
-          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "opacity-70 pt-2")}>
-            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-4 py-1")}>
+          <div className={cn("opacity-70 pt-2")}>
+            <div className={cn("px-4 py-1")}>
               <Text variant="overline" as="span" className="text-muted-foreground/55">
                 Próximos eventos
               </Text>
@@ -143,7 +143,7 @@ export function PulseTimeline({
                   key={fi.id}
                   type="button"
                   onClick={() => onSelectFutureItem?.(fi)}
-                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "group flex w-full cursor-pointer hover:bg-foreground/4 px-4 py-2")}
+                  className={cn("group flex w-full cursor-pointer hover:bg-foreground/4 px-4 py-2")}
                 >
                   <div className="grid grid-cols-[48px_1fr] w-full">
                     <div className={cn("flex flex-col items-center inline-micro")}>
@@ -153,7 +153,7 @@ export function PulseTimeline({
                       </div>
                       <div className="w-px grow bg-border/30 mt-1" />
                     </div>
-                    <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
+                    <div className={cn("flex flex-col justify-center pb-1")}>
                       <div className={cn("flex items-center inline-tight mb-0.5")}>
                         <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10")}>
                           {fi.tipo === 'audiencia' ? 'Audiência' : fi.tipo === 'expediente' ? 'Prazo' : 'Perícia'}
@@ -191,13 +191,13 @@ export function PulseTimeline({
         ))}
 
         {pastItems.length > 0 && (
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-6 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv. */ "grid grid-cols-[48px_1fr] px-2 pb-6 pt-4 opacity-70")}>
+          <div className={cn("grid grid-cols-[48px_1fr] px-2 pb-6 pt-4 opacity-70")}>
             <div className={cn("flex flex-col items-center inline-micro")}>
               <div className="h-2 w-px bg-border" />
               <div className="size-3 rounded-full border border-border bg-muted" />
               <div className="h-8 w-px bg-transparent" />
             </div>
-            <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center border-b border-dashed border-border/70 pb-4")}>
+            <div className={cn("flex items-center border-b border-dashed border-border/70 pb-4")}>
               <Text variant="caption" className="font-medium italic">
                 Início do processo
               </Text>
@@ -206,7 +206,7 @@ export function PulseTimeline({
         )}
 
         {filteredItems.length === 0 && futureItems.length === 0 && (
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-12 padding direcional sem Inset equiv. */ "px-4 py-12 text-center")}>
+          <div className={cn("px-4 py-12 text-center")}>
             <Text variant="caption" className="italic">
               Nenhum item encontrado com os filtros aplicados.
             </Text>

@@ -57,7 +57,7 @@ export function TimelineSidebarHeader({
           placeholder="Buscar na timeline..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-16 padding direcional sem Inset equiv. */ "h-8 pl-8 pr-16 text-caption")}
+          className={cn("h-8 pl-8 pr-16 text-caption")}
         />
         {/* Badge CMD+K para abrir busca avançada */}
         <button
@@ -65,7 +65,7 @@ export function TimelineSidebarHeader({
           onClick={onOpenSearch}
           className={cn(
             'absolute right-2 top-1/2 -translate-y-1/2',
-            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'flex items-center inline-nano px-1.5 py-0.5 rounded',
+            'flex items-center inline-nano px-1.5 py-0.5 rounded',
             'bg-muted border border-border',
              'text-[10px] font-medium text-muted-foreground',
             'hover:bg-accent hover:text-accent-foreground transition-colors',

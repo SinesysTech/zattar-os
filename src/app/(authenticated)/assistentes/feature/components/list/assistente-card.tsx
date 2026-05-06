@@ -53,8 +53,8 @@ export function AssistenteCard({
         className="flex-1 overflow-hidden"
         onClick={() => onView(assistente)}
       >
-        <CardHeader className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-4 pt-3 pb-2")}>
-          <div className={cn(/* design-system-escape: pr-8 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-tight pr-8")}>
+        <CardHeader className={cn("px-4 pt-3 pb-2")}>
+          <div className={cn("flex items-start justify-between inline-tight pr-8")}>
             <CardTitle className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm font-semibold leading-tight line-clamp-2")}>
               {assistente.nome}
             </CardTitle>
@@ -62,12 +62,12 @@ export function AssistenteCard({
           {/* Badge de tipo */}
           <div className="mt-1">
             {isDify && typeConfig ? (
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 h-4 inline-micro")}>
+              <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0 h-4 inline-micro")}>
                 {typeConfig.icon}
                 {typeConfig.label}
               </Badge>
             ) : (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 h-4 inline-micro")}>
+              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 h-4 inline-micro")}>
                 <Globe className="h-3 w-3" />
                 Iframe
               </Badge>
@@ -76,7 +76,7 @@ export function AssistenteCard({
         </CardHeader>
 
         {temDescricao && (
-          <CardContent className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pt-0 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-4 pt-0 pb-2")}>
+          <CardContent className={cn("px-4 pt-0 pb-2")}>
             <p className={cn("text-caption text-muted-foreground line-clamp-2")} title={assistente.descricao || ''}>
               {truncarDescricao(assistente.descricao || null, 120)}
             </p>

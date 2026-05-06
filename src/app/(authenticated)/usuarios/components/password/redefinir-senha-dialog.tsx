@@ -165,7 +165,7 @@ export function RedefinirSenhaDialog({
               placeholder="Digite a nova senha"
               required
               disabled={isLoading || !!successMessage}
-              className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+              className={cn("pr-10")}
             />
             <button
               type="button"
@@ -197,7 +197,7 @@ export function RedefinirSenhaDialog({
               placeholder="Digite novamente a nova senha"
               required
               disabled={isLoading || !!successMessage}
-              className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+              className={cn("pr-10")}
             />
             <button
               type="button"

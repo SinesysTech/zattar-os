@@ -50,7 +50,7 @@ export function WidgetChatAtivo() {
           <p className={cn( "text-body-lg font-bold tabular-nums")}>{naoLidas}</p>
         </div>
         <div className={cn("flex flex-col items-end inline-nano")}>
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>salas</span>
+          <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>salas</span>
           <span className={cn( "text-body font-bold tabular-nums")}>{salasAtivas}</span>
           <span className="text-[9px] text-muted-foreground/55">ativas</span>
         </div>
@@ -58,22 +58,22 @@ export function WidgetChatAtivo() {
 
       {/* Preview da última mensagem */}
       {ultimaMsg ? (
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
+        <div className={cn("px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
           <div className={cn("flex items-center inline-snug mb-1")}>
             <div className="size-1.5 rounded-full bg-success/60" />
             <span className={cn( "text-[10px] font-semibold text-foreground/70")}>{ultimaMsg.autor}</span>
             <span className="text-[9px] text-muted-foreground/55 ml-auto tabular-nums">{tempoRelativo}</span>
           </div>
-          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/55 leading-relaxed line-clamp-2")}>{ultimaMsg.preview}</p>
+          <p className={cn("text-[10px] text-muted-foreground/55 leading-relaxed line-clamp-2")}>{ultimaMsg.preview}</p>
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
+        <div className={cn("px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
           <p className="text-[10px] text-muted-foreground/40 text-center">Nenhuma mensagem recente</p>
         </div>
       )}
 
-      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
-        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>
+      <div className={cn("mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
+        <span className={cn("text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>
           {salasAtivas} salas — {naoLidas} pendentes
         </span>
         <Link

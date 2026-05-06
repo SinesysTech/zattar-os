@@ -288,7 +288,7 @@ export function PermissoesMatriz({
               Você está prestes a modificar as permissões deste usuário. Esta ação será registrada no log de auditoria.
             </DialogDescription>
           </DialogHeader>
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+          <div className={cn("py-4")}>
             <p className="text-sm text-muted-foreground">
               <strong>Total de permissões ativas:</strong> {totalPermissoesAtivas} de {totalPermissoes}
             </p>

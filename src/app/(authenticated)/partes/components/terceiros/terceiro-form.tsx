@@ -551,7 +551,7 @@ export function TerceiroFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+            <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
           <input type="hidden" name="tipo_parte" value={formData.tipo_parte} />
         </div>
@@ -577,7 +577,7 @@ export function TerceiroFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+            <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
           <input type="hidden" name="polo" value={formData.polo} />
         </div>
@@ -673,7 +673,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
               <input type="hidden" name="genero" value={formData.genero} />
             </div>
@@ -696,7 +696,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
               <input type="hidden" name="estado_civil" value={formData.estado_civil} />
             </div>
@@ -810,7 +810,7 @@ export function TerceiroFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
+                className={cn("inline-micro pr-1")}
               >
                 {email}
                 <button
@@ -884,7 +884,7 @@ export function TerceiroFormDialog({
   // Renderizar Step 4 - Endereço
   const renderStep4 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+      <div className={cn("flex items-center space-x-2")}>
         <Checkbox
           id="endereco_desconhecido"
           checked={formData.endereco_desconhecido}
@@ -977,7 +977,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
           </div>
@@ -1002,7 +1002,7 @@ export function TerceiroFormDialog({
       </div>
 
       <div className={cn("grid grid-cols-1 md:grid-cols-3 inline-default")}>
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+        <div className={cn("flex items-center space-x-2")}>
           <Checkbox
             id="ativo"
             checked={formData.ativo}
@@ -1013,7 +1013,7 @@ export function TerceiroFormDialog({
           </Label>
         </div>
 
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+        <div className={cn("flex items-center space-x-2")}>
           <Checkbox
             id="principal"
             checked={formData.principal}
@@ -1024,7 +1024,7 @@ export function TerceiroFormDialog({
           </Label>
         </div>
 
-        <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+        <div className={cn("flex items-center space-x-2")}>
           <Checkbox
             id="autoridade"
             checked={formData.autoridade}

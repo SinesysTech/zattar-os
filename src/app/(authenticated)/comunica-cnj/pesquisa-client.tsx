@@ -93,7 +93,7 @@ export function PesquisaClient() {
       <DiarioOficialPageNav active="pesquisa" subtitle={subtitle} />
 
       {/* Busca centralizada — hero de consulta à API pública */}
-      <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+      <div className={cn("py-4")}>
         <SearchHero onBuscar={executarBusca} />
         <div className="mt-4">
           <SearchQuickFilters />

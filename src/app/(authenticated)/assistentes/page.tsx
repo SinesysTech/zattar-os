@@ -27,7 +27,7 @@ export default async function AssistentesPage() {
   if (!result.success || !result.data) {
     // Handle error state gracefully
     return (
-      <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4 text-destructive")}>
+      <div className={cn("py-4 text-destructive")}>
         Erro ao carregar dados: {result.error}
       </div>
     );

@@ -46,7 +46,7 @@ export default function PlaygroundPage() {
       <div className="min-h-screen bg-background text-foreground transition-colors">
         {/* Header */}
         <div className="border-b bg-card">
-          <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "container mx-auto px-6 py-4")}>
+          <div className={cn("container mx-auto px-6 py-4")}>
             <div className="flex items-center justify-between">
               <div>
                 <Heading level="page">Design System Playground</Heading>
@@ -72,7 +72,7 @@ export default function PlaygroundPage() {
         </div>
 
         {/* Content */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ "container mx-auto px-6 py-8")}>
+        <div className={cn("container mx-auto px-6 py-8")}>
           <div className={cn("stack-section")}>
             {/* Theme Info */}
             <Card>

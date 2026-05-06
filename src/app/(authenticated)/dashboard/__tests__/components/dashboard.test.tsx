@@ -234,7 +234,7 @@ describe('Dashboard Responsive Properties', () => {
                         // Renderizar card de métrica
                         const { container } = render(
                             <Card>
-                                <CardContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; sm:pt-6 sem equivalente DS */ "pt-4 sm:pt-6")}>
+                                <CardContent className={cn("pt-4 sm:pt-6")}>
                                     <div className={cn(/* design-system-escape: sm:space-y-2 sem equivalente DS */ "stack-micro sm:space-y-2")}>
                                         <p className={cn( "text-body-sm font-medium text-muted-foreground truncate")}>
                                             {title}

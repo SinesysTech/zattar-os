@@ -41,7 +41,7 @@ export function UsuarioViewSheet({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn("max-h-[90vh] w-[min(92vw,25rem)] sm:w-[min(92vw,33.75rem)] overflow-y-auto inset-dialog")}>
-        <DialogHeader className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "pb-5")}>
+        <DialogHeader className={cn("pb-5")}>
           <DialogTitle className={cn("text-section-title flex items-center gap-2")}>
             {formatarNomeExibicao(usuario.nomeExibicao)}
             <Badge variant={usuario.ativo ? 'success' : 'outline'}>

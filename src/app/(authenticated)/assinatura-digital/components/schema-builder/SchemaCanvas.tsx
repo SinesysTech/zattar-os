@@ -71,7 +71,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       ref={setNodeRef}
       style={style}
       className={cn(
-        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "group flex items-center inline-tight rounded-lg border bg-card px-2.5 py-2 transition-all",
+        "group flex items-center inline-tight rounded-lg border bg-card px-2.5 py-2 transition-all",
         isSelected ? "border-primary ring-1 ring-primary/20" : "border-transparent hover:border-border",
         isDragging && "opacity-50"
       )}
@@ -92,17 +92,17 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
         {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
           <div className={cn("flex inline-micro mt-1 flex-wrap")}>
             {field.validation?.required && (
-              <Badge variant="destructive" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
+              <Badge variant="destructive" className={cn("text-[10px] px-1.5 py-0")}>
                 Obrigatório
               </Badge>
             )}
             {field.conditional && (
-              <Badge variant="outline" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
+              <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0")}>
                 Condicional
               </Badge>
             )}
             {field.options && field.options.length > 0 && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0")}>
+              <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0")}>
                 {field.options.length} opções
               </Badge>
             )}
@@ -188,7 +188,7 @@ function DroppableSectionCard({
       )}
       onClick={() => onSectionSelect(section.id)}
     >
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-tight px-3 pt-3 pb-2")}>
+      <div className={cn("flex items-start justify-between inline-tight px-3 pt-3 pb-2")}>
         <div className="flex-1 min-w-0">
           <Heading level="subsection" className={cn("text-caption")}>{section.title}</Heading>
           {section.description && (
@@ -229,7 +229,7 @@ function DroppableSectionCard({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv. */ "px-3 pb-3 stack-micro")}>
+      <div className={cn("px-3 pb-3 stack-micro")}>
         {fields.length === 0 ? (
           <div className={cn("border border-dashed rounded-lg inset-card-compact text-center")}>
             <AlertCircle className="size-5 text-muted-foreground/50 mx-auto mb-1" />
@@ -270,7 +270,7 @@ export default function SchemaCanvas({
   return (
     <div className={cn("stack-medium")}>
       {schema.sections.length === 0 ? (
-        <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center rounded-xl border border-dashed py-12 inline-medium")}>
+        <div className={cn("flex flex-col items-center justify-center rounded-xl border border-dashed py-12 inline-medium")}>
           <AlertCircle className="size-8 text-muted-foreground/60" />
           <div className={cn("text-center stack-micro")}>
             <Text variant="caption" className="font-medium">Nenhuma seção criada</Text>
@@ -303,7 +303,7 @@ export default function SchemaCanvas({
 
           <button
             onClick={onSectionAdd}
-            className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "w-full rounded-xl border border-dashed py-3 text-body-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer")}
+            className={cn("w-full rounded-xl border border-dashed py-3 text-body-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer")}
           >
             <Plus className="size-4 inline-block mr-1.5 -mt-0.5" />
             Adicionar Seção

@@ -89,7 +89,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
         </IconContainer>
       </div>
 
-      <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; px-1 padding direcional sem Inset equiv. */ "relative overflow-x-auto pb-2 -mx-1 px-1")}>
+      <div className={cn("relative overflow-x-auto pb-2 -mx-1 px-1")}>
         <div
           className={cn("relative flex items-start justify-between inline-tight min-w-fit")}
           style={{ minWidth: parcelasOrdenadas.length * 96 }}
@@ -128,7 +128,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                 type="button"
                 onClick={() => onSelecionar?.(parcela)}
                 className={cn(
-                  /* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'relative flex flex-col items-center inline-tight min-w-[84px] group rounded-lg px-1 py-1',
+                  'relative flex flex-col items-center inline-tight min-w-[84px] group rounded-lg px-1 py-1',
                   'cursor-pointer hover:bg-primary/5 transition-colors duration-200',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
                 )}

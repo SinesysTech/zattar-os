@@ -45,7 +45,7 @@ export function ChatEmptyState() {
             <Heading level="section" className="text-foreground">
               Suas conversas
             </Heading>
-            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[0.8rem] text-muted-foreground/70 text-center text-balance leading-relaxed")}>
+            <p className={cn("text-[0.8rem] text-muted-foreground/70 text-center text-balance leading-relaxed")}>
               Selecione uma conversa para começar ou inicie uma nova.
             </p>
           </div>
@@ -68,7 +68,7 @@ export function ChatEmptyState() {
                 <p className={cn( "text-[0.7rem] font-semibold text-foreground mb-0.5")}>
                   {title}
                 </p>
-                <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[0.6rem] text-muted-foreground/65 leading-snug")}>
+                <p className={cn("text-[0.6rem] text-muted-foreground/65 leading-snug")}>
                   {description}
                 </p>
               </div>

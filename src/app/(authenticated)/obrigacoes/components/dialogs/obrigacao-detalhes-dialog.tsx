@@ -421,7 +421,7 @@ export function ObrigacaoDetalhesDialog({
         </DialogHeader>
 
         {/* ══════════ BLOCO PRINCIPAL · Tipo, valor e vencimento ══════════ */}
-        <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS */ "shrink-0 mx-6 mt-4 inset-card-compact rounded-xl bg-primary/5 border border-primary/15")}>
+        <div className={cn("shrink-0 mx-6 mt-4 inset-card-compact rounded-xl bg-primary/5 border border-primary/15")}>
           <div className={cn("flex items-start inline-medium mb-3.5")}>
             <div className="flex-1 min-w-0">
               <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[14.5px] font-semibold text-foreground leading-tight")}>
@@ -517,7 +517,7 @@ export function ObrigacaoDetalhesDialog({
               ) : (
                 <Text
                   variant="kpi-value"
-                  className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[22px] leading-tight tabular-nums")}
+                  className={cn("text-[22px] leading-tight tabular-nums")}
                 >
                   {formatCurrency(obrigacao.valor)}
                 </Text>
@@ -587,7 +587,7 @@ export function ObrigacaoDetalhesDialog({
                   <Text
                     variant="kpi-value"
                     className={cn(
-                      /* design-system-escape: leading-tight sem token DS */ 'text-[17px] leading-tight tabular-nums',
+                      'text-[17px] leading-tight tabular-nums',
                       obrigacao.status === 'vencida' && 'text-destructive',
                     )}
                   >
@@ -615,7 +615,7 @@ export function ObrigacaoDetalhesDialog({
                 asChild
                 size="sm"
                 variant="default"
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <Link
                   href={`/obrigacoes/${obrigacao.acordoId}`}
@@ -631,7 +631,7 @@ export function ObrigacaoDetalhesDialog({
                 asChild
                 size="sm"
                 variant="outline"
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <Link
                   href={`/processos/${obrigacao.processoId}`}
@@ -647,7 +647,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onVerLancamento?.(obrigacao)}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <LinkIcon className="size-3" />
                 Ver lançamento
@@ -658,7 +658,7 @@ export function ObrigacaoDetalhesDialog({
                 size="sm"
                 variant="outline"
                 onClick={() => onSincronizar?.(obrigacao)}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
+                className={cn("h-7 px-2.5 rounded-lg text-[11.5px] inline-snug")}
               >
                 <RefreshCw className="size-3" />
                 Sincronizar
@@ -668,7 +668,7 @@ export function ObrigacaoDetalhesDialog({
         </div>
 
         {/* ══════════ BODY scrollável ══════════ */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]")}>
+        <div className={cn("flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:thin]")}>
           <div className={cn("stack-default")}>
             {/* Registrar recebimento — parcelas pendentes/vencidas */}
             {podeMarcarRecebida && (
@@ -740,7 +740,7 @@ export function ObrigacaoDetalhesDialog({
                       <Button
                         size="sm"
                         onClick={handleStartEfetivacao}
-                        className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 px-3 rounded-lg text-[11.5px] inline-snug bg-success hover:bg-success/90 text-success-foreground")}
+                        className={cn("h-7 px-3 rounded-lg text-[11.5px] inline-snug bg-success hover:bg-success/90 text-success-foreground")}
                       >
                         <CheckCircle2 className="size-3" />
                         {isRecebimento
@@ -807,7 +807,7 @@ export function ObrigacaoDetalhesDialog({
         </div>
 
         {/* ══════════ FOOTER ══════════ */}
-        <DialogFooter className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "shrink-0 px-6 py-3 border-t border-border/50 bg-card/40")}>
+        <DialogFooter className={cn("shrink-0 px-6 py-3 border-t border-border/50 bg-card/40")}>
           <Button variant="outline" size="sm" onClick={handleClose}>
             Fechar
           </Button>

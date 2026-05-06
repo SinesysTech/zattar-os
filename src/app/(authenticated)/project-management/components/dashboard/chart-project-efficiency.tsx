@@ -75,7 +75,7 @@ export function ChartProjectEfficiency({
             Eficiência dos Projetos
           </CardTitle>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
+        <CardContent className={cn("flex items-center justify-center py-12")}>
           <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível.
           </Text>
@@ -121,7 +121,7 @@ export function ChartProjectEfficiency({
           </Select>
         </CardAction>
       </CardHeader>
-      <CardContent className={cn(/* design-system-escape: pb-0 padding direcional sem Inset equiv. */ "flex flex-1 justify-center pb-0")}>
+      <CardContent className={cn("flex flex-1 justify-center pb-0")}>
         <ChartContainer
           id={id}
           config={chartConfig}

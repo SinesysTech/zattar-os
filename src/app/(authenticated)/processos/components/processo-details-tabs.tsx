@@ -167,7 +167,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
 
   if (sorted.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-6 text-center")}>
+      <p className={cn("text-body-sm text-muted-foreground py-6 text-center")}>
         Nenhuma audiência encontrada para este processo.
       </p>
     );
@@ -178,7 +178,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
       {sorted.map((aud) => (
         <div
           key={aud.id}
-          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
+          className={cn("rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
         >
           <div className={cn("flex items-start justify-between inline-medium")}>
             <div className={cn("min-w-0 stack-micro")}>
@@ -266,7 +266,7 @@ function ExpedientesTable({
 
   if (sorted.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-6 text-center")}>
+      <p className={cn("text-body-sm text-muted-foreground py-6 text-center")}>
         Nenhum expediente encontrado para este processo.
       </p>
     );
@@ -380,7 +380,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
 
   if (sorted.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-6 text-center")}>
+      <p className={cn("text-body-sm text-muted-foreground py-6 text-center")}>
         Nenhuma perícia encontrada para este processo.
       </p>
     );
@@ -391,7 +391,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
       {sorted.map((per) => (
         <div
           key={per.id}
-          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
+          className={cn("rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40")}
         >
           <div className={cn("flex items-start justify-between inline-medium")}>
             <div className={cn("min-w-0 stack-micro")}>
@@ -540,7 +540,7 @@ export function ProcessoDetailsTabs({
 
   return (
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn("stack-medium")}>
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between inline-medium rounded-xl border bg-background/70 px-3 py-2.5")}>
+      <div className={cn("flex flex-wrap items-center justify-between inline-medium rounded-xl border bg-background/70 px-3 py-2.5")}>
         <div className={cn("flex flex-wrap items-center inline-tight text-body-sm text-muted-foreground")}>
           <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <FileText className="h-3.5 w-3.5" />
@@ -569,7 +569,7 @@ export function ProcessoDetailsTabs({
               <FileText className="h-3.5 w-3.5" />
               Expedientes
               {!isLoading && totalExpedientes > 0 && (
-                <SemanticBadge category="status" value={totalExpedientes} variantOverride="secondary" toneOverride="soft" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}>
+                <SemanticBadge category="status" value={totalExpedientes} variantOverride="secondary" toneOverride="soft" className={cn("ml-1 text-[10px] px-1.5 py-0")}>
                   {totalExpedientes}
                 </SemanticBadge>
               )}
@@ -578,7 +578,7 @@ export function ProcessoDetailsTabs({
               <Calendar className="h-3.5 w-3.5" />
               Audiências
               {!isLoading && totalAudiencias > 0 && (
-                <SemanticBadge category="status" value={totalAudiencias} variantOverride="secondary" toneOverride="soft" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}>
+                <SemanticBadge category="status" value={totalAudiencias} variantOverride="secondary" toneOverride="soft" className={cn("ml-1 text-[10px] px-1.5 py-0")}>
                   {totalAudiencias}
                 </SemanticBadge>
               )}
@@ -587,7 +587,7 @@ export function ProcessoDetailsTabs({
               <Microscope className="h-3.5 w-3.5" />
               Perícias
               {!isLoading && totalPericias > 0 && (
-                <SemanticBadge category="status" value={totalPericias} variantOverride="secondary" toneOverride="soft" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-1 text-[10px] px-1.5 py-0")}>
+                <SemanticBadge category="status" value={totalPericias} variantOverride="secondary" toneOverride="soft" className={cn("ml-1 text-[10px] px-1.5 py-0")}>
                   {totalPericias}
                 </SemanticBadge>
               )}
@@ -599,17 +599,17 @@ export function ProcessoDetailsTabs({
           ) : (
             <>
               <TabsContent value="expedientes" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 p-3")}>
-                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "max-h-96 overflow-y-auto pr-1")}>
+                <div className={cn("max-h-96 overflow-y-auto pr-1")}>
                   <ExpedientesTable expedientes={expedientes} usuariosMap={usuariosMap} tiposMap={tiposMap} />
                 </div>
               </TabsContent>
               <TabsContent value="audiencias" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 p-3")}>
-                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "max-h-96 overflow-y-auto pr-1")}>
+                <div className={cn("max-h-96 overflow-y-auto pr-1")}>
                   <AudienciasTable audiencias={audiencias} />
                 </div>
               </TabsContent>
               <TabsContent value="pericias" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-0 rounded-xl border bg-background/70 p-3")}>
-                <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "max-h-96 overflow-y-auto pr-1")}>
+                <div className={cn("max-h-96 overflow-y-auto pr-1")}>
                   <PericiasTable pericias={pericias} />
                 </div>
               </TabsContent>

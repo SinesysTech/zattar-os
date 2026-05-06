@@ -103,7 +103,7 @@ export function EditarDocumentoClient({ uuid }: EditarDocumentoClientProps) {
 
           {/* PDF Canvas — scrollable */}
           <div className={cn("relative flex-1 overflow-auto inset-dialog scroll-smooth scrollbar-custom bg-muted/15")}>
-            <div className={cn(/* design-system-escape: pb-20 padding direcional sem Inset equiv. */ "flex justify-center min-h-full pb-20")}>
+            <div className={cn("flex justify-center min-h-full pb-20")}>
               <EditorCanvas
                 canvasRef={canvasRef}
                 canvasSize={PDF_CANVAS_SIZE}

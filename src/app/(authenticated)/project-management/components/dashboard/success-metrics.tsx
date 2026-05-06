@@ -56,7 +56,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
       <CardContent>
         <p className={cn( "mb-2 text-body-sm font-bold")}>Destaques do Mês</p>
         {membros.length > 0 ? (
-          <div className={cn(/* design-system-escape: -space-x-4 sem equivalente DS */ "flex -space-x-4")}>
+          <div className={cn("flex -space-x-4")}>
             <TooltipProvider>
               {membros.map((membro) => (
                 <Tooltip key={membro.usuarioId}>

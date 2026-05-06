@@ -141,7 +141,7 @@ function MetaRow({
   value: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-medium py-1")}>
+    <div className={cn("flex items-center justify-between inline-medium py-1")}>
       <span className="text-[11.5px] text-muted-foreground/70">{label}</span>
       <span className={cn( "text-[12px] font-medium text-foreground text-right truncate")}>{value}</span>
     </div>
@@ -199,7 +199,7 @@ export function DocumentoDetailDialog({
         {/* ── Hero preview ───────────────────────────────────── */}
         <div
           className={cn(
-            /* design-system-escape: px-6 padding direcional sem Inset equiv.; py-8 padding direcional sem Inset equiv. */ 'relative flex flex-col items-center justify-center inline-default px-6 py-8',
+            'relative flex flex-col items-center justify-center inline-default px-6 py-8',
             'border-b border-border/30',
             accentClasses.bg,
           )}
@@ -327,7 +327,7 @@ export function DocumentoDetailDialog({
         </div>
 
         {/* ── Actions ────────────────────────────────────────── */}
-        <DialogFooter className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "border-t border-border/30 px-6 py-4")}>
+        <DialogFooter className={cn("border-t border-border/30 px-6 py-4")}>
           {onShare && (
             <Button
               type="button"

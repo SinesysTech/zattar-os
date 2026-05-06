@@ -284,7 +284,7 @@ function GlassCard({
         </p>
       </div>
 
-      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/30")}>
+      <div className={cn("flex items-center justify-between inline-tight pt-2 border-t border-border/30")}>
         {doc.assinantes.length > 0 ? (
           <div className={cn("flex items-center inline-snug")}>
             <ProgressRing
@@ -353,7 +353,7 @@ function CardsSkeleton() {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 text-center")}>
       <FileSignature className="size-10 text-muted-foreground/55 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>
         Nenhum documento encontrado

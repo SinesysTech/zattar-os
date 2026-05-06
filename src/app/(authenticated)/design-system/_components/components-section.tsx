@@ -120,10 +120,10 @@ function BadgesSpecimen() {
             <Badge tone="soft" variant="neutral">Cível</Badge>
             <Badge tone="soft" variant="neutral">Família</Badge>
             <Badge>28</Badge>
-            <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground")}>
+            <kbd className={cn("rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground")}>
               ⌘ K
             </kbd>
-            <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground")}>
+            <kbd className={cn("rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground")}>
               ↵
             </kbd>
           </div>
@@ -159,7 +159,7 @@ function InputsSpecimen() {
             <Input
               id="ds-search"
               placeholder="Buscar processos, partes, peças…"
-              className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "pl-8")}
+              className={cn("pl-8")}
             />
           </div>
         </div>
@@ -247,7 +247,7 @@ function CardsSpecimen() {
                 </div>
               </div>
             </div>
-            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between border-t border-dashed border-border pt-2")}>
+            <div className={cn("flex items-center justify-between border-t border-dashed border-border pt-2")}>
               <div className="flex">
                 <span className={cn( "flex size-5.5 items-center justify-center rounded-full border-2 border-card bg-primary text-[9px] font-semibold text-white")}>
                   AR

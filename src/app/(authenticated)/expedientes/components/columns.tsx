@@ -85,12 +85,12 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   return (
     <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
+      <span className={cn("bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
       <span className={cn(
-        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
         grauColorClasses[grau] || 'bg-muted text-muted-foreground'
       )}>
         {grauLabel}
@@ -229,7 +229,7 @@ export function TipoDescricaoCell({
                         <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipoExpediente}</SelectItem>
                       ))
                     ) : (
-                      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "px-2 py-1.5 text-body-sm text-muted-foreground")}>
+                      <div className={cn("px-2 py-1.5 text-body-sm text-muted-foreground")}>
                         {isLoadingTipos ? 'Carregando...' : 'Nenhum tipo'}
                       </div>
                     )}
@@ -254,7 +254,7 @@ export function TipoDescricaoCell({
         <button
           type="button"
           onClick={() => setIsDescricaoDialogOpen(true)}
-          className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-caption text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
+          className={cn("text-caption text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
         >
           {descricaoExibicao}
         </button>
@@ -270,7 +270,7 @@ export function TipoDescricaoCell({
             <DialogTitle>Editar Descrição</DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-            <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")}>
+            <div className={cn("py-2")}>
               <Textarea
                 value={descricao}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDescricao(e.target.value)}
@@ -331,11 +331,11 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   return (
     <div className={cn( "inline-flex flex-col items-center text-caption font-medium shrink-0 inline-nano", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-success/15 text-success px-2 py-0.5 rounded-full")}>
+      <span className={cn("bg-success/15 text-success px-2 py-0.5 rounded-full")}>
         {formatDate(dataInicio)}
       </span>
       {/* Data Fim (vermelho - arredondado) */}
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-destructive/15 text-destructive px-2 py-0.5 rounded-full")}>
+      <span className={cn("bg-destructive/15 text-destructive px-2 py-0.5 rounded-full")}>
         {formatDate(dataFim)}
       </span>
     </div>
@@ -522,7 +522,7 @@ export const columns: ColumnDef<Expediente>[] = [
       headerLabel: 'Prazo',
     },
     cell: ({ row }) => (
-      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+      <div className={cn("flex items-center py-2")}>
         <PrazoCell expediente={row.original} />
       </div>
     ),
@@ -542,7 +542,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <TipoDescricaoCell
             expediente={row.original}
             onSuccessAction={meta?.onSuccessAction || (() => { })}
@@ -568,7 +568,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row }) => {
       const e = row.original;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
+        <div className={cn("flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
           {/* Linha 1: Badge Tribunal + Grau */}
           <div className={cn("flex items-center inline-snug flex-wrap")}>
             <TribunalGrauBadge trt={e.trt} grau={e.grau} />
@@ -613,7 +613,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <ObservacoesCell expediente={row.original} onSuccessAction={meta?.onSuccessAction} />
         </div>
       );
@@ -634,7 +634,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <ResponsavelCell expediente={row.original} usuarios={meta?.usuarios} onSuccessAction={meta?.onSuccessAction} />
         </div>
       );
@@ -655,7 +655,7 @@ export const columns: ColumnDef<Expediente>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as ExpedientesTableMeta;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <ExpedienteActions
             expediente={row.original}
             onSuccessAction={meta?.onSuccessAction}

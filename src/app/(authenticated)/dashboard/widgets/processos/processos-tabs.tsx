@@ -120,7 +120,7 @@ export function WidgetProcessosComTabs() {
       <div className={cn("flex flex-col inline-medium")}>
         <Treemap segments={treemapData} height={84} />
         {/* Legend row */}
-        <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap gap-x-3 gap-y-1 pt-1")}>
+        <div className={cn("flex flex-wrap gap-x-3 gap-y-1 pt-1")}>
           {treemapData.map((seg) => (
             <div key={seg.label} className={cn("flex items-center inline-micro")}>
               <span

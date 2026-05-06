@@ -23,13 +23,13 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
       : 0;
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-5 py-3")}>
+    <GlassPanel className={cn("px-5 py-3")}>
       <div className={cn("flex items-center inline-loose overflow-x-auto")}>
         {/* Total */}
         <div className={cn("flex items-center inline-tight shrink-0")}>
           <FileSignature className="size-4 text-muted-foreground/55" />
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
             <p className={cn( "font-display text-body-lg font-bold tabular-nums")}>
@@ -42,7 +42,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
         {/* Taxa Conclusão */}
         <div className="shrink-0">
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+          <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa Conclusão
           </p>
           <div className={cn("flex items-center inline-tight")}>
@@ -61,7 +61,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
 
         {/* Tempo Médio */}
         <div className="shrink-0">
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+          <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Tempo Médio
           </p>
           <p className={cn( "font-display text-body font-bold tabular-nums")}>
@@ -75,7 +75,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
         {/* Tendência */}
         <div className={cn("flex items-center inline-medium shrink-0")}>
           <div>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendência 6m
             </p>
             <Text variant="caption" className="font-semibold text-success/60">

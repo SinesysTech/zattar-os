@@ -103,7 +103,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
             ))}
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex flex-col justify-center inline-default pt-4")}>
+          <div className={cn("flex flex-col justify-center inline-default pt-4")}>
             <div className={cn("text-muted-foreground text-body-sm text-center")}>
               Nenhuma tarefa aqui.
             </div>
@@ -343,7 +343,7 @@ export function TaskBoard({ quadros }: TaskBoardProps) {
         </div>
 
         {/* Kanban Board */}
-        <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex w-full inline-default overflow-x-auto pb-4")}>
+        <div className={cn("flex w-full inline-default overflow-x-auto pb-4")}>
           {STATUS_COLUMNS.map((column) => {
             const tasks = tarefasByStatus[column.value] ?? [];
             return (

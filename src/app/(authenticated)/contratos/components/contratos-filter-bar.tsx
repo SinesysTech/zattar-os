@@ -166,12 +166,12 @@ function SegmentoFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <CommandInput placeholder="Buscar segmento..." className={cn("h-8 text-caption rounded-lg")} />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-52 px-1.5 pb-1.5")}>
             {isLoading ? (
-              <Text variant="caption" as="div" className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "py-6 text-center text-muted-foreground/65")}>Carregando...</Text>
+              <Text variant="caption" as="div" className={cn("py-6 text-center text-muted-foreground/65")}>Carregando...</Text>
             ) : (
               <>
                 <CommandEmpty>
@@ -189,7 +189,7 @@ function SegmentoFilter({
                           onChange(isSelected ? '' : segId);
                           setOpen(false);
                         }}
-                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5")}
+                        className={cn("inline-tight rounded-lg text-caption px-2 py-1.5")}
                       >
                         <span>{segmento.nome}</span>
                         {isSelected && <Check className="size-3 ml-auto text-primary shrink-0" />}
@@ -249,7 +249,7 @@ function TipoContratoFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 selected === value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -308,7 +308,7 @@ function TipoCobrancaFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 selected === value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -350,7 +350,7 @@ function SortFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
         <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "p-2 stack-nano")}>
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/70")}>
+          <div className={cn("px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/70")}>
             Ordenar por
           </div>
           {CONTRATOS_SORT_OPTIONS.map(({ campo, label: optLabel }) => (
@@ -362,7 +362,7 @@ function SortFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 sort.campo === campo
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -372,8 +372,8 @@ function SortFilter({
               {sort.campo === campo && <Check className="size-3 ml-auto" />}
             </button>
           ))}
-          <div className={cn(/* design-system-escape: my-1.5 margin sem primitiva DS; mx-1 margin sem primitiva DS */ "h-px bg-border/40 my-1.5 mx-1")} />
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "px-2 pb-1 text-meta-label text-muted-foreground/70")}>
+          <div className={cn("h-px bg-border/40 my-1.5 mx-1")} />
+          <div className={cn("px-2 pb-1 text-meta-label text-muted-foreground/70")}>
             Direção
           </div>
           {(['desc', 'asc'] as const).map((ord) => (
@@ -385,7 +385,7 @@ function SortFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-caption transition-colors cursor-pointer',
                 sort.ordem === ord
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70',

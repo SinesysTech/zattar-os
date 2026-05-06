@@ -104,7 +104,7 @@ function SelectAllRail({
   visibleCount: number;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight px-4 pb-2 text-muted-foreground/70")}>
+    <div className={cn("flex items-center inline-tight px-4 pb-2 text-muted-foreground/70")}>
       <Checkbox
         checked={allSelected ? true : someSelected ? 'indeterminate' : false}
         onCheckedChange={onToggleSelectAll}
@@ -222,7 +222,7 @@ function ResponsavelCell({
             e.stopPropagation();
             setDialogOpen(true);
           }}
-          className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS; py-1 padding direcional sem Inset equiv. */ "flex items-center inline-snug min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
+          className={cn("flex items-center inline-snug min-w-0 rounded-lg px-1 -mx-1 py-1 text-left transition-colors hover:bg-muted/40 focus:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer")}
           title={`Alterar responsável: ${nome}`}
         >
           <Avatar className="size-5">
@@ -293,7 +293,7 @@ function ResponsavelAssignPopover({
           onClick={(e) => e.stopPropagation()}
           aria-label="Adicionar responsável"
           disabled={isPending}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center inline-snug rounded-lg border border-dashed border-border/50 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
+          className={cn("inline-flex items-center inline-snug rounded-lg border border-dashed border-border/50 px-2 py-1 text-muted-foreground/60 hover:text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer disabled:opacity-50 w-fit")}
         >
           <Plus className="size-3" aria-hidden="true" />
           <span className="text-micro-caption font-medium">Adicionar responsável</span>
@@ -319,7 +319,7 @@ function ResponsavelAssignPopover({
                   key={usuario.id}
                   value={usuario.nome}
                   onSelect={() => handleSelect(usuario.id)}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
+                  className={cn("inline-tight rounded-lg text-caption px-2 py-1.5 cursor-pointer")}
                 >
                   <Avatar className="size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nome} />
@@ -591,7 +591,7 @@ function ListSkeleton() {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <Text variant="label" className="text-muted-foreground/60">
         Nenhum contrato encontrado

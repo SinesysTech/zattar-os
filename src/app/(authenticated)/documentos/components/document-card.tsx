@@ -92,7 +92,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
         )}
 
         {/* Footer */}
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 pt-3 border-t text-caption text-muted-foreground")}>
+        <div className={cn("flex items-center justify-between mt-4 pt-3 border-t text-caption text-muted-foreground")}>
           <div className={cn("flex items-center inline-micro")}>
             <Users className="h-3 w-3" />
             <span>{documento.criador.nomeCompleto}</span>

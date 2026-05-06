@@ -111,7 +111,7 @@ export function ContratoTransitoriasAlert({
             {transitorias.map((t) => (
               <li
                 key={t.id}
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-medium rounded-xl bg-surface-container-low/60 px-3 py-2 ring-1 ring-outline-variant/20")}
+                className={cn("flex items-center justify-between inline-medium rounded-xl bg-surface-container-low/60 px-3 py-2 ring-1 ring-outline-variant/20")}
               >
                 <Text variant="label" className="truncate text-foreground">
                   {t.nome}

@@ -46,7 +46,7 @@ export default function PecasJuridicasDoc() {
       <DocSection title="Entendendo os Placeholders">
         <p className="text-muted-foreground mb-4">
           Placeholders são variáveis inseridas no texto do modelo no formato{' '}
-          <code className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-muted px-1 py-0.5 rounded text-body-sm font-mono")}>{'{{nome_variavel}}'}</code>.
+          <code className={cn("bg-muted px-1 py-0.5 rounded text-body-sm font-mono")}>{'{{nome_variavel}}'}</code>.
           No momento da geração, o sistema substitui automaticamente cada placeholder pelo dado correspondente.
         </p>
         <DocActionList
@@ -95,7 +95,7 @@ export default function PecasJuridicasDoc() {
         />
         <DocTip>
           No editor de modelos, use o menu de inserção de placeholders (ícone de chaves{' '}
-          <code className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-muted px-1 py-0.5 rounded text-body-sm font-mono")}>{'{}'}</code>) para ver a lista
+          <code className={cn("bg-muted px-1 py-0.5 rounded text-body-sm font-mono")}>{'{}'}</code>) para ver a lista
           completa de variáveis disponíveis e inseri-las sem precisar digitá-las manualmente.
         </DocTip>
       </DocSection>

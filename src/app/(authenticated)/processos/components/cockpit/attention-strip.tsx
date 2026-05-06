@@ -75,12 +75,12 @@ export function AttentionStrip({
   if (!hasUrgency) return null;
 
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: mx-4 margin sem primitiva DS */ "mx-4 mt-2 shrink-0")}>
+    <GlassPanel depth={2} className={cn("mx-4 mt-2 shrink-0")}>
       <div className="flex items-stretch overflow-x-auto">
         {proximaAudiencia && (() => {
           const countdown = formatCountdown(proximaAudiencia.dataInicio);
           return (
-            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-50 px-4 py-3")}>
+            <div className={cn("flex-1 min-w-50 px-4 py-3")}>
               <div className={cn("flex items-center inline-tight mb-1.5")}>
                 <Calendar className="size-3.5 text-primary/65" />
                 <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
@@ -100,7 +100,7 @@ export function AttentionStrip({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "mt-1.5 h-6 px-2 text-[10px]")}
+                  className={cn("mt-1.5 h-6 px-2 text-[10px]")}
                   onClick={() => onOpenAudiencia(proximaAudiencia)}
                 >
                   Ver detalhes <ChevronRight className="size-3 ml-0.5" />
@@ -115,7 +115,7 @@ export function AttentionStrip({
         )}
 
         {expedientesUrgentes.total > 0 && (
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-45 px-4 py-3")}>
+          <div className={cn("flex-1 min-w-45 px-4 py-3")}>
             <div className={cn("flex items-center inline-tight mb-1.5")}>
               <FileText className="size-3.5 text-warning/65" />
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
@@ -146,7 +146,7 @@ export function AttentionStrip({
         )}
 
         {periciasPendentes.length > 0 && (
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-40 px-4 py-3")}>
+          <div className={cn("flex-1 min-w-40 px-4 py-3")}>
             <div className={cn("flex items-center inline-tight mb-1.5")}>
               <Microscope className="size-3.5 text-info/65" />
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
@@ -159,11 +159,11 @@ export function AttentionStrip({
           </div>
         )}
 
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "flex items-center px-3 shrink-0")}>
+        <div className={cn("flex items-center px-3 shrink-0")}>
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 px-2.5 text-[10px] text-muted-foreground/70")}
+            className={cn("h-7 px-2.5 text-[10px] text-muted-foreground/70")}
             onClick={onOpenAllDetails}
           >
             Ver todos <ChevronRight className="size-3 ml-0.5" />

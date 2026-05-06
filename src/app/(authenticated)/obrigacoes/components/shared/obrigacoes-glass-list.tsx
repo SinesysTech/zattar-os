@@ -327,7 +327,7 @@ function ListSkeleton() {
 
 function GlassEmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="w-10 h-10 text-muted-foreground/30 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/50")}>
         Nenhuma obrigação encontrada

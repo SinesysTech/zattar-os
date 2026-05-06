@@ -130,7 +130,7 @@ export function WidgetSaúdeFinanceira() {
         <div className={cn("flex flex-wrap sm:flex-nowrap items-center inline-loose flex-1 min-w-0")}>
 
           <div className={cn("flex flex-col inline-nano")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Saldo
             </p>
             <p className={`font-display text-base font-bold tabular-nums ${saldo < 0 ? 'text-destructive/80' : ''}`}>
@@ -146,7 +146,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
           <div className={cn("flex flex-col inline-nano")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A receber
             </p>
             <p className={cn( "font-display text-body font-bold tabular-nums text-success/80")}>
@@ -164,7 +164,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
           <div className={cn("flex flex-col inline-nano")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A pagar
             </p>
             <p className={cn( "font-display text-body font-bold tabular-nums text-destructive/70")}>
@@ -182,7 +182,7 @@ export function WidgetSaúdeFinanceira() {
           <div className="w-px self-stretch bg-border/10" aria-hidden="true" />
 
           <div className={cn("flex flex-col inline-nano")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Resultado
             </p>
             <p className={`font-display text-base font-bold tabular-nums ${resultado >= 0 ? 'text-primary/90' : 'text-destructive/80'}`}>

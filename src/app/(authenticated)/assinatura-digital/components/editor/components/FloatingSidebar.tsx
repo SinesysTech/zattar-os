@@ -202,7 +202,7 @@ function SidebarContent(props: FloatingSidebarProps) {
             title="Quem vai assinar?"
             action={
               signers.length > 0 ? (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[11px] tabular-nums px-1.5 py-0.5 rounded-full bg-foreground/8 text-muted-foreground")}>
+                <span className={cn("text-[11px] tabular-nums px-1.5 py-0.5 rounded-full bg-foreground/8 text-muted-foreground")}>
                   {signers.length}
                 </span>
               ) : null
@@ -218,7 +218,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <Text variant="caption" className="font-medium text-foreground">
                   Nenhum assinante
                 </Text>
-                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] text-muted-foreground max-w-45 leading-relaxed")}>
+                <p className={cn("text-[11px] text-muted-foreground max-w-45 leading-relaxed")}>
                   Adicione as pessoas que precisam assinar este documento.
                 </p>
                 <Button
@@ -264,7 +264,7 @@ function SidebarContent(props: FloatingSidebarProps) {
         <section className={cn("stack-medium")}>
           <div className={cn("flex flex-col inline-micro")}>
             <SectionHeader title="Campos" />
-            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] text-muted-foreground leading-relaxed")}>
+            <p className={cn("text-[11px] text-muted-foreground leading-relaxed")}>
               Arraste para o documento e solte onde deseja que o assinante
               assine.
             </p>

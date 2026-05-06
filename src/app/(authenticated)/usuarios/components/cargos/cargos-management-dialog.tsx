@@ -212,7 +212,7 @@ export function CargosManagementDialog({
               </div>
 
               {isLoading ? (
-                <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
+                <div className={cn("flex items-center justify-center py-10")}>
                   <LoadingSpinner className="size-6 text-muted-foreground" />
                 </div>
               ) : cargos.length === 0 ? (
@@ -238,7 +238,7 @@ export function CargosManagementDialog({
                           handleEdit(cargo);
                         }
                       }}
-                      className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv. */ "w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors cursor-pointer rounded-md")}
+                      className={cn("w-full text-left flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors cursor-pointer rounded-md")}
                     >
                       <div className={cn("flex items-center inline-tight flex-1 min-w-0")}>
                         <div className={cn('w-1 h-5 rounded-sm bg-linear-to-b shrink-0', getRoleBannerGradient(cargo.nome))} />

@@ -225,7 +225,7 @@ function ExpedienteSingleDetails({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "border-t pt-4 stack-default")}>
+          <div className={cn("border-t pt-4 stack-default")}>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <Text variant="caption">Número do Processo</Text>
@@ -328,7 +328,7 @@ export function ExpedienteDetalhesDialog({
           <DialogTitle>{titulo || (exibirLista ? 'Expedientes do Dia' : 'Detalhes do Expediente')}</DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "max-h-[60vh] pr-4")}>
+          <ScrollArea className={cn("max-h-[60vh] pr-4")}>
             {exibirLista ? (
               <div className={cn("stack-default")}>
                 {listaLocal.map((exp) => (

@@ -44,7 +44,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
   if (isLoading) {
     return (
       <Card className="h-full">
-        <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+        <CardHeader className={cn("pb-2")}>
           <Skeleton className="h-5 w-44" />
         </CardHeader>
         <CardContent>
@@ -71,7 +71,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <PieIcon className="h-4 w-4 text-muted-foreground" />
           Despesas por Categoria
@@ -101,7 +101,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                 return (
                   <div
                     key={item.name}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between inline-tight rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
                   >
                     <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
                       <span

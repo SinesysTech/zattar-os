@@ -393,7 +393,7 @@ export default function EventCalendarApp({
             aria-hidden="true"
           />
           <Input
-            className={cn(/* design-system-escape: pl-9 padding direcional sem Inset equiv. */ "h-9 bg-card pl-9")}
+            className={cn("h-9 bg-card pl-9")}
             placeholder="Buscar eventos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -516,7 +516,7 @@ function CalendarViewPopover({
                   setOpen(false);
                 }}
                 className={cn(
-                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center inline-tight rounded-sm px-2 py-1.5 text-body-sm transition-colors",
+                  "flex w-full items-center inline-tight rounded-sm px-2 py-1.5 text-body-sm transition-colors",
                   "hover:bg-accent hover:text-accent-foreground",
                   "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2",
                   isSelected && "bg-accent text-accent-foreground"
@@ -536,7 +536,7 @@ function CalendarViewPopover({
               setOpen(false);
             }}
             className={cn(
-              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center inline-tight rounded-sm px-2 py-1.5 text-body-sm transition-colors",
+              "flex w-full items-center inline-tight rounded-sm px-2 py-1.5 text-body-sm transition-colors",
               "hover:bg-accent hover:text-accent-foreground",
               "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2"
             )}

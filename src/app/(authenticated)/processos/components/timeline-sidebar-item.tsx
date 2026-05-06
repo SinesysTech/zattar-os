@@ -54,7 +54,7 @@ export function TimelineSidebarItem({
       disabled={!isClickable}
       onClick={() => isClickable && onSelect(item)}
       className={cn(
-        /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full text-left px-3 py-2 flex items-start inline-tight transition-colors border-l-2',
+        'w-full text-left px-3 py-2 flex items-start inline-tight transition-colors border-l-2',
         isClickable
           ? 'cursor-pointer hover:bg-accent/50'
           : 'cursor-default opacity-60',
@@ -89,7 +89,7 @@ export function TimelineSidebarItem({
             <SemanticBadge
               category="grau"
               value={item.grauOrigem}
-              className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 h-4 shrink-0")}
+              className={cn("text-[10px] px-1 py-0 h-4 shrink-0")}
             >
               {formatarGrauCurto(item.grauOrigem)}
             </SemanticBadge>

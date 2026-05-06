@@ -277,9 +277,9 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
   // Loading inicial
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "flex w-full min-h-[calc(100vh-7rem)] flex-col inline-default pb-8")}>
+      <div className={cn("flex w-full min-h-[calc(100vh-7rem)] flex-col inline-default pb-8")}>
         <section className="rounded-2xl border bg-card shadow-sm">
-          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "px-5 py-5 sm:px-6 stack-default")}>
+          <div className={cn("px-5 py-5 sm:px-6 stack-default")}>
             <div className={cn("stack-tight")}>
               <Skeleton className="h-3 w-36" />
               <Skeleton className="h-10 w-3/4" />
@@ -295,7 +295,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t bg-muted/20 px-5 py-4 sm:px-6")}>
+          <div className={cn("border-t bg-muted/20 px-5 py-4 sm:px-6")}>
             <div className={cn("stack-medium")}>
               <div className={cn("flex items-center inline-default")}>
                 <Skeleton className="h-7 w-28" />
@@ -319,8 +319,8 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv.; sm:px-6 sem equivalente DS */ "border-t px-5 py-5 sm:px-6")}>
-            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-xl border bg-card px-4 py-3 mb-5")}>
+          <div className={cn("border-t px-5 py-5 sm:px-6")}>
+            <div className={cn("rounded-xl border bg-card px-4 py-3 mb-5")}>
               <div className={cn("flex items-center justify-between inline-medium")}>
                 <div className={cn("stack-tight")}>
                   <Skeleton className="h-4 w-36" />
@@ -406,7 +406,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           {/* Desktop: Split panel */}
           <div className="hidden md:flex flex-1 min-h-0">
             {isCapturing ? (
-              <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "w-full px-5 py-5")}>
+              <div className={cn("w-full px-5 py-5")}>
                 <TimelineLoading
                   message={
                     timeline === null
@@ -449,7 +449,7 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
           </div>
 
           {/* Mobile: Tabs */}
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "md:hidden flex-1 min-h-0 overflow-auto px-4 py-4")}>
+          <div className={cn("md:hidden flex-1 min-h-0 overflow-auto px-4 py-4")}>
             {isCapturing ? (
               <TimelineLoading
                 message={

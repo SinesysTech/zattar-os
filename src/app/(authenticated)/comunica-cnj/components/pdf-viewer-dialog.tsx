@@ -133,7 +133,7 @@ export function PdfViewerDialog({ hash, open, onOpenChange }: PdfViewerDialogPro
           )}
 
           {error && (
-            <Alert variant="destructive" className={cn(/* design-system-escape: m-4 margin sem primitiva DS */ "m-4")}>
+            <Alert variant="destructive" className={cn("m-4")}>
               <AlertCircle className="size-4" aria-hidden />
               <AlertDescription>{error}</AlertDescription>
             </Alert>

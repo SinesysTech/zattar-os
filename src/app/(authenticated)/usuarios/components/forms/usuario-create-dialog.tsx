@@ -567,7 +567,7 @@ export function UsuarioCreateDialog({
                   </div>
                 </div>
 
-                <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center space-x-2 pt-2")}>
+                <div className={cn("flex items-center space-x-2 pt-2")}>
                   <Checkbox
                     id="ativo"
                     checked={formData.ativo ?? true}

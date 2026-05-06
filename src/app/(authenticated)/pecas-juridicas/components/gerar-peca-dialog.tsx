@@ -352,7 +352,7 @@ export function GerarPecaDialog({
 
         {/* Step 3: Generating */}
         {step === 'generating' && (
-          <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "py-12 flex flex-col items-center justify-center inline-default")}>
+          <div className={cn("py-12 flex flex-col items-center justify-center inline-default")}>
             <LoadingSpinner className="size-8 text-primary" />
             <p className="text-muted-foreground">Gerando peça jurídica...</p>
           </div>
@@ -360,7 +360,7 @@ export function GerarPecaDialog({
 
         {/* Step 4: Success */}
         {step === 'success' && result && (
-          <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-default")}>
+          <div className={cn("py-8 stack-default")}>
             <div className={cn("flex flex-col items-center inline-default")}>
               <CheckCircle2 className="h-12 w-12 text-success" />
               <p className={cn( "text-body-lg font-medium")}>Peça gerada com sucesso!</p>

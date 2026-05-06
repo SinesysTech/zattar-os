@@ -40,7 +40,7 @@ export function UploadContextPanel({
       <div className="relative">
         <span
           className={cn(
-            /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center rounded-full px-3 py-1",
+            "inline-flex items-center rounded-full px-3 py-1",
             "bg-primary/10 text-primary",
             /* design-system-escape: tracking-wider sem token DS */ "text-caption font-medium uppercase tracking-wider",
           )}
@@ -60,7 +60,7 @@ export function UploadContextPanel({
       </h2>
 
       {/* Descrição */}
-      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "relative text-body-lg leading-relaxed text-muted-foreground")}>
+      <p className={cn("relative text-body-lg leading-relaxed text-muted-foreground")}>
         Suportamos arquivos <strong className="text-foreground">PDF</strong> com até{" "}
         <strong className="text-foreground">10MB</strong>.
       </p>

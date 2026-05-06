@@ -129,7 +129,7 @@ export function ParteDetalheDialog({
       : formatarTelefone(p.ddd_telefone, p.numero_telefone);
 
     return (
-      <div className={`space-y-3 ${!isPrincipal ? /* design-system-escape: pt-3 padding direcional sem Inset equiv. */ 'pt-3 border-t' : ''}`}>
+      <div className={`space-y-3 ${!isPrincipal ? 'pt-3 border-t' : ''}`}>
         {/* Header com nome e tipo */}
         <div className={cn("flex items-center inline-tight")}>
           {tipoPessoaIcon}
@@ -138,7 +138,7 @@ export function ParteDetalheDialog({
             <Text variant="caption">
               {formatarTipoPessoa(p.tipo_pessoa)}
               {p.tipo_entidade === 'cliente' && (
-                <AppBadge variant="success" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-2 text-[10px] px-1 py-0")}>
+                <AppBadge variant="success" className={cn("ml-2 text-[10px] px-1 py-0")}>
                   Cliente
                 </AppBadge>
               )}
@@ -207,7 +207,7 @@ export function ParteDetalheDialog({
           </DialogTitle>
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "stack-default py-2")}>
+          <div className={cn("stack-default py-2")}>
             {/* Loading state */}
             {isLoading && (
               <div className={cn("stack-medium")}>
@@ -226,7 +226,7 @@ export function ParteDetalheDialog({
 
             {/* Error state */}
             {!isLoading && error && (
-              <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
+              <div className={cn("flex flex-col items-center justify-center py-6 text-center")}>
                 <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
                 <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
               </div>
@@ -234,7 +234,7 @@ export function ParteDetalheDialog({
 
             {/* Parte não encontrada */}
             {!isLoading && !error && !parte && (
-              <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
+              <div className={cn("flex flex-col items-center justify-center py-6 text-center")}>
                 <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
                 <p className={cn("text-body-sm text-muted-foreground")}>
                   Parte não encontrada no cadastro
@@ -252,7 +252,7 @@ export function ParteDetalheDialog({
 
                 {/* Outras partes do mesmo polo */}
                 {outrasPartes.length > 0 && (
-                  <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t")}>
+                  <div className={cn("pt-3 border-t")}>
                     <Text variant="caption" className="mb-2">
                       Outras partes ({outrasPartes.length})
                     </Text>

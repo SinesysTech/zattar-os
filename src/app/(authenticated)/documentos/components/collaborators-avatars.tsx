@@ -27,7 +27,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
   }
 
   return (
-    <div className={cn(/* design-system-escape: -space-x-2 sem equivalente DS */ "flex items-center -space-x-2")}>
+    <div className={cn("flex items-center -space-x-2")}>
       <TooltipProvider>
         {collaborators.slice(0, 5).map((collab) => (
           <Tooltip key={collab.user_id}>

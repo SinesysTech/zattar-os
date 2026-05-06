@@ -99,7 +99,7 @@ export function ClienteResponsavelCell({
                     role="combobox"
                     aria-expanded={open}
                     className={cn(
-                        /* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-tight h-8 w-full min-w-0 px-1 hover:bg-muted/50",
+                        "flex items-center justify-center inline-tight h-8 w-full min-w-0 px-1 hover:bg-muted/50",
                         !responsavel && "text-muted-foreground"
                     )}
                     title={responsavel ? `Responsável: ${responsavel.nomeExibicao}` : 'Clique para atribuir responsável'}

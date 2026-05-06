@@ -48,7 +48,7 @@ export function WidgetRepassesPendentes() {
   if (!data) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -64,7 +64,7 @@ export function WidgetRepassesPendentes() {
   if (!contratos) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>
@@ -76,7 +76,7 @@ export function WidgetRepassesPendentes() {
   if (repassesPendentes.length === 0) {
     return (
       <WidgetContainer title="Repasses Pendentes" icon={ArrowLeftRight} subtitle="Divisão cliente/escritório" depth={1}>
-        <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-8 inline-tight")}>
           <ArrowLeftRight className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Nenhum repasse pendente
@@ -107,7 +107,7 @@ export function WidgetRepassesPendentes() {
                   </p>
                   <StatusBadge status={r.status} />
                 </div>
-                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
+                <p className={cn("text-[10px] text-muted-foreground/60 font-mono break-all leading-relaxed mt-0.5")}>
                   {r.processo}
                 </p>
                 <div className={cn("flex items-center inline-medium mt-1")}>

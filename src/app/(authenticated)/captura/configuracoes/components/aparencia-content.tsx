@@ -97,7 +97,7 @@ export function AparenciaContent() {
 
       {/* Card: Botão de Reset */}
       <Card>
-        <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
+        <CardContent className={cn("pt-6")}>
           <ResetThemeButton label="Restaurar Padrão" />
         </CardContent>
       </Card>

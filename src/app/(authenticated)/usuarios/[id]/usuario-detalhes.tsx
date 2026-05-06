@@ -200,7 +200,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (isLoadingUsuario) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-default")}>
+      <div className={cn("py-8 stack-default")}>
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
           <Button
             variant="ghost"
@@ -227,7 +227,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
 
   if (errorUsuario || !usuario) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-default")}>
+      <div className={cn("py-8 stack-default")}>
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
           <Button
             variant="ghost"
@@ -260,7 +260,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
   // ─── Main Layout ────────────────────────────────────────────────────────────
 
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-loose")}>
+    <div className={cn("py-8 stack-loose")}>
       {/* Two-column grid: sidebar (sticky) + content */}
       <div className={cn("grid grid-cols-1 lg:grid-cols-[300px_1fr] inline-default items-start")}>
 
@@ -296,7 +296,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
               >
                 Usuários
               </span>
-              <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5")}>/</span>
+              <span className={cn("mx-1.5")}>/</span>
               <span className={cn( "text-foreground font-medium")}>{usuario.nomeCompleto}</span>
             </div>
           </div>

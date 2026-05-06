@@ -129,9 +129,9 @@ export function WidgetTarefasStatus() {
       </div>
 
       {/* Barra de progresso */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-4 pt-3 border-t border-border/10 stack-snug")}>
+      <div className={cn("mt-4 pt-3 border-t border-border/10 stack-snug")}>
         <div className="flex items-center justify-between">
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
+          <span className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa de conclusão
           </span>
           <span className={cn( "text-[10px] font-semibold tabular-nums")}>

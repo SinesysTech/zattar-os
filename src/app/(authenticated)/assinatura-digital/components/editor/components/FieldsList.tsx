@@ -191,7 +191,7 @@ export default function FieldsList({
       <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 stack-default")}>
         {pages.map((page) => (
           <div key={page}>
-            <Heading level="subsection" className={cn(/* design-system-escape: tracking-wider sem token DS; px-1 padding direcional sem Inset equiv. */ "text-caption text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
+            <Heading level="subsection" className={cn("text-caption text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
               Página {page}
             </Heading>
             <div className={cn("stack-micro")}>
@@ -211,7 +211,7 @@ export default function FieldsList({
         ))}
 
         {/* Summary */}
-        <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t text-center")}>
+        <div className={cn("pt-3 border-t text-center")}>
           <Text variant="caption">
             {fields.length} campo{fields.length !== 1 ? 's' : ''} no total
           </Text>

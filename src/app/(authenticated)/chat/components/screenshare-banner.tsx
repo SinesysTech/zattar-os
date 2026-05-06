@@ -20,7 +20,7 @@ export function ScreenshareBanner({
 
   return (
     <div className={cn(
-      /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-body-sm shadow-md transition-transform duration-300 transform",
+      "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-body-sm shadow-md transition-transform duration-300 transform",
       isSelf ? "bg-info text-white" : "bg-video-surface-hover text-video-text"
     )}>
       <div className={cn("flex items-center inline-tight")}>
@@ -35,7 +35,7 @@ export function ScreenshareBanner({
           variant="ghost"
           size="sm"
           onClick={onStop}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 hover:bg-white/20 text-white hover:text-white")}
+          className={cn("h-7 px-2 hover:bg-white/20 text-white hover:text-white")}
         >
           Parar
         </Button>

@@ -100,7 +100,7 @@ export function VersionHistoryDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-100 pr-4")}>
+          <ScrollArea className={cn("h-100 pr-4")}>
             {loading ? (
               <div className={cn("stack-default")}>
                 {[1, 2, 3].map((i) => (

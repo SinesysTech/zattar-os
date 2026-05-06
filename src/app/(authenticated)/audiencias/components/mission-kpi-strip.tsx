@@ -130,12 +130,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 ${className ?? ''}`}>
       {/* ── Semana ─────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Semana</p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
-              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
+              <p className={cn("text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.totalSemana} />
               </p>
               <span className="text-micro-caption text-muted-foreground/60">audiências</span>
@@ -159,12 +159,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Próxima ────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Próxima</p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
-              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
+              <p className={cn("text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.nextLabel}
               </p>
             </div>
@@ -186,12 +186,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Realizadas ─────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Realizadas</p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
-              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight")}>
+              <p className={cn("text-kpi-value leading-none tracking-tight")}>
                 <AnimatedNumber value={stats.realizadasMes} />
               </p>
               <span className="text-micro-caption text-muted-foreground/60">/ {stats.relevantesMes} mês</span>
@@ -216,12 +216,12 @@ export function MissionKpiStrip({ audiencias, className }: MissionKpiStripProps)
       </GlassPanel>
 
       {/* ── Preparo ────────────────────────────────────── */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+      <GlassPanel className={cn("px-4 py-3.5")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className="text-meta-label">Preparo</p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
-              <p className={cn(/* design-system-escape: leading-none/tracking-tight para apertar o KPI numérico junto ao caption */ "text-kpi-value leading-none tracking-tight tabular-nums")}>
+              <p className={cn("text-kpi-value leading-none tracking-tight tabular-nums")}>
                 {stats.avgPrep}%
               </p>
               <span className="text-micro-caption text-muted-foreground/60">média</span>

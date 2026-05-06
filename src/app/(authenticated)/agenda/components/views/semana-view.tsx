@@ -84,7 +84,7 @@ function WeekEventChip({ event, onClick }: { event: AgendaEvent; onClick?: () =>
     >
       {/* Accent bar (cor sólida do tipo) */}
       <span className={cn("absolute left-0 top-0 bottom-0 w-0.75", colors.accent)} aria-hidden />
-      <div className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv.; pr-1.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "pl-2 pr-1.5 py-1")}>
+      <div className={cn("pl-2 pr-1.5 py-1")}>
         <div className={cn("flex items-baseline inline-snug")}>
           <span className={cn( "text-[10px] font-semibold tabular-nums", colors.text)}>
             {fmtTime(event.start)}
@@ -215,7 +215,7 @@ export function SemanaView({
           {weekDays.map((day, i) => {
             const isToday = isSameDay(day, today);
             return (
-              <div key={i} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex-1 text-center py-2 border-l border-border/6 first:border-l-0")}>
+              <div key={i} className={cn("flex-1 text-center py-2 border-l border-border/6 first:border-l-0")}>
                 <div className={cn( "text-[10px] text-muted-foreground/40 font-medium")}>{WEEKDAYS[day.getDay()]}</div>
                 <div className={cn(
                    "inline-flex items-center justify-center size-7 rounded-full mt-0.5 text-body-sm font-semibold",

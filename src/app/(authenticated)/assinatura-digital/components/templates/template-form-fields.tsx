@@ -230,7 +230,7 @@ export function TemplateFormFields({
       </div>
 
       {/* Checkbox Ativo */}
-      <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+      <div className={cn("flex items-center space-x-2")}>
         <Checkbox
           id="ativo"
           checked={ativo ?? true}

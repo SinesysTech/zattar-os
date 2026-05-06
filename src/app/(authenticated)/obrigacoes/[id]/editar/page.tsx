@@ -58,7 +58,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
 
   if (isLoading) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 max-w-4xl mx-auto")}>
+      <div className={cn("py-8 max-w-4xl mx-auto")}>
         <Empty><EmptyHeader><EmptyMedia variant="icon"><LoadingSpinner className="size-6" /></EmptyMedia><EmptyTitle>Carregando...</EmptyTitle></EmptyHeader></Empty>
       </div>
     );
@@ -66,7 +66,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
 
   if (error || !acordo) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 max-w-4xl mx-auto")}>
+      <div className={cn("py-8 max-w-4xl mx-auto")}>
         <Empty className="border-destructive">
           <EmptyHeader>
             <EmptyMedia variant="icon"><AlertCircle className="h-6 w-6 text-destructive" /></EmptyMedia>
@@ -81,7 +81,7 @@ export default function EditarObrigacaoPage({ params }: EditarObrigacaoPageProps
   }
 
   return (
-    <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-loose max-w-4xl mx-auto")}>
+    <div className={cn("py-8 stack-loose max-w-4xl mx-auto")}>
       <div className={cn("flex items-center inline-default")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" asChild>
           <Link href={`/obrigacoes/${acordoId}`}><ArrowLeft className="h-4 w-4" /></Link>

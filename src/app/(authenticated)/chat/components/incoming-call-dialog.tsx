@@ -149,7 +149,7 @@ export function IncomingCallDialog({
           <div className="absolute inset-0 bg-primary/5 animate-pulse" />
         </div>
 
-        <DialogHeader className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-default py-6")}>
+        <DialogHeader className={cn("flex flex-col items-center inline-default py-6")}>
           <DialogTitle className="sr-only">Recebendo chamada</DialogTitle>
           
           <div className="relative">
@@ -178,7 +178,7 @@ export function IncomingCallDialog({
           </div>
         </DialogHeader>
 
-        <DialogFooter className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex flex-row justify-center inline-extra-loose sm:justify-center pb-6")}>
+        <DialogFooter className={cn("flex flex-row justify-center inline-extra-loose sm:justify-center pb-6")}>
           <div className={cn("flex flex-col items-center inline-tight")}>
             <Button
               variant="destructive"

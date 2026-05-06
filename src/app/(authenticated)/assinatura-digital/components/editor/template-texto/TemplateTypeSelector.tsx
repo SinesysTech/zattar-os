@@ -91,7 +91,7 @@ export function TemplateTypeSelector({
             </div>
 
             {/* Content */}
-            <div className={cn(/* design-system-escape: pr-6 padding direcional sem Inset equiv. */ "stack-micro pr-6")}>
+            <div className={cn("stack-micro pr-6")}>
               <Heading level="subsection">{option.title}</Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{option.description}</p>
             </div>

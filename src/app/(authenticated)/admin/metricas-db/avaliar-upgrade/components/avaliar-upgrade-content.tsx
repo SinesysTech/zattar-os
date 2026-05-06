@@ -115,7 +115,7 @@ export function AvaliarUpgradeContent() {
 
   if (isPending || !recommendation || !metricsSnapshot) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
+      <div className={cn("flex items-center justify-center py-12")}>
         <LoadingSpinner className="size-8 text-muted-foreground" />
       </div>
     );

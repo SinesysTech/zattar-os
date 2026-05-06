@@ -47,7 +47,7 @@ export function WidgetHeatmapSemanal() {
         icon={Calendar}
         subtitle="Distribuicao semanal de audiencias"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-6 inline-tight")}>
           <Calendar className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados de heatmap indisponiveis
@@ -87,23 +87,23 @@ export function WidgetHeatmapSemanal() {
         <CalendarHeatmap data={heatmap} colorScale="primary" />
 
         {/* Stats */}
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2 border-t border-border/10")}>
+        <div className={cn("flex items-center justify-between pt-2 border-t border-border/10")}>
           <div className={cn("stack-nano")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Dia mais cheio
             </p>
             <p className={cn( "text-[12px] font-semibold")}>{diaMaisCheio}</p>
           </div>
 
           <div className={cn("stack-nano text-center")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Horario pico
             </p>
             <p className={cn( "text-[12px] font-semibold")}>{horarioPico}</p>
           </div>
 
           <div className={cn("stack-nano text-right")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
+            <p className={cn("text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Total
             </p>
             <p className={cn( "text-[12px] font-semibold tabular-nums")}>

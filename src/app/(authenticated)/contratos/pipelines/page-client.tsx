@@ -246,7 +246,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
                   <FormLabel>Segmento</FormLabel>
                   <FormControl>
                     <select
-                      className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50")}
+                      className={cn("flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50")}
                       value={field.value}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     >
@@ -650,23 +650,23 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="right" className="w-full sm:max-w-lg flex flex-col">
-          <SheetHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <SheetHeader className={cn("pb-2")}>
             <SheetTitle>Estágios — {pipeline.nome}</SheetTitle>
           </SheetHeader>
 
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-4 pb-4 stack-medium")}>
+          <div className={cn("flex-1 overflow-y-auto px-4 pb-4 stack-medium")}>
             {isLoadingEstagios ? (
-              <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-tight pt-2")}>
+              <div className={cn("stack-tight pt-2")}>
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Skeleton key={i} className="h-14 w-full" />
                 ))}
               </div>
             ) : estagios.length === 0 ? (
-              <p className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "pt-4 text-center text-body-sm text-muted-foreground")}>
+              <p className={cn("pt-4 text-center text-body-sm text-muted-foreground")}>
                 Nenhum estágio cadastrado.
               </p>
             ) : (
-              <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-tight pt-2")}>
+              <div className={cn("stack-tight pt-2")}>
                 {estagios.map((estagio, index) => (
                   <div
                     key={estagio.id}
@@ -724,7 +724,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "px-4 pb-4 pt-2 border-t stack-tight")}>
+          <div className={cn("px-4 pb-4 pt-2 border-t stack-tight")}>
             {hasReordered && (
               <Button
                 onClick={() => void handleSaveOrder()}
@@ -917,7 +917,7 @@ export function PipelinesPageClient() {
                 <div
                   key={pipeline.id}
                   role="row"
-                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
+                  className={cn("grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <div className="min-w-0">
                     <div className={cn( "text-body-sm font-medium truncate")}>{pipeline.nome}</div>
@@ -935,7 +935,7 @@ export function PipelinesPageClient() {
                       {pipeline.estagios?.length ?? 0} estágio(s)
                     </span>
                     {pipeline.estagios && pipeline.estagios.length > 0 && (
-                      <div className={cn(/* design-system-escape: -space-x-1 sem equivalente DS */ "flex -space-x-1")}>
+                      <div className={cn("flex -space-x-1")}>
                         {pipeline.estagios.slice(0, 5).map((e) => (
                           <div
                             key={e.id}

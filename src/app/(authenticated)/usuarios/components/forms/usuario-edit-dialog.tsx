@@ -264,7 +264,7 @@ export function UsuarioEditDialog({
       <form ref={formRef} onSubmit={handleSubmit}>
         <div className={cn("grid inline-loose")}>
           {/* Avatar */}
-          <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center inline-default pb-4 border-b")}>
+          <div className={cn("flex items-center inline-default pb-4 border-b")}>
             <div
               className="relative group cursor-pointer"
               onClick={() => setAvatarDialogOpen(true)}
@@ -616,7 +616,7 @@ export function UsuarioEditDialog({
           <GlassPanel depth={1} className={cn("inset-card-compact grid inline-default")}>
             <small className="text-sm font-medium leading-none text-muted-foreground">Status do Usuário</small>
             <div className={cn("stack-medium")}>
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+              <div className={cn("flex items-center space-x-2")}>
                 <Checkbox
                   id="ativo"
                   checked={formData.ativo}

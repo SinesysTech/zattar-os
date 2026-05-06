@@ -428,13 +428,13 @@ export function ClienteFormDialog({
 
   // Renderizar Step 1 - Tipo de Pessoa
   const renderStep1 = () => (
-    <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4")}>
+    <div className={cn("py-4")}>
       <div className={cn("flex flex-col inline-tight")}>
         <button
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pf' }))}
           className={cn(
-            /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center inline-medium px-4 py-3 rounded-md border transition-all text-left',
+            'flex items-center inline-medium px-4 py-3 rounded-md border transition-all text-left',
             isPF
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
@@ -463,7 +463,7 @@ export function ClienteFormDialog({
           type="button"
           onClick={() => setFormData(prev => ({ ...prev, tipo_pessoa: 'pj' }))}
           className={cn(
-            /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'flex items-center inline-medium px-4 py-3 rounded-md border transition-all text-left',
+            'flex items-center inline-medium px-4 py-3 rounded-md border transition-all text-left',
             isPJ
               ? 'border-primary bg-primary/5'
               : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
@@ -578,7 +578,7 @@ export function ClienteFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
             <div className={cn("grid inline-tight")}>
@@ -600,7 +600,7 @@ export function ClienteFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
           </div>
@@ -712,7 +712,7 @@ export function ClienteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
+                className={cn("inline-micro pr-1")}
               >
                 {email}
                 <button
@@ -866,7 +866,7 @@ export function ClienteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+            <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
         </div>
       </div>
@@ -1057,7 +1057,7 @@ export function ClienteFormDialog({
   const isLastStep = currentStep === TOTAL_STEPS;
 
   const renderEditFullView = () => (
-    <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "stack-loose pb-2")}>
+    <div className={cn("stack-loose pb-2")}>
       <section aria-labelledby="secao-identificacao">
         <Heading level="subsection" id="secao-identificacao" className="mb-3">
           Identificação

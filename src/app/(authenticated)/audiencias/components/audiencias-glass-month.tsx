@@ -135,7 +135,7 @@ function DayCell({
       </div>
 
       {count > 0 && count < 3 && (
-        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5 flex-wrap")}>
+        <div className={cn("flex inline-micro mt-auto pt-1.5 flex-wrap")}>
           {audienciasDia.map((aud) => (
             <div
               key={aud.id}
@@ -146,7 +146,7 @@ function DayCell({
       )}
 
       {count >= 3 && (
-        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
+        <div className={cn("flex inline-micro mt-auto pt-1.5")}>
           <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-micro-caption font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
@@ -314,7 +314,7 @@ export function AudienciasGlassMonth({
           </div>
 
           {/* Legend */}
-          <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center inline-default mb-4 px-1")}>
+          <div className={cn("flex items-center inline-default mb-4 px-1")}>
             {[
               { color: 'bg-success', label: 'Marcada' },
               { color: 'bg-info', label: 'Finalizada' },
@@ -391,7 +391,7 @@ export function AudienciasGlassMonth({
                             <X className="w-3.5 h-3.5 text-foreground/70" />
                           </button>
                         </div>
-                        <div className={cn(/* design-system-escape: pr-0.5 padding direcional sem Inset equiv. */ "stack-tight max-h-72 overflow-y-auto pr-0.5")}>
+                        <div className={cn("stack-tight max-h-72 overflow-y-auto pr-0.5")}>
                           {auds.map(aud => (
                             <button
                               key={aud.id}
@@ -419,7 +419,7 @@ export function AudienciasGlassMonth({
           </div>
 
           {/* Summary Strip */}
-          <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap inline-medium")}>
+          <div className={cn("mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap inline-medium")}>
             <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
               <div className="text-center">
                 <p className={cn( "text-body-lg font-bold")}>{summary.total}</p>

@@ -89,7 +89,7 @@ export function WidgetTendenciaNovos() {
           color="var(--primary)"
         />
       </div>
-      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-end justify-between pt-2 border-t border-border/10")}>
+      <div className={cn("flex items-end justify-between pt-2 border-t border-border/10")}>
         {tendencia.map((t, i) => (
           <div key={i} className={cn("flex flex-col items-center inline-nano")}>
             <span className="text-[9px] text-muted-foreground/60 tabular-nums">{t.novos}</span>

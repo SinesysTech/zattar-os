@@ -190,7 +190,7 @@ export default function ConfigurarEmailPage() {
   }
 
   return (
-    <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "mx-auto max-w-xl stack-loose py-6")}>
+    <div className={cn("mx-auto max-w-xl stack-loose py-6")}>
       <div className={cn("flex items-center inline-medium")}>
         <Button variant="ghost" size="icon" aria-label="Voltar" onClick={() => router.push("/app/mail")}>
           <ArrowLeft className="h-4 w-4" />
@@ -251,7 +251,7 @@ export default function ConfigurarEmailPage() {
                 type="button"
                 variant="ghost"
                 size="icon" aria-label="Ocultar"
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "absolute right-0 top-0 h-full px-3")}
+                className={cn("absolute right-0 top-0 h-full px-3")}
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -268,7 +268,7 @@ export default function ConfigurarEmailPage() {
               <AccordionTrigger className={cn("text-body-sm")}>
                 Configurações avançadas
               </AccordionTrigger>
-              <AccordionContent className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "stack-default pt-2")}>
+              <AccordionContent className={cn("stack-default pt-2")}>
                 <div className={cn("grid grid-cols-2 inline-default")}>
                   <div className={cn("stack-tight")}>
                     <Label htmlFor="imap-host">Servidor IMAP</Label>
@@ -342,7 +342,7 @@ export default function ConfigurarEmailPage() {
           )}
 
           {/* Actions */}
-          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight pt-2")}>
+          <div className={cn("flex items-center inline-tight pt-2")}>
             <Button
               variant="outline"
               onClick={handleTest}

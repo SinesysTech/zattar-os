@@ -112,7 +112,7 @@ export const PericiasForm = forwardRef<CapturaFormHandle, PericiasFormProps>(
             <Label>Situações das Perícias</Label>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-medium")}>
               {SITUACAO_PERICIA_OPTIONS.map((option) => (
-                <div key={option.value} className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+                <div key={option.value} className={cn("flex items-center space-x-2")}>
                   <Checkbox
                     id={`situacao-${option.value}`}
                     checked={situacoesSelecionadas.includes(option.value)}

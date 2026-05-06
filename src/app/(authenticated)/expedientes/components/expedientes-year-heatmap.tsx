@@ -92,7 +92,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
+    <div className={cn("rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn('size-3.5', iconColor)} />
@@ -231,7 +231,7 @@ function ExpedientesDayDialog({
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="max-h-[60vh]">
-          <div className={cn(/* design-system-escape: pr-2 padding direcional sem Inset equiv. */ "stack-tight pr-2")}>
+          <div className={cn("stack-tight pr-2")}>
             {expedientes.map((exp) => (
               <div
                 key={exp.id}

@@ -82,7 +82,7 @@ function ResultadoCard({
         {item.texto && (
           <Text
             variant="micro-caption"
-            className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "line-clamp-2 border-t border-border/30 pt-2 text-muted-foreground/80")}
+            className={cn("line-clamp-2 border-t border-border/30 pt-2 text-muted-foreground/80")}
           >
             {item.texto.replace(/<[^>]+>/g, '').slice(0, 240)}
           </Text>
@@ -109,7 +109,7 @@ export function SearchResults() {
 
   if (isBuscando) {
     return (
-      <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "mx-auto w-full max-w-3xl py-8")}>
+      <div className={cn("mx-auto w-full max-w-3xl py-8")}>
         <div className={cn("flex flex-col items-center inline-medium")}>
           <LoadingSpinner className="size-6" />
           <Text variant="caption" className="text-muted-foreground">

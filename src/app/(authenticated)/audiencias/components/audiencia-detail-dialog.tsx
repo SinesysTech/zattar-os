@@ -369,7 +369,7 @@ export function AudienciaDetailDialog({
       {/* Partes — espelha hierarquia do card */}
       <Text variant="caption" as="p" className="text-foreground">
         <span className="font-semibold">{poloAtivo}</span>
-        <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5 text-[10px] font-normal text-muted-foreground/65")}>vs</span>
+        <span className={cn("mx-1.5 text-[10px] font-normal text-muted-foreground/65")}>vs</span>
         <span className="font-medium text-muted-foreground/80">{poloPassivo}</span>
       </Text>
       {/* Processo */}
@@ -410,7 +410,7 @@ export function AudienciaDetailDialog({
 
   const heroNode =
     audiencia && !isLoading && !error ? (
-      <div className={cn(/* design-system-escape: mx-5 margin sem primitiva DS */ "mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 inset-card-compact")}>
+      <div className={cn("mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 inset-card-compact")}>
         {dataInicio && (
           <Text variant="caption" as="p" className="mb-3.5 capitalize text-muted-foreground">
             {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}
@@ -419,7 +419,7 @@ export function AudienciaDetailDialog({
           </Text>
         )}
 
-        <div className={cn(/* design-system-escape: pb-3.5 padding direcional sem Inset equiv. */ "mb-3.5 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-border/40 pb-3.5 sm:grid-cols-4")}>
+        <div className={cn("mb-3.5 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-border/40 pb-3.5 sm:grid-cols-4")}>
           {/* Modalidade */}
           <div className={cn("flex flex-col inline-micro")}>
             <Text variant="label" className="text-muted-foreground/80">
@@ -468,7 +468,7 @@ export function AudienciaDetailDialog({
                 <Text
                   variant="overline"
                   as="p"
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-2 pt-1 pb-1.5 text-muted-foreground/75")}
+                  className={cn("px-2 pt-1 pb-1.5 text-muted-foreground/75")}
                 >
                   Modalidade
                 </Text>
@@ -523,7 +523,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 asChild
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-8 inline-snug rounded-lg px-3 text-caption")}
+                className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
               >
                 <a
                   href={audiencia.urlAudienciaVirtual}
@@ -538,7 +538,7 @@ export function AudienciaDetailDialog({
               <Button
                 size="sm"
                 disabled
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-8 inline-snug rounded-lg px-3 text-caption")}
+                className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
               >
                 <Video className="size-3" />
                 Entrar na sala virtual
@@ -550,7 +550,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               asChild
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-8 inline-snug rounded-lg px-3 text-caption")}
+              className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
             >
               <a href={pjeUrl} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="size-3" />
@@ -562,7 +562,7 @@ export function AudienciaDetailDialog({
               size="sm"
               variant="outline"
               disabled
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-8 inline-snug rounded-lg px-3 text-caption")}
+              className={cn("h-8 inline-snug rounded-lg px-3 text-caption")}
             >
               <ExternalLink className="size-3" />
               Abrir no PJe
@@ -578,7 +578,7 @@ export function AudienciaDetailDialog({
           open: true,
           content: (
             <>
-              <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card")}>
+              <div className={cn("flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card")}>
                 <div className={cn( "flex items-center inline-tight text-label font-semibold")}>
                   <FileText className="size-3.5 text-success" />
                   Ata{' '}
@@ -589,7 +589,7 @@ export function AudienciaDetailDialog({
                   )}
                 </div>
                 <div className={cn("flex items-center inline-micro")}>
-                  <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-micro-caption")}>
+                  <Button variant="ghost" size="sm" asChild className={cn("h-7 px-2 text-micro-caption")}>
                     <a href={audiencia.urlAtaAudiencia} target="_blank" rel="noopener noreferrer">
                       Baixar
                     </a>
@@ -653,12 +653,12 @@ export function AudienciaDetailDialog({
           {heroNode && <div data-slot="dialog-hero" className="shrink-0">{heroNode}</div>}
           <div data-slot="dialog-body" className="min-h-0 flex-1 overflow-y-auto px-5 py-3.5 [scrollbar-width:thin]">
             {isLoading && (
-              <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
+              <div className={cn("flex items-center justify-center py-10")}>
                 <LoadingSpinner className="size-6 text-muted-foreground" />
               </div>
             )}
             {error && !isLoading && (
-              <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center inline-tight py-10 text-center")}>
+              <div className={cn("flex flex-col items-center justify-center inline-tight py-10 text-center")}>
                 <AlertCircle className="size-6 text-destructive" />
                 <Text variant="caption" className="text-destructive">{error}</Text>
               </div>
@@ -701,7 +701,7 @@ export function AudienciaDetailDialog({
                   <SectionHeader icon={Building2} label="Local / Acesso" />
                   <SectionCard>
                     {(isVirtual || isHibrida) && (
-                      <div className={isHibrida ? /* design-system-escape: pb-3 padding direcional sem Inset equiv. */ 'mb-3 pb-3 border-b border-border/40' : ''}>
+                      <div className={isHibrida ? 'mb-3 pb-3 border-b border-border/40' : ''}>
                         <div className="flex items-center justify-between mb-1.5">
                           <div className={cn("flex items-center inline-snug")}>
                             <Text variant="caption" as="span" className="text-muted-foreground">
@@ -914,7 +914,7 @@ export function AudienciaDetailDialog({
                             </div>
                           </div>
                         ) : audiencia.enderecoPresencial ? (
-                          <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-foreground/90 leading-relaxed")}>
+                          <Text variant="caption" className={cn("text-foreground/90 leading-relaxed")}>
                             {audiencia.enderecoPresencial.logradouro},{' '}
                             {audiencia.enderecoPresencial.numero}
                             {audiencia.enderecoPresencial.complemento &&
@@ -938,7 +938,7 @@ export function AudienciaDetailDialog({
 
                     {/* Híbrida: quem é presencial? */}
                     {isHibrida && (
-                      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/40")}>
+                      <div className={cn("mt-3 pt-3 border-t border-border/40")}>
                         <Text variant="caption" as="span" className="mb-2 block text-muted-foreground">
                           Quem participa presencialmente?
                         </Text>
@@ -960,7 +960,7 @@ export function AudienciaDetailDialog({
                                   : undefined
                               }
                               className={cn(
-                                /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'rounded-md px-3 py-1 text-overline transition-colors',
+                                'rounded-md px-3 py-1 text-overline transition-colors',
                                 audiencia.presencaHibrida === v
                                   ? 'bg-card text-foreground shadow-sm'
                                   : 'text-muted-foreground hover:text-foreground',
@@ -971,7 +971,7 @@ export function AudienciaDetailDialog({
                             </button>
                           ))}
                         </div>
-                        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-micro-caption mt-2 leading-relaxed text-muted-foreground/80")}>
+                        <p className={cn("text-micro-caption mt-2 leading-relaxed text-muted-foreground/80")}>
                           Os demais participam por videoconferência.
                         </p>
                       </div>

@@ -62,7 +62,7 @@ export function WidgetCasosTribunal() {
           return (
             <div key={trt.trt}>
               <div className="flex items-center justify-between mb-1">
-                <span className={cn(/* design-system-escape: leading-none sem token DS */ "text-[10px] text-muted-foreground/70 truncate leading-none")}>
+                <span className={cn("text-[10px] text-muted-foreground/70 truncate leading-none")}>
                   {trt.trt}
                 </span>
                 <span className={cn( "text-[10px] font-semibold tabular-nums ml-2 shrink-0")}>

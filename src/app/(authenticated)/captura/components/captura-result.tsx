@@ -256,7 +256,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
       {/* Período de referência */}
       {hasPeriodo && (
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg border bg-muted/30 px-3 py-2.5")}>
+        <div className={cn("flex items-center inline-tight rounded-lg border bg-muted/30 px-3 py-2.5")}>
           <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <Text variant="caption">
             Período: {new Date(data!.dataInicio!).toLocaleDateString('pt-BR')} até{' '}

@@ -323,7 +323,7 @@ export default function TemplateInfoPopover({
             </SheetDescription>
           </SheetHeader>
 
-          <Separator className={cn(/* design-system-escape: my-3 margin sem primitiva DS */ "my-3")} />
+          <Separator className={cn("my-3")} />
 
           <div className={cn("stack-default")}>
             {/* Nome */}
@@ -413,7 +413,7 @@ export default function TemplateInfoPopover({
             </div>
 
             {/* Acoes */}
-            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex inline-tight pt-2 border-t")}>
+            <div className={cn("flex inline-tight pt-2 border-t")}>
               <Button
                 variant="outline"
                 size="sm"
@@ -479,11 +479,11 @@ export default function TemplateInfoPopover({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "max-h-64 overflow-y-auto stack-tight py-2")}>
+          <div className={cn("max-h-64 overflow-y-auto stack-tight py-2")}>
             {desativacaoCheck.formularios.map((f) => (
               <div
                 key={f.id}
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-medium rounded-lg border border-border/40 bg-muted/30 px-3 py-2")}
+                className={cn("flex items-start justify-between inline-medium rounded-lg border border-border/40 bg-muted/30 px-3 py-2")}
               >
                 <div className="min-w-0 flex-1">
                   <div className={cn("flex items-center inline-tight flex-wrap")}>

@@ -42,13 +42,13 @@ export function NavMobile() {
           </DialogHeader>
         </VisuallyHidden>
 
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 items-center justify-center px-4")}>
+        <div className={cn("flex h-13 items-center justify-center px-4")}>
           <span className={cn( "text-body-sm font-semibold")}>E-mail</span>
         </div>
 
         <Separator />
 
-        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-2 py-2")}>
+        <div className={cn("px-2 py-2")}>
           <ComposeMailDialog>
             <Button variant="default" className={cn("w-full inline-tight")}>
               <Pencil className="h-4 w-4" />

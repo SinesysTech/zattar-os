@@ -72,7 +72,7 @@ function InfoRow({
 }) {
   if (!value) return null;
   return (
-    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-start inline-medium py-2")}>
+    <div className={cn("flex items-start inline-medium py-2")}>
       {Icon && (
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">
           <Icon className="h-4 w-4 text-muted-foreground" />
@@ -189,7 +189,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
-              className={cn(/* design-system-escape: px-0 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-auto w-full justify-between rounded-lg px-0 py-2 hover:bg-transparent")}
+              className={cn("h-auto w-full justify-between rounded-lg px-0 py-2 hover:bg-transparent")}
             >
               <div className={cn("flex min-w-0 items-start inline-medium text-left")}>
                 <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted">

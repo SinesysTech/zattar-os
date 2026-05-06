@@ -33,7 +33,7 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
             Comparativo de projetos concluídos nos últimos anos.
           </CardDescription>
         </CardHeader>
-        <CardContent className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex items-center justify-center py-12")}>
+        <CardContent className={cn("flex items-center justify-center py-12")}>
           <Text variant="caption" className="text-muted-foreground">
             Nenhum dado disponível.
           </Text>

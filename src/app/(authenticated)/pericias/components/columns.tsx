@@ -65,12 +65,12 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   return (
     <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
+      <span className={cn("bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
       </span>
       {/* Grau (lado direito - cor baseada no grau, arredondado à direita) */}
       <span className={cn(
-        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50 rounded-r-full',
+        'px-2 py-0.5 border-l border-background/50 rounded-r-full',
         grauColorClasses[grau] || 'bg-muted text-muted-foreground'
       )}>
         {grauLabel}
@@ -106,7 +106,7 @@ function ResponsavelCell({
       <button
         type="button"
         onClick={() => setIsDialogOpen(true)}
-        className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center justify-start inline-tight text-body-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
+        className={cn("flex items-center justify-start inline-tight text-body-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel || pericia.responsavelId ? (
@@ -216,7 +216,7 @@ export const columns: ColumnDef<Pericia>[] = [
       const vencido = prazo && isVencido(prazo) && !p.laudoJuntado;
 
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-micro items-start py-2")}>
+        <div className={cn("flex flex-col inline-micro items-start py-2")}>
           {/* Data do prazo */}
           <span className={cn(
              'text-body-sm font-medium',
@@ -251,7 +251,7 @@ export const columns: ColumnDef<Pericia>[] = [
       const nomeParteRe = p.processo?.nomeParteRe || '-';
 
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
+        <div className={cn("flex flex-col inline-snug items-start py-2 max-w-[min(92vw,20rem)] min-w-0")}>
           {/* Linha 1: Badge Tribunal + Grau */}
           <div className={cn("flex items-center inline-snug flex-wrap")}>
             <TribunalGrauBadge trt={p.trt} grau={p.grau} />
@@ -294,7 +294,7 @@ export const columns: ColumnDef<Pericia>[] = [
       headerLabel: 'Especialidade',
     },
     cell: ({ row }) => (
-      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+      <div className={cn("flex items-center py-2")}>
         <span className="max-w-60 truncate">
           {row.original.especialidade?.descricao || '-'}
         </span>
@@ -314,7 +314,7 @@ export const columns: ColumnDef<Pericia>[] = [
       headerLabel: 'Perito',
     },
     cell: ({ row }) => (
-      <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+      <div className={cn("flex items-center py-2")}>
         <span className="max-w-50 truncate">{row.original.perito?.nome || '-'}</span>
       </div>
     ),
@@ -334,7 +334,7 @@ export const columns: ColumnDef<Pericia>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as PericiasTableMeta | undefined;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <ResponsavelCell
             pericia={row.original}
             usuarios={meta?.usuarios}
@@ -359,7 +359,7 @@ export const columns: ColumnDef<Pericia>[] = [
     cell: ({ row, table }) => {
       const meta = table.options.meta as PericiasTableMeta | undefined;
       return (
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+        <div className={cn("flex items-center py-2")}>
           <ActionsCell
             pericia={row.original}
             onSuccess={meta?.onSuccess}

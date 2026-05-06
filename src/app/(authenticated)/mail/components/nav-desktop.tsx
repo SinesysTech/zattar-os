@@ -28,7 +28,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
           {accounts.map((acc) => (
             <button
               key={acc.id}
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex w-full items-center inline-medium rounded-md px-2 py-2 text-left transition-colors hover:bg-muted")}
+              className={cn("flex w-full items-center inline-medium rounded-md px-2 py-2 text-left transition-colors hover:bg-muted")}
               onClick={() => setSelectedAccountId(acc.id)}>
               <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                 <MailIcon className="h-4 w-4" />
@@ -66,7 +66,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
       <div
         className={cn(
           "flex h-13 shrink-0 items-center",
-          isCollapsed ? "justify-center" : /* design-system-escape: px-4 padding direcional sem Inset equiv. */ "px-4"
+          isCollapsed ? "justify-center" : "px-4"
         )}>
         <Popover>
           {isCollapsed ? (
@@ -96,7 +96,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
 
       <Separator />
 
-      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "shrink-0 px-2 py-2", isCollapsed && /* design-system-escape: px-1 padding direcional sem Inset equiv. */ "px-1")}>
+      <div className={cn("shrink-0 px-2 py-2", isCollapsed && "px-1")}>
         {isCollapsed ? (
           <Tooltip>
             <TooltipTrigger asChild>

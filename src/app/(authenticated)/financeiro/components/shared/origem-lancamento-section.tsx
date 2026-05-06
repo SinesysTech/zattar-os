@@ -285,7 +285,7 @@ export function OrigemLancamentoSection({
           </div>
 
           {/* Links de navegação */}
-          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex flex-wrap inline-tight pt-2 border-t")}>
+          <div className={cn("flex flex-wrap inline-tight pt-2 border-t")}>
             {acordo && (
               <Button variant="outline" size="sm" asChild>
                 <Link href={`/obrigacoes/${acordo.id}`}>

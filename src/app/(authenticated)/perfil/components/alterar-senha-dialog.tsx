@@ -129,7 +129,7 @@ export function AlterarSenhaDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             {error && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 {error}
@@ -154,7 +154,7 @@ export function AlterarSenhaDialog({
                   placeholder="Digite sua senha atual"
                   required
                   disabled={isLoading || !!successMessage}
-                  className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+                  className={cn("pr-10")}
                 />
                 <button
                   type="button"
@@ -183,7 +183,7 @@ export function AlterarSenhaDialog({
                   placeholder="Digite sua nova senha"
                   required
                   disabled={isLoading || !!successMessage}
-                  className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+                  className={cn("pr-10")}
                 />
                 <button
                   type="button"
@@ -215,7 +215,7 @@ export function AlterarSenhaDialog({
                   placeholder="Digite novamente sua nova senha"
                   required
                   disabled={isLoading || !!successMessage}
-                  className={cn(/* design-system-escape: pr-10 padding direcional sem Inset equiv. */ "pr-10")}
+                  className={cn("pr-10")}
                 />
                 <button
                   type="button"

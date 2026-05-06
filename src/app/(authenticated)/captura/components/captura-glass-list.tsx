@@ -219,7 +219,7 @@ function GlassRow({
     >
       <div className={cn("grid grid-cols-[90px_1fr_200px_120px_80px_56px] inline-medium items-center")}>
         {/* Data + hora (ancoragem temporal) */}
-        <div className={cn(/* design-system-escape: leading-tight sem token DS */ "flex flex-col leading-tight")}>
+        <div className={cn("flex flex-col leading-tight")}>
           <Text variant="caption" className="font-medium text-foreground/80 tabular-nums">{data}</Text>
           <span className="text-[11px] text-muted-foreground/75 tabular-nums">{hora}</span>
         </div>
@@ -332,7 +332,7 @@ function PaginationBar({
   const fim = Math.min(pagina * paginacao.limite, paginacao.total);
 
   return (
-    <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 px-1")}>
+    <div className={cn("flex items-center justify-between mt-4 px-1")}>
       <Text variant="caption" className="text-muted-foreground/75">
         {paginacao.total > 0 ? `${inicio}–${fim} de ${paginacao.total}` : '0 resultados'}
       </Text>

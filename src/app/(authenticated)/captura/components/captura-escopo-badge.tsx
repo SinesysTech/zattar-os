@@ -92,14 +92,14 @@ export function CapturaEscopoBadge({
         </span>
       </TooltipTrigger>
       <TooltipContent side="top" align="start" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-xs p-0 overflow-hidden")}>
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-3 py-2 border-b border-border/40")}>
+        <div className={cn("px-3 py-2 border-b border-border/40")}>
           <p className={cn( "text-[11px] font-semibold text-foreground")}>Escopo da captura</p>
           <p className="text-[10px] text-muted-foreground/80">
             {tribunais.length} tribunal{tribunais.length === 1 ? '' : 'is'} ·{' '}
             {graus.length} grau{graus.length === 1 ? '' : 's'}
           </p>
         </div>
-        <ul className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto")}>
+        <ul className={cn("px-3 py-2 grid grid-cols-2 gap-x-3 gap-y-1 max-h-56 overflow-y-auto")}>
           {detalhes.map((d, idx) => (
             <li key={`${d.tribunal}-${d.grau}-${idx}`} className={cn("flex items-center inline-snug")}>
               <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-wide sem token DS */ "inline-flex items-center px-1.5 py-0.5 rounded-lg text-[9px] font-semibold tabular-nums border border-border/15 bg-muted/20 text-muted-foreground tracking-wide")}>

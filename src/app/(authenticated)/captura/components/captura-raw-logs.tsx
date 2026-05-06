@@ -75,7 +75,7 @@ function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
       {valores.map((v, i) => (
         <div
           key={i}
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex flex-wrap items-start gap-x-2 gap-y-0.5 rounded-md bg-info/4 border border-info/10 px-3 py-2")}
+          className={cn("flex flex-wrap items-start gap-x-2 gap-y-0.5 rounded-md bg-info/4 border border-info/10 px-3 py-2")}
         >
           <span className={cn(/* design-system-escape: min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-30")}>
             {formatarCampoAlterado(v.campo)}
@@ -181,7 +181,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {inseridos.slice(0, 30).map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-md bg-success/4 border border-success/15 px-2.5 py-1.5")}
+                className={cn("flex items-center inline-tight rounded-md bg-success/4 border border-success/15 px-2.5 py-1.5")}
               >
                 <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
                 <Text variant="caption" className="text-foreground/80">
@@ -190,7 +190,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
               </div>
             ))}
             {inseridos.length > 30 && (
-              <p className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground pl-1")}>
+              <p className={cn("text-[11px] text-muted-foreground pl-1")}>
                 +{inseridos.length - 30} registros adicionais
               </p>
             )}
@@ -207,7 +207,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
             {atualizados.slice(0, 15).map((log, i) => (
               <div
                 key={i}
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-md border border-border/60 bg-muted/20 px-3 py-2.5")}
+                className={cn("rounded-md border border-border/60 bg-muted/20 px-3 py-2.5")}
               >
                 <p className={cn( "text-body-sm font-medium text-foreground/90 mb-1")}>
                   {log.numero_processo || `Processo PJE ${log.id_pje}`}
@@ -295,9 +295,9 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
             <AccordionItem
               key={rawLog.raw_log_id}
               value={rawLog.raw_log_id}
-              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "rounded-lg border px-4 cursor-pointer hover:border-border/80 transition-colors duration-150")}
+              className={cn("rounded-lg border px-4 cursor-pointer hover:border-border/80 transition-colors duration-150")}
             >
-              <AccordionTrigger className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "py-3 hover:no-underline")}>
+              <AccordionTrigger className={cn("py-3 hover:no-underline")}>
                 <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-1 items-center gap-2.5 text-sm min-w-0")}>
                   {isError ? (
                     <XCircle className="h-4 w-4 text-destructive shrink-0" />
@@ -305,34 +305,34 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                     <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
                   )}
                   <span className={cn( "font-semibold shrink-0")}>{rawLog.trt}</span>
-                  <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal shrink-0")}>
+                  <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0 font-normal shrink-0")}>
                     {formatarGrau(rawLog.grau)}
                   </Badge>
                   <Badge
                     variant="outline"
-                    className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal shrink-0 hidden sm:inline-flex")}
+                    className={cn("text-[10px] px-1.5 py-0 font-normal shrink-0 hidden sm:inline-flex")}
                   >
                     {formatarTipoCaptura(rawLog.tipo_captura)}
                   </Badge>
                   {resumo.length > 0 && !isError && (
-                    <span className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "ml-auto text-[11px] text-muted-foreground hidden sm:inline shrink-0 pl-2")}>
+                    <span className={cn("ml-auto text-[11px] text-muted-foreground hidden sm:inline shrink-0 pl-2")}>
                       {resumo.join(' · ')}
                     </span>
                   )}
                   {isError && rawLog.erro && (
-                    <span className={cn(/* design-system-escape: pl-2 padding direcional sem Inset equiv. */ "ml-auto text-[11px] text-destructive hidden sm:inline truncate max-w-50 pl-2")}>
+                    <span className={cn("ml-auto text-[11px] text-destructive hidden sm:inline truncate max-w-50 pl-2")}>
                       {rawLog.erro.length > 60 ? `${rawLog.erro.slice(0, 60)}…` : rawLog.erro}
                     </span>
                   )}
                 </div>
               </AccordionTrigger>
               <AccordionContent>
-                <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "stack-medium pb-3")}>
+                <div className={cn("stack-medium pb-3")}>
                   {/* Erro principal do raw log */}
                   {rawLog.erro && (
                     <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>
                       <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
+                      <p className={cn("text-body-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
                     </div>
                   )}
 
@@ -345,7 +345,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                   )}
 
                   {/* Metadados */}
-                  <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground pt-2.5 border-t")}>
+                  <div className={cn("flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted-foreground pt-2.5 border-t")}>
                     <span>
                       Credencial #{rawLog.credencial_id}
                     </span>

@@ -46,7 +46,7 @@ export function TemplateCard({
 
   return (
     <Card className="flex flex-col hover:shadow-md transition-shadow">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <div className="flex items-start justify-between">
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
@@ -85,7 +85,7 @@ export function TemplateCard({
         </div>
       </CardHeader>
 
-      <CardContent className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex-1 pb-2")}>
+      <CardContent className={cn("flex-1 pb-2")}>
         {template.descricao && (
           <CardDescription className="line-clamp-2">
             {template.descricao}
@@ -93,7 +93,7 @@ export function TemplateCard({
         )}
       </CardContent>
 
-      <CardFooter className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "flex flex-col items-stretch inline-medium pt-0")}>
+      <CardFooter className={cn("flex flex-col items-stretch inline-medium pt-0")}>
         {/* Meta info */}
         <div className={cn("flex items-center justify-between text-caption text-muted-foreground")}>
           <div className={cn("flex items-center inline-micro")}>

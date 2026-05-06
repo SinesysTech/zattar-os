@@ -56,7 +56,7 @@ function KanbanColumn({
         isOver && "ring-2 ring-primary/20"
       )}
     >
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-3 py-2")}>
+      <div className={cn("flex items-center justify-between px-3 py-2")}>
         <Heading level="subsection" className={cn("text-body-sm")}>
           {STATUS_TAREFA_LABELS[status]}
         </Heading>
@@ -105,7 +105,7 @@ export function TaskBoard({ tarefas }: TaskBoardProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex inline-default overflow-x-auto pb-4")}>
+      <div className={cn("flex inline-default overflow-x-auto pb-4")}>
         {KANBAN_COLUMNS.map((status) => (
           <KanbanColumn
             key={status}

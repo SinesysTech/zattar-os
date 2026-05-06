@@ -245,7 +245,7 @@ export default function AgendamentosPage() {
           <GlassPanel depth={1} className="overflow-hidden">
             <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
               {Array.from({ length: 5 }, (_, i) => (
-                <div key={i} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 border-b border-border/5")}>
+                <div key={i} className={cn("px-4 py-3 border-b border-border/5")}>
                   <div className={cn("flex items-center inline-default")}>
                     <Skeleton className="h-5 w-16 rounded-full" />
                     <Skeleton className="h-4 w-40" />
@@ -262,7 +262,7 @@ export default function AgendamentosPage() {
         {!isLoading && filteredAgendamentos.length > 0 && (
           <GlassPanel depth={1} className="overflow-hidden">
             {/* Column Headers */}
-            <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] inline-medium items-center px-4 py-2.5 border-b border-foreground/5")}>
+            <div className={cn("grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] inline-medium items-center px-4 py-2.5 border-b border-foreground/5")}>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Status</span>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Nome / Tipo</span>
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Frequência</span>

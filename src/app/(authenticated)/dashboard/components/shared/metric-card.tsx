@@ -88,7 +88,7 @@ function MetricCardContent({
         )}
       </div>
       {footer && (
-        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-auto pt-4 border-t")}>
+        <div className={cn("mt-auto pt-4 border-t")}>
           <div className="text-right">
             {footer}
           </div>

@@ -94,7 +94,7 @@ export default function CreateTemplateForm({
     <div className={cn("border rounded-lg inset-dialog bg-card shadow-sm")}>
       <div className={cn("stack-default")}>
         {/* Header */}
-        <div className={cn(/* design-system-escape: pb-3 padding direcional sem Inset equiv. */ "flex items-center inline-tight pb-3 border-b")}>
+        <div className={cn("flex items-center inline-tight pb-3 border-b")}>
           <FileText className="h-4 w-4" />
           <Heading level="card" className={cn("text-body-sm")}>Informações do Novo Template</Heading>
         </div>
@@ -184,7 +184,7 @@ export default function CreateTemplateForm({
                     </ul>
                   </div>
                 </div>
-                <p className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 text-[11px] text-muted-foreground border-t pt-2")}>
+                <p className={cn("mt-3 text-[11px] text-muted-foreground border-t pt-2")}>
                   <strong>📌 Dica:</strong> Use o formato <code>{'{{categoria.campo}}'}</code> para campos estáticos (cliente, sistema, assinatura)
                   e <code>{'{{campoId}}'}</code> para campos do formulário dinâmico.
                 </p>
@@ -199,7 +199,7 @@ export default function CreateTemplateForm({
 
         {/* Info do arquivo (condicional para tipoTemplate === 'pdf') */}
         {tipoTemplate === 'pdf' && pdfFile && (
-          <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t")}>
+          <div className={cn("pt-2 border-t")}>
             <Text variant="caption">
               <strong>Arquivo:</strong> {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
             </Text>
@@ -207,7 +207,7 @@ export default function CreateTemplateForm({
         )}
 
         {/* Ações */}
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex inline-tight pt-2")}>
+        <div className={cn("flex inline-tight pt-2")}>
           {onCancel && (
             <Button
               variant="outline"

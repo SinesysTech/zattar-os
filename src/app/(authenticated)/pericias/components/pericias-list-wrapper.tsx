@@ -169,7 +169,7 @@ export function PericiasListWrapper({
 
       {/* Pagination simples */}
       {totalPages > 1 && (
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between text-[11px] text-muted-foreground/70 pt-2")}>
+        <div className={cn("flex items-center justify-between text-[11px] text-muted-foreground/70 pt-2")}>
           <span className="tabular-nums">
             Mostrando{' '}
             <span className={cn( "text-foreground font-medium")}>

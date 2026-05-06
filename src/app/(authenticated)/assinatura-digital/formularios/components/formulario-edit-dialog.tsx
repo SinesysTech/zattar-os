@@ -28,7 +28,7 @@ import {
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 const SELECT_CLASS =
-  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
+  'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
 
 const editFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -409,11 +409,11 @@ export function FormularioEditDialog({
                 disabled={isSubmitting}
               />
               {templateIds.length > 0 && (
-                <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap inline-snug pt-1")}>
+                <div className={cn("flex flex-wrap inline-snug pt-1")}>
                   {templateIds.map((templateUuid) => {
                     const template = templates.find((t) => t.template_uuid === templateUuid);
                     return (
-                      <Badge key={templateUuid} variant="secondary" className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}>
+                      <Badge key={templateUuid} variant="secondary" className={cn("inline-micro pr-1")}>
                         <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}
                         </span>
@@ -568,7 +568,7 @@ export function FormularioEditDialog({
               </div>
             )}
 
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Switch
                 id="edit-foto_necessaria"
                 checked={watch('foto_necessaria')}
@@ -580,7 +580,7 @@ export function FormularioEditDialog({
               </Label>
             </div>
 
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Switch
                 id="edit-geolocation_necessaria"
                 checked={watch('geolocation_necessaria')}
@@ -592,7 +592,7 @@ export function FormularioEditDialog({
               </Label>
             </div>
 
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Switch
                 id="edit-ativo"
                 checked={watch('ativo')}
@@ -604,7 +604,7 @@ export function FormularioEditDialog({
               </Label>
             </div>
 
-            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t")}>
+            <div className={cn("pt-2 border-t")}>
               <Button
                 type="button"
                 variant="outline"

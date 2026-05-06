@@ -262,7 +262,7 @@ export function ProcessoHeader({
           <Text variant="caption" className="hidden sm:flex items-center gap-2">
             {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
             {instancias && instancias.length > 1 && (
-              <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro rounded-full border bg-muted/20 px-2 py-1")}>
+              <span className={cn("inline-flex items-center inline-micro rounded-full border bg-muted/20 px-2 py-1")}>
                 <Layers className="h-3 w-3" />
                 {instancias.length} instâncias
               </span>
@@ -305,7 +305,7 @@ export function ProcessoHeader({
       {instancias && instancias.length > 1 && (
         <div className={cn("flex items-center inline-tight flex-wrap text-body-sm")}>
           {instancias.map((inst) => (
-            <div key={inst.id} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1")}>
+            <div key={inst.id} className={cn("flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1")}>
               <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">
                 {formatarGrauComOrdinal(inst.grau)}
               </SemanticBadge>

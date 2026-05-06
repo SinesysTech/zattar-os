@@ -631,7 +631,7 @@ export function ParteContrariaFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
               <input type="hidden" name="genero" value={formData.genero} />
             </div>
@@ -654,7 +654,7 @@ export function ParteContrariaFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+                <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
               <input type="hidden" name="estado_civil" value={formData.estado_civil} />
             </div>
@@ -768,7 +768,7 @@ export function ParteContrariaFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
+                className={cn("inline-micro pr-1")}
               >
                 {email}
                 <button
@@ -922,7 +922,7 @@ export function ParteContrariaFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+            <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
         </div>
       </div>
@@ -944,7 +944,7 @@ export function ParteContrariaFormDialog({
         />
       </div>
 
-      <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center space-x-2 pt-2")}>
+      <div className={cn("flex items-center space-x-2 pt-2")}>
         <Checkbox
           id="ativo"
           checked={formData.ativo}

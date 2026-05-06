@@ -99,7 +99,7 @@ function EditableInfoRow({
 }) {
   return (
     <div className={cn("flex items-start justify-between inline-medium")}>
-      <span className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "shrink-0 text-overline pt-1")}>
+      <span className={cn("shrink-0 text-overline pt-1")}>
         {label}
       </span>
       <div className="flex justify-end">{children}</div>

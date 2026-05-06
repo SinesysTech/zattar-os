@@ -122,7 +122,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                     </Button>
                  </div>
               </div>
-              <ScrollArea className={cn(/* design-system-escape: leading-relaxed sem token DS */ "flex-1 inset-card-compact font-mono text-body-sm leading-relaxed")}>
+              <ScrollArea className={cn("flex-1 inset-card-compact font-mono text-body-sm leading-relaxed")}>
                 <div className="whitespace-pre-wrap text-foreground/90">
                   {chamada.transcricao}
                 </div>

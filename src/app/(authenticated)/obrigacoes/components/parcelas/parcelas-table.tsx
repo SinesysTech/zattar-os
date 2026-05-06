@@ -100,7 +100,7 @@ export function ParcelasTable({
 
   if (parcelas.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 opacity-60")}>
+      <div className={cn("flex flex-col items-center justify-center py-12 opacity-60")}>
         <FileX className="w-8 h-8 text-muted-foreground/30 mb-3" />
         <p className={cn( "text-body-sm font-medium text-muted-foreground/50")}>
           Nenhuma parcela encontrada
@@ -123,7 +123,7 @@ export function ParcelasTable({
             key={parcela.id}
             depth={1}
             className={cn(
-              /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ 'px-4 py-3 transition-colors',
+              'px-4 py-3 transition-colors',
               isAtrasada && 'border-destructive/20',
             )}
           >
@@ -218,7 +218,7 @@ export function ParcelasTable({
                   <Button
                     size="sm"
                     variant="outline"
-                    className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv. */ "h-7 text-[11px] px-2.5")}
+                    className={cn("h-7 text-[11px] px-2.5")}
                     onClick={() =>
                       handleMarcar(
                         parcela.id,

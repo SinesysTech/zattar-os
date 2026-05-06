@@ -31,9 +31,9 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
   const hasEvents = days.some((day) => getAgendaEventsForDay(events, day).length > 0);
 
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "border-border/70 border-t px-4")}>
+    <div className={cn("border-border/70 border-t px-4")}>
       {!hasEvents ? (
-        <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex min-h-[70svh] flex-col items-center justify-center py-16 text-center")}>
+        <div className={cn("flex min-h-[70svh] flex-col items-center justify-center py-16 text-center")}>
           <Calendar size={32} className="text-muted-foreground/50 mb-2" />
           <h3 className={cn( "text-body-lg font-medium")}>Nenhum evento encontrado</h3>
           <p className="text-muted-foreground">
@@ -47,7 +47,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
           if (dayEvents.length === 0) return null;
 
           return (
-            <div key={day.toString()} className={cn(/* design-system-escape: my-8 margin sem primitiva DS */ "group border-border/70 relative my-8 first:mt-4 border-t")}>
+            <div key={day.toString()} className={cn("group border-border/70 relative my-8 first:mt-4 border-t")}>
               <div className={cn("bg-background absolute -top-3 left-0 flex h-6 items-center inline-micro pe-4 sm:pe-4")}>
                 <span
                   className={cn(/* design-system-escape: data-today:font-medium sem equivalente DS; sm:text-xs sem equivalente DS */ "text-[10px] uppercase data-today:font-medium sm:text-xs")}

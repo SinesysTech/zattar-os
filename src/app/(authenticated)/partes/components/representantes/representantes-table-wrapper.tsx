@@ -110,12 +110,12 @@ function OabSituacaoBadge({
   return (
     <Text variant="caption" className="inline-flex items-center font-medium rounded-full overflow-hidden shrink-0">
       {/* Lado esquerdo: OAB (azul/info) */}
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5")}>
+      <span className={cn("bg-info/15 text-info px-2 py-0.5")}>
         {numeroFormatado} OAB-{uf}
       </span>
       {/* Separador e lado direito: Situação */}
       {situacaoLabel && (
-        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-2 py-0.5 border-l border-background/50', toneClasses[situacaoTone])}>
+        <span className={cn('px-2 py-0.5 border-l border-background/50', toneClasses[situacaoTone])}>
           {situacaoLabel}
         </span>
       )}

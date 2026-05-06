@@ -254,7 +254,7 @@ export function ExpedientesSemanaView({
 
               {/* Expedientes */}
               {dayExps.length === 0 ? (
-                <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex-1 flex items-center justify-center py-6")}>
+                <div className={cn("flex-1 flex items-center justify-center py-6")}>
                   <Text variant="caption" className="text-muted-foreground/55">—</Text>
                 </div>
               ) : (

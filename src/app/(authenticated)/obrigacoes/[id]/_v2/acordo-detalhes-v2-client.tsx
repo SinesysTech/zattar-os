@@ -260,7 +260,7 @@ export function AcordoDetalhesV2Client({
       />
 
       {/* ==================== TAB CONTENT ==================== */}
-      <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "flex-1 min-h-0 overflow-y-auto pr-1")}>
+      <div className={cn("flex-1 min-h-0 overflow-y-auto pr-1")}>
         {activeTab === 'resumo' && (
           <ResumoTab
             acordo={acordo}
@@ -459,7 +459,7 @@ function ObservacoesCard({ observacoes }: { observacoes: string }) {
       </div>
       <Text
         variant="caption"
-        className={cn(/* design-system-escape: leading-relaxed sem token DS */ "whitespace-pre-wrap text-foreground/80 leading-relaxed")}
+        className={cn("whitespace-pre-wrap text-foreground/80 leading-relaxed")}
       >
         {observacoes}
       </Text>

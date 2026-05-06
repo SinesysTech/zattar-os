@@ -23,7 +23,7 @@ export function DashboardSkeleton() {
       {/* Tier 2: Charts row */}
       <div className={cn("grid inline-default lg:grid-cols-3")}>
         <Card className="lg:col-span-2">
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <Skeleton className="h-5 w-48" />
           </CardHeader>
           <CardContent>
@@ -31,7 +31,7 @@ export function DashboardSkeleton() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <Skeleton className="h-5 w-40" />
           </CardHeader>
           <CardContent className={cn("stack-default")}>
@@ -46,7 +46,7 @@ export function DashboardSkeleton() {
       {/* Tier 3: Second charts row */}
       <div className={cn("grid inline-default lg:grid-cols-3")}>
         <Card className="lg:col-span-2">
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <Skeleton className="h-5 w-36" />
           </CardHeader>
           <CardContent>
@@ -54,7 +54,7 @@ export function DashboardSkeleton() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+          <CardHeader className={cn("pb-2")}>
             <Skeleton className="h-5 w-44" />
           </CardHeader>
           <CardContent className={cn("stack-medium")}>
@@ -69,7 +69,7 @@ export function DashboardSkeleton() {
       <div className={cn("grid inline-default md:grid-cols-2 lg:grid-cols-3")}>
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i}>
-            <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+            <CardHeader className={cn("pb-2")}>
               <Skeleton className="h-5 w-32" />
             </CardHeader>
             <CardContent className={cn("stack-medium")}>

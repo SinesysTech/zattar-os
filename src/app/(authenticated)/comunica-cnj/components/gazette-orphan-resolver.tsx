@@ -53,7 +53,7 @@ function highlightSegments(text: string, highlights: string[]): React.ReactNode 
 
   return parts.map((part, i) =>
     regex.test(part) ? (
-      <span key={i} className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "bg-primary/15 px-0.5 rounded")}>
+      <span key={i} className={cn("bg-primary/15 px-0.5 rounded")}>
         {part}
       </span>
     ) : (
@@ -406,7 +406,7 @@ export function GazetteOrphanResolver() {
             <Heading level="section">Comunicações Órfãs</Heading>
             <Text
               variant="micro-badge"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center rounded-full bg-warning/10 px-2 py-0.5 text-warning")}
+              className={cn("inline-flex items-center rounded-full bg-warning/10 px-2 py-0.5 text-warning")}
             >
               {orphans.length}
             </Text>
@@ -416,7 +416,7 @@ export function GazetteOrphanResolver() {
               <Button
                 variant="outline"
                 size="sm"
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 inline-snug border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
+                className={cn("h-7 inline-snug border-success/20 bg-success/10 px-3 text-caption text-success hover:bg-success/15")}
                 onClick={handleAcceptHighConfidence}
               >
                 <Check className="size-3" aria-hidden />
@@ -426,7 +426,7 @@ export function GazetteOrphanResolver() {
             <Button
               variant="outline"
               size="sm"
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv. */ "h-7 px-3 text-caption")}
+              className={cn("h-7 px-3 text-caption")}
               onClick={handleIgnoreAll}
             >
               Ignorar Todos
@@ -442,12 +442,12 @@ export function GazetteOrphanResolver() {
       </div>
 
       {/* ── Navigation Bar ── */}
-      <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between border-b border-border/30 px-4 py-2")}>
+      <div className={cn("flex items-center justify-between border-b border-border/30 px-4 py-2")}>
         <div className={cn("flex items-center inline-tight")}>
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 inline-micro px-2 text-caption")}
+            className={cn("h-7 inline-micro px-2 text-caption")}
             disabled={currentIndex === 0}
             onClick={goPrev}
           >
@@ -457,7 +457,7 @@ export function GazetteOrphanResolver() {
           <Button
             variant="ghost"
             size="sm"
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 inline-micro px-2 text-caption")}
+            className={cn("h-7 inline-micro px-2 text-caption")}
             disabled={currentIndex === orphans.length - 1}
             onClick={goNext}
           >
@@ -486,14 +486,14 @@ export function GazetteOrphanResolver() {
             {current.tipoComunicacao && (
               <Text
                 variant="micro-badge"
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded-md bg-primary/10 px-2 py-0.5 text-primary")}
+                className={cn("rounded-md bg-primary/10 px-2 py-0.5 text-primary")}
               >
                 {current.tipoComunicacao}
               </Text>
             )}
             <Text
               variant="micro-badge"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded-md bg-muted/40 px-2 py-0.5 text-muted-foreground")}
+              className={cn("rounded-md bg-muted/40 px-2 py-0.5 text-muted-foreground")}
             >
               {current.meioCompleto ?? current.meio}
             </Text>

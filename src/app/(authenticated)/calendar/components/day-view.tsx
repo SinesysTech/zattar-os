@@ -126,7 +126,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
           {positionedEvents.map((positionedEvent) => (
             <div
               key={positionedEvent.event.id}
-              className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "absolute z-10 px-0.5")}
+              className={cn("absolute z-10 px-0.5")}
               style={{
                 top: `${positionedEvent.top}px`,
                 height: `${positionedEvent.height}px`,

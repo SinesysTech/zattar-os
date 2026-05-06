@@ -51,14 +51,14 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
             {...listeners}
             {...attributes}
             className={cn(
-              /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-md border border-dashed border-border bg-card px-2.5 py-1.5 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
+              "flex items-center inline-tight rounded-md border border-dashed border-border bg-card px-2.5 py-1.5 cursor-grab active:cursor-grabbing transition-colors hover:border-primary/50 hover:bg-accent/50",
               isDragging && "opacity-50 border-primary"
             )}
           >
             <Icon className="size-3.5 text-muted-foreground shrink-0" />
             <Text variant="caption" className="flex-1 min-w-0 wrap-break-word">{field.label}</Text>
             {field.badge && (
-              <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 shrink-0")}>
+              <Badge variant="secondary" className={cn("text-[10px] px-1 py-0 shrink-0")}>
                 {field.badge}
               </Badge>
             )}
@@ -115,23 +115,23 @@ export default function FieldPalette() {
 
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
-      <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "shrink-0 px-3 pt-3 pb-2 stack-tight border-b")}>
-        <Heading level="card" className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-caption uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
+      <div className={cn("shrink-0 px-3 pt-3 pb-2 stack-tight border-b")}>
+        <Heading level="card" className={cn("text-caption uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
           <Input
             placeholder="Buscar campos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv. */ "pl-8 h-7 text-caption")}
+            className={cn("pl-8 h-7 text-caption")}
           />
         </div>
       </div>
 
       <ScrollArea className="flex-1">
-        <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "px-3 pb-3 pt-2 stack-nano")}>
+        <div className={cn("px-3 pb-3 pt-2 stack-nano")}>
           {filteredCategories.length === 0 ? (
-            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
+            <div className={cn("text-center py-8 text-muted-foreground")}>
               <Search className="size-6 mx-auto mb-2 opacity-50" />
               <Text variant="caption">Nenhum campo encontrado</Text>
             </div>
@@ -146,7 +146,7 @@ export default function FieldPalette() {
                   open={isExpanded}
                   onOpenChange={() => toggleCategory(category.id)}
                 >
-                  <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors")}>
+                  <CollapsibleTrigger className={cn("flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors")}>
                     <CategoryIcon className="size-3.5 text-muted-foreground" />
                     <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left")}>{category.label}</span>
                     <ChevronDown
@@ -156,7 +156,7 @@ export default function FieldPalette() {
                       )}
                     />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "pt-0.5 pb-1.5 stack-nano")}>
+                  <CollapsibleContent className={cn("pt-0.5 pb-1.5 stack-nano")}>
                     {category.fields.map(field => (
                       <DraggableFieldItem key={`${category.id}-${field.fieldName}`} field={field} />
                     ))}

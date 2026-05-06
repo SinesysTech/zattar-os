@@ -26,7 +26,7 @@ import { generateSlug, type AssinaturaDigitalSegmento, type AssinaturaDigitalTem
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 const SELECT_CLASS =
-  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
+  'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
 
 const createFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -250,7 +250,7 @@ export function FormularioCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
@@ -330,14 +330,14 @@ export function FormularioCreateDialog({
               />
               {/* Preview dos templates selecionados */}
               {templateIds.length > 0 && (
-                <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex flex-wrap inline-snug pt-1")}>
+                <div className={cn("flex flex-wrap inline-snug pt-1")}>
                   {templateIds.map((templateUuid) => {
                     const template = templates.find(t => t.template_uuid === templateUuid);
                     return (
                       <Badge
                         key={templateUuid}
                         variant="secondary"
-                        className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
+                        className={cn("inline-micro pr-1")}
                       >
                         <span className="truncate max-w-37.5">
                           {template?.nome || templateUuid}
@@ -493,7 +493,7 @@ export function FormularioCreateDialog({
               </div>
             )}
 
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Switch
                 id="foto_necessaria"
                 checked={watch('foto_necessaria')}
@@ -505,7 +505,7 @@ export function FormularioCreateDialog({
               </Label>
             </div>
 
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Switch
                 id="geolocation_necessaria"
                 checked={watch('geolocation_necessaria')}
@@ -517,7 +517,7 @@ export function FormularioCreateDialog({
               </Label>
             </div>
 
-            <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
+            <div className={cn("flex items-center space-x-2")}>
               <Switch
                 id="ativo"
                 checked={watch('ativo')}

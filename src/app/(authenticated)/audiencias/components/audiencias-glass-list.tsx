@@ -233,14 +233,14 @@ function GlassRow({
     >
       <div className={cn("flex items-start inline-default")}>
         {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
-        <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
+        <div className={cn("flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
           <div className="text-center">
             <div className={cn(/* design-system-escape: leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap")}>
               {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
             </div>
             {audiencia.horaInicio && (
               <>
-                <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "mt-0.5 text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
+                <div className={cn("mt-0.5 text-micro-caption uppercase tracking-wider text-muted-foreground/55")}>
                   Início
                 </div>
                 <div className="text-mono-num text-muted-foreground/55 tabular-nums">
@@ -312,7 +312,7 @@ function GlassRow({
           </div>
 
           {/* Identidade Processual */}
-          <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 stack-micro")}>
+          <div className={cn("mt-3 border-t border-border/40 pt-3 stack-micro")}>
             <p className="text-sm font-semibold text-foreground leading-snug">
               {poloAtivo}
               {poloAtivo !== '—' && poloPassivo !== '—' && (
@@ -332,7 +332,7 @@ function GlassRow({
 
           {/* Observações (editável) */}
           <div
-            className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3")}
+            className={cn("mt-3 border-t border-border/40 pt-3")}
             onClick={(e) => e.stopPropagation()}
             onKeyDown={(e) => e.stopPropagation()}
           >
@@ -351,7 +351,7 @@ function GlassRow({
                     size="sm"
                     variant="ghost"
                     onClick={handleCancelObs}
-                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 text-caption px-2")}
+                    className={cn("h-6 text-caption px-2")}
                   >
                     <X className="w-3 h-3" />
                     Cancelar
@@ -360,7 +360,7 @@ function GlassRow({
                     size="sm"
                     onClick={handleSaveObs}
                     disabled={savingObs}
-                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 text-caption px-2")}
+                    className={cn("h-6 text-caption px-2")}
                   >
                     {savingObs ? (
                       <LoadingSpinner size="sm" />
@@ -378,12 +378,12 @@ function GlassRow({
                   type="button"
                   onClick={handleStartObs}
                   className={cn(
-                    /* design-system-escape: px-1.5 py-1 padding direcional sem Inset equiv. */ 'flex items-center inline-snug rounded-md px-1.5 py-1 -mx-1.5 -my-1 w-full text-left',
+                    'flex items-center inline-snug rounded-md px-1.5 py-1 -mx-1.5 -my-1 w-full text-left',
                     'transition-colors cursor-pointer hover:bg-muted/60',
                     obsValue ? 'text-foreground/75' : 'text-muted-foreground/60'
                   )}
                 >
-                  <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-caption flex-1 line-clamp-1 leading-snug")}>
+                  <span className={cn("text-caption flex-1 line-clamp-1 leading-snug")}>
                     {obsValue || 'Adicionar observações'}
                   </span>
                   <Pencil className="w-2.5 h-2.5 shrink-0 text-muted-foreground/65 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -395,7 +395,7 @@ function GlassRow({
           {/* Footer */}
           {!editingObs && (
             <div
-              className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 border-t border-border/40 pt-3 flex items-center inline-snug")}
+              className={cn("mt-3 border-t border-border/40 pt-3 flex items-center inline-snug")}
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
             >
@@ -476,7 +476,7 @@ function ListSkeleton() {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <Gavel className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>Nenhuma audiência encontrada</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">

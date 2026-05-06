@@ -161,7 +161,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   const dataProximaAudiencia = processo.dataProximaAudiencia;
 
   return (
-    <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start justify-center inline-snug py-2 min-w-0 group")}>
+    <div className={cn("flex flex-col items-start justify-center inline-snug py-2 min-w-0 group")}>
       <div className={cn("flex items-center inline-snug flex-wrap")}>
         <SemanticBadge category="tribunal" value={trt} className={cn("w-fit text-caption")}>
           {trt}
@@ -264,7 +264,7 @@ function ProcessoResponsavelCell({
           e.stopPropagation();
           setIsDialogOpen(true);
         }}
-        className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center justify-start inline-tight text-body-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
+        className={cn("flex items-center justify-start inline-tight text-body-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel ? (
@@ -339,7 +339,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processoTags = tagsMap[row.original.id] || [];
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2 min-w-0")}>
+          <div className={cn("flex items-center py-2 min-w-0")}>
             <TagBadgeList
               tags={processoTags}
               maxVisible={3}
@@ -359,7 +359,7 @@ function criarColunas(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Responsável" />,
       cell: ({ row }) => {
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2 min-w-0")}>
+          <div className={cn("flex items-center py-2 min-w-0")}>
             <ProcessoResponsavelCell
               processo={row.original}
               usuarios={usuarios}
@@ -381,7 +381,7 @@ function criarColunas(
         // Fallback para ATIVO se status for nulo (cenário de migração de dados)
         const status = row.original.status;
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+          <div className={cn("flex items-center py-2")}>
             <ProcessoStatusBadge status={status} className={cn("text-caption")} />
           </div>
         );
@@ -398,7 +398,7 @@ function criarColunas(
       cell: ({ row }) => {
         const processo = row.original;
         return (
-          <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center py-2")}>
+          <div className={cn("flex items-center py-2")}>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -1002,7 +1002,7 @@ export function ProcessosTableWrapper({
         }
       >
         {error && (
-          <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-body-sm text-destructive")}>
+          <div className={cn("mb-4 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-body-sm text-destructive")}>
             {error}
           </div>
         )}

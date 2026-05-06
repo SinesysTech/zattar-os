@@ -406,7 +406,7 @@ function GlassCard({
         <Text variant="caption" className="text-muted-foreground/65 italic flex-1">Sem descrição</Text>
       )}
 
-      <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
+      <div className={cn("flex items-center justify-between inline-tight pt-2 border-t border-border/40")}>
         <span className="text-[10px] text-muted-foreground tabular-nums">
           {formatFileSize(template.arquivo_tamanho || 0)}
         </span>
@@ -449,7 +449,7 @@ function CardsSkeleton() {
 
 function EmptyState() {
   return (
-    <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
+    <div className={cn("flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>Nenhum template encontrado</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">Tente ajustar os filtros ou criar um novo template</Text>

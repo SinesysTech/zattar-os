@@ -246,7 +246,7 @@ export function AudienciaTimeline({
       <div className="absolute left-4 top-8 bottom-0 w-px bg-border/30" />
 
       {entries.map((entry) => (
-        <div key={entry.id} className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "relative flex inline-medium pb-5")}>
+        <div key={entry.id} className={cn("relative flex inline-medium pb-5")}>
           {/* Avatar / icon */}
           {entry.type === 'manual' && entry.usuario ? (
             <Avatar size="lg" className="shrink-0">

@@ -359,7 +359,7 @@ export function TiposPageClient() {
                 <div
                   key={tipo.id}
                   role="row"
-                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_80px_100px_120px] inline-default items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
+                  className={cn("grid grid-cols-[1.5fr_1fr_80px_100px_120px] inline-default items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <span className={cn( "text-body-sm font-medium truncate")}>{tipo.nome}</span>
                   <Text variant="caption" className="truncate">{tipo.slug}</Text>

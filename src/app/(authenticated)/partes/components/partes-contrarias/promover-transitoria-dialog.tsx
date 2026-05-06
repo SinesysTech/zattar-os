@@ -243,7 +243,7 @@ export function PromoverTransitoriaDialog({
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       {isLoading ? (
-        <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "flex items-center justify-center py-10")}>
+        <div className={cn("flex items-center justify-center py-10")}>
           <LoadingSpinner />
         </div>
       ) : (
@@ -286,7 +286,7 @@ export function PromoverTransitoriaDialog({
                         onClick={() => handleSelectSugestao(sug)}
                         disabled={!isOficial || isBusy}
                         className={cn(
-                          /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex w-full items-start inline-medium rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
+                          'flex w-full items-start inline-medium rounded-xl px-3 py-2.5 text-left ring-1 transition-colors',
                           isSelected
                             ? 'bg-primary/10 ring-primary/30'
                             : isOficial

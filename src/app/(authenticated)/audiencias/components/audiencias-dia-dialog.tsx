@@ -210,7 +210,7 @@ function AudienciaContent({
           {audiencia.observacoes && (
             <div>
               <div className="text-meta-label mb-1.5">Observações</div>
-              <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-caption whitespace-pre-wrap leading-relaxed")}>
+              <p className={cn("text-caption whitespace-pre-wrap leading-relaxed")}>
                 {audiencia.observacoes}
               </p>
             </div>
@@ -306,7 +306,7 @@ export function AudienciasDiaDialog({
 
         {/* ── BODY — conteúdo direto, sem cards aninhados ── */}
         <ScrollArea className="flex-1 min-h-0">
-          <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "px-6 py-5")}>
+          <div className={cn("px-6 py-5")}>
             <AudienciaContent
               audiencia={audienciaAtual}
               usuarios={usuarios}

@@ -477,7 +477,7 @@ export function RepresentanteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+            <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
           <input type="hidden" name="sexo" value={formData.sexo} />
         </div>
@@ -502,7 +502,7 @@ export function RepresentanteFormDialog({
             </SelectContent>
           </Select>
         ) : (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+          <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
         )}
         <input type="hidden" name="tipo" value={formData.tipo} />
       </div>
@@ -533,7 +533,7 @@ export function RepresentanteFormDialog({
                 </SelectContent>
               </Select>
             ) : (
-              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+              <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
             )}
             {mounted ? (
               <Select
@@ -552,7 +552,7 @@ export function RepresentanteFormDialog({
                 </SelectContent>
               </Select>
             ) : (
-              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+              <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
             )}
           </div>
           <Button
@@ -573,7 +573,7 @@ export function RepresentanteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
+                className={cn("inline-micro pr-1")}
               >
                 {oab.numero}/{oab.uf} ({SITUACOES_OAB.find(s => s.value === oab.situacao)?.label || oab.situacao})
                 <button
@@ -634,7 +634,7 @@ export function RepresentanteFormDialog({
               <Badge
                 key={index}
                 variant="secondary"
-                className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1")}
+                className={cn("inline-micro pr-1")}
               >
                 {email}
                 <button
@@ -788,7 +788,7 @@ export function RepresentanteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
+            <div className={cn("h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
         </div>
       </div>

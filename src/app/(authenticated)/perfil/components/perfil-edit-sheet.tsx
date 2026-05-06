@@ -102,7 +102,7 @@ export function PerfilEditSheet({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={cn("max-h-[90vh] w-100 sm:w-135 overflow-y-auto inset-dialog")}>
         <form onSubmit={handleSubmit}>
-          <DialogHeader className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "pb-5")}>
+          <DialogHeader className={cn("pb-5")}>
             <DialogTitle className="text-section-title">Editar Perfil</DialogTitle>
             <DialogDescription>
               Atualize suas informações pessoais e de contato.
@@ -177,7 +177,7 @@ export function PerfilEditSheet({
                   <select
                     id="genero"
                     title="Selecione o gênero"
-                    className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                    className={cn("flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                     value={formData.genero || ''}
                     onChange={(e) =>
                       setFormData({ ...formData, genero: e.target.value as GeneroUsuario })

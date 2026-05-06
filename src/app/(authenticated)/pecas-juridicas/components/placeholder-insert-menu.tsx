@@ -145,7 +145,7 @@ export function PlaceholderInsertMenu({
                             key={placeholder.key}
                             value={placeholder.key}
                             onSelect={() => handleSelect(placeholder)}
-                            className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start inline-micro py-2")}
+                            className={cn("flex flex-col items-start inline-micro py-2")}
                           >
                             <div className={cn("flex items-center inline-tight w-full")}>
                               <span className={cn( "font-medium")}>{placeholder.label}</span>
@@ -189,7 +189,7 @@ export function PlaceholderToolbarButton({
       onSelect={onInsert}
       maxIndex={maxIndex}
       trigger={
-        <Button variant="ghost" size="sm" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-8 px-2")}>
+        <Button variant="ghost" size="sm" className={cn("h-8 px-2")}>
           <FileText className="h-4 w-4 mr-1" />
           Placeholder
         </Button>

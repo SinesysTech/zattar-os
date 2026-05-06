@@ -105,7 +105,7 @@ function CardSkeleton() {
         <div className="h-2 bg-muted-foreground/8 rounded w-full" />
         <div className="h-2 bg-muted-foreground/8 rounded w-2/3" />
       </div>
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex justify-between mt-3 pt-3 border-t border-border/10")}>
+      <div className={cn("flex justify-between mt-3 pt-3 border-t border-border/10")}>
         <div className="h-2 bg-muted-foreground/8 rounded w-24" />
         <div className="h-2 bg-muted-foreground/8 rounded w-12" />
       </div>
@@ -164,7 +164,7 @@ function StatusFilterPills({
 
 function ListRowSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-4 py-2.5 rounded-xl animate-pulse")}>
+    <div className={cn("flex items-center inline-medium px-4 py-2.5 rounded-xl animate-pulse")}>
       <div className="size-8 rounded-lg bg-muted-foreground/10 shrink-0" />
       <div className={cn("flex-1 stack-snug")}>
         <div className="h-2.5 bg-muted-foreground/10 rounded w-48" />
@@ -222,7 +222,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
                 {data.tipo === 'pf' ? 'Pessoa Física' : 'Pessoa Jurídica'}
               </span>
               {!data.ativo && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/70")}>
+                <span className={cn("text-[9px] px-1.5 py-0.5 rounded bg-muted-foreground/10 text-muted-foreground/70")}>
                   Inativo
                 </span>
               )}
@@ -277,7 +277,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       {data.tags && data.tags.length > 0 && (
         <div className={cn("flex flex-wrap inline-snug mb-5")}>
           {data.tags.map((tag) => (
-            <span key={tag} className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] px-2 py-0.5 rounded-full bg-primary/6 text-primary/60 border border-primary/10")}>
+            <span key={tag} className={cn("text-[10px] px-2 py-0.5 rounded-full bg-primary/6 text-primary/60 border border-primary/10")}>
               {tag}
             </span>
           ))}
@@ -287,13 +287,13 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       {/* Nome social */}
       {data.nomeSocial && (
         <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "mb-4 p-2.5 rounded-lg bg-foreground/2.5 border border-border/10")}>
-          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider mb-0.5")}>Nome fantasia / Social</p>
+          <p className={cn("text-[9px] text-muted-foreground/55 uppercase tracking-wider mb-0.5")}>Nome fantasia / Social</p>
           <Text variant="caption" className="text-muted-foreground/70">{data.nomeSocial}</Text>
         </div>
       )}
 
       {/* Ações */}
-      <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex inline-tight mt-5 pt-4 border-t border-border/10")}>
+      <div className={cn("flex inline-tight mt-5 pt-4 border-t border-border/10")}>
         <Link
           href={perfilHref}
           className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
@@ -326,7 +326,7 @@ function InfoRow({
     <div className={cn("flex items-start inline-tight")}>
       <Icon className="size-3 text-muted-foreground/55 mt-0.5 shrink-0" />
       <div className="min-w-0">
-        <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{label}</p>
+        <p className={cn("text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{label}</p>
         <p className={cn( "text-[11px] font-medium truncate")}>{value}</p>
       </div>
     </div>
@@ -702,7 +702,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
               )}
 
           {!isLoading && !error && partes.length === 0 && (
-            <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 text-center")}>
+            <div className={cn("col-span-full flex flex-col items-center justify-center py-16 text-center")}>
               <Users className="size-8 text-muted-foreground/65 mb-3" />
               <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>
                 Nenhuma parte encontrada
@@ -724,7 +724,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
 
       {/* ── Paginação ──────────────────────────────────────────── */}
       {totalPages > 1 && (
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2")}>
+        <div className={cn("flex items-center justify-between pt-2")}>
           <Text variant="caption" className="text-muted-foreground/70">
             {((pagina - 1) * PAGE_SIZE) + 1}–{Math.min(pagina * PAGE_SIZE, total)} de {total.toLocaleString('pt-BR')}
           </Text>

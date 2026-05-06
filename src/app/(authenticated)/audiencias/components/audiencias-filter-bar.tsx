@@ -152,7 +152,7 @@ function StatusFilter({
                   setOpen(false);
                 }}
                 className={cn(
-                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                  'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                   isSelected
                     ? 'bg-primary/8 text-primary'
                     : 'hover:bg-muted/30 text-muted-foreground/70',
@@ -230,7 +230,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'meus'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -246,7 +246,7 @@ function ResponsavelFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === 'sem_responsavel'
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -257,10 +257,10 @@ function ResponsavelFilter({
               {selected === 'sem_responsavel' && <Check className="size-3" />}
             </button>
           </div>
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-2 pb-1.5")}>
+          <div className={cn("px-3 pt-2 pb-1.5")}>
             <CommandInput placeholder="Buscar usuário..." className="h-8 text-micro-caption rounded-lg" />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-44 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-44 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
@@ -273,7 +273,7 @@ function ResponsavelFilter({
                     onChange(selected === usuario.id ? null : usuario.id);
                     setOpen(false);
                   }}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn("inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-4">
                     <AvatarImage src={usuario.avatarUrl || undefined} />
@@ -340,10 +340,10 @@ function TRTFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <CommandInput placeholder="Buscar TRT..." className="h-8 text-micro-caption rounded-lg" />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
@@ -353,7 +353,7 @@ function TRTFilter({
                   key={trt}
                   value={trt}
                   onSelect={() => handleToggle(trt)}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn("inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',
@@ -418,7 +418,7 @@ function ModalidadeFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -486,7 +486,7 @@ function GrauFilter({
               type="button"
               onClick={() => handleToggle(opt.value)}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
+                'w-full flex items-center inline-tight rounded-lg px-2.5 py-2 text-micro-caption transition-colors cursor-pointer',
                 selected.includes(opt.value)
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -549,10 +549,10 @@ function TipoAudienciaFilter({
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-64')} align="start" side="bottom">
         <Command className="bg-transparent">
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
+          <div className={cn("px-3 pt-3 pb-1.5")}>
             <CommandInput placeholder="Buscar tipo..." className="h-8 text-micro-caption rounded-lg" />
           </div>
-          <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>
+          <CommandList className={cn("max-h-52 px-1.5 pb-1.5")}>
             <CommandEmpty>
               <Text variant="caption" as="span" className="text-muted-foreground/65">Não encontrado</Text>
             </CommandEmpty>
@@ -562,7 +562,7 @@ function TipoAudienciaFilter({
                   key={tipo.id}
                   value={tipo.descricao}
                   onSelect={() => handleToggle(tipo.id)}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
+                  className={cn("inline-tight rounded-lg text-micro-caption px-2 py-1.5")}
                 >
                   <div className={cn(
                     'size-3.5 rounded border flex items-center justify-center',

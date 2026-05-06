@@ -44,7 +44,7 @@ export function TimelineTypeBadge({
     <span
       className={cn(
         'inline-flex items-center',
-        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'px-1.5 py-0.5 rounded-sm',
+        'px-1.5 py-0.5 rounded-sm',
         /* design-system-escape: tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
         'border',
         bgClass,

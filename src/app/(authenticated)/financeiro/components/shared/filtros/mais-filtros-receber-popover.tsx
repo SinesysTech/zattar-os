@@ -104,7 +104,7 @@ export function MaisFiltrosReceberPopover({
           <Filter className="h-4 w-4" />
           Mais Filtros
           {hasActiveFilters && (
-            <AppBadge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "ml-1 rounded-sm px-1.5 font-normal")}>
+            <AppBadge variant="secondary" className={cn("ml-1 rounded-sm px-1.5 font-normal")}>
               {activeFiltersCount}
             </AppBadge>
           )}
@@ -118,7 +118,7 @@ export function MaisFiltrosReceberPopover({
               <Button
                 variant="ghost"
                 size="sm"
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-7 px-2 text-caption")}
+                className={cn("h-7 px-2 text-caption")}
                 onClick={handleClearAll}
               >
                 <X className="mr-1 h-3 w-3" />

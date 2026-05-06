@@ -45,7 +45,7 @@ export function AudienciasPorTipo() {
         icon={Gavel}
         subtitle="Distribuicao por tipo de audiencia"
       >
-        <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 inline-tight")}>
+        <div className={cn("flex flex-col items-center justify-center py-6 inline-tight")}>
           <Gavel className="size-8 text-muted-foreground/45" />
           <p className="text-[11px] text-muted-foreground/60 text-center">
             Dados por tipo indisponiveis
@@ -96,8 +96,8 @@ export function AudienciasPorTipo() {
         })}
 
         {/* Total */}
-        <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2 border-t border-border/10")}>
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
+        <div className={cn("flex items-center justify-between pt-2 border-t border-border/10")}>
+          <span className={cn("text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
             Total
           </span>
           <span className={cn( "text-[12px] font-bold tabular-nums")}>

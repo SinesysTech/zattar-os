@@ -154,7 +154,7 @@ export function FileUploadDialogUnified({
                 >
                     <div className="text-center">
                         <Upload className="mx-auto h-10 w-10 opacity-25" aria-hidden="true" />
-                        <div className={cn(/* design-system-escape: leading-none sem token DS */ "mt-4 flex text-body-sm leading-none")}>
+                        <div className={cn("mt-4 flex text-body-sm leading-none")}>
                             <Label htmlFor="file-upload-unified" className="relative cursor-pointer text-primary">
                                 <span>Selecionar arquivos</span>
                                 <Input
@@ -167,7 +167,7 @@ export function FileUploadDialogUnified({
                                     disabled={uploading}
                                 />
                             </Label>
-                            <p className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "pl-1 text-muted-foreground")}>ou arraste e solte</p>
+                            <p className={cn("pl-1 text-muted-foreground")}>ou arraste e solte</p>
                         </div>
                         <Text variant="caption" className="mt-2">
                             PDF, DOC, XLS, imagens e mais (até 50MB)
@@ -182,7 +182,7 @@ export function FileUploadDialogUnified({
                             {files.map((file, index) => (
                                 <li
                                     key={index}
-                                    className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; leading-6 sem token DS */ /* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; leading-6 sem token DS */ "flex items-center justify-between py-2 pl-4 pr-2 text-body-sm leading-6")}
+                                    className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; pl-4 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; leading-6 sem token DS */ "flex items-center justify-between py-2 pl-4 pr-2 text-body-sm leading-6")}
                                 >
                                     <div className="flex min-w-0 flex-1 items-center">
                                         <div className={cn("flex min-w-0 flex-1 inline-tight")}>

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 function PesquisaLoading() {
   return (
-    <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "flex flex-col inline-loose px-6 py-6")}>
+    <div className={cn("flex flex-col inline-loose px-6 py-6")}>
       <Skeleton className="h-9 w-60 rounded-xl" />
       <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "mx-auto flex w-full max-w-3xl flex-col items-center gap-5")}>
         <Skeleton className="size-14 rounded-2xl" />

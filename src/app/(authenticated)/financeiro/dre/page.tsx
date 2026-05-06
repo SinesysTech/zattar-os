@@ -11,12 +11,12 @@ function DRELoading() {
   return (
     <div className="w-full">
       {/* DataTableToolbar skeleton - Linha 1: Título */}
-      <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between py-4")}>
+      <div className={cn("flex items-center justify-between py-4")}>
         <Skeleton className="h-8 w-32" />
       </div>
 
       {/* DataTableToolbar skeleton - Linha 2: Filtros */}
-      <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center inline-default pb-4")}>
+      <div className={cn("flex items-center inline-default pb-4")}>
         <div className={cn("flex items-center inline-tight flex-1")}>
           <Skeleton className="h-9 w-80" />
           <Skeleton className="h-6 w-px" />
@@ -46,7 +46,7 @@ function DRELoading() {
       <div className={cn("mt-4 stack-medium")}>
         <Skeleton className="h-10 w-80" />
         <Card>
-          <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
+          <CardContent className={cn("pt-6")}>
             <div className={cn("stack-snug")}>
               {Array.from({ length: 12 }).map((_, i) => (
                 <Skeleton key={i} className="h-7" />

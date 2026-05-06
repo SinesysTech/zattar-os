@@ -108,7 +108,7 @@ function KanbanColumnContent({
       className="min-w-60 max-w-60 sm:min-w-70 sm:max-w-70 shrink-0"
     >
       <div className={cn("flex flex-col inline-tight min-h-28")}>
-        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2")}>
+        <div className={cn("flex items-center justify-between px-1 pb-2")}>
           <div className={cn("flex items-center inline-tight min-w-0")}>
             <span
               className="inline-block w-2 h-2 rounded-full shrink-0"
@@ -162,13 +162,13 @@ function KanbanColumnContent({
 
 function KanbanBoardSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "flex inline-medium overflow-x-auto pb-4 pt-2")}>
+    <div className={cn("flex inline-medium overflow-x-auto pb-4 pt-2")}>
       {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
           className={cn("flex flex-col inline-tight min-w-60 max-w-60 sm:min-w-70 sm:max-w-70")}
         >
-          <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-1 pb-2")}>
+          <div className={cn("flex items-center justify-between px-1 pb-2")}>
             <Skeleton className="h-3.5 w-28" />
             <Skeleton className="h-3 w-5" />
           </div>
@@ -312,7 +312,7 @@ function KanbanBoardContent({
       getItemValue={(item: KanbanContrato) => String(item.id)}
       flatCursor
     >
-      <KanbanBoard className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv.; pt-2 padding direcional sem Inset equiv. */ "overflow-x-auto pb-4 pt-2 items-start")}>
+      <KanbanBoard className={cn("overflow-x-auto pb-4 pt-2 items-start")}>
         {Object.entries(localColumns).map(([colKey, items]) => {
           const estagio = getEstagioForColumn(colKey);
           if (colKey === SEM_ESTAGIO_KEY && items.length === 0) return null;

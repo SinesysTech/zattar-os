@@ -34,7 +34,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
   return (
     <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {/* Total Capturas */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
@@ -62,7 +62,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
       </GlassPanel>
 
       {/* Taxa de Sucesso */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
@@ -93,7 +93,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
       </GlassPanel>
 
       {/* Em Andamento */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
@@ -123,7 +123,7 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
       </GlassPanel>
 
       {/* Falhas */}
-      <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
+      <GlassPanel className={cn("px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>

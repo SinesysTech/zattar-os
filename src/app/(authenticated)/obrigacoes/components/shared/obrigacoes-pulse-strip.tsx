@@ -37,7 +37,7 @@ function PulseSkeleton() {
   return (
     <div className={cn("grid grid-cols-2 lg:grid-cols-4 inline-medium")}>
       {Array.from({ length: 4 }).map((_, i) => (
-        <GlassPanel key={i} depth={1} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ "px-4 py-3.5")}>
+        <GlassPanel key={i} depth={1} className={cn("px-4 py-3.5")}>
           <div className={cn("flex items-start justify-between inline-tight")}>
             <div className={cn("min-w-0 stack-tight")}>
               <Skeleton className="h-2.5 w-16" />
@@ -116,7 +116,7 @@ export function ObrigacoesPulseStrip({ resumo, isLoading }: ObrigacoesPulseStrip
             key={metric.label}
             depth={metric.highlight ? 2 : 1}
             className={cn(
-              /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3.5 padding direcional sem Inset equiv. */ 'px-4 py-3.5',
+              'px-4 py-3.5',
               metric.highlight && metric.quantidade > 0 && 'border-destructive/15',
             )}
           >

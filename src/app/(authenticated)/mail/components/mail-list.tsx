@@ -131,7 +131,7 @@ export function MailList({ items }: MailListProps) {
                 : "hover:bg-muted/50"
             )}>
             <div
-              className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex shrink-0 items-start pt-0.5")}
+              className={cn("flex shrink-0 items-start pt-0.5")}
               onClick={(e) => e.stopPropagation()}>
               <Checkbox
                 checked={selectedUids.has(item.uid)}
@@ -164,7 +164,7 @@ export function MailList({ items }: MailListProps) {
                 </div>
                 <div
                   className={cn(
-                    /* design-system-escape: leading-4 sem token DS */ "text-[11px] leading-4 whitespace-normal wrap-break-word text-left sm:text-right",
+                    "text-[11px] leading-4 whitespace-normal wrap-break-word text-left sm:text-right",
                     selectedMail?.uid === item.uid
                       ? "text-foreground"
                       : "text-muted-foreground"
@@ -175,7 +175,7 @@ export function MailList({ items }: MailListProps) {
                   })}
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: leading-5 sem token DS */ "grid w-full inline-micro text-caption leading-5")}>
+              <div className={cn("grid w-full inline-micro text-caption leading-5")}>
                 <div className={cn( "font-medium text-foreground whitespace-normal wrap-break-word")}>
                   {item.subject}
                 </div>
@@ -191,7 +191,7 @@ export function MailList({ items }: MailListProps) {
 
         {/* Infinite scroll sentinel */}
         {hasMore && (
-          <div ref={sentinelRef} className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "flex items-center justify-center py-4")}>
+          <div ref={sentinelRef} className={cn("flex items-center justify-center py-4")}>
             {isLoadingMore && <LoadingSpinner size="lg" className="text-muted-foreground" />}
           </div>
         )}

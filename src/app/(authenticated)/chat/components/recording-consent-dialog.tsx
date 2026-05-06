@@ -44,7 +44,7 @@ export function RecordingConsentDialog({
             <AlertCircle className="h-5 w-5 text-warning" />
             Consentimento para Gravação
           </DialogTitle>
-          <DialogDescription className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "text-left stack-medium pt-2")}>
+          <DialogDescription className={cn("text-left stack-medium pt-2")}>
             <p>
               Você está prestes a iniciar a gravação desta chamada. De acordo com a{" "}
               <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, é necessário o
@@ -66,7 +66,7 @@ export function RecordingConsentDialog({
               automaticamente excluída.
             </p>
 
-            <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-start inline-tight pt-2")}>
+            <div className={cn("flex items-start inline-tight pt-2")}>
               <Checkbox
                 id="consent"
                 checked={agreed}
@@ -74,7 +74,7 @@ export function RecordingConsentDialog({
               />
               <label
                 htmlFor="consent"
-                className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm leading-tight cursor-pointer")}
+                className={cn("text-body-sm leading-tight cursor-pointer")}
               >
                 Confirmo que todos os participantes foram informados e consentiram com a
                 gravação desta chamada.

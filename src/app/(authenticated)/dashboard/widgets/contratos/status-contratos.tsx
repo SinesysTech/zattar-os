@@ -31,7 +31,7 @@ export function WidgetStatusContratos() {
   if (!data) {
     return (
       <WidgetContainer title="Status dos Contratos" icon={FileText} subtitle="Distribuição por status" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Não foi possível carregar os dados.
         </p>
       </WidgetContainer>
@@ -47,7 +47,7 @@ export function WidgetStatusContratos() {
   if (!contratos) {
     return (
       <WidgetContainer title="Status dos Contratos" icon={FileText} subtitle="Distribuição por status" depth={1}>
-        <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-[11px] text-muted-foreground/60 py-4 text-center")}>
+        <p className={cn("text-[11px] text-muted-foreground/60 py-4 text-center")}>
           Dados indisponíveis
         </p>
       </WidgetContainer>

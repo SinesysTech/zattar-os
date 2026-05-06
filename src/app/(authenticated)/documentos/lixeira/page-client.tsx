@@ -155,7 +155,7 @@ function DocumentoCard({
 
   return (
     <Card>
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
+      <CardHeader className={cn("pb-2")}>
         <div className="flex items-start justify-between">
           <div className={cn("flex items-center inline-medium")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
@@ -199,7 +199,7 @@ function DocumentoCard({
         </div>
       </CardHeader>
       {documento.descricao && (
-        <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
+        <CardContent className={cn("pt-0")}>
           <p className={cn("text-body-sm text-muted-foreground line-clamp-2")}>
             {documento.descricao}
           </p>

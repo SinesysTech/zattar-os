@@ -208,7 +208,7 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
       </div>
 
       {count > 0 && count < 3 && (
-        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5 flex-wrap")}>
+        <div className={cn("flex inline-micro mt-auto pt-1.5 flex-wrap")}>
           {periciasDia.map((p) => (
             <div
               key={p.id}
@@ -222,7 +222,7 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
       )}
 
       {count >= 3 && (
-        <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
+        <div className={cn("flex inline-micro mt-auto pt-1.5")}>
           <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
@@ -398,7 +398,7 @@ export function PericiasGlassMonth({
         </div>
 
         {/* ── Legend ────────────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center inline-default mb-4 px-1 flex-wrap")}>
+        <div className={cn("flex items-center inline-default mb-4 px-1 flex-wrap")}>
           {[
             { color: 'bg-primary', label: 'Aguardando Laudo' },
             { color: 'bg-warning', label: 'Esclarecimentos' },
@@ -486,7 +486,7 @@ export function PericiasGlassMonth({
                           <X className="w-3.5 h-3.5 text-foreground/50" />
                         </button>
                       </div>
-                      <div className={cn(/* design-system-escape: pr-0.5 padding direcional sem Inset equiv. */ "stack-tight max-h-72 overflow-y-auto pr-0.5")}>
+                      <div className={cn("stack-tight max-h-72 overflow-y-auto pr-0.5")}>
                         {popoverPericias.map((p) => (
                           <button
                             key={p.id}
@@ -514,7 +514,7 @@ export function PericiasGlassMonth({
         </div>
 
         {/* ── Summary Strip ─────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap inline-medium")}>
+        <div className={cn("mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap inline-medium")}>
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
             <div className="text-center">
               <p className={cn( "text-body-lg font-bold")}>{summary.total}</p>

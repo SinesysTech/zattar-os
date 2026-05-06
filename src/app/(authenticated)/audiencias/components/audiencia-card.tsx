@@ -32,7 +32,7 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
   };
 
   return (
-    <div onClick={handleCardClick} className={cn('cursor-pointer', compact ? /* design-system-escape: my-0.5 margin sem primitiva DS */ 'my-0.5' : /* design-system-escape: my-0.5 margin sem primitiva DS */ 'my-0.5')}>
+    <div onClick={handleCardClick} className={cn('cursor-pointer', compact ? 'my-0.5' : 'my-0.5')}>
       <GlassPanel depth={1} className={cn(
         'group relative z-10 w-full overflow-hidden rounded-md',
         'transition-all duration-200 ease-in-out hover:shadow-lg',

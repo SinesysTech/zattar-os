@@ -448,7 +448,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             </button>
           ))}
           <span
-            className={cn(/* design-system-escape: mx-0.5 margin sem primitiva DS */ "mx-0.5 h-4 w-px bg-border/40")}
+            className={cn("mx-0.5 h-4 w-px bg-border/40")}
             aria-hidden="true"
           />
           <DropdownMenu>
@@ -467,13 +467,13 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             >
               <DropdownMenuItem
                 asChild
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-caption px-3 py-2 cursor-pointer")}
+                className={cn("rounded-lg text-caption px-3 py-2 cursor-pointer")}
               >
                 <Link href="/pericias/especialidades">Especialidades</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 asChild
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-lg text-caption px-3 py-2 cursor-pointer")}
+                className={cn("rounded-lg text-caption px-3 py-2 cursor-pointer")}
               >
                 <Link href="/pericias/peritos">Peritos</Link>
               </DropdownMenuItem>
@@ -485,14 +485,14 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
       {/* ── Active Filter Chips ─────────────────────────────── */}
       {activeFilterChips.length > 0 && (
         <div className={cn("flex flex-wrap items-center inline-tight")}>
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] uppercase tracking-wider text-muted-foreground/60")}>
+          <span className={cn("text-[11px] uppercase tracking-wider text-muted-foreground/60")}>
             Filtros:
           </span>
           {activeFilterChips.map((chip) => (
             <AppBadge
               key={chip.key}
               variant="secondary"
-              className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "inline-micro pr-1 cursor-pointer hover:bg-secondary/80")}
+              className={cn("inline-micro pr-1 cursor-pointer hover:bg-secondary/80")}
               onClick={() => chip.onRemove()}
             >
               {chip.label}
@@ -512,7 +512,7 @@ export function PericiasClient({ initialView = 'quadro' }: PericiasClientProps) 
             <Button
               variant="ghost"
               size="sm"
-              className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "h-6 px-2 text-caption")}
+              className={cn("h-6 px-2 text-caption")}
               onClick={handleClearAllFilters}
             >
               Limpar todos

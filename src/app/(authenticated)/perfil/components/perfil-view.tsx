@@ -51,7 +51,7 @@ export function PerfilView() {
     return (
       <div className="flex min-h-100 items-center justify-center">
         <Card className="w-full max-w-md">
-          <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
+          <CardContent className={cn("pt-6")}>
             <div className="text-center">
               <p className={cn("text-body-sm text-destructive")}>{error}</p>
               <Button

@@ -253,8 +253,8 @@ export function DocumentViewer({
           // Exibição do PDF com renderer controlado
           <div
             className={cn(
-              /* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-20 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; sm:px-4 sem equivalente DS; sm:pt-4 sem equivalente DS */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-20 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; sm:px-4 sem equivalente DS; sm:pt-4 sem equivalente DS */ 'h-full w-full overflow-auto px-3 pb-20 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
-              annotationsOpen && /* design-system-escape: lg:pr-6 sem equivalente DS */ 'lg:pr-6'
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-20 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; sm:px-4 sem equivalente DS; sm:pt-4 sem equivalente DS */ 'h-full w-full overflow-auto px-3 pb-20 pt-3 transition-[padding] duration-200 sm:px-4 sm:pt-4',
+              annotationsOpen && 'lg:pr-6'
             )}
           >
             <div className="mx-auto flex min-h-full w-full max-w-232 justify-center rounded-2xl bg-background">

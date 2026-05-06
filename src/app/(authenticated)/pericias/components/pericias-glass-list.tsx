@@ -269,7 +269,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       </div>
 
       {/* ── Footer: Prazo · Responsável · Countdown ── */}
-      <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "mt-3 pt-3 border-t border-border/40 flex items-center justify-between inline-medium flex-wrap")}>
+      <div className={cn("mt-3 pt-3 border-t border-border/40 flex items-center justify-between inline-medium flex-wrap")}>
         <div className={cn("flex items-center inline-default min-w-0 flex-wrap")}>
           {prazoFormatted && (
             <div className={cn("flex items-center inline-snug")}>

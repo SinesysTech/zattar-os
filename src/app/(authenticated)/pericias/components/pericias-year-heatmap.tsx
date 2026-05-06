@@ -235,7 +235,7 @@ const MonthGrid = React.memo(function MonthGrid({
             aria-label={tooltipText}
           />
         </TooltipTrigger>
-        <TooltipContent side="top" className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "text-[10px] px-2 py-1")}>
+        <TooltipContent side="top" className={cn("text-[10px] px-2 py-1")}>
           {tooltipText}
         </TooltipContent>
       </Tooltip>,
@@ -282,7 +282,7 @@ function StatCard({
   children,
 }: StatCardProps) {
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "inset-card-compact px-5")}>
+    <GlassPanel depth={2} className={cn("inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
@@ -394,7 +394,7 @@ export function PericiasYearHeatmap({
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-primary/85" />
               </div>
               <span className="text-[10px] text-muted-foreground/60">Mais</span>
-              <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS */ "text-muted-foreground/40 mx-2 text-[10px]")}>·</span>
+              <span className={cn("text-muted-foreground/40 mx-2 text-[10px]")}>·</span>
               <div className={cn("flex items-center inline-snug")}>
                 <div className="w-2.5 h-2.5 rounded-[2px] bg-muted/30 ring-[1.5px] ring-primary ring-offset-1 ring-offset-transparent" />
                 <span className="text-[10px] text-muted-foreground/60">Hoje</span>

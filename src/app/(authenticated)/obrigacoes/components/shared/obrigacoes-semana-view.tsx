@@ -286,7 +286,7 @@ export function ObrigacoesSemanaView({
 
               {/* Parcelas */}
               {dayItems.length === 0 ? (
-                <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex items-center justify-center py-6")}>
+                <div className={cn("flex items-center justify-center py-6")}>
                   <Text variant="caption" className="text-muted-foreground/30">—</Text>
                 </div>
               ) : (

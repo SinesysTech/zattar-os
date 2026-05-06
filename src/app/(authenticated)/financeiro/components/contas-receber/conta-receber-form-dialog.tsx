@@ -344,7 +344,7 @@ export function ContaReceberFormDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
+          <div className={cn("stack-default py-4")}>
             {Object.keys(errors).length > 0 && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.

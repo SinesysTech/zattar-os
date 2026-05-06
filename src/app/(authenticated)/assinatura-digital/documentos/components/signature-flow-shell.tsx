@@ -82,7 +82,7 @@ export function SignatureFlowShell({
         className={cn(
           "sticky top-0 z-40 flex items-center shrink-0",
           "bg-background",
-          /* design-system-escape: px-4 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS */ "h-14 px-4 lg:px-6"
+          "h-14 px-4 lg:px-6"
         )}
       >
         {/* Botao Sair */}

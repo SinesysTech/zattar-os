@@ -177,7 +177,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
               <Text variant="caption" className="text-muted-foreground/50">{dateStr}</Text>
             </div>
           </div>
-          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>
+          <p className={cn("text-[13px] text-muted-foreground/60 leading-relaxed")}>
             Você tem <span className={cn( "text-foreground font-semibold")}>{dayEvents.length} compromissos</span> hoje
             {audienciaCount > 0 && <>, incluindo <span className={cn( "text-info font-semibold")}>{audienciaCount} audiência{audienciaCount > 1 ? "s" : ""}</span></>}.
             {dayEvents.length === 0 && " Dia livre para foco e preparação."}
@@ -246,7 +246,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
               { icon: Users, label: "Confirmar Testemunhas" },
               { icon: CalendarCheck, label: "Pauta da Semana" },
             ].map((a) => (
-              <button key={a.label} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight px-3 py-2 rounded-lg text-[11px] text-muted-foreground/60 hover:bg-muted/10 hover:text-muted-foreground transition-colors cursor-pointer")}>
+              <button key={a.label} className={cn("w-full flex items-center inline-tight px-3 py-2 rounded-lg text-[11px] text-muted-foreground/60 hover:bg-muted/10 hover:text-muted-foreground transition-colors cursor-pointer")}>
                 <a.icon className="size-3.5 text-muted-foreground/35" />{a.label}
               </button>
             ))}

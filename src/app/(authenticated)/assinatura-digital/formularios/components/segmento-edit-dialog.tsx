@@ -206,7 +206,7 @@ export function SegmentoEditDialog({
                 )}
               </div>
 
-              <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 md:col-span-2")}>
+              <div className={cn("flex items-center space-x-2 md:col-span-2")}>
                 <Switch
                   id="ativo"
                   checked={watch('ativo')}

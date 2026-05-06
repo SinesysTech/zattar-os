@@ -89,7 +89,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
   return (
     <div data-slot="week-view" className="flex h-full flex-col">
       <div className="bg-background/80 border-border/70 sticky top-0 z-30 grid grid-cols-8 border-b backdrop-blur-md">
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "py-2")} />
+        <div className={cn("py-2")} />
         {days.map((day) => (
           <div
             key={day.toString()}
@@ -185,7 +185,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
             {(processedDayEvents[dayIndex] ?? []).map((positionedEvent) => (
               <div
                 key={positionedEvent.event.id}
-                className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "absolute z-10 px-0.5")}
+                className={cn("absolute z-10 px-0.5")}
                 style={{
                   top: `${positionedEvent.top}px`,
                   height: `${positionedEvent.height}px`,

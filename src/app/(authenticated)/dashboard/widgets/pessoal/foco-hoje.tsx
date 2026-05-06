@@ -197,17 +197,17 @@ export function WidgetFocoHoje() {
                 {acao.titulo}
               </p>
               {acao.partes && (
-                <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
+                <p className={cn("text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
                   {acao.partes}
                 </p>
               )}
               {acao.numeroProcesso && (
-                <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/80 mt-0.5 break-all leading-relaxed")}>
+                <p className={cn("text-[9px] text-muted-foreground/80 mt-0.5 break-all leading-relaxed")}>
                   {acao.numeroProcesso}
                 </p>
               )}
               {acao.contextoProcesso && (
-                <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[9px] text-foreground/55 mt-0.5 leading-tight")}>
+                <p className={cn("text-[9px] text-foreground/55 mt-0.5 leading-tight")}>
                   {acao.contextoProcesso}
                 </p>
               )}
