@@ -348,7 +348,7 @@ function ModalidadeCell({
                       href={audiencia.urlAudienciaVirtual}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-primary underline truncate flex-1")}
+                      className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs text-primary underline truncate flex-1")}
                       title={audiencia.urlAudienciaVirtual}
                     >
                       {audiencia.urlAudienciaVirtual}

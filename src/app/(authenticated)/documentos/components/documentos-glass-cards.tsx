@@ -201,7 +201,7 @@ function GlassCard({
               {item.tipo === 'arquivo' && (
                 <DropdownMenuItem
                   onClick={(e) => onOpen(item, e)}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "gap-2 text-xs cursor-pointer")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption" as="div"> */ "gap-2 text-xs cursor-pointer")}
                 >
                   <ExternalLink className="size-3.5" />
                   Abrir

@@ -42,7 +42,7 @@ export function UploadContextPanel({
           className={cn(
             /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center rounded-full px-3 py-1",
             "bg-primary/10 text-primary",
-            /* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium uppercase tracking-wider",
+            /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium uppercase tracking-wider",
           )}
         >
           Passo 1

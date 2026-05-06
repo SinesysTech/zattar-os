@@ -275,7 +275,7 @@ function PericiaMissionCard({
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Tribunal
               </span>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/90 truncate")}>
+              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/90 truncate")}>
                 {pericia.trt}
                 <span className="text-[9px] text-muted-foreground/55 ml-1 font-normal">
                   {getGrauLabel(pericia.grau)}

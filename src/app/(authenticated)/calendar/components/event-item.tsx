@@ -186,7 +186,7 @@ export function EventItem({
         className={cn(
           /* design-system-escape: py-1 padding direcional sem Inset equiv. */ "py-1",
           durationMinutes < 45 ? "items-center" : "flex-col",
-          view === "week" ? /* design-system-escape: sm:text-xs sem equivalente DS */ "text-[10px] sm:text-xs" : /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs",
+          view === "week" ? /* design-system-escape: sm:text-xs sem equivalente DS */ "text-[10px] sm:text-xs" : /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs",
           className
         )}
         currentTime={currentTime}

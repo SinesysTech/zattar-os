@@ -351,7 +351,7 @@ function PdfPreviewSection({
               >
                 <div
                   className={cn(
-                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-primary-foreground flex items-center gap-1",
+                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "absolute -top-6 left-0 px-2 py-0.5 rounded text-xs font-medium text-primary-foreground flex items-center gap-1",
                     color.solid,
                   )}
                 >
@@ -387,7 +387,7 @@ function PdfPreviewSection({
         <Button
           variant="ghost"
           size="sm"
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}
           onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
           disabled={currentPage >= numPages}
         >

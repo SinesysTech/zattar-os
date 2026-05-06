@@ -77,7 +77,7 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
       variant="outline"
       size="sm"
       onClick={handleAutoAdjust}
-      className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "gap-1.5 text-xs")}
+      className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption" as="div"> */ "gap-1.5 text-xs")}
     >
       <ArrowUpDown className="h-3.5 w-3.5" />
       Ajustar Altura (+{heightDiff}px)

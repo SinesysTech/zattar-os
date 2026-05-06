@@ -196,7 +196,7 @@ export function TipoDescricaoCell({
                 {badgeVariant === 'outline' ? (
                   <AppBadge
                     variant="outline"
-                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
+                    className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "w-fit text-xs shrink-0 cursor-pointer hover:opacity-80 transition-opacity")}
                   >
                     {tipoNome}
                   </AppBadge>
@@ -254,7 +254,7 @@ export function TipoDescricaoCell({
         <button
           type="button"
           onClick={() => setIsDescricaoDialogOpen(true)}
-          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
+          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; leading-relaxed sem token DS */ "text-xs text-muted-foreground w-full text-justify whitespace-pre-wrap leading-relaxed cursor-pointer hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 rounded")}
         >
           {descricaoExibicao}
         </button>
@@ -329,7 +329,7 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   const opacityClass = baixado ? 'opacity-50' : '';
 
   return (
-    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; gap-0.5 gap sem token DS */ "inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
+    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; gap-0.5 gap sem token DS */ "inline-flex flex-col items-center text-xs font-medium shrink-0 gap-0.5", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-success/15 text-success px-2 py-0.5 rounded-full")}>
         {formatDate(dataInicio)}

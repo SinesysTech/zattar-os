@@ -37,7 +37,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
                 style={{ borderColor: collab.color }}
               >
                 <AvatarFallback
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-white")}
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs text-white")}
                   style={{ backgroundColor: collab.color }}
                 >
                   {collab.name.substring(0, 2).toUpperCase()}

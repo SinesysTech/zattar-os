@@ -229,7 +229,7 @@ function ForwardDialog({
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
           <Text variant="label">Encaminhar e-mail</Text>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-            <Label htmlFor="forward-to" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <Label htmlFor="forward-to" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
               Para (separar com vírgula)
             </Label>
             <Input

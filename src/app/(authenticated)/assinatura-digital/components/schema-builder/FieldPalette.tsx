@@ -116,7 +116,7 @@ export default function FieldPalette() {
   return (
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "shrink-0 px-3 pt-3 pb-2 space-y-2 border-b")}>
-        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "text-xs uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
+        <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; tracking-wider sem token DS */ "text-xs uppercase tracking-wider text-muted-foreground")}>Campos Disponíveis</Heading>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
           <Input

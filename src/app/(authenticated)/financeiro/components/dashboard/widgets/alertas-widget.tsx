@@ -91,7 +91,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
             Alertas
           </div>
           {alertas.length > 0 && (
-            <SemanticBadge category="status" value={alertas.length} variantOverride="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs tabular-nums")}>
+            <SemanticBadge category="status" value={alertas.length} variantOverride="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs tabular-nums")}>
               {alertas.length}
             </SemanticBadge>
           )}

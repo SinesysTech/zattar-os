@@ -112,7 +112,7 @@ function SearchableCombobox({
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
             <CommandInput
               placeholder={searchPlaceholder}
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-60 px-1.5 pb-1.5")}>

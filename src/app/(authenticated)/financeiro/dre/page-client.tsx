@@ -157,7 +157,7 @@ function VariacaoIndicator({
   }
 
   const iconSize = size === 'sm' ? 'h-3.5 w-3.5' : 'h-3 w-3';
-  const textSize = size === 'sm' ? /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs' : /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs';
+  const textSize = size === 'sm' ? /* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ 'text-xs' : /* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs';
 
   return (
     <div className={`flex items-center gap-1 ${textSize} ${getVariacaoColor(valor)}`}>
@@ -361,7 +361,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
       <table className="w-full">
         <thead>
           <tr className="border-b bg-muted/50">
-            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-left p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground")}>Descrição</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-left p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground")}>Descrição</th>
             <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-40")}>Valor (R$)</th>
             <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-xs font-medium uppercase tracking-wider text-muted-foreground w-28")}>% Receita</th>
           </tr>

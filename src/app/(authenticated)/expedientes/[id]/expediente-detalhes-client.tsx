@@ -190,7 +190,7 @@ export function ExpedienteDetalhesClient({
             </span>
           </Text>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
+            <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
               <Download className="size-3" />
               PDF
             </Button>
@@ -728,7 +728,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             <span className="text-muted-foreground/70 font-normal">documentos</span>
           </Heading>
         </div>
-        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
+        <Button variant="outline" size="sm" className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; gap-1.5 gap sem token DS */ "rounded-full h-8 px-3 text-xs gap-1.5")}>
           <Plus className="size-3" />
           Adicionar
         </Button>

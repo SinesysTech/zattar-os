@@ -151,7 +151,7 @@ function Toolbar({
             placeholder="Buscar eventos..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "w-full pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20")}
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; pr-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "w-full pl-8 pr-3 py-1.5 rounded-lg bg-foreground/4 border border-border/15 text-xs placeholder:text-muted-foreground/55 focus:outline-none focus:ring-1 focus:ring-primary/20")}
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer">
@@ -614,7 +614,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                   <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold tabular-nums", !isDateToday && "text-foreground/60")}>{date.getDate()}</span>
                 </div>
                 <div>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
+                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
                   <span className="text-[10px] text-muted-foreground/55 ml-2">{fmtDate(date)}</span>
                 </div>
                 <span className="text-[9px] text-muted-foreground/45 ml-auto tabular-nums">{dayEvents.length}</span>
@@ -1061,19 +1061,19 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
         {/* Fields */}
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {/* Date/Time */}
-          <Text variant="caption" className="flex items-center gap-3">
+          <Text variant="caption" as="div" className="flex items-center gap-3">
             <Calendar className="size-3.5 text-muted-foreground/55" />
             <div>
               <p className="text-foreground/70">{fmtDateFull(event.start)}</p>
               <p className="text-muted-foreground/60 tabular-nums">
                 {event.allDay ? "Dia inteiro" : `${fmtTime(event.start)} – ${fmtTime(event.end)}`}
               </p>
-            </Text>
-          </div>
+            </div>
+          </Text>
 
           {/* Location */}
           {event.location && (
-            <Text variant="caption" className="flex items-center gap-3">
+            <Text variant="caption" as="div" className="flex items-center gap-3">
               <MapPin className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.location}</p>
             </Text>
@@ -1081,7 +1081,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
 
           {/* Description */}
           {event.description && (
-            <Text variant="caption" className="flex items-start gap-3">
+            <Text variant="caption" as="div" className="flex items-start gap-3">
               <FileText className="size-3.5 text-muted-foreground/55 mt-0.5" />
               <p className="text-foreground/70">{event.description}</p>
             </Text>
@@ -1089,7 +1089,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
 
           {/* Responsável */}
           {event.responsavel && (
-            <Text variant="caption" className="flex items-center gap-3">
+            <Text variant="caption" as="div" className="flex items-center gap-3">
               <Users className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.responsavel}</p>
             </Text>
@@ -1097,7 +1097,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
 
           {/* Modalidade */}
           {event.modalidade && (
-            <Text variant="caption" className="flex items-center gap-3">
+            <Text variant="caption" as="div" className="flex items-center gap-3">
               {event.modalidade === "virtual" ? <Video className="size-3.5 text-muted-foreground/55" /> : <Building2 className="size-3.5 text-muted-foreground/55" />}
               <p className="text-foreground/70 capitalize">{event.modalidade}</p>
             </Text>
@@ -1105,7 +1105,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
 
           {/* TRT */}
           {event.trt && (
-            <Text variant="caption" className="flex items-center gap-3">
+            <Text variant="caption" as="div" className="flex items-center gap-3">
               <Gavel className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.trt}</p>
             </Text>

@@ -711,7 +711,7 @@ export function ObrigacaoDetalhesDialog({
                           variant="ghost"
                           onClick={() => setEfetivando(false)}
                           disabled={savingEfetivacao}
-                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                          className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-7 text-xs")}
                         >
                           Cancelar
                         </Button>

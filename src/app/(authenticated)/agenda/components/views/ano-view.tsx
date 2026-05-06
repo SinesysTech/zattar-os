@@ -172,7 +172,7 @@ const MonthGrid = React.memo(function MonthGrid({
                   )}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+              <TooltipContent side="top" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
                 {format(new Date(year, monthIndex, day), "d 'de' MMMM", {
                   locale: ptBR,
                 })}{" "}

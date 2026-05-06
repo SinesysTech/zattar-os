@@ -66,7 +66,7 @@ function ContaSection({
           </div>
           <Text variant="caption" className="font-medium">{title}</Text>
         </div>
-        <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}>
+        <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "h-6 px-2 text-xs")}>
           <Link href={href}>
             Ver <ArrowRight className="h-3 w-3 ml-1" />
           </Link>

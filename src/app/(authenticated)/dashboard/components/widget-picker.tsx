@@ -69,7 +69,7 @@ export function WidgetPicker({
         <Button
           variant="outline"
           size="sm"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "gap-2 text-xs font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "gap-2 text-xs font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
           aria-label="Personalizar dashboard"
         >
           <LayoutGrid className="size-3.5" />

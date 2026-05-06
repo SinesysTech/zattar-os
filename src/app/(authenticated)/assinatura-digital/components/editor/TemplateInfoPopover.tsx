@@ -312,7 +312,7 @@ export default function TemplateInfoPopover({
               {!isCreating && (
                 <Badge
                   variant={STATUS_OPTIONS.find(s => s.value === formData.status)?.variant || 'default'}
-                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}
+                  className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}
                 >
                   {STATUS_OPTIONS.find(s => s.value === formData.status)?.label}
                 </Badge>

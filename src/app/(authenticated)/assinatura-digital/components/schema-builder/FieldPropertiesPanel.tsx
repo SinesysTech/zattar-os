@@ -334,7 +334,7 @@ export default function FieldPropertiesPanel({
                       <FormControl>
                         <Input {...formField} placeholder="campo_id" readOnly className="bg-muted" />
                       </FormControl>
-                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                      <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
                         Identificador único gerado automaticamente
                       </FormDescription>
                       <FormMessage />
@@ -589,7 +589,7 @@ export default function FieldPropertiesPanel({
                         <FormControl>
                           <Input {...field} placeholder="^[A-Za-z]+$" />
                         </FormControl>
-                        <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                        <FormDescription className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
                           Expressão regular para validação
                         </FormDescription>
                         <FormMessage />

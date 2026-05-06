@@ -106,7 +106,7 @@ export function ResponsavelPopover({
             </p>
             <CommandInput
               placeholder="Buscar..."
-              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs rounded-lg")}
+              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs rounded-lg")}
             />
           </div>
           <CommandList className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "max-h-52 px-1.5 pb-1.5")}>

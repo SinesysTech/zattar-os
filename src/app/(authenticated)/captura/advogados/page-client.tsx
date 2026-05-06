@@ -189,7 +189,7 @@ export default function AdvogadosPage() {
     <>
       <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
         {/* Breadcrumb */}
-        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground/75")}>
+        <nav className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption" as="div"> */ "flex items-center gap-1.5 text-xs text-muted-foreground/75")}>
           <a href="/captura" className="hover:text-foreground transition-colors">Captura</a>
           <ChevronRight className="size-3" />
           <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>

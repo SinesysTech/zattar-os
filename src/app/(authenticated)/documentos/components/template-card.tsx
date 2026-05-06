@@ -53,7 +53,7 @@ export function TemplateCard({
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base line-clamp-1")}>{template.titulo}</CardTitle>
               {template.categoria && (
-                <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <Badge variant="secondary" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
                   {template.categoria}
                 </Badge>
               )}

@@ -93,7 +93,7 @@ export function TimelineSidebar({
             placeholder="Buscar na timeline..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-8 pl-8 text-xs")}
+            className={cn(/* design-system-escape: pl-8 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 pl-8 text-xs")}
           />
         </div>
       </div>

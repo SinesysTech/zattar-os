@@ -158,7 +158,7 @@ function SidebarContent(props: FloatingSidebarProps) {
 
           <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <Label htmlFor="doc-titulo" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")}>
+              <Label htmlFor="doc-titulo" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption" as="div"> */ "flex items-center gap-1.5 text-xs")}>
                 <FileText className="size-3.5" />
                 Título
               </Label>

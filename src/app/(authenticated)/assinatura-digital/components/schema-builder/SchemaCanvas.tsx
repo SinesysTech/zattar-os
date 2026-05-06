@@ -190,7 +190,7 @@ function DroppableSectionCard({
     >
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-2 px-3 pt-3 pb-2")}>
         <div className="flex-1 min-w-0">
-          <Heading level="subsection" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{section.title}</Heading>
+          <Heading level="subsection" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>{section.title}</Heading>
           {section.description && (
             <p className="text-[11px] text-muted-foreground mt-0.5">{section.description}</p>
           )}

@@ -333,7 +333,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
             <div className="flex-1">
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-1")}>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{alerta.descricao}</span>
-                <Badge variant={getTipoBadgeVariant(alerta.tipo)} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                <Badge variant={getTipoBadgeVariant(alerta.tipo)} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
                   {getTipoLabel(alerta.tipo)}
                 </Badge>
               </div>

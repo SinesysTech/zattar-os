@@ -250,7 +250,7 @@ export function AudienciaTimeline({
           {/* Avatar / icon */}
           {entry.type === 'manual' && entry.usuario ? (
             <Avatar size="lg" className="shrink-0">
-              <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+              <AvatarFallback className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
                 {getInitials(entry.usuario.nome)}
               </AvatarFallback>
             </Avatar>

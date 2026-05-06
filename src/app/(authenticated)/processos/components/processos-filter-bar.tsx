@@ -191,7 +191,7 @@ function OrigemFilter({
                 setOpen(false);
               }}
               className={cn(
-                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
+                /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ 'w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs transition-colors cursor-pointer',
                 selected === opt.value
                   ? 'bg-primary/8 text-primary'
                   : 'hover:bg-muted/30 text-muted-foreground/70'
@@ -311,7 +311,7 @@ function ResponsavelFilter({
                     onChange(selected === usuario.id ? null : usuario.id);
                     setOpen(false);
                   }}
-                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
+                  className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption" as="div">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "gap-2 rounded-lg text-xs px-2 py-1.5")}
                 >
                   <Avatar size="xs" className="border size-5">
                     <AvatarImage src={usuario.avatarUrl || undefined} />

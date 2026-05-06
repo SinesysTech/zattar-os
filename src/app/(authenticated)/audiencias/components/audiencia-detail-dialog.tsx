@@ -736,7 +736,7 @@ export function AudienciaDetailDialog({
                               placeholder="https://..."
                               value={urlDraft}
                               onChange={(e) => setUrlDraft(e.target.value)}
-                              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs flex-1")}
+                              className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs flex-1")}
                               autoFocus
                             />
                             <Button
@@ -831,7 +831,7 @@ export function AudienciaDetailDialog({
                                 onChange={(e) =>
                                   setEnderecoDraft((d) => ({ ...d, logradouro: e.target.value }))
                                 }
-                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-8 text-xs")}
+                                className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 text-xs")}
                                 autoFocus
                               />
                               <Input
@@ -1026,7 +1026,7 @@ export function AudienciaDetailDialog({
                             size="sm"
                             variant="ghost"
                             onClick={() => setEditingObs(false)}
-                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "h-7 text-xs")}
+                            className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "h-7 text-xs")}
                           >
                             Cancelar
                           </Button>

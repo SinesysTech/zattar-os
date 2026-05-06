@@ -284,7 +284,7 @@ export function ReceberContaDialog({
                 <div className="text-right">
                   <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-bold text-lg text-success")}>{formatarValor(conta.valor)}</p>
                   {conta.dataVencimento && (
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ 'text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
+                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ 'text-xs', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
                       Venc: {format(new Date(conta.dataVencimento), 'dd/MM/yyyy')}
                     </p>
                   )}

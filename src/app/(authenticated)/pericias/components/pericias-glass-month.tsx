@@ -383,7 +383,7 @@ export function PericiasGlassMonth({
             </Button>
             <Button
               size="sm"
-              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-xs font-semibold")}
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-xs font-semibold")}
               onClick={() => onMonthChange(new Date())}
             >
               Hoje

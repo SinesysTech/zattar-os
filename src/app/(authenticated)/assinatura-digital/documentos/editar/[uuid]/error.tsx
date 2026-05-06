@@ -31,14 +31,14 @@ export default function ErrorBoundary({
                 </p>
 
                 {error.digest && (
-                    <Text variant="caption" className="mt-4 rounded-md bg-muted p-3 font-mono text-left overflow-auto max-h-32">
+                    <Text variant="caption" as="div" className="mt-4 rounded-md bg-muted p-3 font-mono text-left overflow-auto max-h-32">
                         <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground mb-1")}>Código do erro (Digest):</p>
                         <p className="text-muted-foreground select-all">{error.digest}</p>
                     </Text>
                 )}
 
                 {process.env.NODE_ENV === 'development' && (
-                    <Text variant="caption" className="mt-4 rounded-md bg-destructive/10 p-3 text-left overflow-auto max-h-48">
+                    <Text variant="caption" as="div" className="mt-4 rounded-md bg-destructive/10 p-3 text-left overflow-auto max-h-48">
                         <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-destructive mb-1")}>Detalhes (Dev):</p>
                         <p className="whitespace-pre-wrap text-destructive/80 font-mono">{error.message}</p>
                         {error.stack && (

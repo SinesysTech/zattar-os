@@ -115,7 +115,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
         {/* Status badges */}
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2 flex-wrap")}>
-          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs gap-1")}>
+          <SemanticBadge category="status" value="acima" variantOverride="outline" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; gap-1 gap sem token DS */ "text-xs gap-1")}>
             <TrendingUp className="h-3 w-3 text-destructive" />
             {resumo.itensAcimaMeta} acima
           </SemanticBadge>

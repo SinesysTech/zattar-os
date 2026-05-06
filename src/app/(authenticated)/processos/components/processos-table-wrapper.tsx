@@ -163,7 +163,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
   return (
     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start justify-center gap-1.5 py-2 min-w-0 group")}>
       <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 flex-wrap")}>
-        <SemanticBadge category="tribunal" value={trt} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-fit text-xs")}>
+        <SemanticBadge category="tribunal" value={trt} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "w-fit text-xs")}>
           {trt}
         </SemanticBadge>
         {isUnificado ? (

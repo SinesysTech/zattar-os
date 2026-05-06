@@ -110,7 +110,7 @@ function StatusAudienciaBadge({ status }: { status: StatusAudiencia }) {
   const label = STATUS_AUDIENCIA_LABELS[status] || status;
 
   return (
-    <SemanticBadge category="audiencia_status" value={status} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+    <SemanticBadge category="audiencia_status" value={status} className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div"> */ "text-xs")}>
       {label}
     </SemanticBadge>
   );

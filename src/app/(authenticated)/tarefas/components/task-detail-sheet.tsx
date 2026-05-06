@@ -424,7 +424,7 @@ export function TaskDetailSheet() {
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "h-8 gap-1.5 text-xs")}
+                                            className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption" as="div"> */ "h-8 gap-1.5 text-xs")}
                                             disabled={isPending}
                                             onClick={() => fileInputRef.current?.click()}
                                         >

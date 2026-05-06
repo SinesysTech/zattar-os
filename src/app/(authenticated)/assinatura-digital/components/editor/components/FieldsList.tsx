@@ -191,7 +191,7 @@ export default function FieldsList({
       <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "p-3 space-y-4")}>
         {pages.map((page) => (
           <div key={page}>
-            <Heading level="subsection" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS; px-1 padding direcional sem Inset equiv. */ "text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
+            <Heading level="subsection" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; tracking-wider sem token DS; px-1 padding direcional sem Inset equiv. */ "text-xs text-muted-foreground uppercase tracking-wider mb-2 px-1")}>
               Página {page}
             </Heading>
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>

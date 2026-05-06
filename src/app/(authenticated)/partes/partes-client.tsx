@@ -296,7 +296,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex gap-2 mt-5 pt-4 border-t border-border/10")}>
         <Link
           href={perfilHref}
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-primary/10 text-primary/70 text-xs font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
         >
           <ExternalLink className="size-3" />
           Ver perfil completo

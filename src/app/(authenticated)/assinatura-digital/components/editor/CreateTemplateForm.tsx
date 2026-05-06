@@ -101,7 +101,7 @@ export default function CreateTemplateForm({
 
         {/* Nome */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+          <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
             Nome do Template *
           </Label>
           <Input

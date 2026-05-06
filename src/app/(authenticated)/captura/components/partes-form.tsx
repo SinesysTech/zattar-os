@@ -163,7 +163,7 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
             {credSelecionadasDetalhes.length > 0 && (
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
                 <Label>Escopo da captura</Label>
-                <Text variant="caption" className="rounded-md border border-dashed border-border/60 p-3 space-y-1">
+                <Text variant="caption" as="div" className="rounded-md border border-dashed border-border/60 p-3 space-y-1">
                   <p>
                     Tribunais (TRTs) incluídos: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{trtsDerivados.join(', ') || '-'}</span>
                   </p>

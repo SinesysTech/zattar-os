@@ -165,7 +165,7 @@ function NoMatchState({
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex w-full max-w-60 flex-col items-center gap-2")}>
         <Button
           variant="outline"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "w-full gap-2 text-xs")}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption" as="div"> */ "w-full gap-2 text-xs")}
           onClick={onBuscarManualmente}
         >
           <Search className="size-3.5" aria-hidden />
@@ -416,7 +416,7 @@ export function GazetteOrphanResolver() {
               <Button
                 variant="outline"
                 size="sm"
-                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-xs text-success hover:bg-success/15")}
+                className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div"> */ "h-7 gap-1.5 border-success/20 bg-success/10 px-3 text-xs text-success hover:bg-success/15")}
                 onClick={handleAcceptHighConfidence}
               >
                 <Check className="size-3" aria-hidden />

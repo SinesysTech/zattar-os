@@ -299,7 +299,7 @@ export function AudienciasGlassMonth({
               </Button>
               <Button
                 size="sm"
-                className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-xs font-semibold")}
+                className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-xs font-semibold")}
                 onClick={() => onMonthChange(new Date())}
               >
                 Hoje
@@ -333,7 +333,7 @@ export function AudienciasGlassMonth({
               <div
                 key={label}
                 className={cn(
-                  /* design-system-escape: py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS */ 'text-center py-2 text-xs font-semibold uppercase tracking-widest',
+                  /* design-system-escape: py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS */ 'text-center py-2 text-xs font-semibold uppercase tracking-widest',
                   idx >= 5 ? 'text-foreground/55' : 'text-foreground/70',
                 )}
               >
