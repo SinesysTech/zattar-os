@@ -113,7 +113,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
       <div className={cn("flex items-start inline-medium rounded-lg border border-destructive/30 bg-destructive/[0.06] inset-card-compact")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div className={cn("stack-tight min-w-0 w-full")}>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>
+          <p className={cn( "text-body-sm font-semibold text-destructive")}>
             {errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''} na captura
           </p>
           <div className={cn("flex flex-wrap inline-snug")}>
@@ -144,7 +144,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
         {grupos.map((grupo) => (
           <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3")}>
             <div className={cn("mb-2.5 flex items-center inline-tight")}>
-              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
+              <p className={cn( "text-body-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
               <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
                 {grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''}
               </Badge>

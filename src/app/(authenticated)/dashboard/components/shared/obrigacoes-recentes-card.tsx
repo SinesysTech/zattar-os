@@ -138,7 +138,7 @@ export function ObrigacoesRecentesCard() {
           <TableBody>
             {obrigacoesOrdenadas.map((ob) => (
               <TableRow key={ob.id}>
-                <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                <TableCell className={cn( "font-medium")}>
                   <div>{getTipoLabel(ob)}</div>
                 </TableCell>
                 <TableCell>

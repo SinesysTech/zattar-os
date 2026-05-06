@@ -113,7 +113,7 @@ function SectionHeader({
   return (
     <div className={cn("flex items-center inline-tight mb-2.5")}>
       <Icon className="size-3.5 text-primary" />
-      <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
+      <h4 className={cn( "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
         {label}
       </h4>
     </div>
@@ -143,7 +143,7 @@ function MetaRow({
   return (
     <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-center justify-between inline-medium py-1")}>
       <span className="text-[11.5px] text-muted-foreground/70">{label}</span>
-      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground text-right truncate")}>{value}</span>
+      <span className={cn( "text-[12px] font-medium text-foreground text-right truncate")}>{value}</span>
     </div>
   );
 }
@@ -220,12 +220,12 @@ export function DocumentoDetailDialog({
             </IconContainer>
           )}
           <div className="text-center max-w-full">
-            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[15px] font-semibold text-foreground leading-tight wrap-break-word")}>
+            <h3 className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[15px] font-semibold text-foreground leading-tight wrap-break-word")}>
               {nome}
             </h3>
             <span
               className={cn(
-                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded-md border px-1.5 py-0.5 mt-2 text-[10px] font-semibold tracking-[0.02em]',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center rounded-md border px-1.5 py-0.5 mt-2 text-[10px] font-semibold tracking-[0.02em]',
                 accentClasses.text,
                 'border-current/20 bg-current/5',
               )}
@@ -297,7 +297,7 @@ export function DocumentoDetailDialog({
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12.5px] font-medium text-foreground truncate")}>{criadorNome}</p>
+                  <p className={cn( "text-[12.5px] font-medium text-foreground truncate")}>{criadorNome}</p>
                   {criadorNomeCompleto && criadorNome !== criadorNomeCompleto && (
                     <p className="text-[11px] text-muted-foreground/60 truncate">
                       {criadorNomeCompleto}

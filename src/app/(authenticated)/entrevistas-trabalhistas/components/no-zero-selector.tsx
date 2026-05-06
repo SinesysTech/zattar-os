@@ -96,7 +96,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
                   {icon}
                 </div>
                 <div>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{TIPO_LITIGIO_LABELS[value]}</p>
+                  <p className={cn( "font-medium")}>{TIPO_LITIGIO_LABELS[value]}</p>
                   <Text variant="caption" className="mt-1">
                     {TIPO_LITIGIO_DESCRICAO[value]}
                   </Text>

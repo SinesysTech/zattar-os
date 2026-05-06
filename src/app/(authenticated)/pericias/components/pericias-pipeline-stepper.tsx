@@ -122,7 +122,7 @@ export function PericiasPipelineStepper({
               <Icon className={cn('size-3.5', cfg.textColor)} />
               <span
                 className={cn(
-                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium uppercase tracking-[0.06em] text-center',
+                   'text-[10px] font-medium uppercase tracking-[0.06em] text-center',
                   isActive
                     ? 'text-foreground'
                     : 'text-muted-foreground/65',
@@ -154,7 +154,7 @@ export function PericiasPipelineStepper({
             {total > 0 ? (
               <span
                 className={cn(
-                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] font-medium tabular-nums',
+                   'text-[10px] font-medium tabular-nums',
                   isActive ? cfg.textColor : 'text-muted-foreground/55',
                 )}
               >

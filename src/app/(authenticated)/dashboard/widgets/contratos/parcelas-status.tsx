@@ -98,7 +98,7 @@ export function WidgetParcelasStatus() {
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {p.status.replace(/_/g, ' ')}
                 </span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+                <span className={cn( "text-[10px] font-medium tabular-nums")}>
                   {fmtNum(p.count)}
                 </span>
                 <span className="text-[9px] text-muted-foreground/50 tabular-nums w-8 text-right">
@@ -114,7 +114,7 @@ export function WidgetParcelasStatus() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums")}>
+            <p className={cn( "text-body-sm font-semibold font-display tabular-nums")}>
               {fmtMoeda(totalValor)}
             </p>
           </div>
@@ -122,7 +122,7 @@ export function WidgetParcelasStatus() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Pendente
             </p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums text-warning/80")}>
+            <p className={cn( "text-body-sm font-semibold font-display tabular-nums text-warning/80")}>
               {fmtMoeda(valorPendente)}
             </p>
           </div>

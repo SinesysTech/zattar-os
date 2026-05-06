@@ -77,7 +77,7 @@ function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
           key={i}
           className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex flex-wrap items-start gap-x-2 gap-y-0.5 rounded-md bg-info/4 border border-info/10 px-3 py-2")}
         >
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-30")}>
+          <span className={cn(/* design-system-escape: min-w arbitrária para alinhar diff lado a lado */ "text-[11px] font-medium text-foreground/70 shrink-0 min-w-30")}>
             {formatarCampoAlterado(v.campo)}
           </span>
           <div className={cn("flex items-center inline-snug flex-wrap")}>
@@ -85,7 +85,7 @@ function ValoresDiff({ valores }: { valores: ValorAlteradoLog[] }) {
               {formatarValor(v.antes)}
             </span>
             <ArrowRight className="size-3 text-muted-foreground/70 shrink-0" />
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-foreground/80")}>
+            <span className={cn( "text-[11px] font-medium text-foreground/80")}>
               {formatarValor(v.depois)}
             </span>
           </div>
@@ -103,37 +103,37 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-success/5 border-success/20 p-2.5")}>
         <FilePlus className="h-4 w-4 text-success shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Inseridos</p>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Inseridos</p>
+          <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-info/5 border-info/20 p-2.5")}>
         <ArrowRight className="h-4 w-4 text-info shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Atualizados</p>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Atualizados</p>
+          <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-muted/40 p-2.5")}>
         <FileX className="h-4 w-4 text-muted-foreground shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Sem Alteração</p>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Sem Alteração</p>
+          <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-destructive/5 border-destructive/20 p-2.5")}>
         <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Erros</p>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.erros}</p>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Erros</p>
+          <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.erros}</p>
         </div>
       </div>
       {stats.conflitos > 0 && (
         <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-warning/5 border-warning/20 p-2.5 col-span-2 sm:col-span-4")}>
           <GitMerge className="h-4 w-4 text-warning shrink-0" />
           <div>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Conflitos de Concorrência</p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.conflitos}</p>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Conflitos de Concorrência</p>
+            <p className={cn( "text-body-sm font-semibold tabular-nums")}>{stats.conflitos}</p>
           </div>
         </div>
       )}
@@ -152,7 +152,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
     <div className={cn(/* design-system-escape: space-y-4 sem token DS */ "mt-3 space-y-4")}>
       {erros.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
             Erros ({erros.length})
           </p>
           <div className={cn("stack-snug")}>
@@ -163,7 +163,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
               >
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
                 <Text variant="caption" className="min-w-0">
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{formatarEntidade(log.entidade)}</span>
+                  <span className={cn( "font-medium text-foreground")}>{formatarEntidade(log.entidade)}</span>
                   <span className="text-muted-foreground ml-1.5">— {log.erro}</span>
                 </Text>
               </div>
@@ -174,7 +174,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
 
       {inseridos.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-success uppercase tracking-wider mb-2")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-success uppercase tracking-wider mb-2")}>
             Processos incluídos ({inseridos.length})
           </p>
           <div className={cn("stack-micro")}>
@@ -200,7 +200,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
 
       {atualizados.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-info uppercase tracking-wider mb-2")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-info uppercase tracking-wider mb-2")}>
             Processos atualizados ({atualizados.length})
           </p>
           <div className={cn(/* design-system-escape: space-y-2 sem token DS */ "space-y-2")}>
@@ -209,7 +209,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
                 key={i}
                 className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-md border border-border/60 bg-muted/20 px-3 py-2.5")}
               >
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 mb-1")}>
+                <p className={cn( "text-body-sm font-medium text-foreground/90 mb-1")}>
                   {log.numero_processo || `Processo PJE ${log.id_pje}`}
                 </p>
 
@@ -304,7 +304,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                   ) : (
                     <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
                   )}
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold shrink-0")}>{rawLog.trt}</span>
+                  <span className={cn( "font-semibold shrink-0")}>{rawLog.trt}</span>
                   <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal shrink-0")}>
                     {formatarGrau(rawLog.grau)}
                   </Badge>

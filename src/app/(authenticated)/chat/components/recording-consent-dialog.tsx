@@ -52,7 +52,7 @@ export function RecordingConsentDialog({
             </p>
             
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted p-3 rounded-md")}>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium mb-1")}>Participantes atuais:</p>
+              <p className={cn( "text-body-sm font-medium mb-1")}>Participantes atuais:</p>
               <ul className={cn("text-body-sm list-disc list-inside")}>
                 {participantNames.map((name, idx) => (
                   <li key={idx}>{name}</li>

@@ -134,7 +134,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Main info */}
       <div className="flex-1 min-w-0">
-        <Text variant="caption" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate text-foreground/80")}>{audiencia.tipoDescricao || 'Audiência'}</Text>
+        <Text variant="caption" as="p" className={cn( "font-medium truncate text-foreground/80")}>{audiencia.tipoDescricao || 'Audiência'}</Text>
         <p className="text-micro-caption text-muted-foreground/65 truncate">
           {audiencia.poloAtivoNome || '—'} vs {audiencia.poloPassivoNome || '—'}
         </p>
@@ -148,7 +148,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Date/Time */}
       <div className="text-right shrink-0 hidden sm:block">
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption font-medium tabular-nums")}>
+        <p className={cn( "text-micro-caption font-medium tabular-nums")}>
           {(() => {
             try {
               return parseISO(audiencia.dataInicio).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
@@ -171,7 +171,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
       {/* TRT + Grau */}
       {audiencia.trt && (
         <div className={cn("flex items-center inline-micro shrink-0 md:flex")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-micro-caption font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>
             {audiencia.trt}
           </span>
           {audiencia.grau && (
@@ -197,7 +197,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
             <span className={cn(
-              /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold tabular-nums text-micro-badge',
+               'font-bold tabular-nums text-micro-badge',
               prepStatus === 'good' ? 'text-success' : prepStatus === 'warning' ? 'text-warning' : 'text-destructive',
             )}>
               {prepScore}%
@@ -208,7 +208,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Countdown or status */}
       <span className={cn(
-        /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-micro-caption shrink-0 w-16 text-right tabular-nums font-medium',
+         'text-micro-caption shrink-0 w-16 text-right tabular-nums font-medium',
         isFinalizada ? 'text-success/70' :
         isCancelada ? 'text-destructive/70' :
         !isPast ? (timeUntil.totalMs <= 60 * 60 * 1000 ? 'text-warning/75' : 'text-muted-foreground/65') :

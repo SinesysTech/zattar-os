@@ -190,7 +190,7 @@ export function TerceirosTableWrapper() {
                 </Badge>
               )}
               <div className={cn("flex items-center inline-micro max-w-full")}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium wrap-break-word whitespace-normal")}>
+                <span className={cn( "text-body-sm font-medium wrap-break-word whitespace-normal")}>
                   {formatarNome(terceiro.nome)}
                 </span>
                 <CopyButton text={terceiro.nome} label="Copiar nome" />

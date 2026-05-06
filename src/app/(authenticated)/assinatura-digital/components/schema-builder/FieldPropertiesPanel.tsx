@@ -653,7 +653,7 @@ export default function FieldPropertiesPanel({
                   onOpenChange={() => toggleSection('condicional')}
                 >
                   <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
-                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1 text-left")}>Condicional</span>
+                    <span className={cn( "text-body-sm font-semibold flex-1 text-left")}>Condicional</span>
                     <ChevronDown
                       className={cn(
                         "size-3.5 transition-transform text-muted-foreground",
@@ -760,7 +760,7 @@ export default function FieldPropertiesPanel({
                   onOpenChange={() => toggleSection('opcoes')}
                 >
                   <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
-                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1 text-left")}>
+                    <span className={cn( "text-body-sm font-semibold flex-1 text-left")}>
                       Opções {options.length > 0 && `(${options.length})`}
                     </span>
                     <ChevronDown
@@ -855,7 +855,7 @@ export default function FieldPropertiesPanel({
                   onOpenChange={() => toggleSection('entitySearch')}
                 >
                   <CollapsibleTrigger className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight w-full p-2 rounded-md hover:bg-muted/50 transition-colors")}>
-                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1 text-left")}>Busca de Entidade</span>
+                    <span className={cn( "text-body-sm font-semibold flex-1 text-left")}>Busca de Entidade</span>
                     <ChevronDown
                       className={cn(
                         "size-3.5 transition-transform text-muted-foreground",

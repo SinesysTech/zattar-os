@@ -175,7 +175,7 @@ export function ClienteSelect({
                     )}
                   />
                   <div className="flex flex-col min-w-0 flex-1">
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{opt.label}</span>
+                    <span className={cn( "font-medium truncate")}>{opt.label}</span>
                     {(opt.cpf || opt.cnpj) && (
                       <Text variant="caption">
                         {formatDocument(opt.cpf, opt.cnpj)}

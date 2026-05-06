@@ -222,7 +222,7 @@ export function CustomCallControls({
                 {activeEffect !== 'none' && (
                   <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t border-video-border")}>
                     <Text variant="caption">
-                      Efeito ativo: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-video-text font-medium capitalize")}>{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
+                      Efeito ativo: <span className={cn( "text-video-text font-medium capitalize")}>{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
                     </Text>
                   </div>
                 )}

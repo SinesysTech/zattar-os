@@ -27,7 +27,7 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className={cn("flex flex-col stack-micro")}>
-            <p className={cn(/* design-system-escape: leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-body-sm leading-none font-medium")}>shadcn</p>
+            <p className={cn(/* design-system-escape: leading-none sem token DS; */ "text-body-sm leading-none font-medium")}>shadcn</p>
             <Text variant="caption" className="leading-none">m@example.com</Text>
           </div>
         </DropdownMenuLabel>

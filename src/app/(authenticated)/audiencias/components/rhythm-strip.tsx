@@ -56,9 +56,9 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
     <GlassPanel className={cn('inset-card-compact', className)}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <Zap className="size-3 text-primary/65" />
-        <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Ritmo de audiências</Text>
+        <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/60")}>Ritmo de audiências</Text>
         {hasOverload && (
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded-full bg-warning/10 text-warning ml-auto")}>
             Pico: {maxInDay}/dia
           </span>
         )}

@@ -32,7 +32,7 @@ export function ExpedientesBulkActions({
   return (
     <>
       <div className={cn("flex items-center inline-tight")}>
-        <AppBadge variant="secondary" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+        <AppBadge variant="secondary" className={cn( "font-medium")}>
           {selectedCount} {selectedCount === 1 ? 'expediente selecionado' : 'expedientes selecionados'}
         </AppBadge>
         <div className={cn("flex items-center inline-tight ml-auto")}>

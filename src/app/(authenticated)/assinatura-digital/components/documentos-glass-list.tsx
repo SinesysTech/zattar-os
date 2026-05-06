@@ -152,7 +152,7 @@ function GlassRow({
             <Icon className={cn('size-4', cfg.iconColor)} />
           </div>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{doc.titulo}</p>
+            <p className={cn( "text-body-sm font-semibold truncate")}>{doc.titulo}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
               {doc.criadoPor} · {timeAgo(doc.criadoEm)}
             </p>
@@ -198,7 +198,7 @@ function GlassRow({
         {/* Status pill */}
         <span
           className={cn(
-            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'hidden sm:inline-flex items-center inline-snug backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+            /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'hidden sm:inline-flex items-center inline-snug backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
             cfg.pill,
           )}
         >
@@ -266,7 +266,7 @@ function GlassCard({
           />
           <span
             className={cn(
-              /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'inline-flex items-center rounded-md text-[10px] font-semibold tracking-[0.04em] px-2 py-0.5 border',
+              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'inline-flex items-center rounded-md text-[10px] font-semibold tracking-[0.04em] px-2 py-0.5 border',
               cfg.pill,
             )}
           >
@@ -276,7 +276,7 @@ function GlassCard({
       </div>
 
       <div className="min-w-0">
-        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-semibold line-clamp-2 leading-snug")}>
+        <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-body-sm font-semibold line-clamp-2 leading-snug")}>
           {doc.titulo}
         </p>
         <p className="text-[11px] text-muted-foreground mt-1 truncate">
@@ -355,7 +355,7 @@ function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
       <FileSignature className="size-10 text-muted-foreground/55 mb-4" />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>
+      <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>
         Nenhum documento encontrado
       </p>
       <Text variant="caption" className="text-muted-foreground/70 mt-1">

@@ -185,7 +185,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
                 <CreditCard className="h-3.5 w-3.5 shrink-0" />
                 <span>CPF</span>
               </div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-1 font-medium text-foreground")}>{signatario.cpf}</p>
+              <p className={cn( "mt-1 font-medium text-foreground")}>{signatario.cpf}</p>
             </div>
           )}
           {signatario.email && (
@@ -194,7 +194,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
                 <Mail className="h-3.5 w-3.5 shrink-0" />
                 <span>Email</span>
               </div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-1 truncate font-medium text-foreground")}>{signatario.email}</p>
+              <p className={cn( "mt-1 truncate font-medium text-foreground")}>{signatario.email}</p>
             </div>
           )}
           {signatario.telefone && (
@@ -203,7 +203,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
                 <Phone className="h-3.5 w-3.5 shrink-0" />
                 <span>Telefone</span>
               </div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-1 font-medium text-foreground")}>{signatario.telefone}</p>
+              <p className={cn( "mt-1 font-medium text-foreground")}>{signatario.telefone}</p>
             </div>
           )}
           {signatario.concluidoEm && (
@@ -212,7 +212,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
                 <Clock className="h-3.5 w-3.5 shrink-0" />
                 <span>Assinado em</span>
               </div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-1 font-medium text-foreground")}>
+              <p className={cn( "mt-1 font-medium text-foreground")}>
                 {format(new Date(signatario.concluidoEm), "dd/MM/yyyy HH:mm", {
                   locale: ptBR,
                 })}

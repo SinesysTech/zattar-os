@@ -65,7 +65,7 @@ export function ChatEmptyState() {
                 {icon}
               </div>
               <div className="min-w-0">
-                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.7rem] font-semibold text-foreground mb-0.5")}>
+                <p className={cn( "text-[0.7rem] font-semibold text-foreground mb-0.5")}>
                   {title}
                 </p>
                 <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[0.6rem] text-muted-foreground/65 leading-snug")}>

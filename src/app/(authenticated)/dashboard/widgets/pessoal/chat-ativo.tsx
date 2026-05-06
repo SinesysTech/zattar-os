@@ -40,18 +40,18 @@ export function WidgetChatAtivo() {
             <MessageCircle className="size-4 text-primary/50" />
           </div>
           {naoLidas > 0 && (
-            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "absolute -top-1 -right-1 size-4 rounded-full bg-primary text-[8px] font-bold text-background flex items-center justify-center tabular-nums")}>
+            <span className={cn( "absolute -top-1 -right-1 size-4 rounded-full bg-primary text-[8px] font-bold text-background flex items-center justify-center tabular-nums")}>
               {naoLidas > 9 ? '9+' : naoLidas}
             </span>
           )}
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[10px] text-muted-foreground/50">Não lidas</p>
-          <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold tabular-nums")}>{naoLidas}</p>
+          <p className={cn( "text-body-lg font-bold tabular-nums")}>{naoLidas}</p>
         </div>
         <div className={cn("flex flex-col items-end inline-nano")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>salas</span>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body font-bold tabular-nums")}>{salasAtivas}</span>
+          <span className={cn( "text-body font-bold tabular-nums")}>{salasAtivas}</span>
           <span className="text-[9px] text-muted-foreground/55">ativas</span>
         </div>
       </div>
@@ -61,7 +61,7 @@ export function WidgetChatAtivo() {
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5 rounded-xl bg-foreground/3 border border-border/10")}>
           <div className={cn("flex items-center inline-snug mb-1")}>
             <div className="size-1.5 rounded-full bg-success/60" />
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-foreground/70")}>{ultimaMsg.autor}</span>
+            <span className={cn( "text-[10px] font-semibold text-foreground/70")}>{ultimaMsg.autor}</span>
             <span className="text-[9px] text-muted-foreground/55 ml-auto tabular-nums">{tempoRelativo}</span>
           </div>
           <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[10px] text-muted-foreground/55 leading-relaxed line-clamp-2")}>{ultimaMsg.preview}</p>
@@ -78,7 +78,7 @@ export function WidgetChatAtivo() {
         </span>
         <Link
           href="/chat"
-          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-primary/50 font-medium hover:text-primary/70 transition-colors cursor-pointer")}
+          className={cn( "text-[9px] text-primary/50 font-medium hover:text-primary/70 transition-colors cursor-pointer")}
         >
           ver todas
         </Link>

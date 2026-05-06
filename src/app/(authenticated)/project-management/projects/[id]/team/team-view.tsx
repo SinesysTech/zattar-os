@@ -152,7 +152,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                           <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+                          <p className={cn( "text-body-sm font-medium")}>
                             {membro.usuarioNome ?? "Usuário"}
                           </p>
                           {membro.usuarioEmail && (

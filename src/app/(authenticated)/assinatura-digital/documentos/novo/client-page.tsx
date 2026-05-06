@@ -60,10 +60,10 @@ const FLOW_STEPS_INFO = [
 function ContextPanel() {
   return (
     <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "p-5 h-fit")}>
-      <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
+      <h3 className={cn( "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
         Como funciona
       </h3>
-      <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-body font-bold mt-1 leading-tight text-foreground")}>
+      <p className={cn(/* design-system-escape: leading-tight sem token DS */ "font-heading text-body font-bold mt-1 leading-tight text-foreground")}>
         Envie, configure e compartilhe em 3 passos simples
       </p>
       <Text variant="caption" className="mt-1.5">
@@ -86,7 +86,7 @@ function ContextPanel() {
                 <Icon className="size-4" />
               </span>
               <div className="min-w-0">
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-medium text-foreground leading-snug")}>
+                <p className={cn(/* design-system-escape: leading-snug sem token DS */ "text-body-sm font-medium text-foreground leading-snug")}>
                   {step.title}
                 </p>
                 <Text variant="caption" className="mt-0.5">
@@ -104,11 +104,11 @@ function ContextPanel() {
       />
 
       <div className={cn("flex items-center inline-tight")}>
-        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
           <Info className="size-3" />
           MP 2.200-2/2001
         </span>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/70")}>
+        <span className={cn( "text-[11px] font-medium text-muted-foreground/70")}>
           Conformidade legal
         </span>
       </div>

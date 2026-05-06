@@ -155,7 +155,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
                 <User className="h-3 w-3" />
                 <span>Parte contrária</span>
               </Text>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")} title={parteContraria || undefined}>
+              <p className={cn( "text-body-sm font-medium truncate")} title={parteContraria || undefined}>
                 {parteContraria || '-'}
               </p>
             </div>
@@ -178,7 +178,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
               <Text variant="caption" className="flex items-center gap-1.5 pt-1 border-t">
                 <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-muted-foreground">Próxima audiência:</span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(processo.data_proxima_audiencia)}</span>
+                <span className={cn( "font-medium")}>{formatarData(processo.data_proxima_audiencia)}</span>
               </Text>
             )}
           </div>

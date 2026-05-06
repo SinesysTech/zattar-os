@@ -175,14 +175,14 @@ export default function TribunaisPage() {
                 {/* Header: Acronym + Name + Grau badge */}
                 <div className={cn("flex items-start justify-between inline-tight mb-3")}>
                   <div className="min-w-0">
-                    <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-lg font-bold text-primary font-heading leading-none")}>
+                    <div className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-lg font-bold text-primary font-heading leading-none")}>
                       {tribunal.tribunal_codigo}
                     </div>
                     <Text variant="caption" className="text-muted-foreground/55 mt-1 truncate">
                       {tribunal.tribunal_nome}
                     </Text>
                   </div>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-medium px-1.5 py-0.5 rounded-[5px] border border-border/15 bg-muted/20 text-muted-foreground shrink-0")}>
+                  <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-medium px-1.5 py-0.5 rounded-[5px] border border-border/15 bg-muted/20 text-muted-foreground shrink-0")}>
                     {TIPO_ACESSO_LABELS[tribunal.tipo_acesso] ?? tribunal.tipo_acesso}
                   </span>
                 </div>
@@ -203,7 +203,7 @@ export default function TribunaisPage() {
                   {/* Credenciais count */}
                   <div className={cn("flex items-center inline-snug text-[11px] text-muted-foreground/70")}>
                     <Lock className="size-3 opacity-50 shrink-0" />
-                    <span>Credenciais: <strong className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0}</strong></span>
+                    <span>Credenciais: <strong className={cn( "text-foreground font-medium")}>{credenciaisPorTribunal.get(tribunal.tribunal_codigo) ?? 0}</strong></span>
                   </div>
 
                   {/* URL base (truncated) */}

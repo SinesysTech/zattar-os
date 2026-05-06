@@ -198,9 +198,9 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
     >
       <div
         className={cn(
-          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
+           'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
           today
-            ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'bg-primary text-primary-foreground rounded-full font-bold'
+            ?  'bg-primary text-primary-foreground rounded-full font-bold'
             : 'text-foreground/85',
         )}
       >
@@ -223,7 +223,7 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
 
       {count >= 3 && (
         <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
         </div>
@@ -261,7 +261,7 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
         </div>
         <span
           className={cn(
-            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
+            /* design-system-escape: px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
             getSituacaoBadgeClass(pericia.situacaoCodigo),
           )}
         >
@@ -383,14 +383,14 @@ export function PericiasGlassMonth({
             </Button>
             <Button
               size="sm"
-              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-caption font-semibold")}
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; */ "ml-1 rounded-full px-4 text-caption font-semibold")}
               onClick={() => onMonthChange(new Date())}
             >
               Hoje
             </Button>
           </div>
 
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center capitalize")}>
+          <span className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center capitalize")}>
             {format(currentMonth, 'MMMM yyyy', { locale: ptBR })}
           </span>
 
@@ -422,7 +422,7 @@ export function PericiasGlassMonth({
             <div
               key={label}
               className={cn(
-                /* design-system-escape: py-2 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS */ 'text-center py-2 text-caption font-semibold uppercase tracking-widest',
+                /* design-system-escape: py-2 padding direcional sem Inset equiv.; tracking-widest sem token DS */ 'text-center py-2 text-caption font-semibold uppercase tracking-widest',
                 idx >= 5 ? 'text-foreground/35' : 'text-foreground/50',
               )}
             >
@@ -468,7 +468,7 @@ export function PericiasGlassMonth({
                     >
                       <div className={cn("flex items-center justify-between inline-medium mb-3")}>
                         <div>
-                          <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold capitalize")}>
+                          <p className={cn( "text-body-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
                           </p>
                           <Text variant="caption" className="text-foreground/40 mt-0.5 capitalize">
@@ -517,26 +517,26 @@ export function PericiasGlassMonth({
         <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/30 flex items-center justify-between flex-wrap inline-medium")}>
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold")}>{summary.total}</p>
+              <p className={cn( "text-body-lg font-bold")}>{summary.total}</p>
               <Text variant="caption" className="text-foreground/40 mt-0.5">Total no mês</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-primary")}>
+              <p className={cn( "text-body-lg font-bold text-primary")}>
                 {summary.aguardandoLaudo}
               </p>
               <Text variant="caption" className="text-foreground/40 mt-0.5">Aguardando</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-info")}>
+              <p className={cn( "text-body-lg font-bold text-info")}>
                 {summary.laudoJuntado}
               </p>
               <Text variant="caption" className="text-foreground/40 mt-0.5">Laudo Juntado</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-success")}>
+              <p className={cn( "text-body-lg font-bold text-success")}>
                 {summary.finalizadas}
               </p>
               <Text variant="caption" className="text-foreground/40 mt-0.5">Finalizadas</Text>
@@ -545,7 +545,7 @@ export function PericiasGlassMonth({
               <>
                 <div className="w-px h-8 bg-border/50" />
                 <div className="text-center">
-                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-destructive")}>
+                  <p className={cn( "text-body-lg font-bold text-destructive")}>
                     {summary.vencidas}
                   </p>
                   <Text variant="caption" className="text-foreground/40 mt-0.5">Vencidas</Text>

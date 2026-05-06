@@ -171,7 +171,7 @@ export function MissionCard({
             </IconContainer>
             <div>
               <div className={cn("flex items-center inline-tight")}>
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-primary/60")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-primary/60")}>
                   {isOngoing ? 'Em andamento' : isPast ? 'Concluída' : 'Próxima missão'}
                 </span>
                 {isOngoing && <span className="size-1.5 rounded-full bg-success animate-pulse" />}
@@ -188,13 +188,13 @@ export function MissionCard({
               <div className={cn("flex items-center inline-nano tabular-nums")}>
                 {hours > 0 && (
                   <>
-                    <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(hours)}</span>
+                    <span className={cn( 'text-body-sm font-bold', urgency.text)}>{pad(hours)}</span>
                     <span className="text-micro-caption text-muted-foreground/60">:</span>
                   </>
                 )}
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(minutes)}</span>
+                <span className={cn( 'text-body-sm font-bold', urgency.text)}>{pad(minutes)}</span>
                 <span className="text-micro-caption text-muted-foreground/60">:</span>
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(seconds)}</span>
+                <span className={cn( 'text-body-sm font-bold', urgency.text)}>{pad(seconds)}</span>
               </div>
             </div>
           )}
@@ -204,14 +204,14 @@ export function MissionCard({
         <div className={cn("grid grid-cols-2 sm:grid-cols-4 inline-medium mb-4")}>
           <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Horário</span>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums")}>
+            <span className={cn( "text-body-sm font-medium tabular-nums")}>
               {format(dataInicio, 'HH:mm', { locale: ptBR })} – {format(dataFim, 'HH:mm', { locale: ptBR })}
             </span>
           </div>
           <div className={cn("flex flex-col inline-nano")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Tribunal</span>
             <div className={cn("flex items-center inline-snug")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{audiencia.trt || '–'}</span>
+              <span className={cn( "text-body-sm font-medium")}>{audiencia.trt || '–'}</span>
               {audiencia.grau && (
                 <span className="text-micro-caption text-muted-foreground/60">
                   {audiencia.grau === 'primeiro_grau' ? '1º grau' : audiencia.grau === 'segundo_grau' ? '2º grau' : 'Superior'}
@@ -229,7 +229,7 @@ export function MissionCard({
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Modalidade</span>
             <div className={cn("flex items-center inline-snug")}>
               <ModalIcon className="size-3 text-muted-foreground/60" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{modalidadeLabel || '–'}</span>
+              <span className={cn( "text-body-sm font-medium")}>{modalidadeLabel || '–'}</span>
             </div>
           </div>
         </div>
@@ -277,7 +277,7 @@ export function MissionCard({
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold tabular-nums text-caption', prepStatus)}>{prepScore}%</span>
+                <span className={cn( 'font-bold tabular-nums text-caption', prepStatus)}>{prepScore}%</span>
               </div>
             </div>
             <div className={cn("stack-nano")}>
@@ -309,7 +309,7 @@ export function MissionCard({
                 key={action.label}
                 onClick={action.onClick}
                 className={cn(
-                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-micro-caption font-medium transition-all cursor-pointer group',
+                  /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-micro-caption font-medium transition-all cursor-pointer group',
                   action.primary
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm'
                     : 'text-muted-foreground/70 hover:text-foreground/70 hover:bg-foreground/4',

@@ -63,7 +63,7 @@ export function DocumentAnnotationOverlay({
             <StickyNote className="size-3.5" />
           </div>
           <div>
-            <Text variant="label" as="p" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>Anotações</Text>
+            <Text variant="label" as="p" className={cn( "font-semibold text-foreground")}>Anotações</Text>
             <Text variant="caption" className="text-muted-foreground">Painel flutuante da leitura</Text>
           </div>
         </div>
@@ -109,7 +109,7 @@ export function DocumentAnnotationOverlay({
         <div className={cn(/* design-system-escape: pr-1 padding direcional sem Inset equiv. */ "stack-tight pr-1")}>
           {annotations.length === 0 ? (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center")}>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>
+              <p className={cn( "text-body-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>
               <p className={cn(/* design-system-escape: leading-4 sem token DS */ "mt-1 text-[11px] leading-4 text-muted-foreground")}>
                 Use este painel sem sair do documento.
               </p>
@@ -125,7 +125,7 @@ export function DocumentAnnotationOverlay({
               >
                 <div className={cn("mb-1.5 flex items-start justify-between inline-tight")}>
                   <div>
-                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground")}>
+                    <p className={cn( "text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground")}>
                       Nota {index + 1}
                     </p>
                     <p className="mt-0.5 text-[10px] text-muted-foreground">{formatarCriacao(annotation.createdAt)}</p>

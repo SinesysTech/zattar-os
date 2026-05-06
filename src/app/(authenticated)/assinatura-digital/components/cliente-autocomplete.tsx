@@ -71,7 +71,7 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
                 >
                   <Check className={cn("mr-2 h-4 w-4", value === String(opt.id) ? "opacity-100" : "opacity-0")} />
                   <div className="flex flex-col">
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{opt.label}</span>
+                    <span className={cn( "font-medium")}>{opt.label}</span>
                     {(opt.cpf || opt.cnpj) && (
                       <Text variant="caption">{opt.cpf || opt.cnpj}</Text>
                     )}

@@ -99,7 +99,7 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'status',
-      header: () => <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conciliação</div>,
+      header: () => <div className={cn( "text-body-sm font-medium")}>Conciliação</div>,
       cell: ({ row }) => {
         const status = row.original.conciliacao?.status || 'pendente';
         const config = STATUS_VARIANTS[status] || STATUS_VARIANTS.pendente;
@@ -113,7 +113,7 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'lancamento',
-      header: () => <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Lançamento</div>,
+      header: () => <div className={cn( "text-body-sm font-medium")}>Lançamento</div>,
       cell: ({ row }) => {
         const lanc = row.original.lancamentoVinculado;
         return lanc ? (
@@ -128,7 +128,7 @@ export function TransacoesImportadasTable({
     },
     {
       id: 'actions',
-      header: () => <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>,
+      header: () => <div className={cn( "text-body-sm font-medium")}>Ações</div>,
       cell: ({ row }) => {
         const transacao = row.original;
         const status = transacao.conciliacao?.status || 'pendente';

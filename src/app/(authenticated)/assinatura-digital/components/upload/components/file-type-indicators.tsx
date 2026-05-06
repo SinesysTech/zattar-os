@@ -69,7 +69,7 @@ export function FileTypeIndicators({
               />
               <span
                 className={cn(
-                  /* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ 'font-medium uppercase tracking-wider transition-colors duration-500',
+                  /* design-system-escape: tracking-wider sem token DS */ 'font-medium uppercase tracking-wider transition-colors duration-500',
                   'text-muted-foreground group-hover/type:text-foreground',
                   compact ? 'text-caption' : 'text-body-sm'
                 )}

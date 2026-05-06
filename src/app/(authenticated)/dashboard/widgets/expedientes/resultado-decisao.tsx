@@ -81,7 +81,7 @@ export function ResultadoDecisao() {
                 color={r.color}
               />
               <div className="flex-1 min-w-0">
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium truncate")}>{r.resultado}</p>
+                <p className={cn( "text-[11px] font-medium truncate")}>{r.resultado}</p>
                 <p className="text-[9px] text-muted-foreground/55">
                   {fmtNum(r.count)} expediente{r.count !== 1 ? 's' : ''}
                 </p>

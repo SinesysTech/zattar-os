@@ -163,7 +163,7 @@ export function AgendaToolbar({
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
-          <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
+          <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
             Hoje
           </button>
           <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>

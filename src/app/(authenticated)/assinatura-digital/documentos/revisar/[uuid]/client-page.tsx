@@ -122,7 +122,7 @@ function KpiCard({
     <GlassPanel depth={2} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
       <div className={cn("flex items-start justify-between inline-tight")}>
         <div className="min-w-0">
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
+          <p className={cn( "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
             {label}
           </p>
           <Text
@@ -145,7 +145,7 @@ function KpiCard({
         </span>
       </div>
       {meta && (
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/70 mt-2.5")}>
+        <p className={cn( "text-[11px] font-medium text-muted-foreground/70 mt-2.5")}>
           {meta}
         </p>
       )}
@@ -224,7 +224,7 @@ function SectionHeader({
         <span className={cn("inline-flex size-8 items-center justify-center rounded-lg", tile)}>
           <Icon className="size-4" />
         </span>
-        <h2 className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-heading text-body font-bold leading-none")}>{title}</h2>
+        <h2 className={cn(/* design-system-escape: leading-none sem token DS */ "font-heading text-body font-bold leading-none")}>{title}</h2>
       </div>
       {action}
     </div>
@@ -259,7 +259,7 @@ function SignerLinkCard({
       <div className={cn("flex items-center inline-medium min-w-0")}>
         <div
           className={cn(
-            /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex size-10 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold text-primary-foreground",
+             "flex size-10 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold text-primary-foreground",
             isConcluido ? "bg-success" : color.solid,
           )}
         >
@@ -271,7 +271,7 @@ function SignerLinkCard({
         </div>
 
         <div className="min-w-0">
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{nome}</p>
+          <p className={cn( "text-body-sm font-medium truncate")}>{nome}</p>
           <Text variant="caption">
             <span className="capitalize">{tipoLabel.toLowerCase()}</span>
             {isConcluido && " · Assinado"}
@@ -351,7 +351,7 @@ function PdfPreviewSection({
               >
                 <div
                   className={cn(
-                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute -top-6 left-0 px-2 py-0.5 rounded text-caption font-medium text-primary-foreground flex items-center inline-micro",
+                    /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; gap-1 gap sem token DS */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "absolute -top-6 left-0 px-2 py-0.5 rounded text-caption font-medium text-primary-foreground flex items-center inline-micro",
                     color.solid,
                   )}
                 >
@@ -557,12 +557,12 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         <div className={cn("flex items-end justify-between inline-default")}>
           <div className="min-w-0">
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 flex-wrap")}>
-              <h1 className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-[26px] font-bold leading-tight truncate")}>
+              <h1 className={cn(/* design-system-escape: leading-tight sem token DS */ "font-heading text-[26px] font-bold leading-tight truncate")}>
                 {documento.titulo || "Documento sem título"}
               </h1>
               <span
                 className={cn(
-                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full px-2 py-0.5 text-[11px] font-medium",
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro rounded-full px-2 py-0.5 text-[11px] font-medium",
                   documento.status === "pronto"
                     ? "bg-success/12 text-success"
                     : "bg-foreground/8 text-muted-foreground",
@@ -572,7 +572,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 {STATUS_LABELS[documento.status] ?? documento.status}
               </span>
               {documento.selfie_habilitada && (
-                <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
+                <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro rounded-full bg-info/12 text-info px-2 py-0.5 text-[11px] font-medium")}>
                   <Camera className="size-3" />
                   Selfie ativa
                 </span>
@@ -597,7 +597,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               <Camera className="size-3.5 text-info/70" />
             </span>
             <p className={cn("text-body-sm")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Selfie de verificação</span>{" "}
+              <span className={cn( "font-medium")}>Selfie de verificação</span>{" "}
               <span className="text-muted-foreground">
                 habilitada para este documento
               </span>
@@ -647,7 +647,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 <Shield className="size-4 text-success/70" />
               </span>
               <div className="min-w-0">
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conformidade MP 2.200-2/2001</p>
+                <p className={cn( "text-body-sm font-medium")}>Conformidade MP 2.200-2/2001</p>
                 <Text variant="caption" className="mt-1">
                   Cada assinatura coleta hash SHA-256, IP, geolocalização,
                   device fingerprint e aceite de termos. Trilha de auditoria

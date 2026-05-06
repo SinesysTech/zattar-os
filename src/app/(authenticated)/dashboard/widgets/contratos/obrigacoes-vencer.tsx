@@ -113,7 +113,7 @@ export function WidgetObrigacoesVencer() {
             <UrgencyDot level={mapUrgencia(ob.urgencia)} />
             <div className="flex-1 min-w-0">
               <div className={cn("flex items-center inline-snug")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
+                <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
                   {ob.descricao}
                 </p>
                 <TipoBadge tipo={ob.tipo} />
@@ -122,7 +122,7 @@ export function WidgetObrigacoesVencer() {
                 <span className="text-[10px] text-muted-foreground/60">
                   {fmtData(ob.vencimento)}
                 </span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+                <span className={cn( "text-[10px] font-medium tabular-nums")}>
                   {fmtMoeda(ob.valor)}
                 </span>
               </div>

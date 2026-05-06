@@ -138,7 +138,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
             {file ? (
               <div className={cn("flex items-center justify-between inline-medium")}>
                 <div className="text-left">
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{file.name}</p>
+                  <p className={cn( "text-body-sm font-medium")}>{file.name}</p>
                   <Text variant="caption">
                     {(file.size / 1024).toFixed(1)} KB
                   </Text>

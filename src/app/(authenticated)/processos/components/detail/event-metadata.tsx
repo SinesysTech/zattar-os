@@ -22,7 +22,7 @@ function MetadataRow({
 }) {
   return (
     <div className={cn("flex justify-between items-start inline-default")}>
-      <Text variant="label" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-muted-foreground font-medium shrink-0")}>
+      <Text variant="label" as="span" className={cn( "text-muted-foreground font-medium shrink-0")}>
         {label}
       </Text>
       <span className="text-[13px] text-foreground text-right min-w-0">
@@ -69,7 +69,7 @@ export function EventMetadata({ item }: EventMetadataProps) {
 
         {/* Tipo — sempre exibido */}
         <MetadataRow label="Tipo">
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+          <span className={cn( "font-medium")}>
             {item.documento ? 'Documento' : 'Movimentação'}
           </span>
         </MetadataRow>

@@ -86,7 +86,7 @@ export function ExpedientesTabsCarousel({
                   'dark:data-[state=active]:-mb-0.5',
                   // Custom styles for icon support
                   /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center inline-snug px-4 py-2',
-                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium',
+                   'text-body-sm font-medium',
                   'whitespace-nowrap',
                   // Active state removes border-b when carousel exists (visual integration)
                   isActive && carousel && 'border-b-0 -mb-px'

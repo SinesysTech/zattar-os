@@ -125,7 +125,7 @@ export function VersionHistoryDialog({
                     {/* Timeline indicator */}
                     <div className="flex flex-col items-center">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-primary")}>
+                        <span className={cn( "text-body-sm font-medium text-primary")}>
                           v{version.versao}
                         </span>
                       </div>

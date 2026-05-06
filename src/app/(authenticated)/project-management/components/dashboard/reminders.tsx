@@ -46,7 +46,7 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center text-body font-semibold capitalize")}>
+        <CardTitle className={cn( "flex items-center text-body font-semibold capitalize")}>
           <span
             className={cn(
               "me-2 inline-block size-2 rounded-full",

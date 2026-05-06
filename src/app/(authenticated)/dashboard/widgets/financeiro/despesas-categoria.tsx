@@ -62,7 +62,7 @@ export function WidgetDespesasCategoria() {
               <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                 {c.categoria}
               </span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums shrink-0")}>
+              <span className={cn( "text-[10px] font-medium tabular-nums shrink-0")}>
                 {fmtMoeda(c.valor)}
               </span>
             </div>

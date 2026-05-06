@@ -92,7 +92,7 @@ export function PlaceholderNodeElement(
     <PlateElement
       {...props}
       className={cn(
-        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-body-sm',
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-body-sm',
         colorClass,
         !readOnly && 'cursor-pointer',
         selected && focused && 'ring-2 ring-ring'
@@ -131,7 +131,7 @@ export function PlaceholderNodeElement(
           <TooltipTrigger asChild>{content}</TooltipTrigger>
           <TooltipContent side="top" className="max-w-xs">
             <div className={cn("stack-micro")}>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{label}</p>
+              <p className={cn( "font-medium")}>{label}</p>
               <Text variant="caption">{description}</Text>
               <Text variant="caption" className="font-mono">
                 {`{{${element.value}}}`}
@@ -164,7 +164,7 @@ export function PlaceholderNodeStatic({
   return (
     <span
       className={cn(
-        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-body-sm',
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-body-sm',
         colorClass,
         className
       )}

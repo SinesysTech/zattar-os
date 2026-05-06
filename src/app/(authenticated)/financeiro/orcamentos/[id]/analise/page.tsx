@@ -227,11 +227,11 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-left p-3 font-medium")}>Conta Contábil</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Previsto</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Realizado</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Desvio</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-center p-3 font-medium")}>Status</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-left p-3 font-medium")}>Conta Contábil</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Realizado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Desvio</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-center p-3 font-medium")}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -242,7 +242,7 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
               <tr key={item.id} className="border-b hover:bg-muted/50">
                 <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
                   <div className="flex flex-col">
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                    <span className={cn( "font-medium")}>
                       {getContaLabel(item.contaContabil)}
                     </span>
                     {centroCustoLabel && (
@@ -332,7 +332,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
             />
             <div className="flex-1">
               <div className={cn("flex items-center inline-tight mb-1")}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{alerta.descricao}</span>
+                <span className={cn( "font-medium")}>{alerta.descricao}</span>
                 <Badge variant={getTipoBadgeVariant(alerta.tipo)} className={cn("text-caption")}>
                   {getTipoLabel(alerta.tipo)}
                 </Badge>
@@ -403,12 +403,12 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
       <table className="w-full">
         <thead>
           <tr className="border-b">
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-left p-3 font-medium")}>Mês</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Previsto</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Realizado</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>Projetado</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-right p-3 font-medium")}>vs Previsto</th>
-            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "text-center p-3 font-medium")}>Tendência</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-left p-3 font-medium")}>Mês</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Realizado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>Projetado</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-right p-3 font-medium")}>vs Previsto</th>
+            <th className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "text-center p-3 font-medium")}>Tendência</th>
           </tr>
         </thead>
         <tbody>
@@ -417,7 +417,7 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
             const tendencia = getTendencia(item.valorPrevisto, item.valorProjetado);
             return (
               <tr key={index} className="border-b hover:bg-muted/50">
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "p-3 font-medium")}>{item.mes}</td>
+                <td className={cn(/* design-system-escape: p-3 → usar <Inset>; */ "p-3 font-medium")}>{item.mes}</td>
                 <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
@@ -624,7 +624,7 @@ export default function AnaliseOrcamentariaPage() {
           Voltar
         </Button>
         <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar análise</p>
+          <p className={cn( "font-semibold")}>Erro ao carregar análise</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>
       </div>

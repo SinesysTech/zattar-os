@@ -230,7 +230,7 @@ function GlassCard({
 
       {/* Body: nome + meta */}
       <div className="relative mt-3.5 min-h-[52px]">
-        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-[13.5px] font-semibold text-foreground line-clamp-2 leading-snug")}>
+        <h3 className={cn(/* design-system-escape: leading-snug sem token DS */ "text-[13.5px] font-semibold text-foreground line-clamp-2 leading-snug")}>
           {nome}
         </h3>
         {meta && (
@@ -289,7 +289,7 @@ function CardsEmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
+      <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
       <Text variant="caption" className="text-muted-foreground/40 mt-1">
         Adicione uma pasta, documento ou faça upload
       </Text>

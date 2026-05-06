@@ -138,7 +138,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
           <Lock className="h-8 w-8 text-destructive" />
         </div>
         <div className={cn("stack-micro")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{item.titulo}</p>
+          <p className={cn( "text-body-sm font-medium")}>{item.titulo}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             Documento sigiloso — visualização restrita
           </p>
@@ -155,7 +155,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
         <div className={cn("stack-micro")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{item.titulo}</p>
+          <p className={cn( "text-body-sm font-medium")}>{item.titulo}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             Documento não foi capturado ou enviado para armazenamento
           </p>

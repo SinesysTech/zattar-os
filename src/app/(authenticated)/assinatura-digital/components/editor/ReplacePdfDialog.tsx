@@ -221,7 +221,7 @@ export default function ReplacePdfDialog({
               >
                 <input {...getInputProps()} ref={fileInputRef} className="hidden" />
                 <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium mb-1")}>
+                <p className={cn( "text-body-sm font-medium mb-1")}>
                   {isDragActive ? 'Solte o arquivo aqui' : 'Arraste um PDF ou clique para selecionar'}
                 </p>
                 <Text variant="caption">
@@ -246,7 +246,7 @@ export default function ReplacePdfDialog({
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{uploadedFile.file.name}</p>
+                        <p className={cn( "text-body-sm font-medium truncate")}>{uploadedFile.file.name}</p>
                         <Text variant="caption">
                           {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
                         </Text>

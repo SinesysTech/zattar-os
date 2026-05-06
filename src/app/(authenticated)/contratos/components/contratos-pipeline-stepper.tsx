@@ -147,7 +147,7 @@ export function ContratosPipelineStepper({
             {total > 0 ? (
               <span
                 className={cn(
-                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-micro-caption font-medium tabular-nums',
+                   'text-micro-caption font-medium tabular-nums',
                   isActive ? cfg.textColor : 'text-muted-foreground/55',
                 )}
               >
@@ -202,7 +202,7 @@ export function ContratosPipelineStepper({
           <GitBranch className="size-3.5 text-primary/70" />
         </span>
         <Heading level="widget">Pipeline de Contratos</Heading>
-        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "ml-auto inline-flex items-center inline-micro rounded-full bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 text-micro-caption font-medium tabular-nums")}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "ml-auto inline-flex items-center inline-micro rounded-full bg-primary/10 border border-primary/20 text-primary px-2 py-0.5 text-micro-caption font-medium tabular-nums")}>
           {total.toLocaleString('pt-BR')} total
         </span>
       </div>

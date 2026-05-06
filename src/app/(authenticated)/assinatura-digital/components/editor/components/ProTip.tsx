@@ -36,7 +36,7 @@ export function ProTip({ children, className }: ProTipProps) {
  */
 export function ProTipLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-chart-2")}>
+    <span className={cn( "font-medium text-chart-2")}>
       {children}
     </span>
   );

@@ -145,7 +145,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
                   <TableCell className={cn("max-w-xl truncate font-mono text-caption")}>{query.query}</TableCell>
                   <TableCell className="text-right">{query.calls}</TableCell>
                   <TableCell className="text-right">{query.total_time.toFixed(0)}</TableCell>
-                  <TableCell className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-right font-semibold")}>{query.max_time.toFixed(0)}</TableCell>
+                  <TableCell className={cn( "text-right font-semibold")}>{query.max_time.toFixed(0)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

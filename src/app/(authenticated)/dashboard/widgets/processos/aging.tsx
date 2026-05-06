@@ -95,7 +95,7 @@ export function WidgetAging() {
                     style={{ width: `${pct}%`, backgroundColor: tokenForTone(seg.tone) }}
                   />
                 </div>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums w-6 text-right")}>
+                <span className={cn( "text-[10px] font-medium tabular-nums w-6 text-right")}>
                   {seg.value}
                 </span>
               </div>

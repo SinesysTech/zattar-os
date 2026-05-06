@@ -164,7 +164,7 @@ function getColumns(
     },
     {
       id: 'acoes',
-      header: () => <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>,
+      header: () => <div className={cn( "text-body-sm font-medium")}>Ações</div>,
       meta: { align: 'left' as const },
       enableSorting: false,
       size: 80,

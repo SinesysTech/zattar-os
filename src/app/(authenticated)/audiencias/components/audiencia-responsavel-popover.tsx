@@ -208,7 +208,7 @@ export function ResponsavelTriggerContent({
             ? 'text-[9px] text-muted-foreground/75'
             : size === 'sm'
               ? 'text-micro-caption text-muted-foreground/75'
-              : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-label font-medium text-foreground',
+              :  'text-label font-medium text-foreground',
         )}>
           {nome}
         </span>

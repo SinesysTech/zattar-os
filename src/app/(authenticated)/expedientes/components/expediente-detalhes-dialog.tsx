@@ -136,7 +136,7 @@ function ExpedienteListItem({
 
         <TabsContent value="detalhes" className={cn("stack-medium mt-0")}>
           <div className="flex items-center justify-between">
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body-lg flex items-center inline-tight")}>
+            <div className={cn( "font-semibold text-body-lg flex items-center inline-tight")}>
               {exp.classeJudicial && <span className={cn("text-muted-foreground text-body-sm uppercase")}>{exp.classeJudicial}</span>}
               {exp.numeroProcesso}
             </div>
@@ -153,12 +153,12 @@ function ExpedienteListItem({
           <div className={cn("grid grid-cols-2 inline-medium text-body-sm")}>
             <div>
               <Text variant="caption">Data de Ciência</Text>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(exp.dataCienciaParte)}</div>
+              <div className={cn( "font-medium")}>{formatarData(exp.dataCienciaParte)}</div>
             </div>
 
             <div>
               <Text variant="caption">Prazo Legal</Text>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(exp.dataPrazoLegalParte)}</div>
+              <div className={cn( "font-medium")}>{formatarData(exp.dataPrazoLegalParte)}</div>
             </div>
 
             <div className="col-span-2">
@@ -229,25 +229,25 @@ function ExpedienteSingleDetails({
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <Text variant="caption">Número do Processo</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-lg")}>
+                <div className={cn( "font-medium text-body-lg")}>
                   {expediente.numeroProcesso}
                 </div>
                 {expediente.classeJudicial && <div className={cn("text-body-sm text-muted-foreground")}>{expediente.classeJudicial}</div>}
               </div>
               <div>
                 <Text variant="caption">Órgão Julgador</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.descricaoOrgaoJulgador || '-'}</div>
+                <div className={cn( "font-medium")}>{expediente.descricaoOrgaoJulgador || '-'}</div>
               </div>
             </div>
 
             <div className={cn("grid grid-cols-2 inline-default")}>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 p-3 rounded-md border")}>
                 <Text variant="caption" className="mb-1">Data de Ciência</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.dataCienciaParte)}</div>
+                <div className={cn( "font-medium")}>{formatarData(expediente.dataCienciaParte)}</div>
               </div>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 p-3 rounded-md border")}>
                 <Text variant="caption" className="mb-1">Prazo Legal</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.dataPrazoLegalParte)}</div>
+                <div className={cn( "font-medium")}>{formatarData(expediente.dataPrazoLegalParte)}</div>
                 <PrazoEditor
                   exp={expediente}
                   onUpdated={onUpdated}
@@ -259,18 +259,18 @@ function ExpedienteSingleDetails({
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div>
                 <Text variant="caption">Parte Autora</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.nomeParteAutora || '-'}</div>
+                <div className={cn( "font-medium")}>{expediente.nomeParteAutora || '-'}</div>
               </div>
               <div>
                 <Text variant="caption">Parte Ré</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.nomeParteRe || '-'}</div>
+                <div className={cn( "font-medium")}>{expediente.nomeParteRe || '-'}</div>
               </div>
             </div>
 
             {expediente.baixadoEm && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-success/5 p-3 rounded-md border border-success/15")}>
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm text-success font-semibold mb-1")}>Baixado em</div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.baixadoEm)}</div>
+                <div className={cn( "text-body-sm text-success font-semibold mb-1")}>Baixado em</div>
+                <div className={cn( "font-medium")}>{formatarData(expediente.baixadoEm)}</div>
                 {expediente.justificativaBaixa && (
                   <div className={cn("text-body-sm mt-1 text-muted-foreground")}>&ldquo;{expediente.justificativaBaixa}&rdquo;</div>
                 )}
@@ -279,7 +279,7 @@ function ExpedienteSingleDetails({
 
             {expediente.observacoes && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted p-3 rounded-md text-body-sm")}>
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold mb-1")}>Observações</div>
+                <div className={cn( "font-semibold mb-1")}>Observações</div>
                 <div className="whitespace-pre-wrap">{expediente.observacoes}</div>
               </div>
             )}

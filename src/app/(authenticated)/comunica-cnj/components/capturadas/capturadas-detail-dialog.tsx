@@ -119,7 +119,7 @@ export function CapturadasDetailDialog({
           <Section title="Processo">
             <div className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
               <Field label="Número" span={2}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "break-all font-medium tabular-nums")}>
+                <span className={cn( "break-all font-medium tabular-nums")}>
                   {processoNumero}
                 </span>
               </Field>

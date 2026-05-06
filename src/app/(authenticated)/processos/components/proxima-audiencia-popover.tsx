@@ -134,8 +134,8 @@ export function ProximaAudienciaPopover({
           {clientData && (
             <div className={cn("stack-micro text-body-sm")}>
               <p className="text-muted-foreground capitalize">{clientData.data}</p>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>às {clientData.hora}</p>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption font-medium', getUrgenciaColor())}>
+              <p className={cn( "font-medium")}>às {clientData.hora}</p>
+              <p className={cn( 'text-caption font-medium', getUrgenciaColor())}>
                 {getUrgenciaLabel()}
               </p>
             </div>

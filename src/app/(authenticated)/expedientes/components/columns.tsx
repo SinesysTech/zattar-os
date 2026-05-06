@@ -329,7 +329,7 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
   const opacityClass = baixado ? 'opacity-50' : '';
 
   return (
-    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex flex-col items-center text-caption font-medium shrink-0 inline-nano", opacityClass)}>
+    <div className={cn( "inline-flex flex-col items-center text-caption font-medium shrink-0 inline-nano", opacityClass)}>
       {/* Data Início (verde - arredondado) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-success/15 text-success px-2 py-0.5 rounded-full")}>
         {formatDate(dataInicio)}
@@ -575,7 +575,7 @@ export const columns: ColumnDef<Expediente>[] = [
           </div>
 
           {/* Linha 2: Número do processo */}
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-mono font-medium text-foreground break-all")} title={e.numeroProcesso}>
+          <span className={cn( "text-caption font-mono font-medium text-foreground break-all")} title={e.numeroProcesso}>
             {e.numeroProcesso}
           </span>
 

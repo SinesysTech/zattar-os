@@ -61,7 +61,7 @@ function StatusOrCountdown({
     return (
       <span
         className={cn(
-          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro text-[11px] font-semibold',
+           'inline-flex items-center inline-micro text-[11px] font-semibold',
           urgency === 'critico' ? 'text-destructive' : 'text-warning',
         )}
       >
@@ -73,7 +73,7 @@ function StatusOrCountdown({
 
   if (status === 'vinculado') {
     return (
-      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-[11px] font-semibold text-success")}>
+      <span className={cn( "inline-flex items-center inline-micro text-[11px] font-semibold text-success")}>
         <Link2 className="w-3 h-3" />
         Vinculado
       </span>
@@ -82,7 +82,7 @@ function StatusOrCountdown({
 
   if (status === 'pendente') {
     return (
-      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-snug text-[11px] font-semibold text-warning")}>
+      <span className={cn( "inline-flex items-center inline-snug text-[11px] font-semibold text-warning")}>
         <span className="size-1.5 rounded-full bg-warning" aria-hidden />
         Pendente
       </span>
@@ -91,7 +91,7 @@ function StatusOrCountdown({
 
   if (status === 'orfao') {
     return (
-      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-[11px] font-semibold text-warning")}>
+      <span className={cn( "inline-flex items-center inline-micro text-[11px] font-semibold text-warning")}>
         <Unlink className="w-3 h-3" />
         Órfão
       </span>
@@ -154,13 +154,13 @@ function GlassRow({
       <div className={cn("flex items-start inline-default")}>
         {/* COLUNA ESQUERDA (âncora): data + badge de tipo */}
         <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-start inline-snug w-24 shrink-0 pt-0.5")}>
-          <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap")}>
+          <div className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11.5px] font-semibold text-foreground leading-tight whitespace-nowrap")}>
             {dataDisponibilizacao
               ? format(dataDisponibilizacao, 'dd MMM yyyy', { locale: ptBR })
               : '—'}
           </div>
           {tipoLabel && (
-            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary")}>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center rounded-md bg-primary/10 border border-primary/20 px-1.5 py-0.5 text-[10.5px] font-semibold tracking-[0.02em] text-primary")}>
               {tipoLabel}
             </span>
           )}
@@ -170,7 +170,7 @@ function GlassRow({
         <div className="flex-1 min-w-0">
           {/* LINHA 1 (título): partes × partes — com status alinhado à direita */}
           <div className={cn("flex items-start inline-medium")}>
-            <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "flex-1 text-[14px] font-semibold text-foreground leading-tight")}>
+            <h3 className={cn(/* design-system-escape: leading-tight sem token DS */ "flex-1 text-[14px] font-semibold text-foreground leading-tight")}>
               {temPartes ? (
                 <span className="flex flex-wrap items-baseline gap-x-0">
                   <span>{poloAtivo}</span>
@@ -179,7 +179,7 @@ function GlassRow({
                       e outros
                     </span>
                   )}
-                  <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-1.5 text-[13px] font-medium text-muted-foreground/60")}>
+                  <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS; */ "mx-1.5 text-[13px] font-medium text-muted-foreground/60")}>
                     ×
                   </span>
                   <span>{poloPassivo}</span>
@@ -205,7 +205,7 @@ function GlassRow({
           {/* LINHA 2 (meta): TRT pill + número do processo + órgão + classe */}
           <div className={cn("mt-1 flex flex-wrap items-center inline-snug")}>
             {comunicacao.siglaTribunal && (
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/70")}>
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/70")}>
                 {comunicacao.siglaTribunal}
               </span>
             )}
@@ -233,7 +233,7 @@ function GlassRow({
             {urgency === 'critico' && comunicacao.diasParaPrazo !== null && (
               <>
                 <span className="w-0.75 h-0.75 rounded-full bg-muted-foreground/30 shrink-0" />
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-[10px] font-semibold text-destructive")}>
+                <span className={cn( "inline-flex items-center inline-micro text-[10px] font-semibold text-destructive")}>
                   <AlertTriangle className="w-2.5 h-2.5" />
                   Prazo crítico
                 </span>

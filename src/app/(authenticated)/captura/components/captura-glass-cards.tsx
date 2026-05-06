@@ -188,7 +188,7 @@ function CapturaCard({
         <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
           <TipoIcon className={cn('w-5 h-5', getTipoIconColor(captura.tipo_captura))} />
         </div>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate min-w-0")}>
+        <span className={cn( "text-body-sm font-semibold truncate min-w-0")}>
           {formatarTipo(captura.tipo_captura)}
         </span>
       </div>
@@ -236,7 +236,7 @@ function CapturaCard({
         <button
           type="button"
           onClick={(e) => { e.stopPropagation(); onView(); }}
-          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-center inline-snug text-caption font-medium text-primary hover:bg-primary/5 rounded-lg py-1.5 transition-colors")}
+          className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center justify-center inline-snug text-caption font-medium text-primary hover:bg-primary/5 rounded-lg py-1.5 transition-colors")}
         >
           <Eye className="size-3.5" />
           Ver Detalhes

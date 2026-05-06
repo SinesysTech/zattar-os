@@ -395,7 +395,7 @@ export function PecaModeloFormSheet({
               {/* Placeholders detectados */}
               {form.watch('conteudo') && (
                 <div className={cn("stack-tight")}>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
+                  <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                     Placeholders detectados:
                   </p>
                   <div className={cn("flex flex-wrap inline-micro")}>

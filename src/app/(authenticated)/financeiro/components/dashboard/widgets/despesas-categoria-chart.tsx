@@ -72,7 +72,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
+        <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <PieIcon className="h-4 w-4 text-muted-foreground" />
           Despesas por Categoria
         </CardTitle>
@@ -91,7 +91,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
               centerContent={
                 <div className="text-center">
                   <Text variant="caption">Total</Text>
-                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold font-heading")}>{formatarMoeda(total)}</p>
+                  <p className={cn( "text-body-sm font-bold font-heading")}>{formatarMoeda(total)}</p>
                 </div>
               }
             />
@@ -114,7 +114,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                       <Text variant="caption" className="tabular-nums">
                         {formatarPercentual(percentual)}
                       </Text>
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{formatarMoeda(item.value)}</span>
+                      <span className={cn( "font-medium tabular-nums")}>{formatarMoeda(item.value)}</span>
                     </div>
                   </div>
                 );

@@ -41,7 +41,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
           {chat.image ? (
             <img src={chat.image} alt={chat.name || chat.nome} className="size-full object-cover" />
           ) : (
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "size-full flex items-center justify-center bg-primary/12 text-primary text-[11px] font-semibold")}>
+            <div className={cn( "size-full flex items-center justify-center bg-primary/12 text-primary text-[11px] font-semibold")}>
               {generateAvatarFallback(chat.name || chat.nome)}
             </div>
           )}
@@ -56,7 +56,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
       {/* Info */}
       <div className="flex-1 min-w-0">
         <div className={cn("flex items-center justify-between inline-tight")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8rem] font-semibold text-foreground truncate")}>
+          <span className={cn( "text-[0.8rem] font-semibold text-foreground truncate")}>
             {chat.name || chat.nome}
           </span>
           <span className="text-[0.6rem] text-muted-foreground/65 tabular-nums shrink-0">
@@ -68,7 +68,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
             {chat.lastMessage}
           </span>
           {unreadCount > 0 && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1 padding direcional sem Inset equiv. */ "min-w-4.5 h-[h-4.5unded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0")}>
+            <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "min-w-4.5 h-[h-4.5unded-full bg-primary text-white text-[0.6rem] font-semibold flex items-center justify-center px-1 shrink-0")}>
               {unreadCount}
             </span>
           )}

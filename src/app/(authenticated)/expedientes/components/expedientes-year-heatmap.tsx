@@ -97,7 +97,7 @@ function StatCard({
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn('size-3.5', iconColor)} />
         </IconContainer>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
           {label}
         </span>
       </div>
@@ -141,7 +141,7 @@ const MonthGrid = React.memo(function MonthGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold capitalize text-foreground")}>
+        <span className={cn( "text-[11px] font-semibold capitalize text-foreground")}>
           {monthName}
         </span>
         <span className="text-[9px] tabular-nums text-muted-foreground/70">
@@ -152,7 +152,7 @@ const MonthGrid = React.memo(function MonthGrid({
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[7px] font-semibold text-center text-muted-foreground/55 uppercase")}
+            className={cn( "text-[7px] font-semibold text-center text-muted-foreground/55 uppercase")}
           >
             {d}
           </span>
@@ -522,16 +522,16 @@ export function ExpedientesYearHeatmap({
             {/* Top Months Ranking */}
             {topMonths.length > 0 && (
               <div className="mt-4">
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
                   Ranking por Volume
                 </span>
                 <div className={cn("mt-2 stack-snug")}>
                   {topMonths.map((m, i) => (
                     <div key={m.idx} className={cn("flex items-center inline-tight")}>
-                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/65 w-3 text-right")}>
+                      <span className={cn( "text-[9px] font-bold text-muted-foreground/65 w-3 text-right")}>
                         {i + 1}
                       </span>
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium w-10")}>
+                      <span className={cn( "text-[11px] font-medium w-10")}>
                         {format(new Date(year, m.idx, 1), 'MMM', {
                           locale: ptBR,
                         })}
@@ -544,7 +544,7 @@ export function ExpedientesYearHeatmap({
                           }}
                         />
                       </div>
-                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums w-7 text-right")}>
+                      <span className={cn( "text-[10px] font-semibold tabular-nums w-7 text-right")}>
                         {m.count}
                       </span>
                     </div>

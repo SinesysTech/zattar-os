@@ -100,7 +100,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Publicações hoje
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -145,7 +145,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Próximo prazo
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -169,7 +169,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Vinculadas
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -203,7 +203,7 @@ export function GazetteMissionKpiStrip({
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Prazos críticos
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>

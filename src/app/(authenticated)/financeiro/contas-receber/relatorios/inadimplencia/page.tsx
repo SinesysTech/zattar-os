@@ -168,7 +168,7 @@ export default function RelatorioInadimplenciaPage() {
           Voltar
         </Button>
         <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar relatório:</p>
+          <p className={cn( "font-semibold")}>Erro ao carregar relatório:</p>
           <p>{error.message}</p>
         </div>
       </div>
@@ -232,7 +232,7 @@ export default function RelatorioInadimplenciaPage() {
       <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Contas Vencidas</CardTitle>
+            <CardTitle className={cn( "text-body-sm font-medium")}>Contas Vencidas</CardTitle>
             <AlertCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -245,7 +245,7 @@ export default function RelatorioInadimplenciaPage() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Valor Total</CardTitle>
+            <CardTitle className={cn( "text-body-sm font-medium")}>Valor Total</CardTitle>
             <DollarSign className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -260,7 +260,7 @@ export default function RelatorioInadimplenciaPage() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Dias Médio de Atraso</CardTitle>
+            <CardTitle className={cn( "text-body-sm font-medium")}>Dias Médio de Atraso</CardTitle>
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
@@ -275,7 +275,7 @@ export default function RelatorioInadimplenciaPage() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Clientes Inadimplentes</CardTitle>
+            <CardTitle className={cn( "text-body-sm font-medium")}>Clientes Inadimplentes</CardTitle>
             <Users className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
@@ -327,7 +327,7 @@ export default function RelatorioInadimplenciaPage() {
                           >
                             {index + 1}
                           </Badge>
-                          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate max-w-[150px]")}>
+                          <span className={cn( "font-medium truncate max-w-[150px]")}>
                             {cliente.clienteNome || 'Sem cliente'}
                           </span>
                         </div>
@@ -368,7 +368,7 @@ export default function RelatorioInadimplenciaPage() {
                 {relatorio.faixasAtraso.map((faixa) => (
                   <div key={faixa.faixa} className={cn("stack-tight")}>
                     <div className={cn("flex items-center justify-between text-body-sm")}>
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{faixa.faixa}</span>
+                      <span className={cn( "font-medium")}>{faixa.faixa}</span>
                       <div className={cn("flex items-center inline-default")}>
                         <span className="text-muted-foreground">
                           {faixa.quantidadeContas} contas
@@ -431,7 +431,7 @@ export default function RelatorioInadimplenciaPage() {
                   return (
                     <TableRow key={conta.id}>
                       <TableCell>
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{conta.descricao}</span>
+                        <span className={cn( "font-medium")}>{conta.descricao}</span>
                         {conta.documento && (
                           <Text variant="caption" className="block">
                             Doc: {conta.documento}
@@ -459,7 +459,7 @@ export default function RelatorioInadimplenciaPage() {
                           {diasAtraso} dias
                         </Badge>
                       </TableCell>
-                      <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-right font-mono font-medium text-destructive")}>
+                      <TableCell className={cn( "text-right font-mono font-medium text-destructive")}>
                         {formatarValor(conta.valor)}
                       </TableCell>
                     </TableRow>

@@ -68,10 +68,10 @@ function buildTimelineItems(logs: SyncLogEntry[]): TimelineItem[] {
 
     const badge = (
       <div className={cn("flex items-center inline-micro")}>
-        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/50 font-medium")}>
+        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-[9px] px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground border border-border/50 font-medium")}>
           {tipoLabel}
         </span>
-        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'text-[9px] px-1.5 py-0.5 rounded font-medium', statusColor)}>
+        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'text-[9px] px-1.5 py-0.5 rounded font-medium', statusColor)}>
           {statusLabel}
         </span>
       </div>
@@ -108,7 +108,7 @@ function SyncResultGrid({ result }: { result: MockSyncResult }) {
     <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "grid grid-cols-5 inline-snug rounded-lg bg-muted/20 border border-border/30 p-3")}>
       {items.map(({ label, value, color }) => (
         <div key={label} className={cn("flex flex-col items-center inline-nano")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body font-semibold tabular-nums', color)}>
+          <span className={cn( 'text-body font-semibold tabular-nums', color)}>
             {value}
           </span>
           <span className="text-[9px] text-muted-foreground">{label}</span>
@@ -162,7 +162,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
             type="button"
             onClick={() => setSection('sincronizar')}
             className={cn(
-              /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-3 py-1.5 rounded-sm text-caption font-medium transition-all',
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'px-3 py-1.5 rounded-sm text-caption font-medium transition-all',
               section === 'sincronizar'
                 ? 'bg-background shadow-sm text-foreground'
                 : 'text-muted-foreground hover:text-foreground',
@@ -174,7 +174,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
             type="button"
             onClick={() => setSection('historico')}
             className={cn(
-              /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-3 py-1.5 rounded-sm text-caption font-medium transition-all',
+              /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'px-3 py-1.5 rounded-sm text-caption font-medium transition-all',
               section === 'historico'
                 ? 'bg-background shadow-sm text-foreground'
                 : 'text-muted-foreground hover:text-foreground',

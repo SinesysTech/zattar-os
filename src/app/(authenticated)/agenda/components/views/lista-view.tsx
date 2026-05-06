@@ -55,7 +55,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
     <GlassPanel className={cn("overflow-hidden", className)}>
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[minmax(180px,1.5fr)_minmax(140px,2fr)_100px_100px_90px_40px] inline-default px-4 py-3 border-b border-border/10")}>
         {["Evento", "Processo / Partes", "Data", "Horário", "Tipo", ""].map((h) => (
-          <span key={h} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10.5px] font-semibold text-muted-foreground/30 uppercase tracking-wider")}>{h}</span>
+          <span key={h} className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10.5px] font-semibold text-muted-foreground/30 uppercase tracking-wider")}>{h}</span>
         ))}
       </div>
       <div>
@@ -66,7 +66,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
               <div className={cn("flex items-center inline-medium min-w-0")}>
                 <div className={cn("w-1 h-10 rounded-full shrink-0", colors.dot)} />
                 <div className="min-w-0">
-                  <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold text-foreground truncate")}>{evt.title}</div>
+                  <div className={cn( "text-[12px] font-semibold text-foreground truncate")}>{evt.title}</div>
                   <div className="text-[10px] text-muted-foreground/45 truncate">
                     {evt.meta?.trt ? `${evt.meta?.trt} · ${evt.meta?.grau ?? ""}` : evt.meta?.local ?? ""}
                     {evt.meta?.modalidade ? ` · ${evt.meta?.modalidade === "virtual" ? "Virtual" : "Presencial"}` : ""}
@@ -83,7 +83,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
               <div className="text-[11px] text-muted-foreground/60">{fmtDate(evt.start)}</div>
               <div className="text-[11px] font-mono text-muted-foreground/60 tabular-nums">{fmtTimeRange(evt.start, evt.end)}</div>
               <div>
-                <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
+                <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
               </div>
               <div>
                 <div className="size-7 flex items-center justify-center rounded-lg hover:bg-muted/15"><MoreHorizontal className="size-4 text-muted-foreground/35" /></div>
@@ -98,7 +98,7 @@ export function ListaView({ events, onEventClick, className }: ListaViewProps) {
           <div className={cn("flex items-center inline-micro")}>
             <button onClick={() => setPage(Math.max(0, page - 1))} disabled={page === 0} className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2 py-1 rounded-lg text-[10px] text-muted-foreground/40 hover:bg-muted/15 disabled:opacity-30 cursor-pointer disabled:cursor-default transition-colors")}>Anterior</button>
             {Array.from({ length: totalPages }, (_, i) => (
-              <button key={i} onClick={() => setPage(i)} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2.5 py-1 rounded-lg text-[10px] cursor-pointer transition-colors", i === page ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary font-semibold" : "text-muted-foreground/40 hover:bg-muted/15")}>{i + 1}</button>
+              <button key={i} onClick={() => setPage(i)} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2.5 py-1 rounded-lg text-[10px] cursor-pointer transition-colors", i === page ?  "bg-primary/10 text-primary font-semibold" : "text-muted-foreground/40 hover:bg-muted/15")}>{i + 1}</button>
             ))}
             <button onClick={() => setPage(Math.min(totalPages - 1, page + 1))} disabled={page >= totalPages - 1} className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "px-2 py-1 rounded-lg text-[10px] text-muted-foreground/40 hover:bg-muted/15 disabled:opacity-30 cursor-pointer disabled:cursor-default transition-colors")}>Próximo</button>
           </div>

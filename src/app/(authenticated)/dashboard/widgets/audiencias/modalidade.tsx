@@ -95,7 +95,7 @@ export function ModalidadeDistribution() {
                   </span>
                 </div>
                 <div className={cn("flex items-center inline-tight shrink-0")}>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>
+                  <span className={cn( "font-medium tabular-nums")}>
                     {fmtNum(m.count)}
                   </span>
                   <span className="text-muted-foreground/50 text-[10px] tabular-nums w-10 text-right">

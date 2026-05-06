@@ -228,7 +228,7 @@ export default function AgendamentosPage() {
             {agendamentos.filter((a) => a.ativo).length > 0 && (
               <>
                 <div className="w-px h-4 bg-border/10" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-[10px] font-medium text-success")}>
+                <span className={cn( "inline-flex items-center inline-micro text-[10px] font-medium text-success")}>
                   <span className="size-1.5 rounded-full bg-success" />
                   {agendamentos.filter((a) => a.ativo).length} ativos
                 </span>
@@ -263,12 +263,12 @@ export default function AgendamentosPage() {
           <GlassPanel depth={1} className="overflow-hidden">
             {/* Column Headers */}
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[70px_1fr_100px_140px_100px_100px_44px] inline-medium items-center px-4 py-2.5 border-b border-foreground/5")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Status</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Nome / Tipo</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Frequência</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Próxima Exec.</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Última Exec.</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Advogado</span>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Status</span>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Nome / Tipo</span>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Frequência</span>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Próxima Exec.</span>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Última Exec.</span>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>Advogado</span>
               <div />
             </div>
 
@@ -285,12 +285,12 @@ export default function AgendamentosPage() {
                   {/* Status badge */}
                   <div>
                     {agendamento.ativo ? (
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md")}>
+                      <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md")}>
                         <span className="size-1.5 rounded-full bg-success" />
                         Ativo
                       </span>
                     ) : (
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md")}>
+                      <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md")}>
                         <Pause className="size-2.5" />
                         Pausado
                       </span>

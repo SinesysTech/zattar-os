@@ -71,7 +71,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         <DataTableColumnHeader column={column} title="ID" />
       ),
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center text-body-sm font-medium")}>
+        <div className={cn( "min-h-10 flex items-center text-body-sm font-medium")}>
           #{row.getValue("id")}
         </div>
       ),
@@ -90,7 +90,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const id = row.original.id;
         return (
           <div className={cn("min-h-10 flex items-center text-body-sm")}>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-75 truncate font-medium")}>
+            <span className={cn( "max-w-75 truncate font-medium")}>
               {titulo || `Documento #${id}`}
             </span>
           </div>
@@ -207,7 +207,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
     },
     {
       id: "acoes",
-      header: () => <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</span>,
+      header: () => <span className={cn( "text-body-sm font-medium")}>Ações</span>,
       cell: ({ row }) => {
         const doc = row.original;
         const isFormulario = doc._origem === "formulario";

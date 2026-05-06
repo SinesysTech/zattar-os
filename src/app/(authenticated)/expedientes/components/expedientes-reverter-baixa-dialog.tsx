@@ -128,31 +128,31 @@ export function ExpedientesReverterBaixaDialog({
       <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn("stack-loose")}>
         {/* Informações do expediente */}
         <div className={cn("stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
+          <div className={cn( "text-body-sm font-medium")}>Expediente</div>
           <div className={cn("text-body-sm stack-micro")}>
             <div>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
+              <span className={cn( "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
             <div>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Parte Autora:</span> {expediente.nomeParteAutora}
+              <span className={cn( "font-medium")}>Parte Autora:</span> {expediente.nomeParteAutora}
             </div>
             <div>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Parte Ré:</span> {expediente.nomeParteRe}
+              <span className={cn( "font-medium")}>Parte Ré:</span> {expediente.nomeParteRe}
             </div>
             {expediente.baixadoEm && (
               <div>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Baixado em:</span>{' '}
+                <span className={cn( "font-medium")}>Baixado em:</span>{' '}
                 {new Date(expediente.baixadoEm).toLocaleString('pt-BR')}
               </div>
             )}
             {expediente.protocoloId && (
               <div>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Protocolo:</span> {expediente.protocoloId}
+                <span className={cn( "font-medium")}>Protocolo:</span> {expediente.protocoloId}
               </div>
             )}
             {expediente.justificativaBaixa && (
               <div>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Justificativa:</span>{' '}
+                <span className={cn( "font-medium")}>Justificativa:</span>{' '}
                 {expediente.justificativaBaixa}
               </div>
             )}
@@ -163,7 +163,7 @@ export function ExpedientesReverterBaixaDialog({
         <div className={cn("flex items-start inline-medium rounded-lg border border-warning bg-warning/10 inset-card-compact")}>
           <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
           <div className={cn("text-body-sm")}>
-            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-warning mb-1")}>Atenção</div>
+            <div className={cn( "font-medium text-warning mb-1")}>Atenção</div>
             <div className="text-muted-foreground">
               Ao reverter a baixa, o expediente voltará a aparecer na lista de pendentes.
               Os dados de protocolo e justificativa serão removidos, mas a ação será registrada
@@ -176,7 +176,7 @@ export function ExpedientesReverterBaixaDialog({
         <div className={cn("stack-tight")}>
           <Label htmlFor="reverter-confirmacao" className={cn("text-body-sm")}>
             Para confirmar, digite{' '}
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{PALAVRA_CONFIRMACAO}</span> abaixo
+            <span className={cn( "font-semibold text-foreground")}>{PALAVRA_CONFIRMACAO}</span> abaixo
           </Label>
           <Input
             id="reverter-confirmacao"

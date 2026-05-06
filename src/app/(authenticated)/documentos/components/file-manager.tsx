@@ -152,7 +152,7 @@ function NovoPopover({
               <FolderPlus className="size-3.5" />
             </span>
             <span className="flex-1 text-left">
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block font-medium")}>Nova pasta</span>
+              <span className={cn( "block font-medium")}>Nova pasta</span>
               <span className="block text-[10px] text-muted-foreground/50">
                 Agrupar arquivos
               </span>
@@ -167,7 +167,7 @@ function NovoPopover({
               <FileText className="size-3.5" />
             </span>
             <span className="flex-1 text-left">
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block font-medium")}>Novo documento</span>
+              <span className={cn( "block font-medium")}>Novo documento</span>
               <span className="block text-[10px] text-muted-foreground/50">
                 Editor colaborativo
               </span>
@@ -183,7 +183,7 @@ function NovoPopover({
               <UploadIcon className="size-3.5" />
             </span>
             <span className="flex-1 text-left">
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block font-medium")}>Fazer upload</span>
+              <span className={cn( "block font-medium")}>Fazer upload</span>
               <span className="block text-[10px] text-muted-foreground/50">
                 PDF, imagem, planilha…
               </span>
@@ -482,7 +482,7 @@ export function FileManager() {
                     className={cn(
                       'transition-colors',
                       isLast
-                        ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold text-foreground cursor-default'
+                        ?  'font-semibold text-foreground cursor-default'
                         : 'text-muted-foreground/70 hover:text-primary cursor-pointer',
                     )}
                   >

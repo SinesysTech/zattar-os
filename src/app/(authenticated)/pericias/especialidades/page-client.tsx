@@ -196,7 +196,7 @@ export function EspecialidadesPageClient() {
             <GlassPanel key={trt} depth={1} className="overflow-hidden">
               <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20")}>
                 <div className={cn("flex items-center inline-tight")}>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
+                  <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
                     Tribunal
                   </span>
                   <AppBadge variant="outline">{trt}</AppBadge>
@@ -227,7 +227,7 @@ export function EspecialidadesPageClient() {
                     role="row"
                     className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[1fr_100px_120px_100px] inline-default items-center px-4 py-2.5 hover:bg-muted/20 transition-colors")}
                   >
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 truncate")}>
+                    <span className={cn( "text-body-sm font-medium text-foreground/90 truncate")}>
                       {item.descricao}
                     </span>
                     <Text variant="caption">

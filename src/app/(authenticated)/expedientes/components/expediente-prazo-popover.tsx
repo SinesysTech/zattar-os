@@ -105,7 +105,7 @@ export function ExpedientePrazoPopover({
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider")}>
             Prazo legal
           </p>
         </div>
@@ -158,8 +158,8 @@ export function PrazoTriggerContent({
       {label ? (
         <span className={cn(
           'tabular-nums',
-          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium' : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium',
-          vencido && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive font-semibold',
+          size === 'sm' ?  'text-[11px] font-medium' :  'text-body-sm font-medium',
+          vencido &&  'text-destructive font-semibold',
         )}>
           {label}
         </span>

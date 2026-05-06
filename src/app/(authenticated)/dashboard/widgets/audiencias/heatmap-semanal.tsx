@@ -92,21 +92,21 @@ export function WidgetHeatmapSemanal() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Dia mais cheio
             </p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold")}>{diaMaisCheio}</p>
+            <p className={cn( "text-[12px] font-semibold")}>{diaMaisCheio}</p>
           </div>
 
           <div className={cn("stack-nano text-center")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Horario pico
             </p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold")}>{horarioPico}</p>
+            <p className={cn( "text-[12px] font-semibold")}>{horarioPico}</p>
           </div>
 
           <div className={cn("stack-nano text-right")}>
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
               Total
             </p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold tabular-nums")}>
+            <p className={cn( "text-[12px] font-semibold tabular-nums")}>
               {totalAudiencias}
             </p>
           </div>

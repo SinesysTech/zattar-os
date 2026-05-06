@@ -67,7 +67,7 @@ const InputCEP = React.forwardRef<HTMLInputElement, InputCEPProps>(
     return (
       <div className={cn("stack-tight")}>
         {label && (
-          <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
+          <label className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
             {label}
           </label>
         )}

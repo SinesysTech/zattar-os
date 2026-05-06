@@ -74,7 +74,7 @@ export function AudienciasPorTipo() {
                   {item.tipo}
                 </span>
                 <div className={cn("flex items-center inline-snug shrink-0")}>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>
+                  <span className={cn( "font-medium tabular-nums")}>
                     {fmtNum(item.count)}
                   </span>
                   <span className="text-muted-foreground/50 text-[10px] tabular-nums">
@@ -100,7 +100,7 @@ export function AudienciasPorTipo() {
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
             Total
           </span>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[12px] font-bold tabular-nums")}>
+          <span className={cn( "text-[12px] font-bold tabular-nums")}>
             {fmtNum(total)}
           </span>
         </div>

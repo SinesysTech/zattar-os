@@ -439,7 +439,7 @@ export function AudienciaDetailDialog({
                       : undefined
                   }
                   className={cn(
-                    /* design-system-escape: gap-1.5 gap sem token DS; pl-2.5 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ /* design-system-escape: pl-2.5 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex w-fit items-center inline-snug rounded-full border border-border/60 bg-card pl-2.5 pr-2 py-1 text-micro-caption font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
+                    /* design-system-escape: gap-1.5 gap sem token DS; pl-2.5 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ /* design-system-escape: pl-2.5 padding direcional sem Inset equiv.; pr-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ 'inline-flex w-fit items-center inline-snug rounded-full border border-border/60 bg-card pl-2.5 pr-2 py-1 text-micro-caption font-medium text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60',
                     !modalidadePopoverDisabled && 'cursor-pointer hover:border-border hover:bg-muted/60',
                     modalidadePopoverDisabled && 'cursor-not-allowed'
                   )}
@@ -579,11 +579,11 @@ export function AudienciaDetailDialog({
           content: (
             <>
               <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-4 py-3 border-b border-border/40 bg-card")}>
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center inline-tight text-label font-semibold")}>
+                <div className={cn( "flex items-center inline-tight text-label font-semibold")}>
                   <FileText className="size-3.5 text-success" />
                   Ata{' '}
                   {dataInicio && (
-                    <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                    <Text variant="caption" as="span" className={cn( "font-medium")}>
                       · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
                     </Text>
                   )}
@@ -709,7 +709,7 @@ export function AudienciaDetailDialog({
                             </Text>
                             {urlObrigatoriaFaltando && (
                               <span
-                                className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
+                                className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
                                 role="status"
                                 aria-label="Campo obrigatório não preenchido"
                               >
@@ -722,7 +722,7 @@ export function AudienciaDetailDialog({
                             <button
                               type="button"
                               onClick={handleStartEditUrl}
-                              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center inline-micro text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
+                              className={cn(/* design-system-escape: tracking-wider sem token DS */ "flex cursor-pointer items-center inline-micro text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
                             >
                               <Pencil className="size-2.5" />
                               {audiencia.urlAudienciaVirtual ? 'Editar' : 'Adicionar'}
@@ -802,7 +802,7 @@ export function AudienciaDetailDialog({
                             </Text>
                             {enderecoObrigatorioFaltando && (
                               <span
-                                className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
+                                className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro rounded-full bg-warning/12 px-1.5 py-px text-micro-badge font-semibold uppercase tracking-[0.08em] text-warning")}
                                 role="status"
                                 aria-label="Campo obrigatório não preenchido"
                               >
@@ -815,7 +815,7 @@ export function AudienciaDetailDialog({
                             <button
                               type="button"
                               onClick={handleStartEditEndereco}
-                              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center inline-micro text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
+                              className={cn(/* design-system-escape: tracking-wider sem token DS */ "flex cursor-pointer items-center inline-micro text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
                             >
                               <Pencil className="size-2.5" />
                               {audiencia.enderecoPresencial ? 'Editar' : 'Adicionar'}
@@ -1002,7 +1002,7 @@ export function AudienciaDetailDialog({
                         <button
                           type="button"
                           onClick={handleStartEditObs}
-                          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "flex cursor-pointer items-center inline-micro text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
+                          className={cn(/* design-system-escape: tracking-wider sem token DS */ "flex cursor-pointer items-center inline-micro text-micro-caption font-semibold uppercase tracking-wider text-primary/70 transition-colors hover:text-primary")}
                         >
                           <Pencil className="size-2.5" />
                           {audiencia.observacoes ? 'Editar' : 'Adicionar'}

@@ -85,7 +85,7 @@ function InfoRow({
   return (
     <div className={cn("flex items-start justify-between inline-medium")}>
       <span className="shrink-0 text-overline">{label}</span>
-      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-right text-caption font-medium")}>{value}</span>
+      <span className={cn( "text-right text-caption font-medium")}>{value}</span>
     </div>
   );
 }

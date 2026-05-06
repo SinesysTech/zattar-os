@@ -281,12 +281,12 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
           <LayoutGrid className="size-6 text-muted-foreground/55" />
         </div>
         <div>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body font-semibold text-foreground/70")}>
+          <p className={cn( "font-heading text-body font-semibold text-foreground/70")}>
             Nenhum widget selecionado
           </p>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-1 max-w-xs")}>
             Clique em{' '}
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/60")}>Personalizar</span>{' '}
+            <span className={cn( "font-medium text-foreground/60")}>Personalizar</span>{' '}
             para escolher quais informacoes exibir no seu painel.
           </p>
         </div>

@@ -155,14 +155,14 @@ export function PulseTimeline({
                     </div>
                     <div className={cn(/* design-system-escape: pb-1 padding direcional sem Inset equiv. */ "flex flex-col justify-center pb-1")}>
                       <div className={cn("flex items-center inline-tight mb-0.5")}>
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10")}>
+                        <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10")}>
                           {fi.tipo === 'audiencia' ? 'Audiência' : fi.tipo === 'expediente' ? 'Prazo' : 'Perícia'}
                         </span>
                         <Text variant="caption" className="text-muted-foreground/70 font-mono shrink-0">
                           {format(new Date(fi.data), 'dd/MM/yy', { locale: ptBR })}
                         </Text>
                       </div>
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-medium leading-tight line-clamp-2 text-foreground/75 text-left")}>
+                      <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm font-medium leading-tight line-clamp-2 text-foreground/75 text-left")}>
                         {fi.titulo}
                       </p>
                       {fi.subtitulo && (

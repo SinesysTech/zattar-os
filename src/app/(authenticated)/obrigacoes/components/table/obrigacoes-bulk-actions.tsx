@@ -94,7 +94,7 @@ export function ObrigacoesBulkActions({
             <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente{' '}
-              <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{selectedRows.length}</Text> obrigações
+              <Text variant="caption" as="span" className={cn( "font-medium")}>{selectedRows.length}</Text> obrigações
               selecionadas e todas as suas parcelas.
             </AlertDialogDescription>
           </AlertDialogHeader>

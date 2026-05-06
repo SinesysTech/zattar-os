@@ -802,22 +802,22 @@ export function RepresentanteFormDialog({
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
         <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm")}>
           <dt className="text-muted-foreground">Nome:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{formData.nome || '-'}</dd>
+          <dd className={cn( "font-medium truncate")}>{formData.nome || '-'}</dd>
 
           <dt className="text-muted-foreground">CPF:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.cpf || '-'}</dd>
+          <dd className={cn( "font-medium")}>{formData.cpf || '-'}</dd>
 
           <dt className="text-muted-foreground">Tipo:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{TIPOS_REPRESENTANTE.find(t => t.value === formData.tipo)?.label || '-'}</dd>
+          <dd className={cn( "font-medium")}>{TIPOS_REPRESENTANTE.find(t => t.value === formData.tipo)?.label || '-'}</dd>
 
           <dt className="text-muted-foreground">OABs:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.oabs.length || '0'}</dd>
+          <dd className={cn( "font-medium")}>{formData.oabs.length || '0'}</dd>
 
           <dt className="text-muted-foreground">E-mails:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.emails.length || '0'}</dd>
+          <dd className={cn( "font-medium")}>{formData.emails.length || '0'}</dd>
 
           <dt className="text-muted-foreground">Cidade:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.municipio || '-'}</dd>
+          <dd className={cn( "font-medium")}>{formData.municipio || '-'}</dd>
         </dl>
       </div>
     </div>

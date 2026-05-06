@@ -82,7 +82,7 @@ function FilterChip({
   return (
     <div
       className={cn(
-        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'group flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'group flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         hasValue
           ? 'border-primary/20 bg-primary/5 text-primary'
           : 'border-border/15 text-muted-foreground/60 hover:bg-muted/30',
@@ -170,7 +170,7 @@ export function SearchQuickFilters() {
                       })
                     }
                   >
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{t.sigla}</span>
+                    <span className={cn( "font-medium tabular-nums")}>{t.sigla}</span>
                     <span className="ml-2 text-muted-foreground">{t.nome}</span>
                   </CommandItem>
                 ))}

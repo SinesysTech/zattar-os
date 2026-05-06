@@ -78,12 +78,12 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
           <AlertTriangle className="h-4 w-4" />
           <AlertTitle>{title}</AlertTitle>
           <AlertDescription className={cn("mt-2 stack-tight")}>
-            {message && <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{message}</p>}
+            {message && <p className={cn( "font-medium")}>{message}</p>}
             <p>{description}</p>
 
             {/* Detalhes técnicos (colapsível) */}
             <details className="mt-3">
-              <summary className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "cursor-pointer text-body-sm font-medium")}>
+              <summary className={cn( "cursor-pointer text-body-sm font-medium")}>
                 Detalhes técnicos
               </summary>
               <pre className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 text-caption bg-muted p-3 rounded overflow-x-auto")}>

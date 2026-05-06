@@ -35,7 +35,7 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
         ) : (
           <div className={cn("stack-medium")}>
             <div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{credencial.advogado_nome}</p>
+              <p className={cn( "text-body-sm font-medium")}>{credencial.advogado_nome}</p>
               <Text variant="caption">
                 CPF {credencial.advogado_cpf} • OAB {formatOabs(credencial.advogado_oabs)}
               </Text>

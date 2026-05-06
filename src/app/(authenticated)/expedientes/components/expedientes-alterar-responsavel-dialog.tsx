@@ -146,7 +146,7 @@ export function ExpedientesAlterarResponsavelDialog({
                 </SelectContent>
               </Select>
               {generalError && (
-                <p role="alert" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{generalError}</p>
+                <p role="alert" className={cn( "text-body-sm font-medium text-destructive")}>{generalError}</p>
               )}
             </div>
           </form>

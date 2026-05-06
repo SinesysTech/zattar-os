@@ -35,7 +35,7 @@ export function AgendaView({ currentDate, events, onEventSelect, onEventCreate }
       {!hasEvents ? (
         <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex min-h-[70svh] flex-col items-center justify-center py-16 text-center")}>
           <Calendar size={32} className="text-muted-foreground/50 mb-2" />
-          <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>Nenhum evento encontrado</h3>
+          <h3 className={cn( "text-body-lg font-medium")}>Nenhum evento encontrado</h3>
           <p className="text-muted-foreground">
             Não há eventos agendados para este período.
           </p>

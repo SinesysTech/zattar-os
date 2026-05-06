@@ -77,7 +77,7 @@ export function TimelineSidebar({
               {totalMovimentos} {totalMovimentos === 1 ? 'mov' : 'movs'}
             </span>
           </Text>
-          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center inline-nano rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
+          <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "flex items-center inline-nano rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
             <span className="text-[9px]">&#x2318;</span>K
           </kbd>
         </div>

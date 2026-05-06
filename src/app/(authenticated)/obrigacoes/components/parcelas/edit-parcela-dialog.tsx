@@ -172,7 +172,7 @@ export function EditParcelaDialog({
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-tight p-3 rounded-md bg-warning/5 border border-warning/15")}>
             <AlertCircle className="h-5 w-5 text-warning mt-0.5 shrink-0" />
             <div className={cn("text-body-sm text-warning")}>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-1")}>Atenção</p>
+              <p className={cn( "font-medium mb-1")}>Atenção</p>
               <p>Ao editar manualmente, as demais parcelas serão redistribuídas proporcionalmente.</p>
             </div>
           </div>

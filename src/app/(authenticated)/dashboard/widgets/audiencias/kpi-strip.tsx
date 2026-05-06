@@ -86,7 +86,7 @@ export function KpiStrip() {
         <div className={cn("flex flex-col items-center inline-nano")}>
           <div className={cn("flex items-center inline-micro")}>
             <Clock className="size-3 text-muted-foreground/50" />
-            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
+            <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
               {duracaoMedia > 0 ? `${duracaoMedia}` : '--'}
             </span>
           </div>

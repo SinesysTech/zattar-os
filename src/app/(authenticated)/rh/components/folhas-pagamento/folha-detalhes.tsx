@@ -213,7 +213,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                   >
                     <div className={cn("flex flex-col inline-micro")}>
                       <div className={cn("flex items-center inline-tight")}>
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                        <span className={cn( "font-medium")}>
                           {item.usuario?.nomeExibicao ?? `Usuário ${item.usuarioId}`}
                         </span>
                         <Badge variant="outline" className={cn("text-caption")}>

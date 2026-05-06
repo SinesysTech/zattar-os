@@ -123,7 +123,7 @@ function criarColunas(
         return (
           <Link
             href={link}
-            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium hover:underline")}
+            className={cn( "text-body-sm font-medium hover:underline")}
             onClick={() => {
               if (!notificacao.lida) {
                 onMarcarComoLida(notificacao.id);

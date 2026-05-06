@@ -118,7 +118,7 @@ function criarColunas(
         const salario = row.original;
         return (
           <div className="flex min-h-10 flex-col justify-center">
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-medium leading-tight")}>
+            <span className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm font-medium leading-tight")}>
               {salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`}
             </span>
             {salario.cargo && (
@@ -139,7 +139,7 @@ function criarColunas(
       size: 150,
       meta: { align: 'right' as const },
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums")}>
+        <span className={cn( "text-body-sm font-medium tabular-nums")}>
           {formatarValor(row.original.salarioBruto)}
         </span>
       ),
@@ -206,7 +206,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center">
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>Ações</span>
+          <span className={cn( "text-body-sm font-medium text-muted-foreground")}>Ações</span>
         </div>
       ),
       enableSorting: false,
@@ -472,7 +472,7 @@ export function SalariosList() {
                   </svg>
                 </div>
                 <div className={cn("relative stack-micro")}>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
+                  <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                     Total Funcionários com Salário
                   </p>
                   <p className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-3xl font-bold tracking-tight")}>{totais.totalFuncionarios}</p>
@@ -487,7 +487,7 @@ export function SalariosList() {
                   </svg>
                 </div>
                 <div className={cn("relative stack-micro")}>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
+                  <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                     Custo Mensal Bruto
                   </p>
                   <p className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-3xl font-bold tracking-tight text-success dark:text-success")}>

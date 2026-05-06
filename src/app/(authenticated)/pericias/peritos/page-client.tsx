@@ -90,7 +90,7 @@ export function PeritosPageClient() {
           <User className="size-4 text-info/70" />
         </IconContainer>
         <div className="flex-1 min-w-0">
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90")}>
+          <p className={cn( "text-body-sm font-medium text-foreground/90")}>
             Peritos são cadastrados como Terceiros
           </p>
           <Text variant="caption" className="text-muted-foreground/70 mt-0.5">
@@ -139,7 +139,7 @@ export function PeritosPageClient() {
                 <User className="size-4 text-muted-foreground/60" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground/90 truncate")}>
+                <p className={cn( "text-body-sm font-semibold text-foreground/90 truncate")}>
                   {p.nome}
                 </p>
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>

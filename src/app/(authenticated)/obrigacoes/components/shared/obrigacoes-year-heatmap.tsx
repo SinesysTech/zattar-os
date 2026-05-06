@@ -411,7 +411,7 @@ export function ObrigacoesYearHeatmap({
 
             {stats.proxima && (
               <StatCard icon={Clock} iconBg="bg-info/12" iconColor="text-info" label="Próxima">
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-label font-semibold")}>
+                <div className={cn( "text-label font-semibold")}>
                   {format(parseISO(stats.proxima.parcela.dataVencimento), "dd MMM", { locale: ptBR })}
                 </div>
                 <div className="text-mono-num mt-0.5">

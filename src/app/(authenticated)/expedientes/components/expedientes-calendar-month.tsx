@@ -179,7 +179,7 @@ export function ExpedientesCalendarMonth({
             {/* Weekday Headers */}
             <div className="grid grid-cols-7 bg-muted/50 border-b">
                 {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map((dia) => (
-                    <div key={dia} className={cn(/* design-system-escape: p-2 → usar <Inset>; font-medium → className de <Text>/<Heading> */ "p-2 text-center text-body-sm font-medium text-muted-foreground")}>{dia}</div>
+                    <div key={dia} className={cn(/* design-system-escape: p-2 → usar <Inset>; */ "p-2 text-center text-body-sm font-medium text-muted-foreground")}>{dia}</div>
                 ))}
             </div>
             

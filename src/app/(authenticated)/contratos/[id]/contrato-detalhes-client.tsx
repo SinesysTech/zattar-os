@@ -129,7 +129,7 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
             <Text variant="meta-label">Recebido</Text>
             <Text
               variant="label"
-              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-heading font-bold text-success tabular-nums text-[15px]")}
+              className={cn( "font-heading font-bold text-success tabular-nums text-[15px]")}
             >
               {formatCurrency(totalReceitas)}
             </Text>
@@ -138,7 +138,7 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
             <Text variant="meta-label">Pendente</Text>
             <Text
               variant="label"
-              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-heading font-bold text-warning tabular-nums text-[15px]")}
+              className={cn( "font-heading font-bold text-warning tabular-nums text-[15px]")}
             >
               {formatCurrency(totalPendente)}
             </Text>
@@ -146,10 +146,10 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
         </div>
         <div>
           <div className="flex justify-between mb-1.5">
-            <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+            <Text variant="caption" className={cn( "font-medium")}>
               Progresso de recebimento
             </Text>
-            <Text variant="caption" className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-primary font-bold tabular-nums")}>
+            <Text variant="caption" className={cn( "text-primary font-bold tabular-nums")}>
               {pctRecebido}%
             </Text>
           </div>

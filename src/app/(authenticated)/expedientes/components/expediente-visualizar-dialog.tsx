@@ -115,7 +115,7 @@ function Section({
         <Text
           variant="overline"
           as="h3"
-          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-muted-foreground/70")}
+          className={cn( "font-semibold text-muted-foreground/70")}
         >
           {title}
         </Text>
@@ -153,7 +153,7 @@ function DataRow({
           'min-w-0',
           editable
             ? 'flex-1 flex justify-end'
-            : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-right text-body-sm font-medium text-foreground/90',
+            :  'text-right text-body-sm font-medium text-foreground/90',
         )}
       >
         {children}

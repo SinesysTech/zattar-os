@@ -102,7 +102,7 @@ export function ParcelasTable({
     return (
       <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-12 opacity-60")}>
         <FileX className="w-8 h-8 text-muted-foreground/30 mb-3" />
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/50")}>
+        <p className={cn( "text-body-sm font-medium text-muted-foreground/50")}>
           Nenhuma parcela encontrada
         </p>
       </div>
@@ -130,14 +130,14 @@ export function ParcelasTable({
             <div className={cn("flex items-center inline-medium flex-wrap")}>
               {/* Numero da parcela */}
               <div className="size-8 rounded-lg bg-primary/8 text-primary/80 flex items-center justify-center shrink-0">
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
+                <span className={cn( "text-[11px] font-bold tabular-nums")}>
                   {parcela.numeroParcela}
                 </span>
               </div>
 
               {/* Dados financeiros agrupados */}
               <div className="flex-1 min-w-60">
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums")}>
+                <div className={cn( "text-body-sm font-medium tabular-nums")}>
                   {formatCurrency(parcela.valorBrutoCreditoPrincipal)}
                   {parcela.editadoManualmente && (
                     <span

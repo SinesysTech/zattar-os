@@ -71,8 +71,8 @@ export function WidgetFluxoCaixa() {
           <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "flex items-center justify-between text-[11px] pt-1 border-t border-border/10")}>
             <span className="text-muted-foreground/50">{fmtMes(lastMonth.mes)}</span>
             <div className={cn("flex items-center inline-medium")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-success/70 font-medium")}>{fmtMoeda(lastMonth.receita)}</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-destructive/60 font-medium")}>{fmtMoeda(lastMonth.despesa)}</span>
+              <span className={cn( "text-success/70 font-medium")}>{fmtMoeda(lastMonth.receita)}</span>
+              <span className={cn( "text-destructive/60 font-medium")}>{fmtMoeda(lastMonth.despesa)}</span>
             </div>
           </div>
         )}

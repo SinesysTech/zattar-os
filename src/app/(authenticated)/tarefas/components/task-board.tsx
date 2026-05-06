@@ -86,7 +86,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
     >
       <div className="flex items-center justify-between mb-3">
         <div className={cn("flex items-center inline-tight")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{label}</span>
+          <span className={cn( "text-body-sm font-semibold")}>{label}</span>
           <AppBadge variant="outline">{tasks.length}</AppBadge>
         </div>
       </div>

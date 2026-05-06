@@ -58,7 +58,7 @@ export function TimelineFilterChips({
           <Text variant="caption" as="span" className="text-muted-foreground/55">·</Text>
           <span>{counts.movs} {counts.movs === 1 ? 'mov' : 'movs'}</span>
         </Text>
-        <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center inline-nano rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
+        <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "flex items-center inline-nano rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
           <span className="text-[9px]">&#x2318;</span>K
         </kbd>
       </div>
@@ -74,7 +74,7 @@ export function TimelineFilterChips({
               aria-selected={isActive}
               onClick={() => onFilterChange(chip.id)}
               className={cn(
-                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-micro px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
+                /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ 'flex items-center inline-micro px-2 py-1 rounded-md text-[10px] font-medium whitespace-nowrap transition-all duration-200 cursor-pointer',
                 isActive
                   ? 'bg-primary/12 text-primary shadow-sm'
                   : 'text-muted-foreground/70 hover:text-muted-foreground/70 hover:bg-foreground/4'
@@ -98,7 +98,7 @@ export function TimelineFilterChips({
                 aria-selected={isActive}
                 onClick={() => onGrauChange(grau as GrauProcesso | 'todos')}
                 className={cn(
-                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2 py-0.5 rounded text-[9px] font-medium transition-all cursor-pointer',
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'px-2 py-0.5 rounded text-[9px] font-medium transition-all cursor-pointer',
                   isActive
                     ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground/65 hover:text-muted-foreground/75'

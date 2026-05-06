@@ -109,7 +109,7 @@ function DetalheItem({
       </div>
       <div className={cn("stack-nano min-w-0")}>
         <Text variant="caption">{label}</Text>
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{value}</div>
+        <div className={cn( "text-body-sm font-medium")}>{value}</div>
       </div>
     </div>
   );

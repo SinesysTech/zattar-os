@@ -42,7 +42,7 @@ export function TimelineContextCard({
       </Text>
 
       {/* Partes do processo */}
-      <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>
+      <Text variant="label" as="p" className={cn( "font-medium truncate")}>
         {partes}
       </Text>
 

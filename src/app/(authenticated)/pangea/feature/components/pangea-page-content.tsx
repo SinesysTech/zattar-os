@@ -438,7 +438,7 @@ export function PangeaPageContent() {
                                       checked ? 'opacity-100' : 'opacity-0'
                                     )}
                                   />
-                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm shrink-0")}>{o.codigo}</span>
+                                  <span className={cn( "font-medium text-body-sm shrink-0")}>{o.codigo}</span>
                                   <span className={cn("ml-1.5 text-muted-foreground text-body-sm truncate")}>
                                     {o.nome}
                                   </span>
@@ -490,7 +490,7 @@ export function PangeaPageContent() {
                                       checked ? 'opacity-100' : 'opacity-0'
                                     )}
                                   />
-                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm shrink-0")}>{tipo}</span>
+                                  <span className={cn( "font-medium text-body-sm shrink-0")}>{tipo}</span>
                                   <span className={cn("ml-1.5 text-muted-foreground text-body-sm truncate")}>
                                     {PANGEA_TIPO_LABELS[tipo]}
                                   </span>

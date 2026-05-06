@@ -119,7 +119,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
             <div className="flex items-center justify-between mb-3">
               <div className={cn("flex items-center inline-tight")}>
                 <Clock className="size-3 text-muted-foreground/50" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Linha do Tempo</span>
+                <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Linha do Tempo</span>
               </div>
               <div className={cn("flex items-center inline-tight")}>
                 {(["audiencias", "agenda", "expedientes"] as const).map((s) => (
@@ -135,7 +135,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "mb-3 pb-2 border-b border-border/8")}>
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
+                  <span className={cn( "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
                   <div className={cn("mt-1 stack-micro")}>
                     {allDay.map((ev) => (
                       <EventChip key={ev.id} title={ev.title} color={ev.color} past={ev.end < new Date()} onClick={() => onEventClick(ev)} />
@@ -188,9 +188,9 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
               <Shield className="size-3 text-warning/40" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Preparação</span>
+              <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Preparação</span>
               {needsPrep.length > 0 && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
               )}
             </div>
             <div className={cn("stack-tight")}>
@@ -212,7 +212,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
               }) : (
                 <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4 text-center")}>
                   <CheckCircle2 className="size-5 text-success/25 mx-auto mb-1.5" />
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] text-success/40 font-medium")}>Tudo pronto</p>
+                  <p className={cn( "text-[10px] text-success/40 font-medium")}>Tudo pronto</p>
                 </div>
               )}
             </div>
@@ -223,7 +223,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
             <GlassPanel className={cn("inset-card-compact")}>
               <div className={cn("flex items-center inline-tight mb-3")}>
                 <AlertTriangle className="size-3 text-destructive/40" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
+                <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
               </div>
               <div className={cn("stack-tight")}>
                 {dayEvents.filter((e) => e.meta.prepStatus === "pendente").map((ev) => (
@@ -243,7 +243,7 @@ export function BriefingView({ events, currentDate, onEventClick }: BriefingView
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
               <Zap className="size-3 text-primary/40" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
+              <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
             <div className={cn("stack-nano")}>
               {[
@@ -285,7 +285,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
     <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-11 shrink-0 flex flex-col items-end pt-2.5")}>
         <span className={cn(
-          /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] tabular-nums font-medium",
+           "text-[11px] tabular-nums font-medium",
           isPast ? "text-muted-foreground/55" : "text-foreground/60",
         )}>{fmtTime(event.start)}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/50">{fmtTime(event.end)}</span>
@@ -310,13 +310,13 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
           </div>
           <div className="min-w-0 flex-1">
             <div className={cn("flex items-center inline-tight")}>
-              <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-foreground truncate")}>{event.title}</h3>
+              <h3 className={cn( "text-[13px] font-medium text-foreground truncate")}>{event.title}</h3>
               {isOngoing && isAudiencia && (
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10 shrink-0")}>Agora</span>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold text-success px-1.5 py-px rounded-full bg-success/10 shrink-0")}>Agora</span>
               )}
               {prep && (
                 <span className={cn(
-                  /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center inline-nano px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0",
+                  /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; */ "flex items-center inline-nano px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0",
                   prep === "preparado" ? "bg-success/10 text-success" : prep === "parcial" ? "bg-warning/10 text-warning" : "bg-destructive/10 text-destructive",
                 )}>
                   {prep === "preparado" ? <CheckCircle2 className="size-2" /> : prep === "parcial" ? <Circle className="size-2" /> : <AlertTriangle className="size-2" />}
@@ -339,9 +339,9 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
               <span className="text-[9px] text-muted-foreground/55 truncate max-w-40">{event.meta.local}</span>
             </div>
           )}
-          {event.meta.trt && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{event.meta.trt}</span>}
+          {event.meta.trt && <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{event.meta.trt}</span>}
           {event.meta.modalidade && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded", event.meta.modalidade === "presencial" ? "bg-warning/8 text-warning/50" : "bg-info/8 text-info/50")}>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded", event.meta.modalidade === "presencial" ? "bg-warning/8 text-warning/50" : "bg-info/8 text-info/50")}>
               {event.meta.modalidade === "presencial" ? "Presencial" : "Virtual"}
             </span>
           )}
@@ -350,7 +350,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
             <a
               href={event.url}
               onClick={(e) => e.stopPropagation()}
-              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40 hover:bg-primary/10 transition-colors")}
+              className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40 hover:bg-primary/10 transition-colors")}
             >
               Ver detalhes →
             </a>
@@ -362,7 +362,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors")}
+              className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-info/8 text-info/50 hover:bg-info/15 transition-colors")}
             >
               Entrar na sala
             </a>
@@ -409,7 +409,7 @@ function NearbyCountdown({ target }: { target: Date }) {
 
   return (
     <span className={cn(
-      /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded-full tabular-nums shrink-0",
+      /* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded-full tabular-nums shrink-0",
       isUrgent ? "bg-destructive/10 text-destructive" : "bg-warning/8 text-warning/60",
     )}>
       {label}

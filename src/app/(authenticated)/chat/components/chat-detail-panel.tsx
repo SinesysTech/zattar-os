@@ -36,7 +36,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
     <div className="flex flex-col h-full w-full">
       {/* Panel header — "Detalhes" per mock */}
       <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex items-center justify-between px-5 py-4 border-b border-border/40 dark:border-white/6 shrink-0")}>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.75rem] font-semibold text-foreground")}>Detalhes</span>
+        <span className={cn( "text-[0.75rem] font-semibold text-foreground")}>Detalhes</span>
         <Button
           size="icon"
           variant="ghost"
@@ -54,7 +54,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
         <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-medium py-6 px-5")}>
           <Avatar className="size-18 rounded-2xl overflow-visible">
             <AvatarImage src={user.avatar} alt={displayName} className="rounded-2xl" />
-            <AvatarFallback className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary text-xl font-semibold rounded-2xl")}>
+            <AvatarFallback className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; */ "bg-primary/10 text-primary text-xl font-semibold rounded-2xl")}>
               {generateAvatarFallback(displayName)}
             </AvatarFallback>
             <AvatarIndicator
@@ -63,7 +63,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             />
           </Avatar>
           <div className="text-center">
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[0.9rem] font-bold text-foreground")}>{displayName}</p>
+            <p className={cn( "text-[0.9rem] font-bold text-foreground")}>{displayName}</p>
             <p className={cn("text-[0.7rem]", getOnlineStatusColor(user.onlineStatus || "offline"))}>
               {user.onlineStatus === "online"
                 ? "Online"
@@ -87,7 +87,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
               </div>
               <div>
                 <p className="text-[0.6rem] text-muted-foreground/65">Email</p>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.725rem] font-medium text-foreground")}>
+                <p className={cn( "text-[0.725rem] font-medium text-foreground")}>
                   {user.email || user.emailCorporativo || "—"}
                 </p>
               </div>
@@ -100,7 +100,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
                 </div>
                 <div>
                   <p className="text-[0.6rem] text-muted-foreground/65">Telefone</p>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.725rem] font-medium text-foreground")}>{user.phone}</p>
+                  <p className={cn( "text-[0.725rem] font-medium text-foreground")}>{user.phone}</p>
                 </div>
               </div>
             )}
@@ -112,7 +112,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
                 </div>
                 <div>
                   <p className="text-[0.6rem] text-muted-foreground/65">Pais</p>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.725rem] font-medium text-foreground")}>{user.country}</p>
+                  <p className={cn( "text-[0.725rem] font-medium text-foreground")}>{user.country}</p>
                 </div>
               </div>
             )}

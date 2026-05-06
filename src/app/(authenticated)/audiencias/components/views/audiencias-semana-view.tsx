@@ -193,7 +193,7 @@ export function AudienciasSemanaView({
         <button
           onClick={handleToday}
           className={cn(
-            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
             isCurrentWeek ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/70 hover:bg-border/15',
           )}
         >
@@ -202,7 +202,7 @@ export function AudienciasSemanaView({
         <button onClick={handleNextWeek} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>
+        <span className={cn( "text-caption font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       <Tabs value={selectedDay} onValueChange={setSelectedDay} className={cn("stack-default")}>
@@ -357,11 +357,11 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
         {/* TEMPORAL: hora + prep score (coluna fixa à esquerda) */}
         <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
           {isOngoing && <span className="size-2 rounded-full bg-success animate-pulse" />}
-          <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
+          <div className={cn(/* design-system-escape: leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap tabular-nums")}>
             {fmtTime(audiencia.dataInicio)}<span className="text-[10px] font-normal ml-px">h</span>
           </div>
           <div className={cn(
-            /* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'text-[10px] font-semibold tabular-nums rounded px-1 py-0.5',
+            /* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'text-[10px] font-semibold tabular-nums rounded px-1 py-0.5',
             prepStatus === 'good'
               ? 'bg-success/15 text-success'
               : prepStatus === 'warning'
@@ -407,7 +407,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                 </span>
               )}
               {isFinalizada && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15")}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-micro-caption font-semibold text-success px-1.5 py-0.5 rounded-full bg-success/15")}>
                   OK
                 </span>
               )}
@@ -454,7 +454,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
               <button
                 type="button"
                 onClick={onClick}
-                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center inline-micro rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "flex h-6 cursor-pointer items-center inline-micro rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/60 transition-colors hover:border-border/40 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
               >
                 <ExternalLink className="size-3" />
                 Detalhes
@@ -465,7 +465,7 @@ function WeekDayCard({ audiencia, onClick, responsavelNomes, usuarios, onRespons
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center inline-micro rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "flex h-6 items-center inline-micro rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <ExternalLink className="size-3" />
                   Entrar na sala

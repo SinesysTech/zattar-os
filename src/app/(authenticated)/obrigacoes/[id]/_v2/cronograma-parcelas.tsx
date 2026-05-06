@@ -80,7 +80,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
           <Text variant="meta-label" className="text-muted-foreground/60">
             Cronograma
           </Text>
-          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground/85 font-medium mt-0.5")}>
+          <Text variant="caption" className={cn( "text-foreground/85 font-medium mt-0.5")}>
             {efetivadas} de {parcelasOrdenadas.length} parcelas efetivadas
           </Text>
         </div>
@@ -156,7 +156,7 @@ export function CronogramaParcelas({ parcelas, onSelecionar }: CronogramaParcela
                   </Text>
                   <Text
                     variant="caption"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums block")}
+                    className={cn( "font-medium text-foreground/85 tabular-nums block")}
                   >
                     {format(venc, 'dd MMM', { locale: ptBR })}
                   </Text>

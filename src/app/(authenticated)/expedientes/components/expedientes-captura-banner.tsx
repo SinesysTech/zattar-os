@@ -37,7 +37,7 @@ export function ExpedientesCapturaBanner({
       <Radar className="size-4 text-info mt-0.5 shrink-0" />
 
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-semibold text-foreground/90 leading-tight")}>
+        <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm font-semibold text-foreground/90 leading-tight")}>
           Expedientes da Captura #{capturaId}
         </p>
         {resumo ? (

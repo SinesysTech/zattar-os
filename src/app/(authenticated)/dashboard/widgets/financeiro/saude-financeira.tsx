@@ -149,7 +149,7 @@ export function WidgetSaúdeFinanceira() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A receber
             </p>
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body font-bold tabular-nums text-success/80")}>
+            <p className={cn( "font-display text-body font-bold tabular-nums text-success/80")}>
               <AnimatedNumber
                 value={receber}
                 prefix={"R$\u00a0"}
@@ -167,7 +167,7 @@ export function WidgetSaúdeFinanceira() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               A pagar
             </p>
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body font-bold tabular-nums text-destructive/70")}>
+            <p className={cn( "font-display text-body font-bold tabular-nums text-destructive/70")}>
               <AnimatedNumber
                 value={pagar}
                 prefix={"R$\u00a0"}

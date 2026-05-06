@@ -584,7 +584,7 @@ export function getAudienciasColumns(
             </div>
 
             {/* Linha 2: Número do processo */}
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-mono-num font-medium text-foreground break-all")} title={a.numeroProcesso}>
+            <span className={cn( "text-mono-num font-medium text-foreground break-all")} title={a.numeroProcesso}>
               {a.numeroProcesso}
             </span>
 

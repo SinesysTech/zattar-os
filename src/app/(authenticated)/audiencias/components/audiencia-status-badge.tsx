@@ -37,7 +37,7 @@ export function AudienciaStatusBadge({ status, className, compact = false }: Aud
   }
 
   return (
-    <SemanticBadge category="audiencia_status" value={status} className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption font-medium', className)}>
+    <SemanticBadge category="audiencia_status" value={status} className={cn( 'text-caption font-medium', className)}>
       {STATUS_AUDIENCIA_LABELS[status]}
     </SemanticBadge>
   );

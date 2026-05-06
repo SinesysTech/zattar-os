@@ -122,9 +122,9 @@ function DayCell({
       )}
     >
       <div className={cn(
-        /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
+         'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
         today
-          ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'bg-primary text-primary-foreground rounded-full font-bold'
+          ?  'bg-primary text-primary-foreground rounded-full font-bold'
           : 'text-foreground/85',
       )}>
         {format(day, 'd')}
@@ -146,7 +146,7 @@ function DayCell({
 
       {count >= 3 && (
         <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
         </div>
@@ -187,7 +187,7 @@ function ExpedienteItem({ expediente }: { expediente: Expediente }) {
         <Text variant="caption" className="font-semibold text-foreground/85 truncate">
           {tipoExpediente}
         </Text>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/50 bg-muted/20 text-foreground/60 shrink-0")}>
+        <span className={cn(/* design-system-escape: px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/50 bg-muted/20 text-foreground/60 shrink-0")}>
           {diasLabel}
         </span>
       </div>
@@ -280,14 +280,14 @@ export function ExpedientesMonthWrapper({
             </Button>
             <Button
               size="sm"
-              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-caption font-semibold")}
+              className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; */ "ml-1 rounded-full px-4 text-caption font-semibold")}
               onClick={() => setCurrentMonth(startOfMonth(new Date()))}
             >
               Hoje
             </Button>
           </div>
 
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center")}>
+          <span className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center")}>
             {format(currentMonth, 'MMMM yyyy', { locale: ptBR }).replace(/^\w/, c => c.toUpperCase())}
           </span>
 
@@ -310,7 +310,7 @@ export function ExpedientesMonthWrapper({
             <div
               key={label}
               className={cn(
-                /* design-system-escape: py-2 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS */ 'text-center py-2 text-caption font-semibold uppercase tracking-widest',
+                /* design-system-escape: py-2 padding direcional sem Inset equiv.; tracking-widest sem token DS */ 'text-center py-2 text-caption font-semibold uppercase tracking-widest',
                 idx >= 5 ? 'text-foreground/55' : 'text-foreground/70',
               )}
             >
@@ -353,7 +353,7 @@ export function ExpedientesMonthWrapper({
                     >
                       <div className={cn("flex items-center justify-between inline-medium mb-3")}>
                         <div>
-                          <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold capitalize")}>
+                          <p className={cn( "text-body-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
                           </p>
                           <Text variant="caption" className="text-foreground/60 mt-0.5 capitalize">
@@ -399,22 +399,22 @@ export function ExpedientesMonthWrapper({
         <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "mt-5 pt-4 border-t border-border/50 flex items-center justify-between flex-wrap inline-medium")}>
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold")}>{summary.total}</p>
+              <p className={cn( "text-body-lg font-bold")}>{summary.total}</p>
               <Text variant="caption" className="text-foreground/60 mt-0.5">Pendentes</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-destructive")}>{summary.vencidos}</p>
+              <p className={cn( "text-body-lg font-bold text-destructive")}>{summary.vencidos}</p>
               <Text variant="caption" className="text-foreground/60 mt-0.5">Vencidos</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-warning")}>{summary.hoje}</p>
+              <p className={cn( "text-body-lg font-bold text-warning")}>{summary.hoje}</p>
               <Text variant="caption" className="text-foreground/60 mt-0.5">Hoje</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold text-info")}>{summary.proximos}</p>
+              <p className={cn( "text-body-lg font-bold text-info")}>{summary.proximos}</p>
               <Text variant="caption" className="text-foreground/60 mt-0.5">Próximos 3d</Text>
             </div>
           </div>

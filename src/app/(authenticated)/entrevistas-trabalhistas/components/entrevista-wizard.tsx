@@ -241,7 +241,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
               >
                 {isComplete ? <CheckCircle2 className="h-4 w-4" /> : index + 1}
               </div>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "hidden font-medium sm:block")}>{MODULO_LABELS[modulo]}</span>
+              <span className={cn( "hidden font-medium sm:block")}>{MODULO_LABELS[modulo]}</span>
             </button>
           );
         })}

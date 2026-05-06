@@ -201,7 +201,7 @@ function criarColunas(
         return (
           <div className="min-h-10 flex flex-col justify-center">
             <div className={cn("flex items-center inline-tight")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{conta.descricao}</span>
+              <span className={cn( "text-body-sm font-medium")}>{conta.descricao}</span>
               {conta.recorrente && (
                 <Repeat className="h-3 w-3 text-muted-foreground" aria-label="Recorrente" />
               )}
@@ -257,7 +257,7 @@ function criarColunas(
       cell: ({ row }) => {
         const valor = row.getValue('valor') as number;
         return (
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-body-sm font-medium text-success")}>
+          <div className={cn( "min-h-10 flex items-center justify-end font-mono text-body-sm font-medium text-success")}>
             {formatarValor(valor)}
           </div>
         );
@@ -279,7 +279,7 @@ function criarColunas(
           <div
             className={cn(
               'min-h-10 flex items-center justify-center text-body-sm',
-              vencida && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-destructive font-medium'
+              vencida &&  'text-destructive font-medium'
             )}
           >
             {formatarData(conta.dataVencimento)}
@@ -317,7 +317,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
+          <div className={cn( "text-body-sm font-medium")}>Ações</div>
         </div>
       ),
       enableSorting: false,
@@ -711,7 +711,7 @@ export default function ContasReceberPage() {
             <AlertDialogDescription>
               Tem certeza que deseja cancelar esta conta?
               {selectedConta && (
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
+                <span className={cn( "block mt-2 font-medium text-foreground")}>
                   {selectedConta.descricao} - {formatarValor(selectedConta.valor)}
                 </span>
               )}
@@ -735,11 +735,11 @@ export default function ContasReceberPage() {
             <AlertDialogDescription>
               Tem certeza que deseja excluir permanentemente esta conta?
               {selectedConta && (
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
+                <span className={cn( "block mt-2 font-medium text-foreground")}>
                   {selectedConta.descricao} - {formatarValor(selectedConta.valor)}
                 </span>
               )}
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 text-destructive font-medium")}>
+              <span className={cn( "block mt-2 text-destructive font-medium")}>
                 Esta ação não pode ser desfeita!
               </span>
             </AlertDialogDescription>

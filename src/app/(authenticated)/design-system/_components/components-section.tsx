@@ -70,7 +70,7 @@ function BadgesSpecimen() {
           </span>
           <div className={cn("flex flex-wrap inline-tight")}>
             <span
-              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
+              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
               style={{
                 color: "var(--entity-cliente)",
                 borderColor: "var(--entity-cliente)",
@@ -80,7 +80,7 @@ function BadgesSpecimen() {
               Cliente
             </span>
             <span
-              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
+              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
               style={{
                 color: "var(--entity-parte-contraria)",
                 borderColor: "var(--entity-parte-contraria)",
@@ -90,7 +90,7 @@ function BadgesSpecimen() {
               Parte contrária
             </span>
             <span
-              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
+              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
               style={{
                 color: "var(--entity-terceiro)",
                 borderColor: "var(--entity-terceiro)",
@@ -100,7 +100,7 @@ function BadgesSpecimen() {
               Terceiro
             </span>
             <span
-              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
+              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center rounded-md border px-2.5 py-0.5 text-[11px] font-medium")}
               style={{
                 color: "var(--entity-representante)",
                 borderColor: "var(--entity-representante)",
@@ -230,36 +230,36 @@ function CardsSpecimen() {
             <div className="grid grid-cols-2 gap-x-3.5 gap-y-2">
               <div>
                 <Text variant="meta-label">Tribunal</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium")}>TRT1</div>
+                <div className={cn( "text-[12px] font-medium")}>TRT1</div>
               </div>
               <div>
                 <Text variant="meta-label">Responsável</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium")}>Dra. Ana Ribeiro</div>
+                <div className={cn( "text-[12px] font-medium")}>Dra. Ana Ribeiro</div>
               </div>
               <div>
                 <Text variant="meta-label">Próx. prazo</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium")}>18/05/2026</div>
+                <div className={cn( "text-[12px] font-medium")}>18/05/2026</div>
               </div>
               <div>
                 <Text variant="meta-label">Valor</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[12px] font-medium")}>
+                <div className={cn( "font-mono text-[12px] font-medium")}>
                   R$ 248.500
                 </div>
               </div>
             </div>
             <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between border-t border-dashed border-border pt-2")}>
               <div className="flex">
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex size-5.5 items-center justify-center rounded-full border-2 border-card bg-primary text-[9px] font-semibold text-white")}>
+                <span className={cn( "flex size-5.5 items-center justify-center rounded-full border-2 border-card bg-primary text-[9px] font-semibold text-white")}>
                   AR
                 </span>
                 <span
-                  className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "-ml-1.5 flex size-5.5 items-center justify-center rounded-full border-2 border-card text-[9px] font-semibold text-white")}
+                  className={cn( "-ml-1.5 flex size-5.5 items-center justify-center rounded-full border-2 border-card text-[9px] font-semibold text-white")}
                   style={{ background: "oklch(0.60 0.22 45)" }}
                 >
                   BN
                 </span>
                 <span
-                  className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "-ml-1.5 flex size-5.5 items-center justify-center rounded-full border-2 border-card text-[9px] font-semibold text-white")}
+                  className={cn( "-ml-1.5 flex size-5.5 items-center justify-center rounded-full border-2 border-card text-[9px] font-semibold text-white")}
                   style={{ background: "oklch(0.55 0.18 145)" }}
                 >
                   LP
@@ -285,7 +285,7 @@ function CardsSpecimen() {
               </div>
               <Text variant="kpi-value">128</Text>
               <div className={cn("flex items-center inline-snug text-[11px] text-muted-foreground")}>
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-success")}>+4</span>
+                <span className={cn( "font-semibold text-success")}>+4</span>
                 desde a última semana
               </div>
             </div>

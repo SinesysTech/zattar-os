@@ -91,7 +91,7 @@ export function VolumeSemanal() {
             </span>
           </div>
         </div>
-        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
+        <span className={cn( "text-[11px] font-bold tabular-nums")}>
           {fmtNum(totalRecebidos + totalBaixados)}
         </span>
       </div>

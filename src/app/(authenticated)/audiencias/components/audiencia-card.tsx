@@ -52,14 +52,14 @@ export function AudienciaCard({ audiencia, compact = false, onClick }: Audiencia
                 <TooltipContent>Ata disponível</TooltipContent>
               </Tooltip>
             )}
-            <Text variant={compact ? 'micro-caption' : 'caption'} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
+            <Text variant={compact ? 'micro-caption' : 'caption'} className={cn( "font-semibold")}>
               {format(dataInicio, 'HH:mm', { locale: ptBR })} - {format(dataFim, 'HH:mm', { locale: ptBR })}
             </Text>
           </Inline>
           <AudienciaStatusBadge status={audiencia.status} compact={compact} />
         </Inline>
         
-        <Text variant={compact ? 'micro-caption' : 'caption'} className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium', compact && 'truncate')}>
+        <Text variant={compact ? 'micro-caption' : 'caption'} className={cn( 'font-medium', compact && 'truncate')}>
           {audiencia.numeroProcesso}
         </Text>
 

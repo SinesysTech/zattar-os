@@ -95,7 +95,7 @@ export function ExpedienteTipoPopover({
       >
         <Command className="bg-transparent">
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
               Tipo de expediente
             </p>
             <CommandInput
@@ -171,7 +171,7 @@ export function TipoTriggerContent({
         )}
         <span className={cn(
           'truncate',
-          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium text-foreground' : /* design-system-escape: size="md" usa font-semibold para dominar a hierarquia visual contra partes (font-medium 13px) — corrige conflito de peso descrito no design review da lista de expedientes */ 'text-sm font-semibold text-foreground',
+          size === 'sm' ?  'text-[11px] font-medium text-foreground' : /* design-system-escape: size="md" usa font-semibold para dominar a hierarquia visual contra partes (font-medium 13px) — corrige conflito de peso descrito no design review da lista de expedientes */ 'text-sm font-semibold text-foreground',
         )}>
           {nome}
         </span>

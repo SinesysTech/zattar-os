@@ -280,12 +280,12 @@ export function WidgetMeuDia() {
                       </span>
                     )}
                     {state === 'near' && (
-                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-bold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0")}>
+                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "mt-1 text-[9px] uppercase tracking-wider font-bold text-warning-foreground bg-warning px-2 py-0.5 rounded shadow-sm shrink-0")}>
                         Em Breve
                       </span>
                     )}
                     {state === 'next' && (
-                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-bold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0")}>
+                      <span className={cn(/* design-system-escape: tracking-wider sem token DS; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "mt-1 text-[9px] uppercase tracking-wider font-bold text-primary-foreground bg-primary px-2 py-0.5 rounded shadow-sm shrink-0")}>
                         Próximo
                       </span>
                     )}

@@ -101,7 +101,7 @@ export function WidgetProdutividadeSemanal() {
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Total semana
           </span>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
+          <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
             {fmtNum(baixasSemana || total)}
           </span>
         </div>
@@ -109,7 +109,7 @@ export function WidgetProdutividadeSemanal() {
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Média diária
           </span>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body font-bold tabular-nums text-primary/80")}>
+          <span className={cn( "font-display text-body font-bold tabular-nums text-primary/80")}>
             {media}
           </span>
         </div>
@@ -122,7 +122,7 @@ export function WidgetProdutividadeSemanal() {
           <span className="text-[9px] text-muted-foreground/60">
             Melhor dia: {getDiaSemanaLabel(melhorDia.data)}
           </span>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold tabular-nums text-primary/70")}>
+          <span className={cn( "text-[9px] font-semibold tabular-nums text-primary/70")}>
             {melhorDia.baixas} baixas
           </span>
         </div>

@@ -107,7 +107,7 @@ export function TipoCapturaSelect({
               <div className={cn("flex items-center inline-medium")}>
                 <TipoIcon className="h-4 w-4" />
                 <div className="flex flex-col">
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{tipo.label}</span>
+                  <span className={cn( "font-medium")}>{tipo.label}</span>
                   <Text variant="caption">
                     {tipo.description}
                   </Text>

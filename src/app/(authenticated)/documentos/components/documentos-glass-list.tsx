@@ -177,7 +177,7 @@ function GlassRow({
           <Icon className={cn('size-4', ACCENT_TEXT[accent])} />
         </IconContainer>
         <div className="flex-1 min-w-0">
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground truncate block")}>{nome}</span>
+          <span className={cn( "text-[13px] font-semibold text-foreground truncate block")}>{nome}</span>
           <div className="text-[11px] text-muted-foreground/60 mt-0.5 truncate">
             {meta ? `${meta} · ` : ''}
             {createdRelative}
@@ -225,7 +225,7 @@ function GlassRow({
 
         {/* 2. Nome + meta */}
         <div className="min-w-0">
-          <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13.5px] font-semibold text-foreground truncate")}>{nome}</div>
+          <div className={cn( "text-[13.5px] font-semibold text-foreground truncate")}>{nome}</div>
           {meta && (
             <div className="text-[11px] text-muted-foreground/60 mt-0.5 truncate">{meta}</div>
           )}
@@ -340,7 +340,7 @@ function GlassEmptyState({ hasSearch }: { hasSearch: boolean }) {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>
+      <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>
         {hasSearch ? 'Nenhum item encontrado' : 'Pasta vazia'}
       </p>
       <Text variant="caption" className="text-muted-foreground/40 mt-1">

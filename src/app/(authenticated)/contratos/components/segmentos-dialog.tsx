@@ -389,7 +389,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
                     className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv. */ "flex items-center justify-between py-2 px-3 hover:bg-muted/50 transition-colors rounded")}
                   >
                     <div className={cn("flex items-center inline-tight flex-1 min-w-0")}>
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{segmento.nome}</span>
+                      <span className={cn( "font-medium")}>{segmento.nome}</span>
                       {!segmento.ativo && (
                         <AppBadge variant="secondary" className={cn("text-caption")}>
                           Inativo

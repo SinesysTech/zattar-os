@@ -387,7 +387,7 @@ function HeroBlock({
               </div>
               <Heading
                 level="section"
-                className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS; text-2xl → migrar para <Heading level="...">; md:text-3xl sem equivalente DS */ "font-bold tracking-tight text-foreground/80 leading-[1.1] text-2xl md:text-3xl lg:text-[2.25rem]")}
+                className={cn(/* design-system-escape: tracking-tight sem token DS; text-2xl → migrar para <Heading level="...">; md:text-3xl sem equivalente DS */ "font-bold tracking-tight text-foreground/80 leading-[1.1] text-2xl md:text-3xl lg:text-[2.25rem]")}
               >
                 {partyNames.re || 'Parte ré ausente'}
               </Heading>
@@ -411,7 +411,7 @@ function HeroBlock({
                 >
                   Processo
                 </Text>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[13px] font-medium text-foreground/85 tabular-nums group-hover:text-foreground transition-colors")}>
+                <span className={cn( "font-mono text-[13px] font-medium text-foreground/85 tabular-nums group-hover:text-foreground transition-colors")}>
                   {expediente.numeroProcesso}
                 </span>
                 <Copy className="size-3 text-muted-foreground/55 group-hover:text-foreground/75 transition-colors" />
@@ -463,7 +463,7 @@ function EditorialTabs({
               onClick={() => onChange(tab.id)}
               className={cn(
                 /* design-system-escape: pb-3 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ 'relative pb-3 pt-1 transition-colors whitespace-nowrap',
-                /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'font-heading text-body-sm font-semibold tracking-tight',
+                /* design-system-escape: tracking-tight sem token DS */ 'font-heading text-body-sm font-semibold tracking-tight',
                 isActive
                   ? 'text-foreground'
                   : 'text-muted-foreground/70 hover:text-muted-foreground',
@@ -722,7 +722,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
           <Heading
             level="card"
             as="h3"
-            className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-foreground mt-1 tabular-nums")}
+            className={cn( "font-bold text-foreground mt-1 tabular-nums")}
           >
             {arquivos.length.toString().padStart(2, '0')}{' '}
             <span className="text-muted-foreground/70 font-normal">documentos</span>
@@ -743,7 +743,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             >
               <Text
                 variant="micro-caption"
-                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-muted-foreground/65 tabular-nums w-6")}
+                className={cn( "font-semibold text-muted-foreground/65 tabular-nums w-6")}
               >
                 {(idx + 1).toString().padStart(2, '0')}
               </Text>
@@ -762,7 +762,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
                     · {arq.tipo}
                   </Text>
                 </div>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[15px] font-medium text-foreground truncate group-hover:text-primary transition-colors")}>
+                <p className={cn( "font-headline text-[15px] font-medium text-foreground truncate group-hover:text-primary transition-colors")}>
                   {arq.nome}
                 </p>
                 <Text
@@ -902,7 +902,7 @@ function EditorialBlock({
           <Heading
             level="card"
             as="h3"
-            className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; text-xl → migrar para <Heading level="...">; md:text-2xl sem equivalente DS; tracking-tight sem token DS */ "font-bold text-xl md:text-2xl tracking-tight text-foreground")}
+            className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; md:text-2xl sem equivalente DS; tracking-tight sem token DS */ "font-bold text-xl md:text-2xl tracking-tight text-foreground")}
           >
             {title}
           </Heading>
@@ -942,7 +942,7 @@ function StatusChip({
       variant="micro-badge"
       className={cn(
         /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-micro rounded-full px-2.5 py-1',
-        /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'font-semibold uppercase tracking-wider',
+        /* design-system-escape: tracking-wider sem token DS */ 'font-semibold uppercase tracking-wider',
         'ring-1 ring-inset',
         tones[tone],
       )}
@@ -965,7 +965,7 @@ function MetaPill({ label, value }: { label: string; value: string }) {
       <Text
         variant="caption"
         as="span"
-        className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums")}
+        className={cn( "font-medium text-foreground/85 tabular-nums")}
       >
         {value}
       </Text>
@@ -978,7 +978,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
     <Text
       variant="micro-badge"
       as="p"
-      className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5")}
+      className={cn( "font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5")}
     >
       {children}
     </Text>
@@ -997,7 +997,7 @@ function StatField({
   return (
     <div className={cn('min-w-0', className)}>
       <FieldLabel>{label}</FieldLabel>
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[15px] font-medium text-foreground/90 wrap-break-word")}>
+      <p className={cn( "font-headline text-[15px] font-medium text-foreground/90 wrap-break-word")}>
         {value}
       </p>
     </div>
@@ -1053,12 +1053,12 @@ function ResponsavelCard({
           <div className={cn("flex items-center inline-medium w-full text-left")}>
             <Avatar className="size-12 ring-2 ring-primary/20">
               <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />
-              <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold bg-primary/10 text-primary")}>
+              <AvatarFallback className={cn( "text-body-sm font-semibold bg-primary/10 text-primary")}>
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading font-bold text-foreground truncate leading-tight")}>
+              <p className={cn(/* design-system-escape: leading-tight sem token DS */ "font-heading font-bold text-foreground truncate leading-tight")}>
                 {usuario.nomeExibicao}
               </p>
               {usuario.cargo && (
@@ -1078,7 +1078,7 @@ function ResponsavelCard({
               <User className="size-5 text-muted-foreground/65" />
             </div>
             <div>
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading font-bold text-warning/80 italic leading-tight")}>
+              <p className={cn(/* design-system-escape: leading-tight sem token DS */ "font-heading font-bold text-warning/80 italic leading-tight")}>
                 Sem responsável
               </p>
               <Text
@@ -1138,7 +1138,7 @@ function CronologiaRow({
         className={cn(
           /* design-system-escape: leading-tight sem token DS */ 'text-right tabular-nums leading-tight font-headline',
           emphasis
-            ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold text-foreground'
+            ?  'font-bold text-foreground'
             : muted
               ? 'text-muted-foreground/60'
               : 'text-foreground/80',
@@ -1224,7 +1224,7 @@ function InlineTipoEditor({
           )}
         >
           {current ? (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading font-semibold text-body-lg text-foreground group-hover:text-primary transition-colors underline decoration-dotted decoration-primary/40 underline-offset-4")}>
+            <span className={cn( "font-heading font-semibold text-body-lg text-foreground group-hover:text-primary transition-colors underline decoration-dotted decoration-primary/40 underline-offset-4")}>
               {current.tipo_expediente}
             </span>
           ) : (
@@ -1241,7 +1241,7 @@ function InlineTipoEditor({
             <Text
               variant="micro-badge"
               as="p"
-              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/70 uppercase tracking-[0.2em] mb-2")}
+              className={cn( "font-medium text-muted-foreground/70 uppercase tracking-[0.2em] mb-2")}
             >
               Escolher tipo
             </Text>
@@ -1264,7 +1264,7 @@ function InlineTipoEditor({
                   onSelect={() => handleSelect(tipo.id)}
                   className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "inline-tight rounded-lg text-caption px-2 py-2")}
                 >
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-headline text-[13px] font-medium")}>
+                  <span className={cn( "font-headline text-[13px] font-medium")}>
                     {tipo.tipo_expediente}
                   </span>
                 </CommandItem>

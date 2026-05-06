@@ -66,11 +66,11 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
         <div>
           <Heading level="page">{tipoFormatado}</Heading>
           <div className={cn("flex items-center inline-tight mt-0.5")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground uppercase tracking-wide")}>
+            <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[11px] font-medium text-muted-foreground uppercase tracking-wide")}>
               Captura #{captura.id}
             </p>
             {isInProgress && (
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center inline-micro text-[10px] font-medium text-info uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "inline-flex items-center inline-micro text-[10px] font-medium text-info uppercase tracking-wider")}>
                 <span className="h-1.5 w-1.5 rounded-full bg-info animate-pulse" />
                 em andamento
               </span>
@@ -92,7 +92,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <Activity className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Status
               </p>
             </div>
@@ -108,7 +108,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <CalendarClock className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Iniciado em
               </p>
             </div>
@@ -121,7 +121,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <CalendarCheck className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Concluído em
               </p>
             </div>
@@ -136,11 +136,11 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className={cn("flex flex-col inline-snug")}>
             <div className={cn("flex items-center inline-snug")}>
               <Timer className="size-3 text-muted-foreground/70" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/75 uppercase tracking-wider")}>
                 Duração
               </p>
             </div>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm tabular-nums font-display font-semibold text-foreground/80")}>
+            <p className={cn( "text-body-sm tabular-nums font-display font-semibold text-foreground/80")}>
               {duracao ?? <span className="text-muted-foreground/65 font-normal">—</span>}
             </p>
           </div>
@@ -159,7 +159,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           ) : (
             <XCircle className="h-4 w-4 text-destructive shrink-0" />
           )}
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+          <p className={cn( "text-body-sm font-medium")}>
             {isCompleted ? 'Captura concluída com sucesso' : 'Captura finalizada com erros'}
           </p>
           {rawLogs.length > 0 && (
@@ -214,7 +214,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           <div className="flex flex-col">
             <div className={cn(/* design-system-escape: px-0.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight mb-2.5 px-0.5")}>
               <AlertTriangle className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
-              <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
+              <h4 className={cn( "text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em]")}>
                 Payload JSON da execução — dados técnicos para auditoria
               </h4>
             </div>

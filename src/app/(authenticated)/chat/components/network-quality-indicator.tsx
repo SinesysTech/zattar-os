@@ -76,7 +76,7 @@ export function NetworkQualityIndicator({
               )} 
             />
             {showLabel && (
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium hidden md:inline-block", config.color)}>
+              <span className={cn( "text-caption font-medium hidden md:inline-block", config.color)}>
                 {config.label}
               </span>
             )}
@@ -84,7 +84,7 @@ export function NetworkQualityIndicator({
         </TooltipTrigger>
         <TooltipContent side="top">
           <div className={cn("flex flex-col inline-micro")}>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>{config.label}</p>
+            <p className={cn( "font-semibold")}>{config.label}</p>
             <Text variant="caption">{config.description}</Text>
             {score >= 0 && <Text variant="caption" className="opacity-70">Score: {score}/5</Text>}
           </div>

@@ -70,7 +70,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
         <div className={cn("flex items-start inline-tight")}>
           <CheckCircle2 className="size-4 text-success mt-0.5 shrink-0" />
           <div>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Declaração assinada pelo cliente</p>
+            <p className={cn( "text-body-sm font-medium")}>Declaração assinada pelo cliente</p>
             {status.dataAssinatura && (
               <Text variant="caption">
                 Em {new Date(status.dataAssinatura).toLocaleString('pt-BR')}
@@ -104,7 +104,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
         <div className={cn("flex items-start inline-tight")}>
           <Clock className="size-4 text-warning mt-0.5 shrink-0" />
           <div>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Aguardando assinatura do cliente</p>
+            <p className={cn( "text-body-sm font-medium")}>Aguardando assinatura do cliente</p>
             {status.expiresAt && (
               <Text variant="caption">
                 Link expira em {new Date(status.expiresAt).toLocaleDateString('pt-BR')}

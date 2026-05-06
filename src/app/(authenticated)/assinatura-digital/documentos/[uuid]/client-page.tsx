@@ -94,10 +94,10 @@ function SummaryMetric({
 }) {
   return (
     <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-border/60 bg-muted/30 px-4 py-3")}>
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
+      <p className={cn( "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
         {label}
       </p>
-      <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body font-semibold text-foreground")}>{value}</p>
+      <p className={cn( "mt-1 text-body font-semibold text-foreground")}>{value}</p>
     </div>
   );
 }
@@ -113,11 +113,11 @@ function MetadataItem({
 }) {
   return (
     <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-border/50 bg-background px-4 py-3")}>
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
+      <p className={cn( "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
         {label}
       </p>
       <div
-        className={mono ? "mt-1 text-body-sm font-mono text-foreground" : /* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-1 text-body-sm font-medium text-foreground"}
+        className={mono ? "mt-1 text-body-sm font-mono text-foreground" :  "mt-1 text-body-sm font-medium text-foreground"}
       >
         {value}
       </div>
@@ -286,7 +286,7 @@ export function DocumentoVerificacaoClient({
                     >
                       <ZoomOut className="h-4 w-4" />
                     </Button>
-                    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-w-14 text-center text-body-sm font-medium text-foreground")}>
+                    <div className={cn( "min-w-14 text-center text-body-sm font-medium text-foreground")}>
                       {Math.round(zoom * 100)}%
                     </div>
                     <Button
@@ -328,7 +328,7 @@ export function DocumentoVerificacaoClient({
                       <FileText className="h-8 w-8" />
                     </div>
                     <div>
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
+                      <p className={cn( "text-body-sm font-medium text-foreground")}>
                         Visualização indisponível
                       </p>
                       <Text variant="caption">

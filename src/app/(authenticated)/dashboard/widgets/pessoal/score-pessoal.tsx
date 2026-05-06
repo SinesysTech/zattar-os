@@ -128,7 +128,7 @@ export function WidgetScorePessoal() {
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Baixas hoje
             </span>
-            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
+            <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
               <AnimatedNumber value={baixasHoje} duration={800} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">concluídas</span>
@@ -138,7 +138,7 @@ export function WidgetScorePessoal() {
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Lembretes
             </span>
-            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
+            <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
               <AnimatedNumber value={isPending ? 0 : lembretePendentes} duration={900} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">pendentes</span>
@@ -148,7 +148,7 @@ export function WidgetScorePessoal() {
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Audiências
             </span>
-            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
+            <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
               <AnimatedNumber value={audienciasHoje} duration={1000} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">hoje</span>
@@ -158,7 +158,7 @@ export function WidgetScorePessoal() {
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Documentos
             </span>
-            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
+            <span className={cn( "font-display text-body-lg font-bold tabular-nums")}>
               <AnimatedNumber value={0} duration={1100} />
             </span>
             <span className="text-[9px] text-muted-foreground/55">editados</span>

@@ -168,7 +168,7 @@ export function AcordoDetalhesV2Client({
               </SemanticBadge>
               <span
                 className={cn(
-                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-nano rounded-full px-2 py-0.5 text-[10px] font-semibold border',
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-nano rounded-full px-2 py-0.5 text-[10px] font-semibold border',
                   isRecebimento
                     ? 'bg-success/10 text-success border-success/25'
                     : 'bg-destructive/10 text-destructive border-destructive/25',
@@ -205,7 +205,7 @@ export function AcordoDetalhesV2Client({
               {processo?.numero_processo && (
                 <Text
                   variant="caption"
-                  className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums")}
+                  className={cn( "font-medium text-foreground/85 tabular-nums")}
                 >
                   {processo.numero_processo}
                 </Text>
@@ -437,7 +437,7 @@ function DetalhesAcordoCard({ acordo }: { acordo: AcordoComParcelas }) {
             </Text>
             <Text
               variant="caption"
-              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85 tabular-nums block mt-0.5 truncate")}
+              className={cn( "font-medium text-foreground/85 tabular-nums block mt-0.5 truncate")}
             >
               {r.value}
             </Text>
@@ -502,13 +502,13 @@ function RepassesTab({
                 <div className={cn("flex items-center inline-tight")}>
                   <Text
                     variant="caption"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}
+                    className={cn( "font-medium text-foreground/85")}
                   >
                     Parcela {parcela.numeroParcela}
                   </Text>
                   <span
                     className={cn(
-                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded px-1.5 py-0.5 border text-[9px] font-semibold',
+                      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center rounded px-1.5 py-0.5 border text-[9px] font-semibold',
                       toneClass,
                     )}
                   >
@@ -608,7 +608,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
                 <Icon className="w-3.5 h-3.5 text-muted-foreground/50" />
                 <Text
                   variant="caption"
-                  className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}
+                  className={cn( "font-medium text-foreground/85")}
                 >
                   {event.label}
                 </Text>

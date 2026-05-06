@@ -129,7 +129,7 @@ export function ExpedienteResponsavelPopover({
       >
         <Command className="bg-transparent">
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv. */ "px-3 pt-3 pb-1.5")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-2")}>
               Responsável
             </p>
             <CommandInput
@@ -208,7 +208,7 @@ export function ResponsavelTriggerContent({
         </Avatar>
         <span className={cn(
           'truncate',
-          size === 'sm' ? 'text-[9px] text-muted-foreground/55' : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[13.5px] font-medium text-foreground',
+          size === 'sm' ? 'text-[9px] text-muted-foreground/55' :  'text-[13.5px] font-medium text-foreground',
         )}>
           {nome}
         </span>

@@ -40,7 +40,7 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
               key={expediente.id}
               className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-start justify-between inline-medium px-3 py-2 text-body-sm")}
             >
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground truncate")}>
+              <span className={cn( "font-medium text-foreground truncate")}>
                 {expediente.numeroProcesso}
               </span>
               <Text variant="caption" className="truncate text-right max-w-[50%]">

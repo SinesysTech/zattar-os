@@ -87,7 +87,7 @@ export function WidgetStatusContratos() {
                 <span className="text-[10px] text-muted-foreground/70 truncate flex-1 capitalize">
                   {s.status.replace(/_/g, ' ')}
                 </span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+                <span className={cn( "text-[10px] font-medium tabular-nums")}>
                   {fmtNum(s.count)}
                 </span>
                 <span className="text-[9px] text-muted-foreground/50 tabular-nums w-8 text-right">

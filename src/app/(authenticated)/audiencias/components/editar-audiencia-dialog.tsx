@@ -718,7 +718,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                   // Audiência Presencial - Campos de Endereço
                   <>
                     <div className={cn("stack-tight")}>
-                      <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>
+                      <Label className={cn( "font-semibold")}>
                         <Text variant="label">Endereço da Audiência Presencial</Text>
                       </Label>
                     </div>

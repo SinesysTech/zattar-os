@@ -135,7 +135,7 @@ export function AudienciasMissaoContent({
           <ChevronLeft className="size-4" />
         </button>
         <button onClick={handleToday} className={cn(
-          /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
+          /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ 'px-2.5 py-1 rounded-lg text-caption font-medium transition-colors cursor-pointer',
           isCurrentDay ? 'bg-primary/12 text-primary' : 'bg-border/8 text-muted-foreground/70 hover:bg-border/15',
         )}>
           Hoje
@@ -143,7 +143,7 @@ export function AudienciasMissaoContent({
         <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize ml-1")}>{dateLabel}</span>
+        <span className={cn( "text-body-sm font-medium capitalize ml-1")}>{dateLabel}</span>
       </div>
 
       {/* Hero Card */}
@@ -288,7 +288,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
   return (
     <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-12 shrink-0 flex flex-col items-end pt-2.5")}>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption tabular-nums font-medium', isPast ? 'text-muted-foreground/55' : 'text-foreground/60')}>
+        <span className={cn( 'text-caption tabular-nums font-medium', isPast ? 'text-muted-foreground/55' : 'text-foreground/60')}>
           {fmtTime(audiencia.dataInicio)}
         </span>
         <span className="text-micro-caption tabular-nums text-muted-foreground/60">{fmtTime(audiencia.dataFim)}</span>
@@ -313,9 +313,9 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
             <div className={cn("flex items-center inline-tight")}>
               <Gavel className="size-3 text-primary/65 shrink-0" />
               <span className="text-subsection-title text-foreground truncate">{audiencia.tipoDescricao || 'Audiência'}</span>
-              {isOngoing && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>}
+              {isOngoing && <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold text-success px-1.5 py-px rounded-full bg-success/10")}>Agora</span>}
               <Text variant="micro-badge" as="span" className={cn(
-                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-nano px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-nano px-1.5 py-px rounded-full font-semibold tabular-nums shrink-0',
                 prepStatus === 'good' ? 'bg-success/10 text-success' : prepStatus === 'warning' ? 'bg-warning/10 text-warning' : 'bg-destructive/10 text-destructive',
               )}>
                 {prepStatus === 'good' ? <CheckCircle2 className="size-2" /> : <AlertTriangle className="size-2" />}
@@ -349,10 +349,10 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
               {audiencia.modalidade === 'presencial' ? 'Presencial' : audiencia.modalidade === 'hibrida' ? 'Híbrida' : 'Virtual'}
             </span>
           </div>
-          {audiencia.trt && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>}
+          {audiencia.trt && <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>}
           {audiencia.urlAudienciaVirtual && (audiencia.modalidade === 'virtual' || audiencia.modalidade === 'hibrida') && (
             <a href={audiencia.urlAudienciaVirtual} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}
-              className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-info/8 text-info/70 hover:bg-info/15 transition-colors")}>
+              className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-info/8 text-info/70 hover:bg-info/15 transition-colors")}>
               Entrar na sala
             </a>
           )}

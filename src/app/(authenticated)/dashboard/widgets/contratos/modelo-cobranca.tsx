@@ -68,17 +68,17 @@ export function WidgetModeloCobranca() {
         <div className={cn("grid grid-cols-2 inline-default")}>
           {/* Pro Labore */}
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3 rounded-xl bg-primary/[0.04] border border-primary/10")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
               Pro Labore
             </p>
             <div className={cn("flex flex-col inline-micro")}>
               <div className={cn("flex items-baseline inline-micro")}>
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmtNum(proLabore.contratos)}</span>
+                <span className={cn( "font-display text-body-lg font-bold")}>{fmtNum(proLabore.contratos)}</span>
                 <span className="text-[9px] text-muted-foreground/50">contratos</span>
               </div>
               <div>
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Faturado</p>
-                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold tabular-nums text-success/80")}>
+                <p className={cn( "text-[12px] font-semibold tabular-nums text-success/80")}>
                   {fmtMoeda(proLabore.faturado)}
                 </p>
               </div>
@@ -87,17 +87,17 @@ export function WidgetModeloCobranca() {
 
           {/* Pro Êxito */}
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight p-3 rounded-xl bg-warning/[0.04] border border-warning/10")}>
-            <p className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider font-medium")}>
               Pro Êxito
             </p>
             <div className={cn("flex flex-col inline-micro")}>
               <div className={cn("flex items-baseline inline-micro")}>
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmtNum(proExito.contratos)}</span>
+                <span className={cn( "font-display text-body-lg font-bold")}>{fmtNum(proExito.contratos)}</span>
                 <span className="text-[9px] text-muted-foreground/50">contratos</span>
               </div>
               <div>
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>Potencial</p>
-                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-semibold tabular-nums text-primary/80")}>
+                <p className={cn( "text-[12px] font-semibold tabular-nums text-primary/80")}>
                   {fmtMoeda(proExito.potencial)}
                 </p>
               </div>
@@ -113,7 +113,7 @@ export function WidgetModeloCobranca() {
             color="var(--success)"
           />
           <div className={cn("flex flex-col inline-nano")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>Taxa de Realização</p>
+            <p className={cn( "text-[10px] font-medium")}>Taxa de Realização</p>
             <p className="text-[9px] text-muted-foreground/60">
               Percentual de êxito convertido em receita efetiva
             </p>

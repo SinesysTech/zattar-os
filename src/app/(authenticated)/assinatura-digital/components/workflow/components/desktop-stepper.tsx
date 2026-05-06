@@ -69,9 +69,9 @@ export function DesktopStepper({
               <span
                 className={cn(
                   'hidden text-body-sm transition-colors duration-200 lg:inline',
-                  step.status === 'current' && /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold text-primary',
-                  step.status === 'completed' && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-foreground',
-                  step.status === 'pending' && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-muted-foreground'
+                  step.status === 'current' &&  'font-bold text-primary',
+                  step.status === 'completed' &&  'font-medium text-foreground',
+                  step.status === 'pending' &&  'font-medium text-muted-foreground'
                 )}
               >
                 {step.label}

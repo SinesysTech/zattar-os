@@ -271,7 +271,7 @@ export function UsuarioEditDialog({
             >
               <Avatar size="2xl" className="border-2 border-muted">
                 <AvatarImage src={currentAvatarUrl || undefined} alt={formData.nomeExibicao || usuario.nomeExibicao} />
-                <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>
+                <AvatarFallback className={cn( "text-body-lg font-medium")}>
                   {getInitials(formData.nomeExibicao || usuario.nomeExibicao)}
                 </AvatarFallback>
               </Avatar>

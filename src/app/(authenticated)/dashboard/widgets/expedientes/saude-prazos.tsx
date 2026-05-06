@@ -77,7 +77,7 @@ export function SaudePrazos() {
             </span>
             <AnimatedNumber
               value={vencidos}
-              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold text-destructive/80")}
+              className={cn( "font-display text-body-lg font-bold text-destructive/80")}
             />
           </div>
 
@@ -87,7 +87,7 @@ export function SaudePrazos() {
             </span>
             <AnimatedNumber
               value={venceHoje}
-              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold text-warning/80")}
+              className={cn( "font-display text-body-lg font-bold text-warning/80")}
             />
           </div>
 
@@ -96,7 +96,7 @@ export function SaudePrazos() {
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Prazo Medio
               </span>
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold")}>
+              <span className={cn( "font-display text-body-sm font-bold")}>
                 {tempoResposta}d
               </span>
             </div>

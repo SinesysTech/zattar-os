@@ -80,7 +80,7 @@ export function WidgetObrigacoesTreemap() {
                       width: `${Math.max(pct, 8)}%`,
                     }}
                   >
-                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] font-semibold text-foreground/70 tabular-nums")}>
+                    <span className={cn( "text-[8px] font-semibold text-foreground/70 tabular-nums")}>
                       {Math.round(pct)}%
                     </span>
                   </div>
@@ -99,7 +99,7 @@ export function WidgetObrigacoesTreemap() {
                   <span className="text-[10px] text-muted-foreground/70 truncate flex-1">
                     {item.label}
                   </span>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+                  <span className={cn( "text-[10px] font-medium tabular-nums")}>
                     {fmtMoeda(item.valor)}
                   </span>
                 </div>

@@ -48,13 +48,13 @@ export function ChatSidebar({
         <div className="flex items-center justify-between">
           <div>
             <Heading level="page">Mensagens</Heading>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[0.65rem] uppercase tracking-[0.08em] text-muted-foreground/70 font-medium")}>
+            <p className={cn( "text-[0.65rem] uppercase tracking-[0.08em] text-muted-foreground/70 font-medium")}>
               {onlineCount !== undefined ? `${onlineCount} online agora` : "Comunicacao da equipe"}
             </p>
           </div>
           <button
             onClick={() => onNovoChatOpenChange(true)}
-            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center inline-snug px-4 py-1 rounded-xl bg-primary text-primary-foreground text-[0.7rem] font-semibold shadow-sm hover:bg-primary/90 hover:-translate-y-px transition-all cursor-pointer")}
+            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "flex items-center inline-snug px-4 py-1 rounded-xl bg-primary text-primary-foreground text-[0.7rem] font-semibold shadow-sm hover:bg-primary/90 hover:-translate-y-px transition-all cursor-pointer")}
           >
             <Plus className="size-3" />
             Nova
@@ -77,7 +77,7 @@ export function ChatSidebar({
       <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex-1 overflow-y-auto px-2 scrollbar-thin")}>
         {fixadas.length > 0 && (
           <>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
+            <p className={cn(/* design-system-escape: tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
               Fixadas
             </p>
             {fixadas.map(sala => (
@@ -91,7 +91,7 @@ export function ChatSidebar({
           </>
         )}
         {(fixadas.length > 0 || recentes.length > 0) && (
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
+          <p className={cn(/* design-system-escape: tracking-widest sem token DS; px-2 padding direcional sem Inset equiv.; pt-4 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold uppercase tracking-widest text-muted-foreground/55 px-2 pt-4 pb-2")}>
             Recentes
           </p>
         )}

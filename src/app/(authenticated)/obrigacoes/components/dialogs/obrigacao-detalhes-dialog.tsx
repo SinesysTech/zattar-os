@@ -178,7 +178,7 @@ function InfoRow({
       </Text>
       <div
         className={cn(
-          /* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ 'text-[13px] font-medium text-foreground/90 leading-snug',
+          /* design-system-escape: leading-snug sem token DS */ 'text-[13px] font-medium text-foreground/90 leading-snug',
           valueClassName,
         )}
       >
@@ -367,7 +367,7 @@ export function ObrigacaoDetalhesDialog({
         {/* ══════════ HEADER · Capa do processo ══════════ */}
         <DialogHeader className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; pt-5 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "shrink-0 gap-0 px-6 pt-5 pb-4 border-b border-border/50")}>
           <div className={cn("flex items-center justify-between inline-default mb-1.5")}>
-            <DialogTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate")}>
+            <DialogTitle className={cn( "flex-1 min-w-0 text-[16px] font-semibold text-foreground leading-[1.3] -tracking-[0.01em] truncate")}>
               {tituloPartes}
             </DialogTitle>
 
@@ -390,7 +390,7 @@ export function ObrigacaoDetalhesDialog({
           </div>
 
           {(numeroProcesso || trt || orgaoJulgador) && (
-            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground")}>
+            <div className={cn( "flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-medium text-muted-foreground")}>
               {numeroProcesso && <span>{numeroProcesso}</span>}
               {classeJudicial && (
                 <>
@@ -424,7 +424,7 @@ export function ObrigacaoDetalhesDialog({
         <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS */ "shrink-0 mx-6 mt-4 inset-card-compact rounded-xl bg-primary/5 border border-primary/15")}>
           <div className={cn("flex items-start inline-medium mb-3.5")}>
             <div className="flex-1 min-w-0">
-              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[14.5px] font-semibold text-foreground leading-tight")}>
+              <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[14.5px] font-semibold text-foreground leading-tight")}>
                 {TIPO_LABELS[obrigacao.tipo] || obrigacao.tipo}
               </p>
               <Text variant="caption" className="text-muted-foreground mt-0.5 block">
@@ -434,7 +434,7 @@ export function ObrigacaoDetalhesDialog({
             {obrigacao.direcao && (
               <span
                 className={cn(
-                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro rounded-full px-2 py-0.5 text-[10.5px] font-semibold border shrink-0',
+                  /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-micro rounded-full px-2 py-0.5 text-[10.5px] font-semibold border shrink-0',
                   isRecebimento
                     ? 'bg-success/10 text-success border-success/25'
                     : 'bg-destructive/10 text-destructive border-destructive/25',
@@ -461,7 +461,7 @@ export function ObrigacaoDetalhesDialog({
                   <button
                     type="button"
                     onClick={handleStartEditValor}
-                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center inline-micro focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
+                    className={cn( "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center inline-micro focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
                     aria-label="Editar valor"
                   >
                     <Pencil className="size-2.5" />
@@ -472,7 +472,7 @@ export function ObrigacaoDetalhesDialog({
 
               {editingValor ? (
                 <div className={cn("flex items-center inline-snug min-w-0")}>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-muted-foreground shrink-0")}>
+                  <span className={cn( "text-[13px] font-medium text-muted-foreground shrink-0")}>
                     R$
                   </span>
                   <Input
@@ -534,7 +534,7 @@ export function ObrigacaoDetalhesDialog({
                   <button
                     type="button"
                     onClick={handleStartEditVencimento}
-                    className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center inline-micro focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
+                    className={cn( "text-[10px] font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer flex items-center inline-micro focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded")}
                     aria-label="Editar vencimento"
                   >
                     <Pencil className="size-2.5" />
@@ -767,7 +767,7 @@ export function ObrigacaoDetalhesDialog({
                       sincConfig.tone === 'muted' && 'text-muted-foreground/60',
                     )}
                   />
-                  <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground/90 font-medium")}>
+                  <Text variant="caption" className={cn( "text-foreground/90 font-medium")}>
                     {sincConfig.label}
                   </Text>
                 </div>

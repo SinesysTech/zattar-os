@@ -361,9 +361,9 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
       <table className="w-full">
         <thead>
           <tr className="border-b bg-muted/50">
-            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-left p-2.5 px-4 text-caption font-medium uppercase tracking-wider text-muted-foreground")}>Descrição</th>
-            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-caption font-medium uppercase tracking-wider text-muted-foreground w-40")}>Valor (R$)</th>
-            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-caption font-medium uppercase tracking-wider text-muted-foreground w-28")}>% Receita</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption" as="div">; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "text-left p-2.5 px-4 text-caption font-medium uppercase tracking-wider text-muted-foreground")}>Descrição</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-caption font-medium uppercase tracking-wider text-muted-foreground w-40")}>Valor (R$)</th>
+            <th className={cn(/* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ /* design-system-escape: p-2.5 → usar <Inset>; px-4 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "text-right p-2.5 px-4 text-caption font-medium uppercase tracking-wider text-muted-foreground w-28")}>% Receita</th>
           </tr>
         </thead>
         <tbody>
@@ -379,7 +379,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
             return (
               <tr
                 key={index}
-                className={`border-b last:border-b-0 transition-colors hover:bg-muted/50 ${linha.destaque ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'bg-muted/30 font-medium' : ''
+                className={`border-b last:border-b-0 transition-colors hover:bg-muted/50 ${linha.destaque ?  'bg-muted/30 font-medium' : ''
                   } ${linha.final
                     ? resumo.lucroLiquido >= 0
                       ? 'bg-success/10'
@@ -388,16 +388,16 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
                   }`}
               >
                 <td
-                  className={`p-2.5 px-4 text-sm ${linha.bold ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold' : ''
+                  className={`p-2.5 px-4 text-sm ${linha.bold ?  'font-semibold' : ''
                     } ${(linha.indent || 0) === 1 ? /* design-system-escape: pl-8 padding direcional sem Inset equiv. */ 'pl-8' : ''
                     }`}
                 >
                   {linha.descricao}
                 </td>
-                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold' : ''} ${valorColor}`}>
+                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ?  'font-semibold' : ''} ${valorColor}`}>
                   {linha.valor !== null ? formatarValor(linha.valor) : ''}
                 </td>
-                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold' : ''} text-muted-foreground`}>
+                <td className={`p-2.5 px-4 text-right text-sm font-mono tabular-nums ${linha.bold ?  'font-semibold' : ''} text-muted-foreground`}>
                   {linha.percentual !== null ? formatarPercentual(linha.percentual) : ''}
                 </td>
               </tr>
@@ -776,7 +776,7 @@ export default function DREClient() {
           }
         >
           <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar DRE</p>
+            <p className={cn( "font-semibold")}>Erro ao carregar DRE</p>
             <p>{error}</p>
           </div>
         </DataShell>

@@ -61,7 +61,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <div className={cn("flex items-center inline-tight")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Alertas</span>
+            <span className={cn( "text-body-sm font-medium")}>Alertas</span>
           </div>
         </CardHeader>
         <CardContent>
@@ -86,7 +86,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <CardTitle className="flex items-center justify-between">
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
+          <div className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
             Alertas
           </div>

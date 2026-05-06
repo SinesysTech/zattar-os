@@ -155,8 +155,8 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
           <div className={cn("grid inline-default md:grid-cols-2")}>
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-micro")}>
               <Text variant="caption" className="uppercase">Transação importada</Text>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{transacao.descricao}</p>
-              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
+              <p className={cn( "text-body-sm font-medium")}>{transacao.descricao}</p>
+              <p className={cn( "text-body-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
               <p className={cn("text-body-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
               {transacao.documento && (
                 <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento}</p>
@@ -165,7 +165,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
 
             <div className={cn("stack-medium")}>
               <div className="flex items-center justify-between">
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões automáticas</p>
+                <p className={cn( "text-body-sm font-medium")}>Sugestões automáticas</p>
                 <Button variant="outline" size="sm" onClick={handleIgnorar}>
                   Marcar como ignorado
                 </Button>
@@ -185,7 +185,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{sugestao.lancamento.descricao}</p>
+                        <p className={cn( "text-body-sm font-medium")}>{sugestao.lancamento.descricao}</p>
                         <Text variant="caption">
                           Data {sugestao.lancamento.dataLancamento} - {formatarValor(sugestao.lancamento.valor)}
                         </Text>
@@ -218,7 +218,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
           <div className={cn("stack-medium")}>
             <div className={cn("flex flex-wrap items-end inline-medium")}>
               <div className={cn("stack-micro")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Busca manual</p>
+                <p className={cn( "text-body-sm font-medium")}>Busca manual</p>
                 <Input
                   placeholder="Buscar por descrição ou documento"
                   value={buscaManual}
@@ -226,18 +226,18 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                 />
               </div>
               <div className={cn("stack-micro")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Data inicial</p>
+                <p className={cn( "text-body-sm font-medium")}>Data inicial</p>
                 <Input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
               </div>
               <div className={cn("stack-micro")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Data final</p>
+                <p className={cn( "text-body-sm font-medium")}>Data final</p>
                 <Input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
               </div>
             </div>
 
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-tight")}>
               <div className="flex items-center justify-between">
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Resultados da busca</p>
+                <p className={cn( "text-body-sm font-medium")}>Resultados da busca</p>
                 {buscando && <Text variant="caption">Buscando...</Text>}
               </div>
               {resultadosBusca.length === 0 && !buscando && (
@@ -247,7 +247,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                 {resultadosBusca.map((lancamento) => (
                   <div key={lancamento.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border p-2")}>
                     <div>
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{lancamento.descricao}</p>
+                      <p className={cn( "text-body-sm font-medium")}>{lancamento.descricao}</p>
                       <Text variant="caption">
                         {lancamento.dataLancamento} - {formatarValor(lancamento.valor)}
                       </Text>

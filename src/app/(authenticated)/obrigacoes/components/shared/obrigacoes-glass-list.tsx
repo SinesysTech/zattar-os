@@ -140,7 +140,7 @@ function GlassRow({
         {/* 2. Partes / Processo com TRT+Grau / Órgão julgador */}
         <div className="min-w-0">
           {/* Linha 1: Nome das partes */}
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 truncate")}>
+          <div className={cn( "text-body-sm font-medium text-foreground/90 truncate")}>
             {parteAutora || parteRe ? (
               <>
                 {parteAutora || '—'}
@@ -158,7 +158,7 @@ function GlassRow({
               <SemanticBadge
                 category="tribunal"
                 value={trt}
-                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
+                className={cn( "text-[9px] font-semibold")}
               >
                 {trt}
               </SemanticBadge>
@@ -167,7 +167,7 @@ function GlassRow({
               <SemanticBadge
                 category="grau"
                 value={grau}
-                className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
+                className={cn( "text-[9px] font-semibold")}
               >
                 {grauLabel}
               </SemanticBadge>
@@ -230,7 +230,7 @@ function GlassRow({
           <SemanticBadge
             category="obrigacao_tipo"
             value={acordo.tipo}
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
+            className={cn( "text-[9px] font-semibold")}
           >
             {tipoLabel}
           </SemanticBadge>
@@ -242,7 +242,7 @@ function GlassRow({
             )}
             <span
               className={cn(
-                /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium tabular-nums truncate',
+                 'text-[11px] font-medium tabular-nums truncate',
                 isRecebimento ? 'text-success/90' : 'text-destructive/90',
               )}
               title={`${direcaoLabel} · ${CURRENCY.format(acordo.valorTotal)}`}
@@ -329,7 +329,7 @@ function GlassEmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/50")}>
+      <p className={cn( "text-body-sm font-medium text-muted-foreground/50")}>
         Nenhuma obrigação encontrada
       </p>
       <Text variant="caption" className="text-muted-foreground/30 mt-1">

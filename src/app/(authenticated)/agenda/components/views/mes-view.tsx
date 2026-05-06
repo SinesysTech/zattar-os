@@ -88,24 +88,24 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
           <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
             <Calendar className="size-4 text-primary" />
           </div>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>{MONTH_NAMES[month]} {year}</span>
+          <span className={cn( "text-body-sm font-semibold text-foreground")}>{MONTH_NAMES[month]} {year}</span>
         </div>
         <div className={cn("flex items-center inline-micro")}>
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>
-          <button onClick={onToday} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>Hoje</button>
+          <button onClick={onToday} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>Hoje</button>
           <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Próximo mês"><ChevronRight className="size-3.5" /></button>
         </div>
       </div>
       <div className={cn("grid grid-cols-7 inline-micro mb-1")}>
         {WEEKDAYS.map((d) => (
-          <div key={d} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS; py-2 padding direcional sem Inset equiv. */ "text-center text-[10px] font-semibold text-muted-foreground/35 uppercase tracking-wider py-2")}>{d}</div>
+          <div key={d} className={cn(/* design-system-escape: tracking-wider sem token DS; py-2 padding direcional sem Inset equiv. */ "text-center text-[10px] font-semibold text-muted-foreground/35 uppercase tracking-wider py-2")}>{d}</div>
         ))}
       </div>
       <div className={cn("grid grid-cols-7 inline-micro")}>
         {cells.map((cell, i) => (
           <div key={i} className={cn("min-h-22 rounded-xl border border-transparent transition-all cursor-pointer hover:bg-muted/8 hover:border-border/10", !cell.currentMonth && "opacity-30")}>
             <div className="mb-1">
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption font-semibold", cell.isToday ? "inline-flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-[11px]" : "text-muted-foreground/60")}>
+              <span className={cn( "text-caption font-semibold", cell.isToday ? "inline-flex items-center justify-center size-6 rounded-full bg-primary text-primary-foreground text-[11px]" : "text-muted-foreground/60")}>
                 {cell.day}
               </span>
             </div>
@@ -117,19 +117,19 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
                     key={evt.id}
                     onClick={() => onEventClick?.(evt)}
                     className={cn(
-                      /* design-system-escape: pl-2 padding direcional sem Inset equiv.; pr-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "relative w-full text-left text-[9.5px] pl-2 pr-1.5 py-0.5 rounded truncate font-medium cursor-pointer hover:brightness-105 transition-all border",
+                      /* design-system-escape: pl-2 padding direcional sem Inset equiv.; pr-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "relative w-full text-left text-[9.5px] pl-2 pr-1.5 py-0.5 rounded truncate font-medium cursor-pointer hover:brightness-105 transition-all border",
                       colors.bg, colors.border,
                     )}
                   >
                     <span className={cn("absolute left-0 top-0 bottom-0 w-0.5 rounded-l", colors.accent)} aria-hidden />
                     {!evt.allDay && (
-                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "tabular-nums font-semibold mr-1", colors.text)}>{fmtTime(evt.start)}</span>
+                      <span className={cn( "tabular-nums font-semibold mr-1", colors.text)}>{fmtTime(evt.start)}</span>
                     )}
                     <span className="text-foreground/85">{evt.title}</span>
                   </button>
                 );
               })}
-              {cell.events.length > 3 && <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; pl-1 padding direcional sem Inset equiv. */ "text-[9px] text-muted-foreground/40 font-medium pl-1")}>+{cell.events.length - 3} mais</span>}
+              {cell.events.length > 3 && <span className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "text-[9px] text-muted-foreground/40 font-medium pl-1")}>+{cell.events.length - 3} mais</span>}
             </div>
           </div>
         ))}

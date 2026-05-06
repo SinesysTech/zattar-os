@@ -81,7 +81,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         </CardHeader>
         <CardContent>
           <div className={`rounded-md p-4 text-sm ${bgClass}`}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight font-medium")}>
+            <p className={cn( "flex items-center inline-tight font-medium")}>
               <Icon className={`size-4 ${isLoading ? "animate-spin" : ""}`} />
               {title}
             </p>
@@ -128,7 +128,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         <div className={cn("grid grid-cols-2 inline-default")}>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
             <Text variant="caption">IOPS</Text>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body-lg font-semibold")}>
+            <p className={cn( "mt-1 text-body-lg font-semibold")}>
               {disk_iops_consumption.toLocaleString('pt-BR')}
               <span className={cn("text-body-sm font-normal text-muted-foreground")}> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
             </p>
@@ -137,7 +137,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           {/* Throughput */}
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
             <Text variant="caption">Throughput</Text>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body-lg font-semibold")}>
+            <p className={cn( "mt-1 text-body-lg font-semibold")}>
               {disk_io_consumption_mbps.toFixed(1)}
               <span className={cn("text-body-sm font-normal text-muted-foreground")}> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>
             </p>

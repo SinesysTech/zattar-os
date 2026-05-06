@@ -194,7 +194,7 @@ export function AssistentesTiposConfig({
         <CardContent>
           <div className={cn("grid inline-default md:grid-cols-3")}>
             <div className={cn("stack-tight")}>
-              <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Assistente</label>
+              <label className={cn( "text-body-sm font-medium")}>Assistente</label>
               <Select value={assistenteId} onValueChange={setAssistenteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o assistente" />
@@ -213,7 +213,7 @@ export function AssistentesTiposConfig({
             </div>
 
             <div className={cn("stack-tight")}>
-              <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Tipo de Expediente</label>
+              <label className={cn( "text-body-sm font-medium")}>Tipo de Expediente</label>
               <Select value={tipoExpedienteId} onValueChange={setTipoExpedienteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o tipo" />
@@ -278,7 +278,7 @@ export function AssistentesTiposConfig({
                 >
                   <div className={cn("flex-1 stack-micro")}>
                     <div className={cn("flex items-center inline-tight")}>
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{relacao.assistente_nome}</span>
+                      <span className={cn( "font-medium")}>{relacao.assistente_nome}</span>
                       {relacao.ativo ? (
                         <SemanticBadge category="status" value="success">
                           <Check className="h-3 w-3 mr-1" />

@@ -85,14 +85,14 @@ export default function PlaygroundPage() {
               <CardContent>
                 <div className={cn("flex items-center inline-default")}>
                   <div className={cn(
-                    /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-4 py-2 rounded-md border-2 font-medium',
+                    /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; */ 'px-4 py-2 rounded-md border-2 font-medium',
                     theme === 'light' && 'bg-primary text-primary-foreground border-primary',
                     theme === 'dark' && 'border-muted-foreground'
                   )}>
                     Light
                   </div>
                   <div className={cn(
-                    /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-4 py-2 rounded-md border-2 font-medium',
+                    /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; */ 'px-4 py-2 rounded-md border-2 font-medium',
                     theme === 'dark' && 'bg-primary text-primary-foreground border-primary',
                     theme === 'light' && 'border-muted-foreground'
                   )}>
@@ -115,7 +115,7 @@ export default function PlaygroundPage() {
               <CardContent className={cn("stack-loose")}>
                 {/* Variants */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Variantes</Label>
                   <div className={cn("flex flex-wrap inline-medium")}>
                     <Button variant="default">Default</Button>
                     <Button variant="secondary">Secondary</Button>
@@ -128,7 +128,7 @@ export default function PlaygroundPage() {
 
                 {/* Sizes */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Tamanhos</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Tamanhos</Label>
                   <div className={cn("flex flex-wrap items-center inline-medium")}>
                     <Button size="sm">Small</Button>
                     <Button size="default">Default</Button>
@@ -141,7 +141,7 @@ export default function PlaygroundPage() {
 
                 {/* States */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Estados</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Estados</Label>
                   <div className={cn("flex flex-wrap inline-medium")}>
                     <Button>Normal</Button>
                     <Button disabled>Disabled</Button>
@@ -163,7 +163,7 @@ export default function PlaygroundPage() {
 
                 {/* With Icons */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Com Ícones</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Com Ícones</Label>
                   <div className={cn("flex flex-wrap inline-medium")}>
                     <Button variant="default">
                       <Check />
@@ -195,7 +195,7 @@ export default function PlaygroundPage() {
               <CardContent className={cn("stack-loose")}>
                 {/* Variants */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Variantes</Label>
                   <div className={cn("flex flex-wrap inline-medium")}>
                     <Badge variant="default">Default</Badge>
                     <Badge variant="secondary">Secondary</Badge>
@@ -211,7 +211,7 @@ export default function PlaygroundPage() {
 
                 {/* With Icons */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Com Ícones</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Com Ícones</Label>
                   <div className={cn("flex flex-wrap inline-medium")}>
                     <Badge variant="success">
                       <Check />
@@ -230,7 +230,7 @@ export default function PlaygroundPage() {
 
                 {/* Use Cases */}
                 <div>
-                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Casos de Uso</Label>
+                  <Label className={cn( "text-body font-semibold mb-3 block")}>Casos de Uso</Label>
                   <div className={cn("flex flex-wrap inline-medium")}>
                     <Badge variant="outline">23 Processos</Badge>
                     <Badge variant="default">Urgente</Badge>
@@ -363,7 +363,7 @@ function ColorSwatch({ name, className }: { name: string; className: string }) {
   return (
     <div className={cn("stack-tight")}>
       <div className={cn('h-20 rounded-md', className)} />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-center")}>{name}</p>
+      <p className={cn( "text-body-sm font-medium text-center")}>{name}</p>
     </div>
   );
 }

@@ -75,7 +75,7 @@ export function CustomAudioGrid({ className }: CustomAudioGridProps) {
           </div>
 
           <div className="text-center">
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-video-text text-body-lg")}>{p.name} {p.id === self?.id && "(Você)"}</p>
+            <p className={cn( "font-semibold text-video-text text-body-lg")}>{p.name} {p.id === self?.id && "(Você)"}</p>
             <p className={cn("text-body-sm text-video-muted")}>{p.audioEnabled ? "Falando..." : "Mudo"}</p>
           </div>
         </div>

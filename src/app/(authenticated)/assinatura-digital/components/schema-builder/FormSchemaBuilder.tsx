@@ -486,7 +486,7 @@ export function FormSchemaBuilder({
       return (
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize")}>{label}</span>
+          <span className={cn( "text-body-sm font-medium capitalize")}>{label}</span>
         </div>
       );
     }
@@ -499,7 +499,7 @@ export function FormSchemaBuilder({
       return (
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{field.label}</span>
+          <span className={cn( "text-body-sm font-medium")}>{field.label}</span>
         </div>
       );
     }
@@ -632,7 +632,7 @@ export function FormSchemaBuilder({
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-4 p-3 bg-muted/50 border rounded-lg")}>
                 <div className={cn("flex items-center inline-tight text-body-sm text-foreground")}>
                   <Eye className="size-4 text-muted-foreground" />
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Preview do Formulário</span>
+                  <span className={cn( "font-medium")}>Preview do Formulário</span>
                 </div>
                 <Text variant="caption" className="mt-1">
                   Visualização de como o formulário será exibido aos usuários

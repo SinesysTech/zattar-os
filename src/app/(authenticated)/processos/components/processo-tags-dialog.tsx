@@ -166,7 +166,7 @@ export function ProcessoTagsDialog({
       <div className={cn("stack-default")}>
         {/* Tags selecionadas */}
         <div>
-          <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Etiquetas selecionadas</Label>
+          <Label className={cn( "text-body-sm font-medium")}>Etiquetas selecionadas</Label>
           <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex flex-wrap inline-tight min-h-10 p-2 border rounded-md bg-muted/30")}>
             {selectedTagIds.length === 0 ? (
               <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta selecionada</span>
@@ -190,7 +190,7 @@ export function ProcessoTagsDialog({
         {/* Lista de tags disponíveis */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Etiquetas disponíveis</Label>
+            <Label className={cn( "text-body-sm font-medium")}>Etiquetas disponíveis</Label>
             <Button
               type="button"
               variant="ghost"
@@ -315,7 +315,7 @@ export function ProcessoTagsDialog({
 
         {/* Erro */}
         {error && (
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{error}</p>
+          <p className={cn( "text-body-sm font-medium text-destructive")}>{error}</p>
         )}
       </div>
         </div>

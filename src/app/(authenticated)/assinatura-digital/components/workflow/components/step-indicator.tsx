@@ -70,7 +70,7 @@ export function StepIndicator({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={cn(
-        /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'relative flex items-center justify-center rounded-full font-medium transition-all duration-300',
+         'relative flex items-center justify-center rounded-full font-medium transition-all duration-300',
         sizeClasses[size],
         // Status styles
         status === 'completed' && 'bg-primary text-primary-foreground',

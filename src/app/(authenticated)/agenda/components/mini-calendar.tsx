@@ -131,7 +131,7 @@ export function MiniCalendar({
         {WEEKDAY_LABELS.map((label, i) => (
           <div
             key={`${label}-${i}`}
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center justify-center size-7 text-[9px] font-semibold text-muted-foreground/40")}
+            className={cn( "flex items-center justify-center size-7 text-[9px] font-semibold text-muted-foreground/40")}
           >
             {label}
           </div>
@@ -154,8 +154,8 @@ export function MiniCalendar({
                   "relative flex items-center justify-center size-7 rounded-lg text-[11px] transition-colors cursor-pointer",
                   !cell.currentMonth && "opacity-30",
                   cell.currentMonth && !isToday && !isSelected && "text-muted-foreground hover:bg-muted/20",
-                  isToday && /* design-system-escape: font-bold → className de <Text>/<Heading> */ "bg-primary text-primary-foreground font-bold",
-                  isSelected && !isToday && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "outline outline-1.5 outline-primary outline-offset-1 font-semibold text-foreground",
+                  isToday &&  "bg-primary text-primary-foreground font-bold",
+                  isSelected && !isToday &&  "outline outline-1.5 outline-primary outline-offset-1 font-semibold text-foreground",
                 )}
                 aria-label={`${cell.day} de ${MONTH_NAMES[month]}`}
                 aria-current={isToday ? "date" : undefined}

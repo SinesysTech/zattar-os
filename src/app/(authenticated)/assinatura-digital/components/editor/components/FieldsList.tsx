@@ -100,7 +100,7 @@ const FieldsListItem = memo(function FieldsListItem({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{field.nome}</p>
+        <p className={cn( "text-body-sm font-medium truncate")}>{field.nome}</p>
         <Text variant="caption">
           {getFieldTypeLabel(field.tipo)} • Pág. {field.posicao.pagina}
         </Text>

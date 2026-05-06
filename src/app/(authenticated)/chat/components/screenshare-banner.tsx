@@ -25,7 +25,7 @@ export function ScreenshareBanner({
     )}>
       <div className={cn("flex items-center inline-tight")}>
         <Monitor className="w-4 h-4" />
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+        <span className={cn( "font-medium")}>
           {isSelf ? "Você está compartilhando sua tela" : `${participantName} está compartilhando a tela`}
         </span>
       </div>

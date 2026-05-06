@@ -193,7 +193,7 @@ export function WidgetFocoHoje() {
 
             {/* Conteúdo — hierarquia: título → partes → processo */}
             <div className="flex-1 min-w-0">
-              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-semibold text-foreground/85 leading-tight")}>
+              <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] font-semibold text-foreground/85 leading-tight")}>
                 {acao.titulo}
               </p>
               {acao.partes && (

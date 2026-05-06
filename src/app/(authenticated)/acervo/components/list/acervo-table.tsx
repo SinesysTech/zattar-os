@@ -104,7 +104,7 @@ export function AcervoTable({
                     />
                   </TableCell>
                 )}
-                <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                <TableCell className={cn( "font-medium")}>
                   {processo.numero_processo}
                 </TableCell>
                 <TableCell>{processo.trt}</TableCell>

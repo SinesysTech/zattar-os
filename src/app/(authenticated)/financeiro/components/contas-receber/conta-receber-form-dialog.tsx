@@ -622,7 +622,7 @@ export function ContaReceberFormDialog({
             <div className={cn("stack-default rounded-lg border inset-card-compact")}>
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="recorrente" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>
+                  <Label htmlFor="recorrente" className={cn( "text-body font-medium")}>
                     Conta Recorrente
                   </Label>
                   <p className={cn("text-body-sm text-muted-foreground")}>

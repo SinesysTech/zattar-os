@@ -175,7 +175,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-start">
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
+          <div className={cn( "text-body-sm font-medium")}>Ações</div>
         </div>
       ),
       enableSorting: false,

@@ -274,7 +274,7 @@ function ComparacaoCards({
                 const statusConfig = STATUS_CONFIG[dados.status];
                 return (
                   <TableRow key={dados.id}>
-                    <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{dados.nome}</TableCell>
+                    <TableCell className={cn( "font-medium")}>{dados.nome}</TableCell>
                     <TableCell>
                       {dados.ano} - {dados.periodo}
                     </TableCell>
@@ -516,7 +516,7 @@ function CompararOrcamentosContent() {
           Voltar
         </Button>
         <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamentos</p>
+          <p className={cn( "font-semibold")}>Erro ao carregar orçamentos</p>
           <p>{error}</p>
         </div>
       </div>

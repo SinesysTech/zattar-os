@@ -191,7 +191,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
               </p>
               {usuario.cargo ? (
                 <div>
-                  <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{usuario.cargo.nome}</div>
+                  <div className={cn( "text-body font-medium")}>{usuario.cargo.nome}</div>
                   {usuario.cargo.descricao && (
                     <div className={cn("text-body-sm text-muted-foreground mt-0.5")}>
                       {usuario.cargo.descricao}

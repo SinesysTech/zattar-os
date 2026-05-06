@@ -102,7 +102,7 @@ export function WidgetRepassesPendentes() {
             <ListItem key={`${r.processo}-${i}`} className="items-start">
               <div className="flex-1 min-w-0">
                 <div className={cn("flex items-center inline-snug")}>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
+                  <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[12px] font-medium leading-tight truncate")}>
                     {r.cliente}
                   </p>
                   <StatusBadge status={r.status} />
@@ -113,20 +113,20 @@ export function WidgetRepassesPendentes() {
                 <div className={cn("flex items-center inline-medium mt-1")}>
                   <div className={cn("flex items-center inline-micro")}>
                     <span className="text-[9px] text-muted-foreground/50">Cliente ({r.pctCliente}%):</span>
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+                    <span className={cn( "text-[10px] font-medium tabular-nums")}>
                       {fmtMoeda(valorCliente)}
                     </span>
                   </div>
                   <div className="w-px h-3 bg-border/15" aria-hidden="true" />
                   <div className={cn("flex items-center inline-micro")}>
                     <span className="text-[9px] text-muted-foreground/50">Escritório:</span>
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+                    <span className={cn( "text-[10px] font-medium tabular-nums")}>
                       {fmtMoeda(valorEscritorio)}
                     </span>
                   </div>
                 </div>
               </div>
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold tabular-nums shrink-0")}>
+              <span className={cn( "text-[11px] font-semibold tabular-nums shrink-0")}>
                 {fmtMoeda(r.total)}
               </span>
             </ListItem>

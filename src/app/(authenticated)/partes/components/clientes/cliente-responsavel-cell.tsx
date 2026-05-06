@@ -108,7 +108,7 @@ export function ClienteResponsavelCell({
                         <>
                             <Avatar size="sm">
                                 <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-                                <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
+                                <AvatarFallback className={cn( "text-[10px] font-medium")}>
                                     {getInitials(responsavel.nomeExibicao)}
                                 </AvatarFallback>
                             </Avatar>

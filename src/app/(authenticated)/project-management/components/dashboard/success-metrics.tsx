@@ -54,7 +54,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "mb-2 text-body-sm font-bold")}>Destaques do Mês</p>
+        <p className={cn( "mb-2 text-body-sm font-bold")}>Destaques do Mês</p>
         {membros.length > 0 ? (
           <div className={cn(/* design-system-escape: -space-x-4 sem equivalente DS */ "flex -space-x-4")}>
             <TooltipProvider>
@@ -84,7 +84,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
             Nenhum membro ativo.
           </Text>
         )}
-        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "mt-8 mb-2 text-body-sm font-bold")}>Resumo</p>
+        <p className={cn( "mt-8 mb-2 text-body-sm font-bold")}>Resumo</p>
         <div className={cn(/* design-system-escape: *:py-3 sem equivalente DS */ "divide-y *:py-3")}>
           <div className={cn("flex justify-between text-body-sm")}>
             <span>Projetos Ativos</span>

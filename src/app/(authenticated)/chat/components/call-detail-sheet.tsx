@@ -144,7 +144,7 @@ export function CallDetailSheet({
             >
               <GlassPanel depth={1} className={cn("inset-card-compact stack-medium")}>
                 <div className="flex justify-between items-center">
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Status</span>
+                  <span className={cn( "text-body-sm font-medium")}>Status</span>
                   <Badge
                     variant={getStatusBadgeVariant(
                       chamada.status as StatusChamada,
@@ -155,7 +155,7 @@ export function CallDetailSheet({
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Iniciada em</span>
+                  <span className={cn( "text-body-sm font-medium")}>Iniciada em</span>
                   <span className={cn("text-body-sm text-muted-foreground")}>
                     {format(
                       new Date(chamada.iniciadaEm),
@@ -167,7 +167,7 @@ export function CallDetailSheet({
 
                 {chamada.finalizadaEm && (
                   <div className="flex justify-between items-center">
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Finalizada em</span>
+                    <span className={cn( "text-body-sm font-medium")}>Finalizada em</span>
                     <span className={cn("text-body-sm text-muted-foreground")}>
                       {format(
                         new Date(chamada.finalizadaEm),
@@ -179,7 +179,7 @@ export function CallDetailSheet({
                 )}
 
                 <div className="flex justify-between items-center">
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Duração</span>
+                  <span className={cn( "text-body-sm font-medium")}>Duração</span>
                   <span className={cn("text-body-sm text-muted-foreground")}>
                     {chamada.duracaoSegundos
                       ? formatarDuracao(chamada.duracaoSegundos)
@@ -189,7 +189,7 @@ export function CallDetailSheet({
 
                 {chamada.iniciador && (
                   <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-between items-center pt-2 border-t border-border/20")}>
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Iniciado por</span>
+                    <span className={cn( "text-body-sm font-medium")}>Iniciado por</span>
                     <div className={cn("flex items-center inline-tight")}>
                       <Avatar size="sm">
                         <AvatarImage src={chamada.iniciador.avatar} />
@@ -261,7 +261,7 @@ export function CallDetailSheet({
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
-                          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+                          <span className={cn( "text-body-sm font-medium")}>
                             Usuário #{p.usuarioId}
                           </span>
                           <Text variant="caption">

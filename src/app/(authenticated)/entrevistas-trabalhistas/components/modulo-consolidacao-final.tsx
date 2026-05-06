@@ -65,7 +65,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
 
       {inconsistencias.length > 0 && (
         <div className={cn("stack-medium rounded-lg border border-warning/15 bg-warning/5 inset-card-compact")}>
-          <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
+          <h4 className={cn( "text-body-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
           {inconsistencias.map((item, index) => (
             <div key={`${item}-${index}`} className={cn("stack-tight")}>
               <p className={cn("text-body-sm")}>{item}</p>

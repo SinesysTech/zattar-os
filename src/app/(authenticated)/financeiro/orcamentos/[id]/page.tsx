@@ -154,7 +154,7 @@ function criarColunasItens(
         const item = row.original;
         return (
           <div className="min-h-10 flex flex-col justify-center">
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+            <span className={cn( "text-body-sm font-medium")}>
               {item.contaContabil?.codigo} - {item.contaContabil?.nome}
             </span>
           </div>
@@ -205,7 +205,7 @@ function criarColunasItens(
       cell: ({ row }) => {
         const valor = row.getValue('valorPrevisto') as number;
         return (
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-body-sm font-medium")}>
+          <div className={cn( "min-h-10 flex items-center justify-end font-mono text-body-sm font-medium")}>
             {formatarValor(valor)}
           </div>
         );
@@ -215,7 +215,7 @@ function criarColunasItens(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
+          <div className={cn( "text-body-sm font-medium")}>Ações</div>
         </div>
       ),
       size: 80,
@@ -397,7 +397,7 @@ export default function OrcamentoDetalhesPage() {
           Voltar
         </Button>
         <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamento</p>
+          <p className={cn( "font-semibold")}>Erro ao carregar orçamento</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>
       </div>
@@ -554,7 +554,7 @@ export default function OrcamentoDetalhesPage() {
             <AlertDialogDescription>
               Tem certeza que deseja excluir este item do orçamento?
               {selectedItem && (
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
+                <span className={cn( "block mt-2 font-medium text-foreground")}>
                   {selectedItem.contaContabil?.nome} - {formatarValor(selectedItem.valorPrevisto)}
                 </span>
               )}

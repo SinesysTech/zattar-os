@@ -181,7 +181,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
           <div className={cn("text-body-sm text-muted-foreground stack-micro")}>
             {item.nomeResponsavel && (
               <p>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Responsável:</span>{' '}
+                <span className={cn( "font-medium")}>Responsável:</span>{' '}
                 {item.nomeSignatario || item.nomeResponsavel}
               </p>
             )}

@@ -105,7 +105,7 @@ function getPecasModelosColumns(
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-4 w-4 text-muted-foreground" />
             <div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
+              <p className={cn( "font-medium")}>{modelo.titulo}</p>
               {modelo.descricao && (
                 <p className={cn("text-body-sm text-muted-foreground line-clamp-1")}>
                   {modelo.descricao}

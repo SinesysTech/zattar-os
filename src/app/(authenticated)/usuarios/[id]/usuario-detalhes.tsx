@@ -297,7 +297,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                 Usuários
               </span>
               <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5")}>/</span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{usuario.nomeCompleto}</span>
+              <span className={cn( "text-foreground font-medium")}>{usuario.nomeCompleto}</span>
             </div>
           </div>
 

@@ -46,7 +46,7 @@ export default function DesignSystemPage() {
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center whitespace-nowrap rounded-lg px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "inline-flex items-center whitespace-nowrap rounded-lg px-3 py-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground")}
               >
                 {s.label}
               </a>

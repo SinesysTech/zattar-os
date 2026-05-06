@@ -175,7 +175,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
         )}
       </div>
       <div className={cn("flex items-center inline-snug")}>
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium whitespace-nowrap")}>
+        <div className={cn( "text-body-sm font-medium whitespace-nowrap")}>
           {classeJudicial && `${classeJudicial} `}
           {numeroProcesso}
         </div>
@@ -271,7 +271,7 @@ function ProcessoResponsavelCell({
           <>
             <Avatar size="sm">
               <AvatarImage src={responsavel.avatarUrl || undefined} alt={responsavel.nomeExibicao} />
-              <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
+              <AvatarFallback className={cn( "text-[10px] font-medium")}>
                 {getInitials(responsavel.nomeExibicao)}
               </AvatarFallback>
             </Avatar>

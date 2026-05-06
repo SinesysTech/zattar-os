@@ -71,7 +71,7 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
       <div className="mt-4 flex flex-col items-center">
         <GaugeMeter value={score} max={100} status={status} size={120} />
         <p className={cn(
-          /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'mt-2 text-center text-[11px] font-medium',
+           'mt-2 text-center text-[11px] font-medium',
           status === 'good' && 'text-success/70',
           status === 'warning' && 'text-warning/70',
           status === 'danger' && 'text-destructive/70',
@@ -149,7 +149,7 @@ export function AgingFunnel({
             >
               <div className={cn("flex items-center justify-between inline-medium mb-1")}>
                 <span className="text-[11px] text-muted-foreground/70 truncate">{faixa.label}</span>
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold tabular-nums")}>{valor}</span>
+                <span className={cn( "text-[11px] font-semibold tabular-nums")}>{valor}</span>
               </div>
               <div className="h-1.5 rounded-full bg-border/10 overflow-hidden">
                 <div

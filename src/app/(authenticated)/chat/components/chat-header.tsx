@@ -49,13 +49,13 @@ export function ChatHeader({ sala, onVideoCall, onAudioCall, onScreenshare: _onS
         >
           <Avatar className="size-8 rounded-full overflow-visible shrink-0">
             <AvatarImage src={image} alt={name} className="rounded-full" />
-            <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "bg-primary/10 text-primary text-[11px] font-semibold rounded-full")}>
+            <AvatarFallback className={cn( "bg-primary/10 text-primary text-[11px] font-semibold rounded-full")}>
               {generateAvatarFallback(name)}
             </AvatarFallback>
             {!isGroup && <AvatarIndicator variant={onlineStatus} />}
           </Avatar>
           <div className={cn("flex flex-col inline-nano")}>
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.8125rem] font-semibold text-foreground leading-[1.2]")}>{name}</span>
+            <span className={cn( "text-[0.8125rem] font-semibold text-foreground leading-[1.2]")}>{name}</span>
             {!isGroup && (
               onlineStatus === "online" ? (
                 <span className="text-[0.625rem] leading-[1.4] text-success">

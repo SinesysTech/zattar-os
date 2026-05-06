@@ -172,14 +172,14 @@ export function PericiasListWrapper({
         <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between text-[11px] text-muted-foreground/70 pt-2")}>
           <span className="tabular-nums">
             Mostrando{' '}
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>
+            <span className={cn( "text-foreground font-medium")}>
               {pageIndex * PAGE_SIZE + 1}
             </span>
             –
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>
+            <span className={cn( "text-foreground font-medium")}>
               {Math.min((pageIndex + 1) * PAGE_SIZE, total)}
             </span>{' '}
-            de <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>{total}</span>
+            de <span className={cn( "text-foreground font-medium")}>{total}</span>
           </span>
           <div className={cn("flex items-center inline-tight")}>
             <Button

@@ -18,7 +18,7 @@ interface SectionHeaderProps {
 export function SectionHeader({ title, action, className }: SectionHeaderProps) {
   return (
     <div className={cn('flex items-center justify-between', className)}>
-      <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/65")}>
+      <h3 className={cn( "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/65")}>
         {title}
       </h3>
       {action}

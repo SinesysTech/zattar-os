@@ -67,7 +67,7 @@ export function DocFieldTable({ fields }: { fields: FieldDef[] }) {
         <TableBody>
           {fields.map((f) => (
             <TableRow key={f.campo}>
-              <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{f.campo}</TableCell>
+              <TableCell className={cn( "font-medium")}>{f.campo}</TableCell>
               <TableCell className="text-muted-foreground">{f.tipo ?? '—'}</TableCell>
               <TableCell>{f.obrigatorio ? 'Sim' : 'Não'}</TableCell>
               <TableCell>{f.descricao}</TableCell>
@@ -96,7 +96,7 @@ export function DocActionList({ actions }: { actions: ActionDef[] }) {
         <li key={a.nome} className={cn("flex items-start inline-medium")}>
           {a.icon && <a.icon className="h-5 w-5 text-primary mt-0.5 shrink-0" />}
           <div>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{a.nome}</span>
+            <span className={cn( "font-medium")}>{a.nome}</span>
             <span className="text-muted-foreground"> — {a.descricao}</span>
           </div>
         </li>
@@ -132,11 +132,11 @@ export function DocSteps({ steps }: { steps: StepDef[] }) {
     <ol className={cn("stack-default")}>
       {steps.map((s, i) => (
         <li key={i} className={cn("flex inline-default")}>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-body-sm font-bold")}>
+          <span className={cn( "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-body-sm font-bold")}>
             {i + 1}
           </span>
           <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "pt-0.5")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{s.titulo}</p>
+            <p className={cn( "font-medium")}>{s.titulo}</p>
             <p className={cn("text-muted-foreground text-body-sm")}>{s.descricao}</p>
           </div>
         </li>

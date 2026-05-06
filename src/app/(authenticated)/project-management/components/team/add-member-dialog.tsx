@@ -79,7 +79,7 @@ export function AddMemberDialog({
 
         <form onSubmit={handleSubmit} className={cn("stack-default")}>
           <div className={cn("stack-tight")}>
-            <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Usuário</label>
+            <label className={cn( "text-body-sm font-medium")}>Usuário</label>
             <Combobox
               options={usuarios}
               value={selectedUser ? [selectedUser] : []}
@@ -91,7 +91,7 @@ export function AddMemberDialog({
           </div>
 
           <div className={cn("stack-tight")}>
-            <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Papel</label>
+            <label className={cn( "text-body-sm font-medium")}>Papel</label>
             <Select
               value={papel}
               onValueChange={(v) => setPapel(v as PapelProjeto)}

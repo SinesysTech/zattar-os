@@ -154,7 +154,7 @@ export function PdfUploadField({
             ) : (
               <>
                 <FileUp className="h-8 w-8 text-muted-foreground" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Clique para selecionar um PDF</span>
+                <span className={cn( "text-body-sm font-medium")}>Clique para selecionar um PDF</span>
                 <Text variant="caption">Máximo 10MB</Text>
               </>
             )}
@@ -166,7 +166,7 @@ export function PdfUploadField({
             <div className={cn("flex items-center inline-medium")}>
               <FileText className="h-8 w-8 text-destructive" />
               <div>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{value?.nome}</p>
+                <p className={cn( "text-body-sm font-medium")}>{value?.nome}</p>
                 <Text variant="caption">
                   {formatFileSize(value?.tamanho || 0)}
                 </Text>

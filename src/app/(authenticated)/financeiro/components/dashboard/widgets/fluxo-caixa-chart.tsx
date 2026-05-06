@@ -98,7 +98,7 @@ export function FluxoCaixaChart({ data, isLoading }: FluxoCaixaChartProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
+        <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <BarChart3 className="h-4 w-4 text-muted-foreground" />
           Fluxo de Caixa
         </CardTitle>

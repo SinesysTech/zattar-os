@@ -305,7 +305,7 @@ export default function TemplateInfoPopover({
             <div className="flex items-center justify-between">
               <div className={cn("flex items-center inline-tight")}>
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                <SheetTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold")}>
+                <SheetTitle className={cn( "text-body font-semibold")}>
                   {isCreating ? 'Novo Template' : 'Informações do Template'}
                 </SheetTitle>
               </div>

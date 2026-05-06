@@ -242,14 +242,14 @@ export default function PdfCanvasArea({
             : "flex items-center justify-center text-center"
         )}>
           <span className={cn(
-            /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-foreground",
+             "text-caption font-medium text-foreground",
             isRichTextField
               ? /* design-system-escape: leading-tight sem token DS */ "line-clamp-20 wrap-break-word whitespace-pre-wrap leading-tight"
               : "truncate"
           )}>{displayText}</span>
         </div>
         {signer && (
-          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "pointer-events-none absolute -top-6 left-0 flex items-center inline-micro rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm")} style={{ backgroundColor: signerColor }}>
+          <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "pointer-events-none absolute -top-6 left-0 flex items-center inline-micro rounded-sm px-2 py-0.5 text-[10px] font-medium text-white shadow-sm")} style={{ backgroundColor: signerColor }}>
             {signer.nome}
           </div>
         )}

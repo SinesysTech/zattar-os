@@ -505,7 +505,7 @@ export function GazetteOrphanResolver() {
             <Text variant="overline" className="text-muted-foreground/70">
               Processo
             </Text>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums text-foreground")}>
+            <p className={cn( "text-body-sm font-medium tabular-nums text-foreground")}>
               {highlightSegments(
                 current.numeroProcessoMascara ?? current.numeroProcesso,
                 matchHighlights,
@@ -581,7 +581,7 @@ export function GazetteOrphanResolver() {
                   </div>
                   <span
                     className={cn(
-                      /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold tabular-nums',
+                       'text-body-sm font-bold tabular-nums',
                       confidenceColor(match.confianca),
                     )}
                   >
@@ -594,7 +594,7 @@ export function GazetteOrphanResolver() {
               <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 inset-card-compact")}>
                 <div>
                   <Text variant="micro-caption">Expediente</Text>
-                  <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>
+                  <p className={cn( "text-body-sm font-semibold text-foreground")}>
                     #{match.expedienteNumero}
                   </p>
                 </div>
@@ -636,7 +636,7 @@ export function GazetteOrphanResolver() {
               <div className={cn("mt-6 stack-tight")}>
                 <button
                   type="button"
-                  className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-caption font-medium text-success transition-colors hover:bg-success/15")}
+                  className={cn(/* design-system-escape: py-2.5 padding direcional sem Inset equiv.; */ "w-full rounded-xl border border-success/20 bg-success/10 py-2.5 text-center text-caption font-medium text-success transition-colors hover:bg-success/15")}
                   onClick={() => handleVincular(current)}
                 >
                   Vincular a Este Expediente

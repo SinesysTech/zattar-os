@@ -134,7 +134,7 @@ export function ParteDetalheDialog({
         <div className={cn("flex items-center inline-tight")}>
           {tipoPessoaIcon}
           <div className="flex-1 min-w-0">
-            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{p.nome}</div>
+            <div className={cn( "font-medium truncate")}>{p.nome}</div>
             <Text variant="caption">
               {formatarTipoPessoa(p.tipo_pessoa)}
               {p.tipo_entidade === 'cliente' && (

@@ -113,7 +113,7 @@ function ResponsavelCell({
           <>
             <Avatar size="sm">
               <AvatarImage src={responsavel?.avatarUrl || undefined} alt={nomeExibicao} />
-              <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
+              <AvatarFallback className={cn( "text-[10px] font-medium")}>
                 {getInitials(nomeExibicao)}
               </AvatarFallback>
             </Avatar>
@@ -219,8 +219,8 @@ export const columns: ColumnDef<Pericia>[] = [
         <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col inline-micro items-start py-2")}>
           {/* Data do prazo */}
           <span className={cn(
-            /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium',
-            vencido && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive font-semibold'
+             'text-body-sm font-medium',
+            vencido &&  'text-destructive font-semibold'
           )}>
             {prazo ? formatarDataCurta(prazo) : '-'}
           </span>
@@ -258,7 +258,7 @@ export const columns: ColumnDef<Pericia>[] = [
           </div>
 
           {/* Linha 2: Número do processo */}
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-mono font-medium text-foreground break-all")} title={p.numeroProcesso}>
+          <span className={cn( "text-caption font-mono font-medium text-foreground break-all")} title={p.numeroProcesso}>
             {p.numeroProcesso}
           </span>
 

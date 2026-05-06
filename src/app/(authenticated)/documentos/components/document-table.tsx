@@ -66,7 +66,7 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
               </TableCell>
               <TableCell>
                 <div>
-                  <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{doc.titulo}</div>
+                  <div className={cn( "font-medium")}>{doc.titulo}</div>
                   {doc.descricao && (
                     <div className={cn("text-body-sm text-muted-foreground line-clamp-1")}>
                       {doc.descricao}

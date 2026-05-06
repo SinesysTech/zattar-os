@@ -197,7 +197,7 @@ export function MiniDonut({
       </svg>
       {centerLabel && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-muted-foreground")}>{centerLabel}</span>
+          <span className={cn( "text-[10px] font-medium text-muted-foreground")}>{centerLabel}</span>
         </div>
       )}
     </div>
@@ -301,7 +301,7 @@ export function ProgressRing({
         <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth={sw} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" className="transition-all duration-700" />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold")}>{percent}%</span>
+        <span className={cn( "text-[10px] font-bold")}>{percent}%</span>
       </div>
     </div>
   );
@@ -630,7 +630,7 @@ export function Treemap({
           {/* Label — only visible if segment wide enough */}
           {(seg.value / total) > 0.12 && (
             <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute inset-0 flex flex-col items-center justify-center p-1")}>
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]")}>
+              <span className={cn( "text-[9px] font-bold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]")}>
                 {seg.value}
               </span>
               <span className="text-[7px] text-white/60 truncate max-w-full drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
@@ -671,7 +671,7 @@ export function ComparisonStat({
     <div className={cn("flex flex-col inline-micro")}>
       <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
       <div className={cn("flex items-baseline inline-tight")}>
-        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmt(current)}</span>
+        <span className={cn( "font-display text-body-lg font-bold")}>{fmt(current)}</span>
         <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
           {isPositive ? '+' : ''}{pctChange.toFixed(1)}%
         </span>

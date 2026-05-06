@@ -113,7 +113,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         </Heading>
         <p className={cn("text-body-sm text-muted-foreground")}>
           Ou clique para selecionar do computador. Tamanho máximo{' '}
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>10 MB</span>.
+          <span className={cn( "font-medium text-foreground")}>10 MB</span>.
         </p>
       </div>
 
@@ -158,7 +158,7 @@ function ErrorState({ message }: { message?: string }) {
         <AlertCircle className="size-7 text-destructive" />
       </div>
       <div className={cn("stack-snug max-w-sm")}>
-        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body-lg font-semibold text-destructive")}>
+        <p className={cn( "font-heading text-body-lg font-semibold text-destructive")}>
           Erro no upload
         </p>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -216,7 +216,7 @@ function FilePreviewCard({
         </div>
 
         <div className="min-w-0 flex-1 text-left">
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium text-foreground")}>{fileName}</p>
+          <p className={cn( "truncate text-body-sm font-medium text-foreground")}>{fileName}</p>
           <Text variant="caption" className="tabular-nums mt-0.5">
             {formatFileSize(fileSize)}
           </Text>
@@ -224,7 +224,7 @@ function FilePreviewCard({
           {isUploading && (
             <div className={cn("mt-3 stack-micro")}>
               <Progress value={progress} className="h-1.5" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground tabular-nums")}>
+              <p className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground tabular-nums")}>
                 Enviando · {progress}%
               </p>
             </div>

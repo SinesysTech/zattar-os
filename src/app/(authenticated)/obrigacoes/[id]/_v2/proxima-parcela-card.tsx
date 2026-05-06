@@ -97,12 +97,12 @@ export function ProximaParcelaCard({
           <Icon className={cn('size-4', accentClass)} />
         </div>
         <div className={cn("flex items-center inline-tight text-body-sm")}>
-          <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>
+          <Text variant="caption" className={cn( "font-medium text-foreground/85")}>
             {format(venc, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </Text>
           <span
             className={cn(
-              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold',
+              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold',
               atrasada
                 ? 'bg-destructive/10 text-destructive'
                 : hoje0

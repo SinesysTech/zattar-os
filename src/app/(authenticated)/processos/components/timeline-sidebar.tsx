@@ -109,7 +109,7 @@ export function TimelineSidebar({
             <div key={group.label}>
               {/* Date separator */}
               <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "sticky top-0 z-10 bg-muted/80 backdrop-blur-sm px-3 py-1.5 border-b")}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground uppercase")}>
+                <span className={cn( "text-[11px] font-medium text-muted-foreground uppercase")}>
                   {group.label}
                 </span>
               </div>

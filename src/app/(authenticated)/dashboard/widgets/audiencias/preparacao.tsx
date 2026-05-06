@@ -107,7 +107,7 @@ export function WidgetPreparacao() {
 
                 {/* Informações da audiência */}
                 <div className="flex-1 min-w-0">
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-medium leading-tight")}>
+                  <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] font-medium leading-tight")}>
                     {audiencia.tipo_audiencia ?? 'Audiência'}
                   </p>
                   {partesTexto && (

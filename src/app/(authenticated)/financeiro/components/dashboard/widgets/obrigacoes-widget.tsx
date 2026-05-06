@@ -51,7 +51,7 @@ function ObrigacaoItem({
       </div>
       <div className="min-w-0 flex-1">
         <Text variant="caption">{label}</Text>
-        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
+        <p className={cn( "text-body-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
         <Text variant="caption">
           {quantidade} parcela{quantidade !== 1 ? 's' : ''}
         </Text>
@@ -93,7 +93,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
+        <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <Scale className="h-4 w-4 text-muted-foreground" />
           Obrigações e Prazos
         </CardTitle>

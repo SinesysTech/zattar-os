@@ -140,12 +140,12 @@ export function TimelineSidebarItem({
               borderClass={meta.badgeBorderClass}
             />
             {isNew && (
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] font-bold uppercase bg-primary/10 text-primary/70 px-1.5 py-0.5 rounded-full shrink-0")}>
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[8px] font-bold uppercase bg-primary/10 text-primary/70 px-1.5 py-0.5 rounded-full shrink-0")}>
                 Novo
               </span>
             )}
             {item.grauOrigem && (
-              <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "rounded border bg-muted/40 px-1 py-px text-[9px] font-medium uppercase tracking-wider text-muted-foreground shrink-0")}>
+              <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "rounded border bg-muted/40 px-1 py-px text-[9px] font-medium uppercase tracking-wider text-muted-foreground shrink-0")}>
                 {item.grauOrigem === 'primeiro_grau'
                   ? '1º'
                   : item.grauOrigem === 'segundo_grau'
@@ -161,7 +161,7 @@ export function TimelineSidebarItem({
           {/* Linha 2: título do item */}
           <p
             className={cn(
-              /* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-body-sm font-medium leading-tight line-clamp-2',
+              /* design-system-escape: leading-tight sem token DS */ 'text-body-sm font-medium leading-tight line-clamp-2',
               isSelected
                 ? 'text-primary'
                 : 'text-foreground/70 group-hover:text-foreground'

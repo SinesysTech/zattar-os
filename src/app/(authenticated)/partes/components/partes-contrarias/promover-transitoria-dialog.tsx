@@ -253,7 +253,7 @@ export function PromoverTransitoriaDialog({
               <Text variant="caption" className="text-muted-foreground">
                 Cadastro pendente
               </Text>
-              <Text variant="label" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-0.5 font-semibold text-foreground")}>
+              <Text variant="label" className={cn( "mt-0.5 font-semibold text-foreground")}>
                 {transitoria.nome}
               </Text>
               {transitoria.criado_em_contrato_id && (
@@ -310,7 +310,7 @@ export function PromoverTransitoriaDialog({
                           )}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <Text variant="label" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium text-foreground")}>
+                          <Text variant="label" className={cn( "truncate font-medium text-foreground")}>
                             {sug.nome}
                           </Text>
                           <Text

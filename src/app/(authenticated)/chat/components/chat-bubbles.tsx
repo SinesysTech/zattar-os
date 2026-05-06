@@ -171,7 +171,7 @@ function FileChatBubble({
 
         {/* File info */}
         <div className="flex flex-col min-w-0 flex-1">
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[0.75rem] font-semibold text-foreground truncate")}>
+          <span className={cn( "text-[0.75rem] font-semibold text-foreground truncate")}>
             {fileName}
           </span>
           {fileSizeLabel && (

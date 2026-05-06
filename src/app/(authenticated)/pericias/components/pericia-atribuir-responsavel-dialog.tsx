@@ -99,7 +99,7 @@ export function PericiaAtribuirResponsavelDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn("grid grid-cols-1 inline-default")}>
             <div className={cn("grid inline-tight")}>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Responsável</div>
+              <div className={cn( "text-body-sm font-medium")}>Responsável</div>
               <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
                 <SelectTrigger className="w-full bg-card">
                   <SelectValue placeholder="Selecione..." />

@@ -165,10 +165,10 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
                 <Label>Escopo da captura</Label>
                 <Text variant="caption" as="div" className="rounded-md border border-dashed border-border/60 p-3 space-y-1">
                   <p>
-                    Tribunais (TRTs) incluídos: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{trtsDerivados.join(', ') || '-'}</span>
+                    Tribunais (TRTs) incluídos: <span className={cn( "font-medium text-foreground")}>{trtsDerivados.join(', ') || '-'}</span>
                   </p>
                   <p>
-                    Graus considerados: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{grausDerivados.join(', ') || '-'}</span>
+                    Graus considerados: <span className={cn( "font-medium text-foreground")}>{grausDerivados.join(', ') || '-'}</span>
                   </p>
                 </Text>
                 <Text variant="caption">
@@ -204,7 +204,7 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
               </Text>
               {totalProcessosManuais > 0 && (
                 <Text variant="caption">
-                  Processos especificados manualmente: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{totalProcessosManuais}</span>
+                  Processos especificados manualmente: <span className={cn( "font-medium")}>{totalProcessosManuais}</span>
                 </Text>
               )}
             </div>

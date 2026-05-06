@@ -124,7 +124,7 @@ const MonthGrid = React.memo(function MonthGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold capitalize text-foreground")}>
+        <span className={cn( "text-[11px] font-semibold capitalize text-foreground")}>
           {monthName}
         </span>
         <span className="text-[9px] tabular-nums text-muted-foreground/50">
@@ -135,7 +135,7 @@ const MonthGrid = React.memo(function MonthGrid({
         {WEEKDAY_LABELS.map((d, i) => (
           <span
             key={i}
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[7px] font-semibold text-center text-muted-foreground/30 uppercase")}
+            className={cn( "text-[7px] font-semibold text-center text-muted-foreground/30 uppercase")}
           >
             {d}
           </span>
@@ -207,7 +207,7 @@ function StatCard({
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn("size-3.5", iconColor)} />
         </IconContainer>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60")}>
           {label}
         </span>
       </div>
@@ -265,7 +265,7 @@ function DayDetailDialog({
                   <div className={cn("flex items-center inline-tight")}>
                     <span
                       className={cn(
-                        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug px-2 py-0.5 rounded-md text-[10px] font-medium border",
+                        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug px-2 py-0.5 rounded-md text-[10px] font-medium border",
                         colors.bg,
                         colors.text,
                         colors.border,
@@ -280,7 +280,7 @@ function DayDetailDialog({
                       {time}
                     </span>
                   </div>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground truncate")}>
+                  <p className={cn( "text-[12px] font-medium text-foreground truncate")}>
                     {evt.title}
                   </p>
                   {evt.meta?.processo && (
@@ -487,7 +487,7 @@ export function AnoView({
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums w-6 text-right")}>
+                        <span className={cn( "text-[10px] font-semibold tabular-nums w-6 text-right")}>
                           {count}
                         </span>
                       </div>
@@ -541,16 +541,16 @@ export function AnoView({
             {/* Ranking por Volume */}
             {topMonths.length > 0 && (
               <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "pt-1")}>
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/40")}>
                   Ranking por Volume
                 </span>
                 <div className={cn("mt-2 stack-snug")}>
                   {topMonths.map((m, i) => (
                     <div key={m.idx} className={cn("flex items-center inline-tight")}>
-                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
+                      <span className={cn( "text-[9px] font-bold text-muted-foreground/40 w-3 text-right")}>
                         {i + 1}
                       </span>
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium w-10 capitalize")}>
+                      <span className={cn( "text-[11px] font-medium w-10 capitalize")}>
                         {format(new Date(year, m.idx, 1), "MMM", {
                           locale: ptBR,
                         })}
@@ -563,7 +563,7 @@ export function AnoView({
                           }}
                         />
                       </div>
-                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums w-7 text-right")}>
+                      <span className={cn( "text-[10px] font-semibold tabular-nums w-7 text-right")}>
                         {m.count}
                       </span>
                     </div>

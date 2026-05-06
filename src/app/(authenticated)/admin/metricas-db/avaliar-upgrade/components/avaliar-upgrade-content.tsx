@@ -222,7 +222,7 @@ export function AvaliarUpgradeContent() {
                   key={tier.name}
                   className={tier.name.toLowerCase() === recommendation.recommended_tier ? "bg-accent" : ""}
                 >
-                  <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                  <TableCell className={cn( "font-medium")}>
                     {tier.name}
                     {tier.name.toLowerCase() === computeTier.toLowerCase() && (
                       <Badge variant="outline" className="ml-2">Atual</Badge>

@@ -525,10 +525,10 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 <AvatarFallback>{participantInitials}</AvatarFallback>
               </Avatar>
               <div className={cn("min-w-0 grid flex-1 inline-micro")}>
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
+                <div className={cn( "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
                 <Text variant="caption" className="whitespace-normal wrap-break-word">{mail.subject}</Text>
                 <Text variant="caption" className="whitespace-normal wrap-break-word">
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{participantLabel}:</span> {participantLine}
+                  <span className={cn( "font-medium")}>{participantLabel}:</span> {participantLine}
                 </Text>
               </div>
             </div>
@@ -553,7 +553,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                     {replyMode === "reply-all"
                       ? "Responder a todos"
                       : "Responder para"}{" "}
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
+                    <span className={cn( "font-medium text-foreground")}>
                       {participantName}
                     </span>
                   </div>

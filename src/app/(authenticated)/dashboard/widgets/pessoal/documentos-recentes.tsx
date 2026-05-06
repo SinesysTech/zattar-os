@@ -50,7 +50,7 @@ export function WidgetDocumentosRecentes() {
                   <Icon className={`size-3.5 ${config.color}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-foreground/75 truncate")}>{doc.nome}</p>
+                  <p className={cn( "text-[10px] font-medium text-foreground/75 truncate")}>{doc.nome}</p>
                   <p className="text-[9px] text-muted-foreground/60 mt-0.5">editado {tempoRelativo}</p>
                 </div>
                 <span className={`text-[8px] uppercase tracking-wider px-1.5 py-0.5 rounded-md font-medium shrink-0 ${
@@ -74,7 +74,7 @@ export function WidgetDocumentosRecentes() {
 
       <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "mt-3 pt-2 border-t border-border/10 flex items-center justify-between")}>
         <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{documentos.length} recentes</span>
-        <Link href="/documentos" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-primary/50 font-medium hover:text-primary/70 transition-colors cursor-pointer")}>
+        <Link href="/documentos" className={cn( "text-[9px] text-primary/50 font-medium hover:text-primary/70 transition-colors cursor-pointer")}>
           abrir todos
         </Link>
       </div>

@@ -44,7 +44,7 @@ export function GlassSection() {
               key={t.cls}
               className={`flex flex-col gap-1.5 rounded-2xl p-4 ${t.cls}`}
             >
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-heading text-[13px] font-bold text-foreground")}>
+              <span className={cn( "font-heading text-[13px] font-bold text-foreground")}>
                 {t.title}
               </span>
               <span className="font-mono text-[10px] text-muted-foreground">

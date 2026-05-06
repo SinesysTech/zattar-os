@@ -135,7 +135,7 @@ function PrepRing({ audiencia }: { audiencia: Audiencia }) {
       </svg>
       <span
         className={cn(
-          /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'absolute inset-0 flex items-center justify-center text-micro-badge font-bold tabular-nums',
+           'absolute inset-0 flex items-center justify-center text-micro-badge font-bold tabular-nums',
           getScoreColor(score)
         )}
       >
@@ -235,7 +235,7 @@ function GlassRow({
         {/* DATA + HORA + PREP RING (coluna fixa à esquerda) */}
         <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-snug w-22 shrink-0 pt-0.5")}>
           <div className="text-center">
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap")}>
+            <div className={cn(/* design-system-escape: leading-tight sem token DS */ "text-caption font-semibold text-foreground leading-tight whitespace-nowrap")}>
               {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
             </div>
             {audiencia.horaInicio && (
@@ -269,7 +269,7 @@ function GlassRow({
               )}
               {countdown ? (
                 <span className={cn(
-                  /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro text-micro-caption font-semibold',
+                   'inline-flex items-center inline-micro text-micro-caption font-semibold',
                   countdown.isUrgent ? 'text-warning' : 'text-success'
                 )}>
                   <Clock className="w-3 h-3" />
@@ -403,7 +403,7 @@ function GlassRow({
                 <button
                   type="button"
                   onClick={onView}
-                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 cursor-pointer items-center inline-micro rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/75 transition-colors hover:border-border/60 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                  className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "flex h-6 cursor-pointer items-center inline-micro rounded-md border border-border/40 px-2 text-[10px] font-medium text-muted-foreground/75 transition-colors hover:border-border/60 hover:text-muted-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                 >
                   <ExternalLink className="size-3" />
                   Detalhes
@@ -414,7 +414,7 @@ function GlassRow({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex h-6 items-center inline-micro rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
+                    className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "flex h-6 items-center inline-micro rounded-md border border-info/25 bg-info/10 px-2 text-[10px] font-medium text-info transition-colors hover:bg-info/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring")}
                   >
                     <ExternalLink className="size-3" />
                     Entrar na sala
@@ -478,7 +478,7 @@ function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <Gavel className="w-10 h-10 text-muted-foreground/55 mb-4" />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>Nenhuma audiência encontrada</p>
+      <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>Nenhuma audiência encontrada</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">
         Tente ajustar os filtros ou criar uma nova audiência
       </Text>

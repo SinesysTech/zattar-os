@@ -165,7 +165,7 @@ export function TrendMensal() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Media
             </p>
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[14px] font-semibold tabular-nums")}>
+            <p className={cn( "text-[14px] font-semibold tabular-nums")}>
               {average}
             </p>
           </div>

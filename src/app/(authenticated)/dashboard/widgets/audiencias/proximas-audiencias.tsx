@@ -100,12 +100,12 @@ function AudienciaItem({
               {audiencia.tipo_audiencia ?? 'Sem tipo'}
             </span>
             {isFirst && (
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-primary/70 uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium text-primary/70 uppercase tracking-wider")}>
                 Próxima
               </span>
             )}
           </div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-medium mt-1 leading-tight")}>{parte}</p>
+          <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] font-medium mt-1 leading-tight")}>{parte}</p>
           {contextoProcesso && (
             <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/60 mt-0.5 leading-tight")}>
               {contextoProcesso}
@@ -134,7 +134,7 @@ function AudienciaItem({
             href={audiencia.url_audiencia_virtual}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer")}
+            className={cn( "inline-flex items-center inline-micro text-[9px] font-medium text-primary/80 hover:text-primary transition-colors shrink-0 cursor-pointer")}
           >
             <Video className="size-2.5" />
             <span>Entrar</span>

@@ -246,7 +246,7 @@ export function ProcessosClient({
 
         {processos.length === 0 && !isPending && (
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>Nenhum processo encontrado</p>
+            <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>Nenhum processo encontrado</p>
             <Text variant="caption" className="text-muted-foreground/65 mt-1">Tente ajustar os filtros ou a busca</Text>
           </div>
         )}

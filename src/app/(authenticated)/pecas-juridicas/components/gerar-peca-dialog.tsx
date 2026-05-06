@@ -268,7 +268,7 @@ export function GerarPecaDialog({
                     >
                       <div className={cn("flex items-start justify-between inline-tight")}>
                         <div>
-                          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
+                          <p className={cn( "font-medium")}>{modelo.titulo}</p>
                           {modelo.descricao && (
                             <p className={cn("text-body-sm text-muted-foreground line-clamp-1")}>
                               {modelo.descricao}
@@ -363,7 +363,7 @@ export function GerarPecaDialog({
           <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "py-8 stack-default")}>
             <div className={cn("flex flex-col items-center inline-default")}>
               <CheckCircle2 className="h-12 w-12 text-success" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>Peça gerada com sucesso!</p>
+              <p className={cn( "text-body-lg font-medium")}>Peça gerada com sucesso!</p>
             </div>
 
             <div className={cn("bg-muted inset-card-compact rounded-lg stack-tight")}>

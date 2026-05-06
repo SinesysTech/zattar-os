@@ -244,7 +244,7 @@ const MonthGrid = React.memo(function MonthGrid({
 
   return (
     <div>
-      <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5")}>
+      <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5")}>
         {MONTH_NAMES[monthIndex]}
       </div>
       <div className={cn("grid grid-cols-7 inline-nano mb-1")}>
@@ -287,7 +287,7 @@ function StatCard({
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
         </IconContainer>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
           {label}
         </span>
       </div>
@@ -356,14 +356,14 @@ export function PericiasYearHeatmap({
                 </Button>
                 <Button
                   size="sm"
-                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-caption font-semibold")}
+                  className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; */ "ml-1 rounded-full px-4 text-caption font-semibold")}
                   onClick={() => onYearChange(new Date().getFullYear())}
                 >
                   Hoje
                 </Button>
               </div>
 
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center tabular-nums")}>
+              <span className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center tabular-nums")}>
                 {year}
               </span>
 
@@ -424,7 +424,7 @@ export function PericiasYearHeatmap({
               iconColor="text-warning"
               label="Mês Mais Intenso"
             >
-              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight")}>
+              <div className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight")}>
                 {MONTH_NAMES[stats.maxMonth]}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -484,7 +484,7 @@ export function PericiasYearHeatmap({
                 iconColor="text-info"
                 label="Próxima Entrega"
               >
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight")}>
+                <div className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight")}>
                   {format(parseISO(stats.proxima.prazoEntrega!), "dd 'de' MMM", {
                     locale: ptBR,
                   })}

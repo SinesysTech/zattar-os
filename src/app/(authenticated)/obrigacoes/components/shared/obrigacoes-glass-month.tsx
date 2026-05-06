@@ -188,9 +188,9 @@ function DayCell({
     >
       <div
         className={cn(
-          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
+           'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
           today
-            ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'bg-primary text-primary-foreground rounded-full font-bold'
+            ?  'bg-primary text-primary-foreground rounded-full font-bold'
             : 'text-foreground/85',
         )}
       >
@@ -213,7 +213,7 @@ function DayCell({
 
       {count >= 3 && (
         <div className={cn(/* design-system-escape: pt-1.5 padding direcional sem Inset equiv. */ "flex inline-micro mt-auto pt-1.5")}>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-bold text-primary bg-primary/15 rounded-full px-1.5 py-0.5 inline-flex items-center justify-center min-w-4.5")}>
             {count}
           </span>
         </div>
@@ -263,7 +263,7 @@ function ParcelaItem({
         <Text variant="caption" className="font-semibold text-foreground/85 tabular-nums">
           {CURRENCY.format(parcela.valorBrutoCreditoPrincipal)}
         </Text>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/30 bg-muted/20 text-foreground/60 shrink-0")}>
+        <span className={cn(/* design-system-escape: px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/30 bg-muted/20 text-foreground/60 shrink-0")}>
           {diasLabel}
         </span>
       </div>
@@ -273,13 +273,13 @@ function ParcelaItem({
         <SemanticBadge
           category="obrigacao_tipo"
           value={acordo.tipo}
-          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
+          className={cn( "text-[9px] font-semibold")}
         >
           {tipoLabel}
         </SemanticBadge>
         <span
           className={cn(
-            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-nano rounded px-1.5 py-0.5 text-[9px] font-semibold border',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-nano rounded px-1.5 py-0.5 text-[9px] font-semibold border',
             isRecebimento
               ? 'bg-success/10 text-success border-success/20'
               : 'bg-destructive/10 text-destructive border-destructive/20',
@@ -370,14 +370,14 @@ export function ObrigacoesGlassMonth({
           </Button>
           <Button
             size="sm"
-            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "ml-1 rounded-full px-4 text-caption font-semibold")}
+            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; */ "ml-1 rounded-full px-4 text-caption font-semibold")}
             onClick={() => setCurrentMonth(startOfMonth(new Date()))}
           >
             Hoje
           </Button>
         </div>
 
-        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center")}>
+        <span className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center")}>
           {format(currentMonth, 'MMMM yyyy', { locale: ptBR }).replace(
             /^\w/,
             (c) => c.toUpperCase(),
@@ -387,7 +387,7 @@ export function ObrigacoesGlassMonth({
         <div className={cn("flex-1 flex justify-end inline-tight text-[11px] text-muted-foreground/60")}>
           <span>{summary.total} pendentes</span>
           {summary.vencidos > 0 && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-destructive/80 font-semibold")}>
+            <span className={cn( "text-destructive/80 font-semibold")}>
               · {summary.vencidos} vencidas
             </span>
           )}
@@ -412,7 +412,7 @@ export function ObrigacoesGlassMonth({
           <div
             key={label}
             className={cn(
-              /* design-system-escape: font-semibold → className de <Text>/<Heading>; py-2 padding direcional sem Inset equiv. */ 'text-center text-[11px] font-semibold text-foreground/45 py-2',
+              /* design-system-escape: py-2 padding direcional sem Inset equiv. */ 'text-center text-[11px] font-semibold text-foreground/45 py-2',
               idx >= 5 && 'text-foreground/30',
             )}
           >
@@ -452,7 +452,7 @@ export function ObrigacoesGlassMonth({
                   sideOffset={8}
                 >
                   <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3 border-b border-border/30")}>
-                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold capitalize")}>
+                    <span className={cn( "text-body-sm font-semibold capitalize")}>
                       {format(day, "d 'de' MMMM", { locale: ptBR })}
                     </span>
                     <button

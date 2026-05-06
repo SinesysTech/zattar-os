@@ -113,7 +113,7 @@ function DetalheItem({
       </div>
       <div className={cn("stack-micro")}>
         <p className={cn("text-body-sm text-muted-foreground")}>{label}</p>
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{value}</div>
+        <div className={cn( "font-medium")}>{value}</div>
       </div>
     </div>
   );
@@ -204,7 +204,7 @@ export default function ContaPagarDetalhesPage() {
           Voltar
         </Button>
         <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar conta:</p>
+          <p className={cn( "font-semibold")}>Erro ao carregar conta:</p>
           <p>{error}</p>
         </div>
       </div>
@@ -220,7 +220,7 @@ export default function ContaPagarDetalhesPage() {
           Voltar
         </Button>
         <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted p-8 text-center")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>Conta não encontrada</p>
+          <p className={cn( "text-body-lg font-medium")}>Conta não encontrada</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             A conta solicitada não existe ou foi removida.
           </p>
@@ -275,7 +275,7 @@ export default function ContaPagarDetalhesPage() {
         <div className={cn("flex items-center inline-medium rounded-lg border border-destructive/50 bg-destructive/10 inset-card-compact")}>
           <AlertTriangle className="h-5 w-5 text-destructive" />
           <div>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>Conta Vencida</p>
+            <p className={cn( "font-medium text-destructive")}>Conta Vencida</p>
             <p className={cn("text-body-sm text-destructive/80")}>
               Esta conta venceu em {formatarData(contaPagar.dataVencimento)}. Realize o pagamento o
               mais rápido possível.
@@ -362,7 +362,7 @@ export default function ContaPagarDetalhesPage() {
                 label="Fornecedor"
                 value={
                   <div>
-                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                    <p className={cn( "font-medium")}>
                       {contaPagar.fornecedor.nomeFantasia || contaPagar.fornecedor.razaoSocial}
                     </p>
                     {contaPagar.fornecedor.cnpj && (
@@ -453,7 +453,7 @@ export default function ContaPagarDetalhesPage() {
                         <FileIcon className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{anexo.nome}</p>
+                        <p className={cn( "truncate text-body-sm font-medium")}>{anexo.nome}</p>
                         <Text variant="caption">
                           {anexo.tamanho
                             ? `${(anexo.tamanho / 1024).toFixed(1)} KB`
@@ -523,7 +523,7 @@ export default function ContaPagarDetalhesPage() {
             <AlertDialogTitle>Cancelar Conta a Pagar</AlertDialogTitle>
             <AlertDialogDescription>
               Tem certeza que deseja cancelar esta conta?
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "block mt-2 font-medium text-foreground")}>
+              <span className={cn( "block mt-2 font-medium text-foreground")}>
                 {contaPagar.descricao} - {formatarValor(contaPagar.valor)}
               </span>
               <span className="block mt-2 text-warning">

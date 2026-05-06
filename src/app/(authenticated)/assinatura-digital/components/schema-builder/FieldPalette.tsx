@@ -148,7 +148,7 @@ export default function FieldPalette() {
                 >
                   <CollapsibleTrigger className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-accent/50 transition-colors")}>
                     <CategoryIcon className="size-3.5 text-muted-foreground" />
-                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left")}>{category.label}</span>
+                    <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex-1 text-left")}>{category.label}</span>
                     <ChevronDown
                       className={cn(
                         "size-3 text-muted-foreground transition-transform",

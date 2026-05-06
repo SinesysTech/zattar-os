@@ -95,7 +95,7 @@ function AudienciaContent({
       <div className={cn("flex items-start justify-between inline-medium mb-1")}>
         <div className="flex-1 min-w-0">
           <div
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-label font-semibold tabular-nums tracking-tight truncate")}
+            className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-label font-semibold tabular-nums tracking-tight truncate")}
             title={audiencia.numeroProcesso}
           >
             {audiencia.numeroProcesso}

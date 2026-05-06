@@ -447,7 +447,7 @@ export function ClienteFormDialog({
             <User className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-body-sm', isPF && 'text-primary')}>
+            <p className={cn( 'font-medium text-body-sm', isPF && 'text-primary')}>
               Pessoa Física
             </p>
             <Text variant="caption">
@@ -476,7 +476,7 @@ export function ClienteFormDialog({
             <Building2 className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-body-sm', isPJ && 'text-primary')}>
+            <p className={cn( 'font-medium text-body-sm', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
             <Text variant="caption">
@@ -900,117 +900,117 @@ export function ClienteFormDialog({
           <dl className={cn("stack-tight text-body-sm")}>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Tipo</dt>
-              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
+              <dd className={cn( "font-medium text-right")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
             </div>
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Nome</dt>
-              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome || '-'}</dd>
+              <dd className={cn( "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome || '-'}</dd>
             </div>
 
             {formData.nome_social_fantasia && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">{isPF ? 'Nome Social' : 'Nome Fantasia'}</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome_social_fantasia}</dd>
+                <dd className={cn( "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome_social_fantasia}</dd>
               </div>
             )}
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">{isPF ? 'CPF' : 'CNPJ'}</dt>
-              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{isPF ? formData.cpf || '-' : formData.cnpj || '-'}</dd>
+              <dd className={cn( "font-medium text-right")}>{isPF ? formData.cpf || '-' : formData.cnpj || '-'}</dd>
             </div>
 
             {isPF && formData.rg && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">RG</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.rg}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.rg}</dd>
               </div>
             )}
 
             {isPF && formData.data_nascimento && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Data de Nascimento</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.data_nascimento}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.data_nascimento}</dd>
               </div>
             )}
 
             {isPJ && formData.data_abertura && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Data de Abertura</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.data_abertura}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.data_abertura}</dd>
               </div>
             )}
 
             {isPF && formData.genero && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Gênero</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{GENEROS.find(g => g.value === formData.genero)?.label || formData.genero}</dd>
+                <dd className={cn( "font-medium text-right")}>{GENEROS.find(g => g.value === formData.genero)?.label || formData.genero}</dd>
               </div>
             )}
 
             {isPF && formData.estado_civil && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Estado Civil</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{ESTADOS_CIVIS.find(ec => ec.value === formData.estado_civil)?.label || formData.estado_civil}</dd>
+                <dd className={cn( "font-medium text-right")}>{ESTADOS_CIVIS.find(ec => ec.value === formData.estado_civil)?.label || formData.estado_civil}</dd>
               </div>
             )}
 
             {isPF && formData.nacionalidade && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Nacionalidade</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.nacionalidade}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.nacionalidade}</dd>
               </div>
             )}
 
             {isPF && formData.nome_genitora && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Nome da Mãe</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome_genitora}</dd>
+                <dd className={cn( "font-medium text-right max-w-[60%] wrap-break-word")}>{formData.nome_genitora}</dd>
               </div>
             )}
 
             {isPJ && formData.inscricao_estadual && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Inscrição Estadual</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.inscricao_estadual}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.inscricao_estadual}</dd>
               </div>
             )}
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">E-mails</dt>
-              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.emails.length > 0 ? formData.emails.join(', ') : '-'}</dd>
+              <dd className={cn( "font-medium text-right")}>{formData.emails.length > 0 ? formData.emails.join(', ') : '-'}</dd>
             </div>
 
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Celular</dt>
-              <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formatTelefone(formData.ddd_celular, formData.numero_celular)}</dd>
+              <dd className={cn( "font-medium text-right")}>{formatTelefone(formData.ddd_celular, formData.numero_celular)}</dd>
             </div>
 
             {(formData.ddd_residencial && formData.numero_residencial) && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Tel. Residencial</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formatTelefone(formData.ddd_residencial, formData.numero_residencial)}</dd>
+                <dd className={cn( "font-medium text-right")}>{formatTelefone(formData.ddd_residencial, formData.numero_residencial)}</dd>
               </div>
             )}
 
             {(formData.ddd_comercial && formData.numero_comercial) && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Tel. Comercial</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formatTelefone(formData.ddd_comercial, formData.numero_comercial)}</dd>
+                <dd className={cn( "font-medium text-right")}>{formatTelefone(formData.ddd_comercial, formData.numero_comercial)}</dd>
               </div>
             )}
 
             {formData.cep && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">CEP</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.cep}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.cep}</dd>
               </div>
             )}
 
             {formData.logradouro && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Endereço</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right max-w-[60%] wrap-break-word")}>
+                <dd className={cn( "font-medium text-right max-w-[60%] wrap-break-word")}>
                   {formData.logradouro}{formData.numero ? `, ${formData.numero}` : ''}{formData.complemento ? ` - ${formData.complemento}` : ''}
                 </dd>
               </div>
@@ -1019,14 +1019,14 @@ export function ClienteFormDialog({
             {formData.bairro && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Bairro</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.bairro}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.bairro}</dd>
               </div>
             )}
 
             {(formData.municipio || formData.estado_sigla) && (
               <div className="flex justify-between">
                 <dt className="text-muted-foreground">Cidade/UF</dt>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{formData.municipio || '-'}{formData.estado_sigla ? `/${formData.estado_sigla}` : ''}</dd>
+                <dd className={cn( "font-medium text-right")}>{formData.municipio || '-'}{formData.estado_sigla ? `/${formData.estado_sigla}` : ''}</dd>
               </div>
             )}
           </dl>

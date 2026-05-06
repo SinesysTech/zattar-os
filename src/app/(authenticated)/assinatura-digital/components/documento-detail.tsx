@@ -83,7 +83,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             }
           />
           <div>
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold")}>
+            <p className={cn( "text-body-sm font-bold")}>
               {progress.signed}/{progress.total} assinantes
             </p>
             <p className="text-[10px] text-muted-foreground/60">
@@ -122,7 +122,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
                   }`}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>{a.nome}</p>
+                  <p className={cn( "text-[11px] font-medium")}>{a.nome}</p>
                   <div className={cn("flex items-center inline-tight mt-0.5")}>
                     {a.email && (
                       <span className={cn("text-[9px] text-muted-foreground/55 flex items-center inline-nano")}>
@@ -165,13 +165,13 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado por
           </p>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{doc.criadoPor}</p>
+          <p className={cn( "font-medium mt-0.5")}>{doc.criadoPor}</p>
         </div>
         <div>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Criado em
           </p>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>
+          <p className={cn( "font-medium mt-0.5")}>
             {new Date(doc.criadoEm).toLocaleDateString("pt-BR")}
           </p>
         </div>
@@ -179,13 +179,13 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Atualizado
           </p>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5")}>{timeAgo(doc.atualizadoEm)}</p>
+          <p className={cn( "font-medium mt-0.5")}>{timeAgo(doc.atualizadoEm)}</p>
         </div>
         <div>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-muted-foreground/55 uppercase tracking-wider text-[9px]")}>
             Verificação
           </p>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mt-0.5 flex items-center inline-micro text-success/60")}>
+          <p className={cn( "font-medium mt-0.5 flex items-center inline-micro text-success/60")}>
             <Shield className="size-2.5" /> Íntegro
           </p>
         </div>
@@ -195,12 +195,12 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex inline-tight pt-3 border-t border-border/10")}>
         {doc.status === "pronto" &&
           doc.assinantes.some((a) => a.status === "pendente") && (
-            <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
+            <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-warning/10 text-warning/70 text-caption font-medium hover:bg-warning/15 transition-colors cursor-pointer")}>
               <RotateCcw className="size-3" />
               Reenviar convites
             </button>
           )}
-        <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
+        <button className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}>
           <ExternalLink className="size-3" />
           Ver documento
         </button>

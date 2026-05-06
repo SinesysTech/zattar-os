@@ -493,7 +493,7 @@ export function ParteContrariaFormDialog({
             <User className="h-8 w-8" />
           </div>
           <div className="text-center">
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold', isPF && 'text-primary')}>
+            <p className={cn( 'font-semibold', isPF && 'text-primary')}>
               Pessoa Física
             </p>
             <p className={cn("text-body-sm text-muted-foreground")}>
@@ -525,7 +525,7 @@ export function ParteContrariaFormDialog({
             <Building2 className="h-8 w-8" />
           </div>
           <div className="text-center">
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold', isPJ && 'text-primary')}>
+            <p className={cn( 'font-semibold', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
             <p className={cn("text-body-sm text-muted-foreground")}>
@@ -959,19 +959,19 @@ export function ParteContrariaFormDialog({
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
         <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm")}>
           <dt className="text-muted-foreground">Tipo:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
+          <dd className={cn( "font-medium")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
 
           <dt className="text-muted-foreground">Nome:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{formData.nome || '-'}</dd>
+          <dd className={cn( "font-medium truncate")}>{formData.nome || '-'}</dd>
 
           <dt className="text-muted-foreground">{isPF ? 'CPF:' : 'CNPJ:'}</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{isPF ? formData.cpf : formData.cnpj || '-'}</dd>
+          <dd className={cn( "font-medium")}>{isPF ? formData.cpf : formData.cnpj || '-'}</dd>
 
           <dt className="text-muted-foreground">E-mails:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.emails.length || '0'}</dd>
+          <dd className={cn( "font-medium")}>{formData.emails.length || '0'}</dd>
 
           <dt className="text-muted-foreground">Cidade:</dt>
-          <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formData.municipio || '-'}</dd>
+          <dd className={cn( "font-medium")}>{formData.municipio || '-'}</dd>
         </dl>
       </div>
     </div>

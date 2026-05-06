@@ -269,7 +269,7 @@ export function ReceberContaDialog({
             <div className={cn("rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm")}>{conta.descricao}</p>
+                  <p className={cn( "font-medium text-body-sm")}>{conta.descricao}</p>
                   {conta.cliente && (
                     <Text variant="caption">
                       {conta.cliente.nomeFantasia || conta.cliente.razaoSocial}
@@ -282,7 +282,7 @@ export function ReceberContaDialog({
                   )}
                 </div>
                 <div className="text-right">
-                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-body-lg text-success")}>{formatarValor(conta.valor)}</p>
+                  <p className={cn( "font-bold text-body-lg text-success")}>{formatarValor(conta.valor)}</p>
                   {conta.dataVencimento && (
                     <p className={cn('text-caption', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
                       Venc: {format(new Date(conta.dataVencimento), 'dd/MM/yyyy')}
@@ -402,7 +402,7 @@ export function ReceberContaDialog({
                   <div className={cn("flex items-center inline-tight overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{comprovanteFile.name}</p>
+                      <p className={cn( "truncate text-body-sm font-medium")}>{comprovanteFile.name}</p>
                       <Text variant="caption">{formatFileSize(comprovanteFile.size)}</Text>
                     </div>
                   </div>

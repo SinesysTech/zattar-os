@@ -118,7 +118,7 @@ export function ProcessosAlterarResponsavelDialog({
             </SelectContent>
           </Select>
           {generalError && (
-            <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>{generalError}</Text>
+            <Text variant="caption" className={cn( "font-medium text-destructive")}>{generalError}</Text>
           )}
         </div>
       </form>

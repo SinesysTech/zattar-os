@@ -176,7 +176,7 @@ export function ClienteDocumentosViewer({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate text-body-sm")}>{doc.name}</p>
+                    <p className={cn( "font-medium truncate text-body-sm")}>{doc.name}</p>
                     <Text variant="caption" className="flex items-center gap-2 mt-0.5">
                       <span>{formatFileSize(doc.size)}</span>
                       <Dot className="size-3 shrink-0" aria-hidden />

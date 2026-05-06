@@ -151,7 +151,7 @@ export function MailList({ items }: MailListProps) {
               <div className="flex w-full flex-wrap items-start gap-x-3 gap-y-1">
                 <div className="min-w-0 flex-1">
                   <div className={cn("flex min-w-0 flex-wrap items-center inline-tight")}>
-                    <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-5 sem token DS */ "text-foreground whitespace-normal wrap-break-word font-semibold leading-5")}>
+                    <div className={cn(/* design-system-escape: leading-5 sem token DS */ "text-foreground whitespace-normal wrap-break-word font-semibold leading-5")}>
                       {getMailPrimaryName(item)}
                     </div>
                     {!item.read && (
@@ -176,7 +176,7 @@ export function MailList({ items }: MailListProps) {
                 </div>
               </div>
               <div className={cn(/* design-system-escape: leading-5 sem token DS */ "grid w-full inline-micro text-caption leading-5")}>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground whitespace-normal wrap-break-word")}>
+                <div className={cn( "font-medium text-foreground whitespace-normal wrap-break-word")}>
                   {item.subject}
                 </div>
                 {getMailListPreview(item) ? (

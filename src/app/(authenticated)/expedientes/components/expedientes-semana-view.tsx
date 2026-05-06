@@ -193,7 +193,7 @@ export function ExpedientesSemanaView({
         <button
           onClick={handleToday}
           className={cn(
-            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
             isCurrentWeek
               ? 'bg-primary/12 text-primary'
               : 'bg-border/8 text-muted-foreground/70 hover:bg-border/15',
@@ -207,7 +207,7 @@ export function ExpedientesSemanaView({
         >
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize ml-1")}>{weekLabel}</span>
+        <span className={cn( "text-body-sm font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
@@ -228,7 +228,7 @@ export function ExpedientesSemanaView({
                 <div className={cn("flex items-center inline-tight")}>
                   <span
                     className={cn(
-                      /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
+                      /* design-system-escape: tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
                       today ? 'text-primary' : 'text-muted-foreground/55',
                     )}
                   >
@@ -236,7 +236,7 @@ export function ExpedientesSemanaView({
                   </span>
                   <span
                     className={cn(
-                      /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold tabular-nums',
+                       'text-body-sm font-bold tabular-nums',
                       today
                         ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
                         : 'text-foreground/80',
@@ -246,7 +246,7 @@ export function ExpedientesSemanaView({
                   </span>
                 </div>
                 {dayExps.length > 0 && (
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/65 font-medium")}>
+                  <span className={cn( "text-[10px] tabular-nums text-muted-foreground/65 font-medium")}>
                     {dayExps.length}
                   </span>
                 )}
@@ -324,7 +324,7 @@ function WeekDayCard({
     >
       {/* Row 1: Prazo date + Urgency indicators */}
       <div className={cn("flex items-center justify-between inline-micro")}>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption tabular-nums font-semibold text-foreground/80")}>
+        <span className={cn( "text-caption tabular-nums font-semibold text-foreground/80")}>
           {prazoLabel ?? <span className="italic text-muted-foreground/65">Sem prazo</span>}
         </span>
         <div className={cn("flex items-center inline-snug")}>
@@ -334,7 +334,7 @@ function WeekDayCard({
           {countdownLabel && (
             <span
               className={cn(
-                /* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -372,7 +372,7 @@ function WeekDayCard({
       {/* Row 4: TRT + Grau + Processo */}
       <div className={cn("flex items-center inline-snug mt-1 min-w-0")}>
         {expediente.trt && (
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
             {expediente.trt}
           </span>
         )}
@@ -403,7 +403,7 @@ function WeekDayCard({
         onKeyDown={(e) => e.stopPropagation()}
       >
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-0.5")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-0.5")}>
             Descrição
           </p>
           <ExpedienteTextEditor
@@ -416,7 +416,7 @@ function WeekDayCard({
           />
         </div>
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-0.5")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[8px] font-medium text-muted-foreground/65 uppercase tracking-wider mb-0.5")}>
             Observações
           </p>
           <ExpedienteTextEditor

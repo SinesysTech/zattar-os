@@ -168,10 +168,10 @@ export function TimelineSearchResult({
         {/* Textos */}
         <div className={cn("flex flex-col min-w-0 inline-nano")}>
           {/* Título com destaque */}
-          <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "font-medium truncate leading-snug text-foreground")}>
+          <Text variant="label" weight="medium" as="p" className={cn(/* /* design-system-escape: leading-snug sem token DS */ "truncate leading-snug text-foreground" )}>
             {partesTitulo.map((parte, i) =>
               parte.match ? (
-                <span key={i} className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-primary")}>
+                <span key={i} className={cn( "font-semibold text-primary")}>
                   {parte.text}
                 </span>
               ) : (
@@ -184,7 +184,7 @@ export function TimelineSearchResult({
           <div className={cn("flex items-center inline-snug")}>
             <span
               className={cn(
-                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium border',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center px-1.5 py-0.5 rounded-sm text-[11px] font-medium border',
                 badgeClasses
               )}
             >

@@ -112,7 +112,7 @@ export function PericiaDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             <div className={cn("grid inline-tight")}>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Responsável</div>
+              <div className={cn( "text-body-sm font-medium")}>Responsável</div>
               <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
                 <SelectTrigger className="w-full bg-card">
                   <SelectValue placeholder="Selecione..." />
@@ -129,7 +129,7 @@ export function PericiaDialog({
             </div>
 
             <div className={cn("md:col-span-2 grid inline-tight")}>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Observações</div>
+              <div className={cn( "text-body-sm font-medium")}>Observações</div>
               <Textarea
                 value={observacoes}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}

@@ -65,7 +65,7 @@ export function WidgetCasosTribunal() {
                 <span className={cn(/* design-system-escape: leading-none sem token DS */ "text-[10px] text-muted-foreground/70 truncate leading-none")}>
                   {trt.trt}
                 </span>
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums ml-2 shrink-0")}>
+                <span className={cn( "text-[10px] font-semibold tabular-nums ml-2 shrink-0")}>
                   {trt.count}
                 </span>
               </div>

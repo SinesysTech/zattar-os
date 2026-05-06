@@ -687,7 +687,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
 
                     <div className="flex-1 min-w-0">
                       <div className={cn("flex items-center inline-snug")}>
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{estagio.nome}</span>
+                        <span className={cn( "text-body-sm font-medium truncate")}>{estagio.nome}</span>
                         {estagio.isDefault && (
                           <Star className="h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
                         )}
@@ -904,7 +904,7 @@ export function PipelinesPageClient() {
           <div role="table" aria-label="Pipelines de Contratos">
             <div
               role="row"
-              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; font-medium → className de <Text>/<Heading> */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
+              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; */ /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default px-4 py-2.5 border-b border-border/40 text-[11px] uppercase tracking-wide font-medium text-muted-foreground/70")}
             >
               <span>Nome</span>
               <span>Segmento</span>
@@ -920,7 +920,7 @@ export function PipelinesPageClient() {
                   className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <div className="min-w-0">
-                    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{pipeline.nome}</div>
+                    <div className={cn( "text-body-sm font-medium truncate")}>{pipeline.nome}</div>
                     {pipeline.descricao && (
                       <Text variant="caption" className="truncate">
                         {pipeline.descricao}

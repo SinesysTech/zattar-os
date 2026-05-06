@@ -418,7 +418,7 @@ export default function EventCalendarApp({
             aria-label="Anterior">
             <ChevronLeftIcon size={16} aria-hidden="true" />
           </Button>
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-w-30 text-center text-body-sm font-medium sm:min-w-40")}>
+          <span className={cn( "min-w-30 text-center text-body-sm font-medium sm:min-w-40")}>
             {isLoading ? (
               <LoaderCircle className="mx-auto h-4 w-4 animate-spin" />
             ) : (

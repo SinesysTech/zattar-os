@@ -72,7 +72,7 @@ const SignerCard = memo(function SignerCard({
 
       {/* Avatar com iniciais */}
       <div
-        className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex items-center justify-center size-8 rounded-full shrink-0 font-semibold text-[11px] text-white")}
+        className={cn( "flex items-center justify-center size-8 rounded-full shrink-0 font-semibold text-[11px] text-white")}
         style={{ backgroundColor: signer.cor }}
       >
         {getInitials(signer.nome)}
@@ -80,7 +80,7 @@ const SignerCard = memo(function SignerCard({
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground truncate")}>
+        <p className={cn( "text-body-sm font-medium text-foreground truncate")}>
           {signer.nome}
           {isCurrentUser && ' (Você)'}
         </p>

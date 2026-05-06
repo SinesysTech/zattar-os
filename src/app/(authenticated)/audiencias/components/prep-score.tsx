@@ -150,7 +150,7 @@ export function PrepScore({ audiencia, className, showBreakdown = false, size = 
         <div className="absolute inset-0 flex items-center justify-center">
           <Text
             variant="label"
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-none sem token DS */ "font-semibold tabular-nums leading-none", cfg.text, statusTextColors[status])}
+            className={cn(/* design-system-escape: leading-none sem token DS */ "font-semibold tabular-nums leading-none", cfg.text, statusTextColors[status])}
           >
             {score}%
           </Text>
@@ -199,7 +199,7 @@ export function PrepScoreBadge({ audiencia, className }: { audiencia: Audiencia;
 
   return (
     <span className={cn(
-      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-nano px-1.5 py-px rounded-full text-micro-badge font-semibold tabular-nums shrink-0",
+      /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-nano px-1.5 py-px rounded-full text-micro-badge font-semibold tabular-nums shrink-0",
       badgeStyles[status],
       className,
     )}>

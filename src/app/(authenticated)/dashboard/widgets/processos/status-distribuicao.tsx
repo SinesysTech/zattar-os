@@ -93,7 +93,7 @@ export function WidgetStatusDistribuicao() {
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {seg.label}
               </span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+              <span className={cn( "text-[10px] font-medium tabular-nums")}>
                 {fmtNum(seg.value)}
               </span>
               <span className="text-[9px] text-muted-foreground/60 w-7 text-right tabular-nums">

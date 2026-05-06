@@ -328,14 +328,14 @@ export function TaskDetailSheet() {
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
-                                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
+                                            <span className={cn( "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
                                     <div className={cn("stack-micro")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
-                                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
+                                            <span className={cn( "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
                                     <div className={cn("stack-micro col-span-2 sm:col-span-1")}>
@@ -366,7 +366,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn("flex items-center inline-tight")}>
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                                            <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Subtarefas</Heading>
+                                            <Heading level="card" className={cn( "text-body-sm font-semibold")}>Subtarefas</Heading>
                                         </div>
                                         {tarefa.subTasks && tarefa.subTasks.length > 0 && (
                                             <Text variant="caption">
@@ -419,7 +419,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn("flex items-center inline-tight")}>
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                            <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Anexos</Heading>
+                                            <Heading level="card" className={cn( "text-body-sm font-semibold")}>Anexos</Heading>
                                         </div>
                                         <Button
                                             variant="ghost"
@@ -483,7 +483,7 @@ export function TaskDetailSheet() {
                                 <div className={cn("stack-default")}>
                                     <div className={cn("flex items-center inline-tight")}>
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                                        <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Comentários</Heading>
+                                        <Heading level="card" className={cn( "text-body-sm font-semibold")}>Comentários</Heading>
                                     </div>
 
                                     <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "stack-default pb-4")}>
@@ -505,7 +505,7 @@ export function TaskDetailSheet() {
                                             {tarefa.comments?.map((comment) => (
                                                 <div key={comment.id} className={cn("group relative flex inline-default")}>
                                                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted">
-                                                        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[10px] font-bold")}>U</span>
+                                                        <span className={cn( "text-[10px] font-bold")}>U</span>
                                                     </div>
                                                     <div className={cn("flex-1 stack-micro")}>
                                                         <div className="flex items-center justify-between">

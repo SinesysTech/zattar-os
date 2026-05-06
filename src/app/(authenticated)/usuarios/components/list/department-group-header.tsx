@@ -57,7 +57,7 @@ export function DepartmentGroupHeader({
           />
 
           {/* Cargo name */}
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground truncate")}>
+          <span className={cn( "text-body-sm font-semibold text-foreground truncate")}>
             {cargoNome}
           </span>
 
@@ -80,14 +80,14 @@ export function DepartmentGroupHeader({
                   src={getAvatarUrl(member.avatarUrl) ?? undefined}
                   alt={member.nomeExibicao}
                 />
-                <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold bg-muted/40")}>
+                <AvatarFallback className={cn( "text-[9px] font-semibold bg-muted/40")}>
                   {getInitials(member)}
                 </AvatarFallback>
               </Avatar>
             ))}
             {overflow > 0 && (
               <div className="size-7 rounded-full border-2 border-background bg-muted/40 flex items-center justify-center shrink-0 z-10">
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold text-muted-foreground/70")}>
+                <span className={cn( "text-[9px] font-semibold text-muted-foreground/70")}>
                   +{overflow}
                 </span>
               </div>

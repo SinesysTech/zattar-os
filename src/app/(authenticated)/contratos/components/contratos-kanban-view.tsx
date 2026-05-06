@@ -120,7 +120,7 @@ function KanbanColumnContent({
             </span>
           </div>
           <span
-            className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-micro-caption font-semibold tabular-nums text-muted-foreground/70 shrink-0")}
+            className={cn( "text-micro-caption font-semibold tabular-nums text-muted-foreground/70 shrink-0")}
             aria-label={`${contratos.length} contratos`}
           >
             {contratos.length}

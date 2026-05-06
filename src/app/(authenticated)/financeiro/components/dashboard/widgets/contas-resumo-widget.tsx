@@ -73,7 +73,7 @@ function ContaSection({
         </Button>
       </div>
       <div>
-        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
+        <p className={cn( "text-body-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
         <Text variant="caption">
           {quantidade} conta{quantidade !== 1 ? 's' : ''} pendente{quantidade !== 1 ? 's' : ''}
         </Text>
@@ -109,7 +109,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+        <CardTitle className={cn( "text-body-sm font-medium")}>
           Contas a Pagar / Receber
         </CardTitle>
       </CardHeader>

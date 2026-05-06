@@ -120,21 +120,21 @@ export function FormularioDuplicateDialog({
             Crie uma cópia do formulário &ldquo;{formulario.nome}&rdquo;.
             <div className={cn("mt-2 stack-micro")}>
               <div className={cn("flex items-center inline-tight")}>
-                <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Segmento:</Label>
+                <Label className={cn( "text-body-sm font-medium")}>Segmento:</Label>
                 <Badge variant="outline">{formulario.segmento?.nome || "N/A"}</Badge>
               </div>
               <div className={cn("flex items-center inline-tight")}>
-                <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Templates:</Label>
+                <Label className={cn( "text-body-sm font-medium")}>Templates:</Label>
                 <Badge variant="outline">{formulario.template_ids?.length || 0}</Badge>
               </div>
               <div className={cn("flex items-center inline-tight")}>
-                <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Foto necessária:</Label>
+                <Label className={cn( "text-body-sm font-medium")}>Foto necessária:</Label>
                 <Badge variant={formulario.foto_necessaria ? "default" : "secondary"}>
                   {formulario.foto_necessaria ? "Sim" : "Não"}
                 </Badge>
               </div>
               <div className={cn("flex items-center inline-tight")}>
-                <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Geolocalização necessária:</Label>
+                <Label className={cn( "text-body-sm font-medium")}>Geolocalização necessária:</Label>
                 <Badge variant={formulario.geolocation_necessaria ? "default" : "secondary"}>
                   {formulario.geolocation_necessaria ? "Sim" : "Não"}
                 </Badge>

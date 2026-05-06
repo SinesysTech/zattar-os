@@ -97,7 +97,7 @@ function TimelineBar({ audiencia, maxEnd, minStart }: { audiencia: Audiencia; ma
         className="absolute top-0.5 h-3.5 rounded bg-primary/20 border border-primary/15 transition-all duration-200 hover:bg-primary/30 cursor-default"
         style={{ left: `${left}%`, width: `${width}%`, minWidth: 20 }}
       >
-        <span className={cn(/* design-system-escape: pr-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "absolute left-1.5 top-1/2 -translate-y-1/2 text-micro-badge text-foreground/75 truncate max-w-full pr-1.5 font-medium")}>
+        <span className={cn(/* design-system-escape: pr-1.5 padding direcional sem Inset equiv.; */ "absolute left-1.5 top-1/2 -translate-y-1/2 text-micro-badge text-foreground/75 truncate max-w-full pr-1.5 font-medium")}>
           {format(parseISO(audiencia.dataInicio), "HH:mm")}
         </span>
       </div>
@@ -118,7 +118,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
       <div className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <AlertTriangle className="size-3 text-destructive/50" />
-          <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/75")}>
+          <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/75")}>
             {conflicts.length} {conflicts.length === 1 ? "alerta" : "alertas"}
           </Text>
         </div>
@@ -142,7 +142,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
                     <AlertTriangle className="size-2.5 text-warning/40" />
                   )}
                   <span className={cn(
-                    /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption font-medium",
+                     "text-micro-caption font-medium",
                     conflict.type === "overlap" ? "text-destructive/60" : "text-warning/60",
                   )}>
                     {conflict.message}

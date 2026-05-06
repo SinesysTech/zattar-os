@@ -121,7 +121,7 @@ export function ViewerToolbar({
               >
                 <StickyNote className="size-4" />
                 {annotationCount > 0 && (
-                  <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "absolute -right-0.5 -top-0.5 inline-flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground")}>
+                  <span className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; */ "absolute -right-0.5 -top-0.5 inline-flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground")}>
                     {annotationCount}
                   </span>
                 )}

@@ -230,7 +230,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
             <Input
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
-              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-md border-0 bg-transparent font-medium shadow-none focus-visible:ring-0")}
+              className={cn( "max-w-md border-0 bg-transparent font-medium shadow-none focus-visible:ring-0")}
               placeholder="Título do documento"
             />
 

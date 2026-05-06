@@ -83,10 +83,10 @@ export function AttentionStrip({
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-50 px-4 py-3")}>
               <div className={cn("flex items-center inline-tight mb-1.5")}>
                 <Calendar className="size-3.5 text-primary/65" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                   Próxima Audiência
                 </span>
-                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-[10px] font-bold tabular-nums ml-auto', URGENCY_STYLES[countdown.urgency])}>
+                <span className={cn( 'text-[10px] font-bold tabular-nums ml-auto', URGENCY_STYLES[countdown.urgency])}>
                   {countdown.label}
                 </span>
               </div>
@@ -118,14 +118,14 @@ export function AttentionStrip({
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-45 px-4 py-3")}>
             <div className={cn("flex items-center inline-tight mb-1.5")}>
               <FileText className="size-3.5 text-warning/65" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                 Prazos
               </span>
             </div>
             {expedientesUrgentes.vencidos.length > 0 && (
               <div className={cn("flex items-center inline-snug mb-1")}>
                 <AlertTriangle className="size-3 text-destructive/70" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-destructive/70")}>
+                <span className={cn( "text-[10px] font-medium text-destructive/70")}>
                   {expedientesUrgentes.vencidos.length} vencido{expedientesUrgentes.vencidos.length > 1 ? 's' : ''}
                 </span>
               </div>
@@ -133,7 +133,7 @@ export function AttentionStrip({
             {expedientesUrgentes.vencendo.length > 0 && (
               <div className={cn("flex items-center inline-snug")}>
                 <Clock className="size-3 text-warning/70" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-warning/70")}>
+                <span className={cn( "text-[10px] font-medium text-warning/70")}>
                   {expedientesUrgentes.vencendo.length} vencendo
                 </span>
               </div>
@@ -149,11 +149,11 @@ export function AttentionStrip({
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex-1 min-w-40 px-4 py-3")}>
             <div className={cn("flex items-center inline-tight mb-1.5")}>
               <Microscope className="size-3.5 text-info/65" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/70 uppercase tracking-wider")}>
                 Perícias
               </span>
             </div>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-info/70")}>
+            <span className={cn( "text-[10px] font-medium text-info/70")}>
               {periciasPendentes.length} pendente{periciasPendentes.length > 1 ? 's' : ''}
             </span>
           </div>

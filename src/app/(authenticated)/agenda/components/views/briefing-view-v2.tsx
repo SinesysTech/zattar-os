@@ -79,17 +79,17 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
     <button onClick={onClick} className={cn("w-full text-left rounded-xl inset-card-compact bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/6r:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
       <div className={cn("flex items-start inline-default")}>
         <div className="text-right shrink-0 w-14">
-          <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
+          <div className={cn( "text-body-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
           {event.start.getTime() !== event.end.getTime() && <div className="text-[9px] text-muted-foreground/40 font-mono tabular-nums">{fmtTime(event.end)}</div>}
-          {isFatal && <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] text-destructive/60 font-bold uppercase mt-0.5")}>FATAL</div>}
+          {isFatal && <div className={cn( "text-[9px] text-destructive/60 font-bold uppercase mt-0.5")}>FATAL</div>}
         </div>
         <div className={cn("w-1 self-stretch rounded-full shrink-0", colors.dot)} />
         <div className="flex-1 min-w-0">
           <div className={cn("flex items-center inline-tight flex-wrap")}>
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground")}>{event.title}</span>
-            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
+            <span className={cn( "text-[13px] font-semibold text-foreground")}>{event.title}</span>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border", colors.bg, colors.text, colors.border)}>{colors.label}</span>
             {event.meta?.status && (
-              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border",
+              <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-semibold border",
                 event.meta?.status === "Marcada" && "bg-success/15 text-success border-success/20",
                 event.meta?.status === "Pendente" && "bg-warning/15 text-warning border-warning/20",
               )}>{event.meta?.status}</span>
@@ -112,7 +112,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
           {prepPct != null && <div className="mt-2"><PrepProgress percent={prepPct} size="sm" /></div>}
           {event.meta?.responsavelNome && (
             <div className={cn("flex items-center inline-tight mt-2")}>
-              <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "size-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px] font-bold text-primary shrink-0")}>
+              <div className={cn( "size-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px] font-bold text-primary shrink-0")}>
                 {event.meta?.responsavelNome.split(" ").map((w) => w[0]).join("").slice(0, 2)}
               </div>
               <span className="text-[10px] text-muted-foreground/45">{event.meta?.responsavelNome}</span>
@@ -173,13 +173,13 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           <div className={cn("flex items-center inline-medium mb-3")}>
             <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center"><Sparkles className="size-4 text-primary" /></div>
             <div>
-              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>Bom dia, {userName}</div>
+              <div className={cn( "text-body-sm font-semibold text-foreground")}>Bom dia, {userName}</div>
               <Text variant="caption" className="text-muted-foreground/50">{dateStr}</Text>
             </div>
           </div>
           <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>
-            Você tem <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-foreground font-semibold")}>{dayEvents.length} compromissos</span> hoje
-            {audienciaCount > 0 && <>, incluindo <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-info font-semibold")}>{audienciaCount} audiência{audienciaCount > 1 ? "s" : ""}</span></>}.
+            Você tem <span className={cn( "text-foreground font-semibold")}>{dayEvents.length} compromissos</span> hoje
+            {audienciaCount > 0 && <>, incluindo <span className={cn( "text-info font-semibold")}>{audienciaCount} audiência{audienciaCount > 1 ? "s" : ""}</span></>}.
             {dayEvents.length === 0 && " Dia livre para foco e preparação."}
           </p>
         </GlassPanel>
@@ -228,7 +228,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
                   <div key={alert.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-start inline-tight p-2 rounded-lg border", cls)}>
                     <Icon className="size-3.5 mt-0.5 shrink-0" />
                     <div>
-                      <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold")}>{alert.title}</div>
+                      <div className={cn( "text-[10px] font-semibold")}>{alert.title}</div>
                       <div className="text-[9px] text-muted-foreground/40">{alert.description}</div>
                     </div>
                   </div>

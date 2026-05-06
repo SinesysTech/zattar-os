@@ -83,7 +83,7 @@ export function OrigemDistribution() {
               <span className="text-[10px] text-muted-foreground/70 flex-1 truncate">
                 {o.origem}
               </span>
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>
+              <span className={cn( "text-[11px] font-bold tabular-nums")}>
                 {fmtNum(o.count)}
               </span>
             </div>

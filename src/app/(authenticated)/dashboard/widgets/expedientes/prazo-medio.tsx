@@ -86,7 +86,7 @@ export function PrazoMedio() {
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Tempo Resposta
               </p>
-              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold mt-0.5")}>
+              <p className={cn( "font-display text-body-sm font-bold mt-0.5")}>
                 {tempoResposta}d
               </p>
             </div>
@@ -107,15 +107,15 @@ export function PrazoMedio() {
         <div className={cn("flex inline-default")}>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Min</span>
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{minVal.toFixed(1)}d</p>
+            <p className={cn( "text-[11px] font-bold tabular-nums")}>{minVal.toFixed(1)}d</p>
           </div>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Media</span>
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{avgVal.toFixed(1)}d</p>
+            <p className={cn( "text-[11px] font-bold tabular-nums")}>{avgVal.toFixed(1)}d</p>
           </div>
           <div>
             <span className="text-[8px] text-muted-foreground/50 uppercase">Max</span>
-            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[11px] font-bold tabular-nums")}>{maxVal.toFixed(1)}d</p>
+            <p className={cn( "text-[11px] font-bold tabular-nums")}>{maxVal.toFixed(1)}d</p>
           </div>
         </div>
       </div>

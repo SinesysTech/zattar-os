@@ -357,7 +357,7 @@ function GlassCard({
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "relative mt-3 pt-3 border-t border-border/20")}>
         <div className={cn("flex items-center inline-snug mb-1.5")}>
           <Scale className="size-3 text-muted-foreground/70" />
-          <Text variant="micro-caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/70")}>
+          <Text variant="micro-caption" className={cn( "font-medium text-muted-foreground/70")}>
             {processos.length === 0
               ? 'Sem processos vinculados'
               : `${processos.length} ${processos.length === 1 ? 'processo' : 'processos'}`}

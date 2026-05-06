@@ -43,7 +43,7 @@ function PalettePrimary() {
                 borderWidth: s.anchor ? 2 : 1,
               }}
             >
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[10px] font-medium")}>{s.label}</span>
+              <span className={cn( "font-mono text-[10px] font-medium")}>{s.label}</span>
               <span className="font-mono text-[10px] opacity-75">{s.caption}</span>
             </div>
           ))}
@@ -106,15 +106,15 @@ function PaletteNeutrals() {
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "mt-4 grid gap-2.5 sm:grid-cols-3")}>
         <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-card px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--card</span>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Card surface</span>
+          <span className={cn( "text-[13px] font-semibold")}>Card surface</span>
         </div>
         <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-border bg-muted px-4 py-3")}>
           <span className="font-mono text-[10px] text-muted-foreground">--muted</span>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Muted</span>
+          <span className={cn( "text-[13px] font-semibold")}>Muted</span>
         </div>
         <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex flex-col inline-micro rounded-xl border border-transparent bg-sidebar px-4 py-3 text-sidebar-foreground")}>
           <span className="font-mono text-[10px] opacity-70">--sidebar</span>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>Sidebar (always dark)</span>
+          <span className={cn( "text-[13px] font-semibold")}>Sidebar (always dark)</span>
         </div>
       </div>
     </SpecimenCard>
@@ -149,7 +149,7 @@ function PaletteStatus() {
               <span>{t.title}</span>
               <span>{t.hue}</span>
             </div>
-            <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-heading text-body font-bold")}>{t.label}</div>
+            <div className={cn( "font-heading text-body font-bold")}>{t.label}</div>
           </div>
         ))}
       </div>
@@ -159,7 +159,7 @@ function PaletteStatus() {
           {chips.map((c) => (
             <span
               key={c.label}
-              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]")}
+              className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]")}
               style={{ background: c.bg, color: c.color }}
             >
               {c.label}
@@ -237,13 +237,13 @@ function PaletteEvent() {
               style={{ background: `var(${e.token})` }}
             />
             <span
-              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "flex size-9 items-center justify-center rounded-xl font-heading text-body-sm font-bold text-white")}
+              className={cn( "flex size-9 items-center justify-center rounded-xl font-heading text-body-sm font-bold text-white")}
               style={{ background: `var(${e.token})` }}
             >
               {e.code}
             </span>
             <div className={cn("flex flex-col inline-nano")}>
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold text-foreground")}>{e.label}</span>
+              <span className={cn( "text-[13px] font-semibold text-foreground")}>{e.label}</span>
               <span className="font-mono text-[10px] text-muted-foreground">
                 {e.token}
               </span>

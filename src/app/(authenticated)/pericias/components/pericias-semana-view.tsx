@@ -215,7 +215,7 @@ export function PericiasSemanaView({
         <button
           onClick={handleToday}
           className={cn(
-            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ 'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer',
             isCurrentWeek
               ? 'bg-primary/12 text-primary'
               : 'bg-border/8 text-muted-foreground/50 hover:bg-border/15',
@@ -230,7 +230,7 @@ export function PericiasSemanaView({
         >
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize ml-1")}>{weekLabel}</span>
+        <span className={cn( "text-body-sm font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
@@ -251,7 +251,7 @@ export function PericiasSemanaView({
                 <div className={cn("flex items-center inline-tight")}>
                   <span
                     className={cn(
-                      /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
+                      /* design-system-escape: tracking-wider sem token DS */ 'text-[10px] font-semibold uppercase tracking-wider',
                       today ? 'text-primary' : 'text-muted-foreground/55',
                     )}
                   >
@@ -259,7 +259,7 @@ export function PericiasSemanaView({
                   </span>
                   <span
                     className={cn(
-                      /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold tabular-nums',
+                       'text-body-sm font-bold tabular-nums',
                       today
                         ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
                         : 'text-foreground/80',
@@ -269,7 +269,7 @@ export function PericiasSemanaView({
                   </span>
                 </div>
                 {dayPericias.length > 0 && (
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] tabular-nums text-muted-foreground/45 font-medium")}>
+                  <span className={cn( "text-[10px] tabular-nums text-muted-foreground/45 font-medium")}>
                     {dayPericias.length}
                   </span>
                 )}
@@ -349,7 +349,7 @@ function WeekDayCard({
     >
       {/* Row 1: prazo + urgency indicator */}
       <div className={cn("flex items-center justify-between inline-micro")}>
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-caption tabular-nums font-semibold text-foreground/80")}>
+        <span className={cn( "text-caption tabular-nums font-semibold text-foreground/80")}>
           {prazoLabel ?? (
             <span className="italic text-muted-foreground/40">Sem prazo</span>
           )}
@@ -361,7 +361,7 @@ function WeekDayCard({
           {countdownLabel && (
             <span
               className={cn(
-                /* design-system-escape: font-bold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
+                /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[9px] font-bold tabular-nums px-1.5 py-0.5 rounded-full',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -375,26 +375,26 @@ function WeekDayCard({
       <div className={cn("flex items-center inline-snug mt-1.5 flex-wrap")}>
         <span
           className={cn(
-            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold border',
+            /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center rounded px-1.5 py-0.5 text-[9px] font-semibold border',
             situacaoTone,
           )}
         >
           {situacaoLabel}
         </span>
         {pericia.segredoJustica && (
-          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro bg-warning/10 border border-warning/20 text-warning rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
             <Lock className="size-2.5" />
             Sigilo
           </span>
         )}
         {pericia.juizoDigital && (
-          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-info/10 border border-info/20 text-info rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro bg-info/10 border border-info/20 text-info rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
             <Monitor className="size-2.5" />
             Digital
           </span>
         )}
         {pericia.prioridadeProcessual && (
-          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-micro bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-micro bg-destructive/10 border border-destructive/20 text-destructive rounded px-1.5 py-0.5 text-[9px] font-semibold")}>
             <AlertTriangle className="size-2.5" />
             Prioridade
           </span>
@@ -405,7 +405,7 @@ function WeekDayCard({
       {especialidade && (
         <p
           className={cn(
-            /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption font-medium text-foreground truncate mt-1.5',
+             'text-caption font-medium text-foreground truncate mt-1.5',
             finalizada && 'line-through',
           )}
         >
@@ -425,7 +425,7 @@ function WeekDayCard({
       {/* Row 5: TRT + Grau + Processo */}
       <div className={cn("flex items-center inline-snug mt-1 min-w-0")}>
         {pericia.trt && (
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary/70 shrink-0")}>
             {pericia.trt}
           </span>
         )}

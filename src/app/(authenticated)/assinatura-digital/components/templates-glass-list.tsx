@@ -255,10 +255,10 @@ function GlassRow({
           </div>
           <div className="min-w-0">
             <div className={cn("flex items-center inline-tight flex-wrap")}>
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{displayName}</span>
+              <span className={cn( "text-body-sm font-semibold truncate")}>{displayName}</span>
               <span
                 className={cn(
-                  /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro rounded px-1.5 py-0.5 text-[10px] font-semibold border',
+                  /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-micro rounded px-1.5 py-0.5 text-[10px] font-semibold border',
                   isMarkdown
                     ? 'bg-info/10 border-info/25 text-info'
                     : 'bg-destructive/10 border-destructive/25 text-destructive',
@@ -276,7 +276,7 @@ function GlassRow({
         </div>
 
         {/* Versão */}
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-foreground/6 border border-foreground/10 text-muted-foreground")}>
+        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex backdrop-blur-sm rounded-lg text-[11px] font-semibold tracking-[0.04em] px-2 py-1 bg-foreground/6 border border-foreground/10 text-muted-foreground")}>
           v{template.versao}
         </span>
 
@@ -289,7 +289,7 @@ function GlassRow({
         <div className="flex justify-start">
           <span
             className={cn(
-              /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
+              /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug backdrop-blur-sm rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border whitespace-nowrap',
               getStatusPillClass(status),
             )}
           >
@@ -383,12 +383,12 @@ function GlassCard({
 
       <div>
         <div className={cn("flex items-center inline-tight flex-wrap")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold line-clamp-1")}>{displayName}</span>
+          <span className={cn( "text-body-sm font-semibold line-clamp-1")}>{displayName}</span>
         </div>
         <div className={cn("mt-1 flex items-center inline-tight")}>
           <span
             className={cn(
-              /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold border',
+              /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-semibold border',
               isMarkdown
                 ? 'bg-info/10 border-info/25 text-info'
                 : 'bg-destructive/10 border-destructive/25 text-destructive',
@@ -412,7 +412,7 @@ function GlassCard({
         </span>
         <span
           className={cn(
-            /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
+            /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'inline-flex items-center inline-snug rounded-lg text-[10px] font-semibold tracking-[0.04em] px-2 py-1 border',
             getStatusPillClass(status),
           )}
         >
@@ -451,7 +451,7 @@ function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileText className="w-10 h-10 text-muted-foreground/55 mb-4" />
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>Nenhum template encontrado</p>
+      <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>Nenhum template encontrado</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">Tente ajustar os filtros ou criar um novo template</Text>
     </div>
   );

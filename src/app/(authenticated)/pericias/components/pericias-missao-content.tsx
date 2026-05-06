@@ -160,7 +160,7 @@ function ResponsavelAvatar({
             {getInitials(nome)}
           </AvatarFallback>
         </Avatar>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground/85 truncate")}>
+        <span className={cn( "text-[12px] font-medium text-foreground/85 truncate")}>
           {nome}
         </span>
       </div>
@@ -241,7 +241,7 @@ function PericiaMissionCard({
                 />
               </IconContainer>
               <div className="min-w-0">
-                <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "block text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/65")}>
                   {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
                 </span>
                 <Heading
@@ -256,7 +256,7 @@ function PericiaMissionCard({
             {/* Prazo (substituindo countdown "Atrasado Xd") */}
             <div
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ 'inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg shrink-0 text-[11px] font-semibold tabular-nums',
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg shrink-0 text-[11px] font-semibold tabular-nums',
                 URGENCY_BADGE[urgency],
               )}
             >
@@ -272,10 +272,10 @@ function PericiaMissionCard({
           {/* ── 2. Info grid: Tribunal | Processo ─────────────────── */}
           <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-3 inline-medium rounded-lg bg-border/5 px-3 py-2.5")}>
             <div className={cn("flex flex-col inline-nano min-w-0")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Tribunal
               </span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium text-foreground/90 truncate")}>
+              <span className={cn( "text-caption font-medium text-foreground/90 truncate")}>
                 {pericia.trt}
                 <span className="text-[9px] text-muted-foreground/55 ml-1 font-normal">
                   {getGrauLabel(pericia.grau)}
@@ -283,7 +283,7 @@ function PericiaMissionCard({
               </span>
             </div>
             <div className={cn("flex flex-col inline-nano min-w-0 col-span-2")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Processo
               </span>
               <Text variant="caption" className="font-medium text-foreground/90 tabular-nums truncate">
@@ -296,7 +296,7 @@ function PericiaMissionCard({
           {(parteAutora || parteRe) && (
             <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-lg bg-border/5 px-3 py-2")}>
               <div className="flex-1 min-w-0">
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
                   Autor
                 </span>
                 <span className="block text-[11px] text-foreground/80 truncate">
@@ -307,7 +307,7 @@ function PericiaMissionCard({
                 vs
               </span>
               <div className="flex-1 min-w-0 text-right">
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "block text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55")}>
                   Réu
                 </span>
                 <span className="block text-[11px] text-foreground/80 truncate">
@@ -322,7 +322,7 @@ function PericiaMissionCard({
             <div className={cn("flex items-start inline-snug text-[12px] text-foreground/75 wrap-break-word")}>
               <Briefcase className="size-3 text-muted-foreground/50 shrink-0 mt-0.5" />
               <span className={cn(/* design-system-escape: leading-snug sem token DS */ "wrap-break-word leading-snug")}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55 mr-1.5")}>
+                <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium uppercase tracking-wider text-muted-foreground/55 mr-1.5")}>
                   Perito
                 </span>
                 {perito}
@@ -359,12 +359,12 @@ function GroupHeader({ group }: GroupHeaderProps) {
         <Icon className={cn('size-4', group.iconColor)} />
       </IconContainer>
       <div className="min-w-0 flex-1">
-        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight text-foreground")}>
+        <p className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight text-foreground")}>
           {group.label}
         </p>
         <p className="text-[11px] text-muted-foreground/65">{group.description}</p>
       </div>
-      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center rounded-full bg-muted/50 px-2 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground/70")}>
+      <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "inline-flex items-center rounded-full bg-muted/50 px-2 py-0.5 text-[10px] font-medium tabular-nums text-muted-foreground/70")}>
         {group.pericias.length}
       </span>
     </div>

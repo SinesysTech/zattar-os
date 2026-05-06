@@ -42,7 +42,7 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
                   className={cn(
                     buttonVariants({ variant: link.variant === "default" ? "secondary" : "ghost", size: "icon" }),
                     "size-9",
-                    link.variant === "default" && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold"
+                    link.variant === "default" &&  "font-semibold"
                   )}>
                   {link.dot ?? <link.icon className="size-4" />}
                   <span className="sr-only">{link.title}</span>
@@ -60,7 +60,7 @@ export function Nav({ links, isCollapsed, onSelect }: NavProps) {
               aria-current={link.variant === "default" ? "page" : undefined}
               className={cn(
                 buttonVariants({ variant: link.variant === "default" ? "secondary" : "ghost", size: "sm" }),
-                link.variant === "default" && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold",
+                link.variant === "default" &&  "font-semibold",
                 "flex justify-start inline-medium"
               )}>
               {link.dot ?? <link.icon className="size-4" />}

@@ -71,7 +71,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
             >
               <div className={cn("w-1 h-8 rounded-full shrink-0", u.bar)} />
               <div className="min-w-0">
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-mono font-semibold", u.label)}>
+                <div className={cn( "text-[10px] font-mono font-semibold", u.label)}>
                   {daysLabel(dl.daysLeft)}
                 </div>
                 <div className="text-[11px] text-muted-foreground truncate">

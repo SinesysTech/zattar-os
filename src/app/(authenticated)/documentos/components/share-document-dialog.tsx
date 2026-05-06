@@ -289,7 +289,7 @@ export function ShareDocumentDialog({
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>
+                          <Text variant="label" as="p" className={cn( "font-medium truncate")}>
                             {usuario.nomeExibicao || usuario.nomeCompleto}
                           </Text>
                           {usuario.emailCorporativo && (
@@ -314,7 +314,7 @@ export function ShareDocumentDialog({
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+                      <p className={cn( "text-body-sm font-medium")}>
                         {selectedUser.nomeExibicao || selectedUser.nomeCompleto}
                       </p>
                       {selectedUser.emailCorporativo && (
@@ -371,7 +371,7 @@ export function ShareDocumentDialog({
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+                            <p className={cn( "text-body-sm font-medium")}>
                               {compartilhamento.usuario.nomeExibicao || compartilhamento.usuario.nomeCompleto}
                             </p>
                             {compartilhamento.usuario.emailCorporativo && (

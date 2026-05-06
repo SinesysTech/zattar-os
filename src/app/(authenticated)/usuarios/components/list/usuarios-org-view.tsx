@@ -72,13 +72,13 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
           src={getAvatarUrl(usuario.avatarUrl) ?? undefined}
           alt={displayName}
         />
-        <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
+        <AvatarFallback className={cn( "text-caption font-medium")}>
           {getInitials(usuario)}
         </AvatarFallback>
       </Avatar>
 
       <div className="flex flex-col items-center text-center min-w-0 w-full">
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-semibold leading-tight truncate w-full text-center")}>
+        <span className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[12px] font-semibold leading-tight truncate w-full text-center")}>
           {displayName}
         </span>
         {cargoNome && (
@@ -159,7 +159,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
         <button
           type="button"
           onClick={handleZoomReset}
-          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium tabular-nums text-muted-foreground/60 hover:text-foreground transition-colors min-w-10nter")}
+          className={cn( "text-[11px] font-medium tabular-nums text-muted-foreground/60 hover:text-foreground transition-colors min-w-10nter")}
           aria-label="Redefinir zoom para 100%"
         >
           {zoom}%

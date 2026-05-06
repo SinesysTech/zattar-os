@@ -229,7 +229,7 @@ function GlassRow({
           <div className={cn('w-9 h-9 rounded-[0.625rem] flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
             <TipoIcon className={cn('w-4 h-4', getTipoIconColor(captura.tipo_captura))} />
           </div>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate min-w-0")}>
+          <span className={cn( "text-body-sm font-semibold truncate min-w-0")}>
             {formatarTipo(captura.tipo_captura)}
           </span>
         </div>
@@ -342,7 +342,7 @@ function PaginationBar({
           onClick={onPrev}
           disabled={pagina <= 1}
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro px-3 py-1.5 rounded-lg text-caption font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-micro px-3 py-1.5 rounded-lg text-caption font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',
@@ -356,7 +356,7 @@ function PaginationBar({
           onClick={onNext}
           disabled={pagina >= paginacao.totalPaginas}
           className={cn(
-            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center inline-micro px-3 py-1.5 rounded-lg text-caption font-medium',
+            /* design-system-escape: gap-1 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-micro px-3 py-1.5 rounded-lg text-caption font-medium',
             'border border-foreground/8 transition-all duration-150',
             'disabled:opacity-30 disabled:cursor-not-allowed',
             'hover:bg-foreground/6 hover:border-foreground/14',

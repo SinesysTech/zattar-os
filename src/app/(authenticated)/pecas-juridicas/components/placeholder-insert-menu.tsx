@@ -148,7 +148,7 @@ export function PlaceholderInsertMenu({
                             className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-start inline-micro py-2")}
                           >
                             <div className={cn("flex items-center inline-tight w-full")}>
-                              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{placeholder.label}</span>
+                              <span className={cn( "font-medium")}>{placeholder.label}</span>
                               <AppBadge variant="secondary" className={cn("ml-auto text-caption font-mono")}>
                                 {`{{${placeholder.key}}}`}
                               </AppBadge>

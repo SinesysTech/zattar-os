@@ -45,7 +45,7 @@ function FilterDropdownTrigger({
   return (
     <div
       className={cn(
-        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
+        /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'flex items-center inline-snug rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors cursor-pointer',
         active
           ? 'border-primary/40 bg-primary/15 text-primary'
           : 'border-border/50 bg-muted/50 text-foreground/70 hover:bg-muted/80 hover:border-border/70',

@@ -68,7 +68,7 @@ export function AgendaFilterBar({
         </button>
         <button
           onClick={onToday}
-          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "px-3 py-1.5 rounded-lg text-caption font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}
         >
           Hoje
         </button>
@@ -95,7 +95,7 @@ export function AgendaFilterBar({
             }
           }}
           className={cn(
-            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
+            /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
             allActive
               ? "border-primary/20 bg-primary/8 text-primary"
               : "border-border/10 text-muted-foreground/40 hover:bg-muted/10",
@@ -114,7 +114,7 @@ export function AgendaFilterBar({
               key={source}
               onClick={() => onToggleSource(source)}
               className={cn(
-                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
+                /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer",
                 active
                   ? "border-primary/20 bg-primary/8 text-primary"
                   : "border-border/10 text-muted-foreground/40 hover:bg-muted/10 hover:text-muted-foreground/60",

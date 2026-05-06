@@ -168,7 +168,7 @@ export function CaseIdentityBar({
             >
               <Avatar className="h-7 w-7 border">
                 <AvatarImage src={responsavel?.avatarUrl || undefined} alt={responsavel?.nomeExibicao || 'Não atribuído'} />
-                <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] font-medium")}>
+                <AvatarFallback className={cn( "text-[9px] font-medium")}>
                   {responsavel ? getInitials(responsavel.nomeExibicao) : 'NA'}
                 </AvatarFallback>
               </Avatar>

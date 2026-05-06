@@ -103,7 +103,7 @@ export function DocumentCard({ doc, onSelect }: DocumentCardProps) {
             <Icon className={`size-4 ${cfg.color}`} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[11px] font-semibold truncate leading-tight")}>
+            <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[11px] font-semibold truncate leading-tight")}>
               {doc.titulo}
             </p>
             <div className={cn("flex items-center inline-tight mt-1")}>

@@ -45,7 +45,7 @@ export function ClientesBulkActionsBar({
 
   return (
     <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight rounded-md border bg-muted/50 px-3 py-2")}>
-      <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium whitespace-nowrap")}>
+      <Text variant="caption" as="span" className={cn( "font-medium whitespace-nowrap")}>
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>
 

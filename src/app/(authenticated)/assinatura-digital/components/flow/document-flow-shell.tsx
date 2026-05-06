@@ -60,7 +60,7 @@ function StepPill({
     <div
       aria-current={isCurrent ? "step" : undefined}
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-tight rounded-full border pl-1.5 pr-3.5 py-1 text-body-sm font-medium transition-all duration-200",
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; */ /* design-system-escape: pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-tight rounded-full border pl-1.5 pr-3.5 py-1 text-body-sm font-medium transition-all duration-200",
         isCurrent &&
           "glass-kpi border-border/50 text-foreground shadow-md",
         isDone && "border-transparent text-foreground/75",
@@ -69,7 +69,7 @@ function StepPill({
     >
       <span
         className={cn(
-          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex size-6 items-center justify-center rounded-full text-caption font-semibold transition-all duration-200",
+           "flex size-6 items-center justify-center rounded-full text-caption font-semibold transition-all duration-200",
           isCurrent && "bg-foreground text-background",
           isDone && "bg-success/15 text-success",
           !isCurrent && !isDone && "bg-foreground/8 text-muted-foreground",
@@ -131,7 +131,7 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
   return (
     <div className={cn("flex flex-col inline-snug")}>
       <div className="flex items-center justify-between">
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground")}>
+        <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[11px] font-medium uppercase tracking-wide text-muted-foreground")}>
           Etapa {currentStep + 1} de {FLOW_STEPS.length}
         </span>
         {stepLabel && (

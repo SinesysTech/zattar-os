@@ -459,7 +459,7 @@ export function FormularioEditDialog({
             {/* Campos de configuração de contrato */}
             {tipoFormulario === 'contrato' && (
               <div className={cn("stack-default rounded-md border inset-card-compact")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
+                <p className={cn( "text-body-sm font-medium text-muted-foreground")}>
                   Configuração do Contrato
                 </p>
 

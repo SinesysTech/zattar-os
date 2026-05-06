@@ -43,7 +43,7 @@ export function criarColunasAdvogados({
       size: 280,
       meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{row.original.nome_completo}</span>
+        <span className={cn( "text-body-sm font-medium")}>{row.original.nome_completo}</span>
       ),
     },
     {

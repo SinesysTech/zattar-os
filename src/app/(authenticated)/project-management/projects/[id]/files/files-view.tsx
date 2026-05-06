@@ -170,7 +170,7 @@ export function FilesView({
                   <div className={cn("flex items-center inline-medium min-w-0")}>
                     <FileIcon className="size-5 text-muted-foreground shrink-0" />
                     <div className="min-w-0">
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
+                      <p className={cn( "text-body-sm font-medium truncate")}>
                         {anexo.nomeArquivo}
                       </p>
                       <Text variant="caption">

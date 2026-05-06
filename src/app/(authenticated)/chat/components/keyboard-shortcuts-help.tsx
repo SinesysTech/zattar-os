@@ -40,13 +40,13 @@ export function KeyboardShortcutsHelp({ open, onOpenChange }: KeyboardShortcutsH
           <TableBody>
             {shortcuts.map((shortcut) => (
               <TableRow key={shortcut.action} className="border-video-border hover:bg-video-surface-hover/50">
-                <TableCell className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{shortcut.action}</TableCell>
+                <TableCell className={cn( "font-medium")}>{shortcut.action}</TableCell>
                 <TableCell className="text-right">
                   <div className={cn("flex justify-end inline-tight")}>
                     {shortcut.keys.map((key) => (
                       <kbd
                         key={key}
-                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "px-2 py-1 text-caption font-semibold text-video-text bg-video-surface-hover border border-video-surface-hover rounded-md")}
+                        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "px-2 py-1 text-caption font-semibold text-video-text bg-video-surface-hover border border-video-surface-hover rounded-md")}
                       >
                         {key}
                       </kbd>

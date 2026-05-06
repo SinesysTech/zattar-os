@@ -24,7 +24,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
       </div>
       <div className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default">; lg:space-x-8 sem equivalente DS */ "flex items-center space-x-4 lg:space-x-8")}>
         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "hidden text-body-sm font-medium lg:inline")}>Linhas por página</p>
+          <p className={cn( "hidden text-body-sm font-medium lg:inline")}>Linhas por página</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -42,7 +42,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             </SelectContent>
           </Select>
         </div>
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex w-25 items-center justify-center text-body-sm font-medium")}>
+        <div className={cn( "flex w-25 items-center justify-center text-body-sm font-medium")}>
           Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </div>
         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>

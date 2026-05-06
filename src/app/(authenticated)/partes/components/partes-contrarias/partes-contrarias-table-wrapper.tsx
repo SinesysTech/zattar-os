@@ -210,7 +210,7 @@ export function PartesContrariasTableWrapper() {
           return (
             <div className={cn("flex flex-col items-start inline-nano max-w-full overflow-hidden")}>
               <div className={cn("flex items-center inline-micro max-w-full")}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium wrap-break-word whitespace-normal")}>
+                <span className={cn( "text-body-sm font-medium wrap-break-word whitespace-normal")}>
                   {formatarNome(parte.nome)}
                 </span>
                 <CopyButton text={parte.nome} label="Copiar nome" />

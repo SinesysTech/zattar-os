@@ -75,7 +75,7 @@ export function SearchStats() {
         </Text>
         <Link
           href="/comunica-cnj/capturadas"
-          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-micro text-caption font-medium text-primary hover:underline")}
+          className={cn( "inline-flex items-center inline-micro text-caption font-medium text-primary hover:underline")}
         >
           Ver gestão completa
           <ArrowRight className="size-3" aria-hidden />
@@ -86,7 +86,7 @@ export function SearchStats() {
           <GlassPanel key={item.label} className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
             <div className={cn("flex items-start justify-between inline-tight")}>
               <div className="min-w-0">
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider truncate")}>
+                <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider truncate")}>
                   {item.label}
                 </p>
                 <Heading level="widget" className="tabular-nums mt-1">

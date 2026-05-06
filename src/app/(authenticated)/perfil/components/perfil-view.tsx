@@ -101,7 +101,7 @@ export function PerfilView() {
           >
             <Avatar size="3xl" className="border-2 border-muted">
               <AvatarImage src={avatarUrl || undefined} alt={usuario.nomeExibicao} />
-              <AvatarFallback className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-medium → className de <Text>/<Heading> */ "text-2xl font-medium")}>
+              <AvatarFallback className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; */ "text-2xl font-medium")}>
                 {getInitials(usuario.nomeExibicao)}
               </AvatarFallback>
             </Avatar>
@@ -149,14 +149,14 @@ export function PerfilView() {
           </CardHeader>
           <CardContent className={cn("stack-default")}>
             <div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+              <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Nome Completo
               </div>
               <div className={cn("text-body")}>{usuario.nomeCompleto}</div>
             </div>
             {usuario.cpf && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                   CPF
                 </div>
                 <div className={cn("text-body")}>{formatarCpf(usuario.cpf)}</div>
@@ -164,7 +164,7 @@ export function PerfilView() {
             )}
             {usuario.rg && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                   RG
                 </div>
                 <div className={cn("text-body")}>{usuario.rg}</div>
@@ -172,7 +172,7 @@ export function PerfilView() {
             )}
             {usuario.dataNascimento && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center inline-micro")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1 flex items-center inline-micro")}>
                   <Calendar className="h-4 w-4" />
                   Data de Nascimento
                 </div>
@@ -183,7 +183,7 @@ export function PerfilView() {
             )}
             {usuario.genero && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                   Gênero
                 </div>
                 <div className={cn("text-body")}>{formatarGenero(usuario.genero)}</div>
@@ -203,7 +203,7 @@ export function PerfilView() {
           <CardContent className={cn("stack-default")}>
             {usuario.emailCorporativo && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Corporativo
                 </div>
                 <div className={cn("text-body break-all")}>{usuario.emailCorporativo}</div>
@@ -211,7 +211,7 @@ export function PerfilView() {
             )}
             {usuario.emailPessoal && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Pessoal
                 </div>
                 <div className={cn("text-body break-all")}>{usuario.emailPessoal}</div>
@@ -219,7 +219,7 @@ export function PerfilView() {
             )}
             {usuario.telefone && (
               <div>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center inline-micro")}>
+                <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1 flex items-center inline-micro")}>
                   <Phone className="h-4 w-4" />
                   Telefone
                 </div>
@@ -244,7 +244,7 @@ export function PerfilView() {
             <CardContent className={cn("stack-default")}>
               {usuario.oab && (
                 <div>
-                  <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+                  <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                     OAB
                   </div>
                   <div className={cn("text-body")}>
@@ -282,13 +282,13 @@ export function PerfilView() {
         <CardContent>
           <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
             <div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+              <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Data de Criação
               </div>
               <div className={cn("text-body")}>{formatarData(usuario.createdAt)}</div>
             </div>
             <div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
+              <div className={cn( "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Última Atualização
               </div>
               <div className={cn("text-body")}>{formatarData(usuario.updatedAt)}</div>

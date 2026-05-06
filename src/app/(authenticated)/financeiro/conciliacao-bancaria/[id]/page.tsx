@@ -68,16 +68,16 @@ export default function TransacaoDetalhePage() {
 
       <div className={cn("grid inline-default md:grid-cols-2")}>
         <Card className={cn("inset-card-compact stack-tight")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Dados da transação</p>
+          <p className={cn( "text-body-sm font-medium")}>Dados da transação</p>
           <Separator />
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{transacao.descricao}</p>
+          <p className={cn( "text-body-lg font-semibold")}>{transacao.descricao}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>Valor: {transacao.valor}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento || '-'}</p>
         </Card>
 
         <Card className={cn("inset-card-compact stack-tight")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conciliação</p>
+          <p className={cn( "text-body-sm font-medium")}>Conciliação</p>
           <Separator />
           <p className={cn("text-body-sm text-muted-foreground")}>Status: {status}</p>
           <p className={cn("text-body-sm text-muted-foreground")}>Tipo: {tipoConciliacao}</p>
@@ -92,7 +92,7 @@ export default function TransacaoDetalhePage() {
           {transacao.lancamentoVinculado && (
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
               <Text variant="caption" className="uppercase">Lançamento vinculado</Text>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{transacao.lancamentoVinculado.descricao}</p>
+              <p className={cn( "text-body-sm font-medium")}>{transacao.lancamentoVinculado.descricao}</p>
             </div>
           )}
         </Card>
@@ -101,13 +101,13 @@ export default function TransacaoDetalhePage() {
       {status === 'pendente' && (
         <Card className={cn("inset-card-compact stack-medium")}>
           <div className="flex items-center justify-between">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões de conciliação</p>
+            <p className={cn( "text-body-sm font-medium")}>Sugestões de conciliação</p>
           </div>
           <div className={cn("grid inline-medium md:grid-cols-2")}>
             {sugestoes?.map((s) => (
               <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3 stack-tight")}>
                 <div className="flex items-center justify-between">
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{s.lancamento.descricao}</p>
+                  <p className={cn( "text-body-sm font-medium")}>{s.lancamento.descricao}</p>
                   <Badge>{Math.round(s.score)}%</Badge>
                 </div>
                 <Text variant="caption">

@@ -118,7 +118,7 @@ export function SegmentosManagerDialog({
                     >
                       <div className="min-w-0">
                         <div className={cn("flex items-center inline-tight")}>
-                          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>
+                          <span className={cn( "truncate text-body-sm font-medium")}>
                             {segmento.nome}
                           </span>
                           <Badge variant={segmento.ativo ? "success" : "secondary"}>

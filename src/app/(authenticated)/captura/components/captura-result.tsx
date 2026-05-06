@@ -69,8 +69,8 @@ function StatCard({ icon, label, value, variant = 'default' }: StatCardProps) {
     <div className={`flex items-center gap-2.5 rounded-lg border p-2.5 ${variants[variant]}`}>
       <div className="text-muted-foreground shrink-0">{icon}</div>
       <div>
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>{label}</p>
-        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{value}</p>
+        <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>{label}</p>
+        <p className={cn( "text-body-sm font-semibold tabular-nums")}>{value}</p>
       </div>
     </div>
   );
@@ -84,7 +84,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
       <div className={cn("flex items-start inline-medium rounded-lg border border-destructive/30 bg-destructive/6 inset-card-compact")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>Erro na Captura</p>
+          <p className={cn( "text-body-sm font-semibold text-destructive")}>Erro na Captura</p>
           <Text variant="caption" className="mt-1">{error || 'Erro desconhecido'}</Text>
         </div>
       </div>
@@ -262,7 +262,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
             Período: {new Date(data!.dataInicio!).toLocaleDateString('pt-BR')} até{' '}
             {new Date(data!.dataFim!).toLocaleDateString('pt-BR')}
             {data?.filtroPrazo && (
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "ml-1.5 font-medium")}>
+              <span className={cn( "ml-1.5 font-medium")}>
                 ({data.filtroPrazo === 'no_prazo' ? 'No Prazo' : 'Sem Prazo'})
               </span>
             )}
@@ -273,7 +273,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
       {/* Erros de processos específicos */}
       {data?.erros && data.erros.length > 0 && (
         <div>
-          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
+          <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-semibold text-destructive uppercase tracking-wider mb-2")}>
             Erros em processos ({data.erros.length})
           </p>
           <div className={cn("stack-snug")}>

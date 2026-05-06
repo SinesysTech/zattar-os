@@ -91,7 +91,7 @@ function Section({
     <section className={cn("stack-tight")}>
       <header className={cn("flex items-center inline-tight")}>
         {icon}
-        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70")}>
+        <h3 className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/70")}>
           {title}
         </h3>
       </header>
@@ -110,7 +110,7 @@ function InfoRow({
   return (
     <div className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "grid grid-cols-[120px_1fr] inline-medium py-1.5 text-body-sm")}>
       <dt className="text-[12px] text-muted-foreground/60">{label}</dt>
-      <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>{children}</dd>
+      <dd className={cn( "font-medium text-foreground/90")}>{children}</dd>
     </div>
   );
 }
@@ -154,7 +154,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
         <TabsContent value="detalhes" className={cn("stack-default mt-0")}>
           <div className={cn("flex items-start justify-between inline-medium")}>
             <div className="min-w-0">
-              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
+              <div className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
                 {pericia.numeroProcesso}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -176,7 +176,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Prazo Entrega
               </div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
+              <div className={cn( "font-medium text-foreground/90")}>
                 {formatarData(pericia.prazoEntrega)}
               </div>
             </div>
@@ -184,7 +184,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Laudo Juntado
               </div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
+              <div className={cn( "font-medium text-foreground/90")}>
                 {pericia.laudoJuntado ? 'Sim' : 'Não'}
               </div>
             </div>
@@ -192,7 +192,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Especialidade
               </div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
+              <div className={cn( "font-medium text-foreground/90")}>
                 {pericia.especialidade?.descricao || '-'}
               </div>
             </div>
@@ -200,7 +200,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className="text-[11px] text-muted-foreground/60 mb-0.5">
                 Perito
               </div>
-              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
+              <div className={cn( "font-medium text-foreground/90")}>
                 {pericia.perito?.nome || '-'}
               </div>
             </div>
@@ -208,7 +208,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
 
           {pericia.observacoes && (
             <GlassPanel depth={1} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 bg-muted/20")}>
-              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-semibold text-foreground/70 mb-1 text-[11px] uppercase tracking-wider")}>
+              <div className={cn(/* design-system-escape: tracking-wider sem token DS */ "font-semibold text-foreground/70 mb-1 text-[11px] uppercase tracking-wider")}>
                 Observações
               </div>
               <Text variant="caption" className="whitespace-pre-wrap text-foreground/80">
@@ -248,13 +248,13 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         <div className={cn("grid grid-cols-3 inline-medium")}>
           <MetaItem label="Prazo">
             <CalendarIcon className="size-3.5 text-muted-foreground/50" />
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "tabular-nums font-medium text-foreground/90")}>
+            <span className={cn( "tabular-nums font-medium text-foreground/90")}>
               {formatarData(pericia.prazoEntrega)}
             </span>
           </MetaItem>
           <MetaItem label="Laudo Juntado">
             <FileCheck2 className="size-3.5 text-muted-foreground/50" />
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>
+            <span className={cn( "font-medium text-foreground/90")}>
               {pericia.laudoJuntado ? 'Sim' : 'Não'}
             </span>
           </MetaItem>
@@ -265,7 +265,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
                 {getInitials(responsavelNome)}
               </AvatarFallback>
             </Avatar>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium text-foreground/90")}>
+            <span className={cn( "truncate font-medium text-foreground/90")}>
               {responsavelNome}
             </span>
           </MetaItem>
@@ -287,7 +287,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         title="Processo"
       >
         <div className={cn("stack-nano")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "block text-body-sm font-semibold tabular-nums tracking-tight text-foreground")}>
+          <span className={cn(/* design-system-escape: tracking-tight sem token DS */ "block text-body-sm font-semibold tabular-nums tracking-tight text-foreground")}>
             {pericia.numeroProcesso}
           </span>
           <span className="block text-[11px] text-muted-foreground/60 mt-1">

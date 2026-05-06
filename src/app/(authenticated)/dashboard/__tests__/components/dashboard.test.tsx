@@ -236,10 +236,10 @@ describe('Dashboard Responsive Properties', () => {
                             <Card>
                                 <CardContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; sm:pt-6 sem equivalente DS */ "pt-4 sm:pt-6")}>
                                     <div className={cn(/* design-system-escape: sm:space-y-2 sem equivalente DS */ "stack-micro sm:space-y-2")}>
-                                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground truncate")}>
+                                        <p className={cn( "text-body-sm font-medium text-muted-foreground truncate")}>
                                             {title}
                                         </p>
-                                        <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; sm:text-3xl sem equivalente DS; font-bold → className de <Text>/<Heading> */ "text-2xl sm:text-3xl font-bold")}>
+                                        <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; sm:text-3xl sem equivalente DS; */ "text-2xl sm:text-3xl font-bold")}>
                                             {value.toLocaleString('pt-BR')}
                                         </p>
                                     </div>

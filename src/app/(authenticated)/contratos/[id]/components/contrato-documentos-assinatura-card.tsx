@@ -163,7 +163,7 @@ export function ContratoDocumentosAssinaturaCard({
                 variant="outline"
                 size="sm"
                 onClick={handleCopyLink}
-                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "h-7 px-2.5 rounded-lg text-[11.5px] font-medium inline-snug")}
+                className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; */ "h-7 px-2.5 rounded-lg text-[11.5px] font-medium inline-snug")}
               >
                 <Copy className="size-3" />
                 Copiar link
@@ -178,7 +178,7 @@ export function ContratoDocumentosAssinaturaCard({
             size="sm"
             onClick={handleRefresh}
             disabled={refreshing}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "h-7 px-2 rounded-lg text-[11.5px] font-medium inline-snug")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "h-7 px-2 rounded-lg text-[11.5px] font-medium inline-snug")}
           >
             <RefreshCw className={`size-3 ${refreshing ? 'animate-spin' : ''}`} />
             Atualizar
@@ -203,12 +203,12 @@ export function ContratoDocumentosAssinaturaCard({
           <div className={cn("stack-tight")}>
             <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; pb-1 padding direcional sem Inset equiv. */ "flex items-center inline-medium px-1 pb-1")}>
               <p className="text-[11px] text-muted-foreground">
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{totalAssinados}</span>{' '}
+                <span className={cn( "font-medium text-foreground")}>{totalAssinados}</span>{' '}
                 assinado{totalAssinados === 1 ? '' : 's'}
                 {totalPendentes > 0 ? (
                   <>
                     {' · '}
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{totalPendentes}</span>{' '}
+                    <span className={cn( "font-medium text-foreground")}>{totalPendentes}</span>{' '}
                     pendente{totalPendentes === 1 ? '' : 's'}
                   </>
                 ) : null}
@@ -263,7 +263,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
       </div>
       <div className="flex-1 min-w-0">
         <div className={cn("flex items-center inline-tight min-w-0")}>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12.5px] font-medium text-foreground truncate")}>
+          <p className={cn( "text-[12.5px] font-medium text-foreground truncate")}>
             {doc.titulo}
           </p>
           <SemanticBadge
@@ -293,7 +293,7 @@ function DocumentoRow({ doc, downloading, onDownload }: DocumentoRowProps) {
           onClick={onDownload}
           disabled={!podeBaixar || downloading}
           title={isAssinado ? 'Baixar PDF assinado' : 'Baixar PDF original'}
-          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "h-7 px-2 rounded-lg text-[11px] font-medium inline-snug")}
+          className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; */ "h-7 px-2 rounded-lg text-[11px] font-medium inline-snug")}
         >
           <Download className={`size-3 ${downloading ? 'animate-pulse' : ''}`} />
           {downloading ? 'Abrindo…' : 'Baixar'}

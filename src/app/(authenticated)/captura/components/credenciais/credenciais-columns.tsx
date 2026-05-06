@@ -30,7 +30,7 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
       header: ({ column }) => <DataTableColumnHeader column={column} title="Advogado" />,
       cell: ({ row }) => (
         <div className="min-w-0">
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{row.original.advogado_nome}</p>
+          <p className={cn( "truncate text-body-sm font-medium")}>{row.original.advogado_nome}</p>
           <Text variant="caption" className="truncate">
             OAB {formatOabs(row.original.advogado_oabs)} • CPF {row.original.advogado_cpf}
           </Text>

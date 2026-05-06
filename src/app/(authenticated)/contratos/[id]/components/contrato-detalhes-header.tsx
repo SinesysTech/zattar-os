@@ -168,7 +168,7 @@ export function ContratoDetalhesHeader({
       <button
         type="button"
         onClick={() => router.push('/app/contratos')}
-        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer")}
+        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug self-start -ml-1 px-2 py-1 rounded-lg text-caption font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer")}
       >
         <ArrowLeft className="size-3.5" />
         Voltar para contratos

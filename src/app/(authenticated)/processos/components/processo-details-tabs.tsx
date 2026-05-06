@@ -91,7 +91,7 @@ function ResponsavelAvatar({ usuario }: { usuario?: UsuarioInfo }) {
         <TooltipTrigger asChild>
           <Avatar className="h-7 w-7 border">
             <AvatarImage src={usuario?.avatarUrl || undefined} alt={usuario?.nomeExibicao || 'Não atribuído'} />
-            <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium")}>
+            <AvatarFallback className={cn( "text-[10px] font-medium")}>
               {usuario ? getInitials(usuario.nomeExibicao) : 'NA'}
             </AvatarFallback>
           </Avatar>
@@ -183,7 +183,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
           <div className={cn("flex items-start justify-between inline-medium")}>
             <div className={cn("min-w-0 stack-micro")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
+                <p className={cn( "text-body-sm font-medium text-foreground")}>
                   {aud.tipoDescricao || 'Audiência'}
                 </p>
                 <Text variant="caption">
@@ -291,7 +291,7 @@ function ExpedientesTable({
             <div className={cn("flex items-start justify-between inline-medium")}>
               <div className={cn("min-w-0 flex-1 stack-tight")}>
                 <div className={cn("flex items-center inline-tight flex-wrap")}>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>{tipoLabel}</p>
+                  <p className={cn( "text-body-sm font-medium text-foreground")}>{tipoLabel}</p>
                 </div>
 
                 <Text variant="caption" className="flex items-center gap-2 flex-wrap">
@@ -396,7 +396,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
           <div className={cn("flex items-start justify-between inline-medium")}>
             <div className={cn("min-w-0 stack-micro")}>
               <div className={cn("flex items-center inline-tight flex-wrap")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
+                <p className={cn( "text-body-sm font-medium text-foreground")}>
                   {per.especialidade?.descricao || 'Perícia'}
                 </p>
                 <SituacaoPericiaBadge codigo={per.situacaoCodigo} />
@@ -542,15 +542,15 @@ export function ProcessoDetailsTabs({
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn("stack-medium")}>
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between inline-medium rounded-xl border bg-background/70 px-3 py-2.5")}>
         <div className={cn("flex flex-wrap items-center inline-tight text-body-sm text-muted-foreground")}>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <FileText className="h-3.5 w-3.5" />
             Expedientes {isLoading ? '...' : totalExpedientes}
           </span>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <Calendar className="h-3.5 w-3.5" />
             Audiências {isLoading ? '...' : totalAudiencias}
           </span>
-          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
+          <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "inline-flex items-center inline-snug rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <Microscope className="h-3.5 w-3.5" />
             Perícias {isLoading ? '...' : totalPericias}
           </span>

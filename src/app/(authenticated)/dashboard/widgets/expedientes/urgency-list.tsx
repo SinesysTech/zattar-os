@@ -57,7 +57,7 @@ function ExpedienteItem({ item }: { item: ExpedienteUrgente }) {
     <ListItem className="items-start">
       <UrgencyDot level={level} />
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[12px] font-medium leading-tight")}>{item.tipo_expediente}</p>
+        <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[12px] font-medium leading-tight")}>{item.tipo_expediente}</p>
         {partes && (
           <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] text-foreground/65 mt-0.5 leading-tight")}>
             {partes}

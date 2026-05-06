@@ -120,7 +120,7 @@ function CountdownBadge({
   return (
     <span
       className={cn(
-        /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-md',
+        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-md',
         URGENCY_COUNTDOWN[urgency],
       )}
     >
@@ -153,7 +153,7 @@ function ResponsavelCell({ responsavelId, usuarios }: ResponsavelCellProps) {
             {getInitials(nome)}
           </AvatarFallback>
         </Avatar>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium text-foreground/85 truncate")}>
+        <span className={cn( "text-[12px] font-medium text-foreground/85 truncate")}>
           {nome}
         </span>
       </div>
@@ -219,9 +219,9 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       {/* ── Linha 1: Partes (título) · Perito · Especialidade · Situação ── */}
       <div className={cn("flex items-start justify-between inline-medium flex-wrap")}>
         <div className={cn("flex-1 min-w-0 flex items-baseline inline-medium flex-wrap")}>
-          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-semibold text-foreground leading-snug wrap-break-word")}>
+          <h3 className={cn(/* design-system-escape: leading-snug sem token DS */ "text-body-sm font-semibold text-foreground leading-snug wrap-break-word")}>
             {parteAutora || 'Autor não informado'}
-            <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-2 text-muted-foreground/50 font-medium")}>×</span>
+            <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS; */ "mx-2 text-muted-foreground/50 font-medium")}>×</span>
             {parteRe || 'Réu não informado'}
           </h3>
 
@@ -235,7 +235,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
 
         <div className={cn("flex items-center inline-tight shrink-0")}>
           {especialidade && (
-            <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
+            <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
               {especialidade}
             </span>
           )}
@@ -244,7 +244,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
               'pericia_situacao',
               pericia.situacaoCodigo,
             )}
-            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] px-2 py-0.5 font-semibold uppercase tracking-wider")}
+            className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "text-[10px] px-2 py-0.5 font-semibold uppercase tracking-wider")}
           >
             {SITUACAO_PERICIA_LABELS[pericia.situacaoCodigo]}
           </AppBadge>
@@ -253,16 +253,16 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
 
       {/* ── Linha 2: # Processo + TRT badge + Grau badge ───────── */}
       <div className={cn("mt-2 flex flex-wrap items-center inline-snug")}>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium tabular-nums text-muted-foreground")}>
+        <span className={cn( "text-[12px] font-medium tabular-nums text-muted-foreground")}>
           {pericia.numeroProcesso}
         </span>
         {pericia.trt && (
-          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-primary/8 border border-primary/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/80")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "inline-flex items-center rounded bg-primary/8 border border-primary/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary/80")}>
             {pericia.trt}
           </span>
         )}
         {grauLabel && (
-          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
+          <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; tracking-wider sem token DS */ "inline-flex items-center rounded bg-muted border border-border/50 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground")}>
             {grauLabel}
           </span>
         )}
@@ -273,10 +273,10 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
         <div className={cn("flex items-center inline-default min-w-0 flex-wrap")}>
           {prazoFormatted && (
             <div className={cn("flex items-center inline-snug")}>
-              <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium")}>
+              <span className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[10px] uppercase tracking-wider text-muted-foreground/55 font-medium")}>
                 Prazo
               </span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[12px] font-medium tabular-nums text-foreground/85")}>
+              <span className={cn( "text-[12px] font-medium tabular-nums text-foreground/85")}>
                 {prazoFormatted}
               </span>
             </div>

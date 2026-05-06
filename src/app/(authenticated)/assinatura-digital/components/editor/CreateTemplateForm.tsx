@@ -101,7 +101,7 @@ export default function CreateTemplateForm({
 
         {/* Nome */}
         <div className={cn("stack-tight")}>
-          <Label htmlFor="template-nome-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
+          <Label htmlFor="template-nome-create" className={cn( "text-caption font-medium")}>
             Nome do Template *
           </Label>
           <Input
@@ -116,7 +116,7 @@ export default function CreateTemplateForm({
 
         {/* Descrição */}
         <div className={cn("stack-tight")}>
-          <Label htmlFor="template-desc-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
+          <Label htmlFor="template-desc-create" className={cn( "text-caption font-medium")}>
             Descrição
           </Label>
           <Textarea
@@ -132,7 +132,7 @@ export default function CreateTemplateForm({
         {/* Conteúdo Markdown (condicional para tipoTemplate === 'markdown') */}
         {tipoTemplate === 'markdown' && (
           <div className={cn("stack-tight")}>
-            <Label htmlFor="template-markdown-create" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
+            <Label htmlFor="template-markdown-create" className={cn( "text-caption font-medium")}>
               Conteúdo Markdown *
             </Label>
             <MarkdownRichTextEditor
@@ -143,10 +143,10 @@ export default function CreateTemplateForm({
             <Alert>
               <Info className="h-4 w-4" />
               <AlertDescription className={cn("text-caption")}>
-                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium mb-2")}>Variáveis disponíveis (use entre chaves duplas):</p>
+                <p className={cn( "font-medium mb-2")}>Variáveis disponíveis (use entre chaves duplas):</p>
                 <div className={cn("stack-tight")}>
                   <div>
-                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>📋 Dados do Cliente (Etapa 2):</p>
+                    <p className={cn( "font-semibold text-[11px] mb-1")}>📋 Dados do Cliente (Etapa 2):</p>
                     <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><code>{'{{cliente.nome_completo}}'}</code>, <code>{'{{cliente.cpf}}'}</code>, <code>{'{{cliente.email}}'}</code>, <code>{'{{cliente.telefone}}'}</code></li>
                       <li><code>{'{{cliente.data_nascimento}}'}</code>, <code>{'{{cliente.genero}}'}</code>, <code>{'{{cliente.estado_civil}}'}</code>, <code>{'{{cliente.nacionalidade}}'}</code></li>
@@ -154,7 +154,7 @@ export default function CreateTemplateForm({
                     </ul>
                   </div>
                   <div>
-                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>📝 Campos do Formulário Dinâmico (Etapa 3):</p>
+                    <p className={cn( "font-semibold text-[11px] mb-1")}>📝 Campos do Formulário Dinâmico (Etapa 3):</p>
                     <p className="text-[11px] ml-2 mb-1">
                       <strong>TODOS os campos do formulário associado</strong> estão disponíveis usando o ID do campo:
                     </p>
@@ -165,7 +165,7 @@ export default function CreateTemplateForm({
                     </ul>
                   </div>
                   <div>
-                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>🖊️ Assinatura Digital (Etapa 4):</p>
+                    <p className={cn( "font-semibold text-[11px] mb-1")}>🖊️ Assinatura Digital (Etapa 4):</p>
                     <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><code>{'{{assinatura.assinatura_base64}}'}</code> - Imagem da assinatura (base64)</li>
                       <li><code>{'{{assinatura.foto_base64}}'}</code> - Foto/selfie do cliente (se habilitada)</li>
@@ -173,7 +173,7 @@ export default function CreateTemplateForm({
                     </ul>
                   </div>
                   <div>
-                    <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-[11px] mb-1")}>⚙️ Metadados do Sistema:</p>
+                    <p className={cn( "font-semibold text-[11px] mb-1")}>⚙️ Metadados do Sistema:</p>
                     <ul className={cn("list-disc list-inside stack-nano ml-2 text-[11px]")}>
                       <li><code>{'{{sistema.data_geracao}}'}</code> - Data em formato extenso (ex: &quot;16 de outubro de 2025&quot;)</li>
                       <li><code>{'{{sistema.timestamp}}'}</code> - Carimbo de data/hora (ex: &quot;16/10/2025 às 14:30:45&quot;)</li>

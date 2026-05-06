@@ -67,7 +67,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Eventos
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -87,7 +87,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Audiências Hoje
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -106,7 +106,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Prazos 7d
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -126,7 +126,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Horas Ocupadas
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -158,7 +158,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Preparo
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>
@@ -194,7 +194,7 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
       <GlassPanel className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3")}>
         <div className={cn("flex items-start justify-between inline-tight")}>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
+            <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>
               Conflitos
             </p>
             <div className={cn("flex items-baseline inline-snug mt-1")}>

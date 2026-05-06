@@ -55,7 +55,7 @@ export function UsuariosListView({
                     src={getAvatarUrl(usuario.avatarUrl) ?? undefined}
                     alt={displayName}
                   />
-                  <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium")}>
+                  <AvatarFallback className={cn( "text-[11px] font-medium")}>
                     {getInitials(displayName)}
                   </AvatarFallback>
                 </Avatar>
@@ -67,7 +67,7 @@ export function UsuariosListView({
               </div>
               <div className="flex flex-col min-w-0">
                 <div className={cn("flex items-center inline-micro")}>
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>
+                  <span className={cn( "text-body-sm font-semibold truncate")}>
                     {usuario.nomeCompleto}
                   </span>
                   {usuario.isSuperAdmin && (
@@ -165,7 +165,7 @@ export function UsuariosListView({
               </span>
             );
           return (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'tabular-nums font-semibold text-body-sm', !usuario.ativo && 'opacity-50')}>
+            <span className={cn( 'tabular-nums font-semibold text-body-sm', !usuario.ativo && 'opacity-50')}>
               {stats.processos}
             </span>
           );
@@ -200,7 +200,7 @@ export function UsuariosListView({
                   style={{ width: `${score}%` }}
                 />
               </div>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium tabular-nums', textColorClass)}>
+              <span className={cn( 'text-[11px] font-medium tabular-nums', textColorClass)}>
                 {score}%
               </span>
             </div>

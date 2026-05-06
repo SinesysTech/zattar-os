@@ -120,7 +120,7 @@ export function WidgetTarefasStatus() {
               <span className="text-[10px] text-muted-foreground/60 truncate flex-1">
                 {row.label}
               </span>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums")}>
+              <span className={cn( "text-[10px] font-medium tabular-nums")}>
                 {fmtNum(row.value)}
               </span>
             </div>
@@ -134,7 +134,7 @@ export function WidgetTarefasStatus() {
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Taxa de conclusão
           </span>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-semibold tabular-nums")}>
+          <span className={cn( "text-[10px] font-semibold tabular-nums")}>
             {taxaConclusao}%
           </span>
         </div>

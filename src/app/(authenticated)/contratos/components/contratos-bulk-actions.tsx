@@ -74,11 +74,11 @@ export function ContratosBulkActionsBar({
   if (selectedCount === 0) return null;
 
   const actionClass =
-    /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-flex items-center inline-snug rounded-lg border border-border/15 bg-background/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground/80 transition-colors hover:border-border/40 hover:bg-muted/30 hover:text-foreground cursor-pointer';
+    /* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center inline-snug rounded-lg border border-border/15 bg-background/40 px-2.5 py-1.5 text-[11px] font-medium text-muted-foreground/80 transition-colors hover:border-border/40 hover:bg-muted/30 hover:text-foreground cursor-pointer';
 
   return (
     <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center inline-tight rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5")}>
-      <Text variant="caption" as="div" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "inline-flex items-center inline-snug font-semibold text-primary whitespace-nowrap")}>
+      <Text variant="caption" as="div" className={cn( "inline-flex items-center inline-snug font-semibold text-primary whitespace-nowrap")}>
         <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>

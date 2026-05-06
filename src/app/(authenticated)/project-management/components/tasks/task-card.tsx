@@ -70,7 +70,7 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
             </button>
 
             <div className={cn("min-w-0 flex-1 stack-tight")}>
-              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
+              <Text variant="label" weight="medium" as="p" className={cn(/* /* design-system-escape: leading-tight sem token DS */ "leading-tight" )}>
                 {tarefa.titulo}
               </Text>
 

@@ -233,14 +233,14 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
               />
               <Label
                 htmlFor="baixar-documentos"
-                className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
+                className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
               >
                 Baixar documentos (PDFs)
               </Label>
             </div>
             {baixarDocumentos && (
               <Collapsible open={filtrosAbertos} onOpenChange={setFiltrosAbertos} className="md:col-span-2">
-                <CollapsibleTrigger className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium hover:underline")}>
+                <CollapsibleTrigger className={cn( "flex items-center inline-tight text-body-sm font-medium hover:underline")}>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${filtrosAbertos ? 'rotate-180' : ''
                       }`}

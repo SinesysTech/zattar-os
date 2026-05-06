@@ -58,7 +58,7 @@ export function TimelineLoading({
           <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <div className={cn("text-center stack-tight")}>
-              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{message}</Text>
+              <Text variant="label" as="p" className={cn( "text-body font-medium")}>{message}</Text>
               {isCapturing && (
                 <>
                   <Progress value={undefined} className="w-64 mx-auto" />
@@ -104,7 +104,7 @@ export function TimelineLoading({
         <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center inline-medium py-8")}>
           <LoadingSpinner className="size-6 text-primary" />
           <div className={cn("text-center stack-tight")}>
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{message}</p>
+            <p className={cn( "text-body font-medium")}>{message}</p>
             {isCapturing && (
               <>
                 <Progress value={undefined} className="w-64 mx-auto" />

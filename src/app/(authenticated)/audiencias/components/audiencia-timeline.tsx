@@ -250,7 +250,7 @@ export function AudienciaTimeline({
           {/* Avatar / icon */}
           {entry.type === 'manual' && entry.usuario ? (
             <Avatar size="lg" className="shrink-0">
-              <AvatarFallback className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium")}>
+              <AvatarFallback className={cn( "text-caption font-medium")}>
                 {getInitials(entry.usuario.nome)}
               </AvatarFallback>
             </Avatar>
@@ -264,7 +264,7 @@ export function AudienciaTimeline({
           <div className="flex-1 min-w-0">
             {/* Header */}
             <div className={cn("flex items-baseline inline-tight flex-wrap")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+              <span className={cn( "text-body-sm font-medium")}>
                 {entry.type === 'manual' && entry.usuario
                   ? entry.usuario.nome
                   : entry.type === 'captura_inicial'
@@ -293,7 +293,7 @@ export function AudienciaTimeline({
                       {change.valorAnterior}
                     </span>
                     {' → '}
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption tabular-nums font-medium")}>
+                    <span className={cn( "text-micro-caption tabular-nums font-medium")}>
                       {change.valorNovo}
                     </span>
                   </li>

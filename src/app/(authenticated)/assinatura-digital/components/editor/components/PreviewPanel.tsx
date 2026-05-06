@@ -76,7 +76,7 @@ export default function PreviewPanel({
               <div className={cn("text-center stack-default max-w-md")}>
                 <FileX2 className="mx-auto h-12 w-12 text-muted-foreground" />
                 <div>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
+                  <p className={cn( "font-medium text-foreground")}>
                     Não foi possível exibir o PDF aqui
                   </p>
                   <p className={cn("text-body-sm text-muted-foreground mt-1")}>

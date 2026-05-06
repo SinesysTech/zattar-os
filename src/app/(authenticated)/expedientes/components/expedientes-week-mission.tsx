@@ -143,7 +143,7 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
     <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 py-1.5")}>
       <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
-        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ 'text-[11px] font-semibold uppercase tracking-wider', config.color)}>
+        <span className={cn(/* design-system-escape: tracking-wider sem token DS */ 'text-[11px] font-semibold uppercase tracking-wider', config.color)}>
           {config.label}
         </span>
       </div>
@@ -195,13 +195,13 @@ function MissionItem({
       <div className={cn("flex min-w-0 flex-1 items-start inline-medium")}>
         <div className={cn("min-w-0 flex-1 stack-micro")}>
           {/* Tipo de expediente */}
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium', isBaixado && 'line-through')}>
+          <p className={cn( 'text-body-sm font-medium', isBaixado && 'line-through')}>
             {tipoExpedienteNome || 'Sem tipo'}
           </p>
 
           {/* Cabeçalho: Partes (autora vs ré) */}
           {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
+            <p className={cn( "text-body-sm font-medium text-foreground")}>
               <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
               <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5 font-normal text-muted-foreground/60")}>vs</span>
               <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
@@ -250,7 +250,7 @@ function MissionItem({
             </p>
           ) : expediente.dataPrazoLegalParte ? (
             <p className={cn(
-              /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[10px] tabular-nums font-medium',
+               'text-[10px] tabular-nums font-medium',
               urgencia === 'urgente' ? 'text-destructive/70' : 'text-muted-foreground/70',
             )}>
               {getDiasLabel(dias, expediente.prazoVencido)}
@@ -445,7 +445,7 @@ export function ExpedientesWeekMission({
       </div>
 
       {/* Day Label */}
-      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/65")}>
+      <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[11px] font-medium uppercase tracking-wider text-muted-foreground/65")}>
         {dateLabel}
       </p>
 

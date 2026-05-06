@@ -362,7 +362,7 @@ export function AudienciasYearHeatmap({
             {/* Próxima Audiência */}
             {stats.proxima && (
               <StatCard icon={Clock} iconBg="bg-info/12" iconColor="text-info" label="Próxima">
-                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-label font-semibold")}>
+                <div className={cn( "text-label font-semibold")}>
                   {format(parseISO(stats.proxima.dataInicio), "dd MMM · HH'h'mm", { locale: ptBR })}
                 </div>
                 <div className="text-mono-num mt-0.5">
@@ -370,7 +370,7 @@ export function AudienciasYearHeatmap({
                 </div>
                 {stats.proxima.tipoDescricao && (
                   <div className="mt-2">
-                    <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "text-micro-badge px-2 py-0.5 rounded-full font-medium bg-info/12 text-info border border-info/20")}>
+                    <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-micro-badge px-2 py-0.5 rounded-full font-medium bg-info/12 text-info border border-info/20")}>
                       {stats.proxima.tipoDescricao}
                     </span>
                   </div>

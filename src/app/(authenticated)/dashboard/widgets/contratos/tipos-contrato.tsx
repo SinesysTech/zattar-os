@@ -80,7 +80,7 @@ export function WidgetTiposContrato() {
                 <span className="text-[10px] text-muted-foreground/70 capitalize truncate">
                   {t.tipo.replace(/_/g, ' ')}
                 </span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums shrink-0 ml-2")}>
+                <span className={cn( "text-[10px] font-medium tabular-nums shrink-0 ml-2")}>
                   {fmtNum(t.count)}
                 </span>
               </div>

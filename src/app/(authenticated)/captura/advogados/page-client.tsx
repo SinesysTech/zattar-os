@@ -194,7 +194,7 @@ export default function AdvogadosPage() {
           <ChevronRight className="size-3" />
           <a href="/captura?tab=credenciais" className="hover:text-foreground transition-colors">Credenciais</a>
           <ChevronRight className="size-3" />
-          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-foreground font-medium")}>Advogados</span>
+          <span className={cn( "text-foreground font-medium")}>Advogados</span>
         </nav>
 
         {/* Header */}
@@ -264,23 +264,23 @@ export default function AdvogadosPage() {
                   {/* Header: Avatar + Name + Status badge */}
                   <div className={cn("flex items-center inline-medium mb-3")}>
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold text-primary font-heading")}>
+                      <span className={cn( "text-body-sm font-bold text-primary font-heading")}>
                         {advogado.nome_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate font-heading")}>{advogado.nome_completo}</div>
+                      <div className={cn( "text-body-sm font-semibold truncate font-heading")}>{advogado.nome_completo}</div>
                       <Text variant="caption" className="text-muted-foreground/55">
                         {advogado.oabs.map((o: { numero: string; uf: string }) => `OAB/${o.uf} ${o.numero}`).join(', ') || 'Sem OAB'}
                       </Text>
                     </div>
                     {temCredenciais ? (
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0")}>
+                      <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0")}>
                         <ShieldCheck className="size-2.5" />
                         Ativo
                       </span>
                     ) : (
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0")}>
+                      <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center inline-micro text-[10px] font-medium text-warning bg-warning/8 border border-warning/15 px-1.5 py-0.5 rounded-md shrink-0")}>
                         <ShieldAlert className="size-2.5" />
                         Pendente
                       </span>
@@ -291,7 +291,7 @@ export default function AdvogadosPage() {
 
                   {/* CPF */}
                   <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/75 mb-1.5">
-                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "font-medium text-muted-foreground/65 uppercase tracking-wide text-[10px]")}>CPF</span>
+                    <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "font-medium text-muted-foreground/65 uppercase tracking-wide text-[10px]")}>CPF</span>
                     <span className="truncate">{advogado.cpf}</span>
                   </Text>
 
@@ -302,11 +302,11 @@ export default function AdvogadosPage() {
                     <Lock className="size-3.5 text-muted-foreground/65 shrink-0" />
                     {temCredenciais ? (
                       <span className="text-muted-foreground/70">
-                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-success font-medium")}>{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
+                        <span className={cn( "text-success font-medium")}>{ativas} ativa{ativas !== 1 ? 's' : ''}</span>
                         {inativas > 0 && (
                           <>
                             <span className={cn(/* design-system-escape: mx-1 margin sem primitiva DS */ "text-muted-foreground/55 mx-1")}>/</span>
-                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-warning font-medium")}>{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
+                            <span className={cn( "text-warning font-medium")}>{inativas} inativa{inativas !== 1 ? 's' : ''}</span>
                           </>
                         )}
                       </span>

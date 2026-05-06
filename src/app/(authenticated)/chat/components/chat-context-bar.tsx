@@ -39,7 +39,7 @@ export function ChatContextBar({ documentoId }: ChatContextBarProps) {
       style={{ background: "rgba(139,92,246,0.03)" }}
     >
       <span
-        className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold px-2 py-0.5 rounded-md shrink-0")}
+        className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[0.6rem] font-semibold px-2 py-0.5 rounded-md shrink-0")}
         style={{
           background: "rgba(139,92,246,0.08)",
           color: "rgba(139,92,246,0.7)",

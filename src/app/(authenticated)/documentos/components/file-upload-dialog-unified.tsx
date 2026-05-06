@@ -186,7 +186,7 @@ export function FileUploadDialogUnified({
                                 >
                                     <div className="flex min-w-0 flex-1 items-center">
                                         <div className={cn("flex min-w-0 flex-1 inline-tight")}>
-                                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>{file.name}</span>
+                                            <span className={cn( "truncate font-medium")}>{file.name}</span>
                                             <span className="shrink-0 text-muted-foreground">
                                                 {(file.size / 1024).toFixed(1)} KB
                                             </span>

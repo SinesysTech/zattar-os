@@ -261,7 +261,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive dark:bg-destructive opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
                 </div>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-destructive dark:text-destructive font-medium")}>{formatDuration(recordingDuration)}</span>
+                <span className={cn( "font-mono text-destructive dark:text-destructive font-medium")}>{formatDuration(recordingDuration)}</span>
                 <Text variant="caption" className="text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</Text>
               </div>
 

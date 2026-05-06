@@ -36,7 +36,7 @@ export function WidgetContasReceber() {
         title="Contas a Receber"
         icon={ArrowUpRight}
         subtitle="Aging"
-        action={<span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-success/70")}>{fmtMoeda(total)}</span>}
+        action={<span className={cn( "text-[11px] font-semibold text-success/70")}>{fmtMoeda(total)}</span>}
       >
         <Text variant="caption" className="text-muted-foreground/60">Nenhum dado de aging disponível.</Text>
       </WidgetContainer>
@@ -50,7 +50,7 @@ export function WidgetContasReceber() {
       title="Contas a Receber"
       icon={ArrowUpRight}
       subtitle="Aging"
-      action={<span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-success/70")}>{fmtMoeda(total)}</span>}
+      action={<span className={cn( "text-[11px] font-semibold text-success/70")}>{fmtMoeda(total)}</span>}
     >
       <div className={cn("flex flex-col inline-tight")}>
         {aging.map((item) => (
@@ -67,7 +67,7 @@ export function WidgetContasReceber() {
                 }}
               />
             </div>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium tabular-nums w-20 text-right shrink-0")}>
+            <span className={cn( "text-[10px] font-medium tabular-nums w-20 text-right shrink-0")}>
               {fmtMoeda(item.valor)}
             </span>
           </div>

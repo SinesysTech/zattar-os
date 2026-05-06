@@ -45,7 +45,7 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
 
       const d = new Date(date);
       return (
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>
+        <span className={cn( "truncate font-medium")}>
           {d.toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
@@ -95,14 +95,14 @@ export const columns: ColumnDef<TarefaDisplayItem>[] = [
           {url ? (
             <a
               href={url}
-              className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex max-w-125 items-center inline-micro truncate font-medium text-foreground hover:text-primary hover:underline")}
+              className={cn( "flex max-w-125 items-center inline-micro truncate font-medium text-foreground hover:text-primary hover:underline")}
               title="Abrir no módulo de origem"
             >
               <span className="truncate">{row.getValue("title")}</span>
               <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
             </a>
           ) : (
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-125 truncate font-medium")}>{row.getValue("title")}</span>
+            <span className={cn( "max-w-125 truncate font-medium")}>{row.getValue("title")}</span>
           )}
           {row.original.prazoVencido && (
             <Badge variant="destructive" className="shrink-0 text-[10px]">

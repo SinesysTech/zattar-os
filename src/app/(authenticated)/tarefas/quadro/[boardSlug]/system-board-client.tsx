@@ -184,7 +184,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
             >
               <div className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-0 padding direcional sem Inset equiv. */ "flex items-center justify-between p-3 pb-0")}>
                 <div className={cn("flex items-center inline-tight")}>
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{col.label}</span>
+                  <span className={cn( "text-body-sm font-semibold")}>{col.label}</span>
                   <AppBadge variant="outline">
                     {columns[col.id]?.length ?? 0}
                   </AppBadge>

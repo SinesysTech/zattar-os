@@ -150,8 +150,8 @@ function StatusFilterPills({
             onClick={() => onChange(opt.value)}
             className={
               selected
-                ? /* design-system-escape: px-3 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-3 h-7 rounded-lg text-[11px] font-medium bg-primary/10 text-primary transition-colors'
-                : /* design-system-escape: px-3 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'px-3 h-7 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/4 transition-colors'
+                ? /* design-system-escape: px-3 padding direcional sem Inset equiv.; */ 'px-3 h-7 rounded-lg text-[11px] font-medium bg-primary/10 text-primary transition-colors'
+                : /* design-system-escape: px-3 padding direcional sem Inset equiv.; */ 'px-3 h-7 rounded-lg text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-foreground/4 transition-colors'
             }
           >
             {opt.label}
@@ -296,7 +296,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "flex inline-tight mt-5 pt-4 border-t border-border/10")}>
         <Link
           href={perfilHref}
-          className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; */ "flex-1 flex items-center justify-center inline-snug py-2 rounded-lg bg-primary/10 text-primary/70 text-caption font-medium hover:bg-primary/15 transition-colors cursor-pointer")}
         >
           <ExternalLink className="size-3" />
           Ver perfil completo
@@ -304,7 +304,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         <button
           onClick={handleCopy}
           aria-label="Copiar nome"
-          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center justify-center inline-snug px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 text-caption font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}
+          className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; */ /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; */ "flex items-center justify-center inline-snug px-3 py-2 rounded-lg bg-foreground/4 text-muted-foreground/70 text-caption font-medium hover:bg-foreground/6 transition-colors cursor-pointer")}
         >
           <Copy className="size-3" />
         </button>
@@ -327,7 +327,7 @@ function InfoRow({
       <Icon className="size-3 text-muted-foreground/55 mt-0.5 shrink-0" />
       <div className="min-w-0">
         <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider")}>{label}</p>
-        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium truncate")}>{value}</p>
+        <p className={cn( "text-[11px] font-medium truncate")}>{value}</p>
       </div>
     </div>
   );
@@ -631,7 +631,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       <PulseStrip items={pulseItems} />
 
       {/* ── Insight Banner ──────────────────────────────────────── */}
-      <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center inline-tight cursor-pointer hover:bg-primary/6 transition-colors")}>
+      <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; */ "rounded-lg border border-primary/10 bg-primary/4 px-3.5 py-2 text-[11px] font-medium text-primary/70 flex items-center inline-tight cursor-pointer hover:bg-primary/6 transition-colors")}>
         <AlertCircle className="size-3.5 shrink-0" />
         <span>Verifique clientes sem processos ativos e cadastros com dados incompletos</span>
         <ChevronRight className="size-3 ml-auto shrink-0" />
@@ -704,7 +704,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           {!isLoading && !error && partes.length === 0 && (
             <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 text-center")}>
               <Users className="size-8 text-muted-foreground/65 mb-3" />
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>
+              <p className={cn( "text-body-sm font-medium text-muted-foreground/70")}>
                 Nenhuma parte encontrada
               </p>
               <Text variant="caption" className="text-muted-foreground/55 mt-1">
@@ -825,7 +825,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
             <AlertDialogDescription>
               {deleteTarget ? (
                 <>
-                  O registro <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>&quot;{deleteTarget.nome}&quot;</span>{' '}
+                  O registro <span className={cn( "font-medium text-foreground")}>&quot;{deleteTarget.nome}&quot;</span>{' '}
                   {deleteTarget.kind === 'representante'
                     ? 'será removido permanentemente.'
                     : 'será desativado e deixará de aparecer nas listagens ativas. Você pode reativá-lo depois.'}

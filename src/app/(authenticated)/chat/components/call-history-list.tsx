@@ -184,7 +184,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const date = new Date(row.original.iniciadaEm);
         return (
           <div className="flex flex-col">
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{format(date, 'dd/MM/yyyy', { locale: ptBR })}</span>
+            <span className={cn( "font-medium")}>{format(date, 'dd/MM/yyyy', { locale: ptBR })}</span>
             <Text variant="caption">{format(date, 'HH:mm', { locale: ptBR })}</Text>
           </div>
         );

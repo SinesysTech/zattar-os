@@ -59,7 +59,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.color)} />
             <div className={cn("flex items-baseline inline-snug")}>
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums")}>{s.value}</span>
+              <span className={cn( "font-display text-body-sm font-bold tabular-nums")}>{s.value}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.label}</span>
             </div>
           </div>
@@ -73,7 +73,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
           return (
             <div key={day.dia} className={cn("flex flex-col items-center inline-micro flex-1")}>
               <span className={cn(
-                /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] tabular-nums font-medium",
+                 "text-[9px] tabular-nums font-medium",
                 day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60",
               )}>
                 {day.eventos || "–"}
@@ -87,8 +87,8 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
                 style={{ height: `${h}%`, minHeight: 4, maxHeight: 36 }}
               />
               <span className={cn(
-                /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] font-medium",
-                day.hoje ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-primary font-semibold" : "text-muted-foreground/55",
+                 "text-[9px] font-medium",
+                day.hoje ?  "text-primary font-semibold" : "text-muted-foreground/55",
               )}>
                 {day.dia}
               </span>

@@ -69,7 +69,7 @@ export function ModalLinkAssinaturaDialog({
             </Button>
           </div>
           <Text variant="caption" className="text-muted-foreground">
-            Expira em: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{dataFormatada}</span>
+            Expira em: <span className={cn( "font-medium")}>{dataFormatada}</span>
           </Text>
         </div>
 

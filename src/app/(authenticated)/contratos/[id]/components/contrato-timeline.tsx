@@ -161,7 +161,7 @@ export function ContratoTimeline({ historico }: ContratoTimelineProps) {
 
                       <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "flex-1 min-w-0 pt-0.5")}>
                         <div className={cn("flex items-center flex-wrap inline-snug")}>
-                          <Text variant="label" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+                          <Text variant="label" className={cn( "font-medium")}>
                             {isCreation
                               ? 'Contrato criado com status'
                               : 'Status alterado para'}

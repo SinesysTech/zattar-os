@@ -209,7 +209,7 @@ function Toolbar({
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
-          <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
+          <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
             Hoje
           </button>
           <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
@@ -286,7 +286,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.c)} />
             <div className={cn("flex items-baseline inline-snug")}>
-              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums")}>{s.v}</span>
+              <span className={cn( "font-display text-body-sm font-bold tabular-nums")}>{s.v}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.l}</span>
             </div>
           </div>
@@ -299,14 +299,14 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
           const h = day.horas > 0 ? Math.max(14, (day.horas / maxH) * 100) : 6;
           return (
             <div key={day.dia} className={cn("flex flex-col items-center inline-micro flex-1")}>
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] tabular-nums font-medium", day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60")}>
+              <span className={cn( "text-[9px] tabular-nums font-medium", day.hoje ? "text-primary" : day.eventos > 0 ? "text-muted-foreground/60" : "text-muted-foreground/60")}>
                 {day.eventos || "–"}
               </span>
               <div
                 className={cn("w-2.5 sm:w-3 rounded-full transition-all duration-500", intColor(day.horas), day.hoje && "ring-1 ring-primary/25 ring-offset-1 ring-offset-transparent")}
                 style={{ height: `${h}%`, minHeight: 4, maxHeight: 36 }}
               />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] font-medium", day.hoje ? /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-primary font-semibold" : "text-muted-foreground/55")}>
+              <span className={cn( "text-[9px] font-medium", day.hoje ?  "text-primary font-semibold" : "text-muted-foreground/55")}>
                 {day.dia}
               </span>
             </div>
@@ -329,7 +329,7 @@ function EventChip({ event, compact = false, onClick }: { event: MockCalendarEve
     <button
       onClick={onClick}
       className={cn(
-        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "w-full text-left rounded px-1.5 py-0.5 text-[10px] font-medium truncate transition-colors cursor-pointer border",
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "w-full text-left rounded px-1.5 py-0.5 text-[10px] font-medium truncate transition-colors cursor-pointer border",
         c.bg, c.text, c.border,
         past && "opacity-60 line-through",
         "hover:opacity-80",
@@ -356,7 +356,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-1">
         {["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((d) => (
-          <div key={d} className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; py-1 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/60 font-medium py-1")}>{d}</div>
+          <div key={d} className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "text-center text-[10px] text-muted-foreground/60 font-medium py-1")}>{d}</div>
         ))}
       </div>
 
@@ -380,8 +380,8 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
               {/* Day number */}
               <div className="flex items-center justify-center mb-0.5">
                 <span className={cn(
-                  /* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] tabular-nums font-medium size-6 flex items-center justify-center rounded-full",
-                  isDateToday ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ "bg-primary text-primary-foreground font-bold" : isCurrentMonth ? "text-foreground/70" : "text-muted-foreground/50",
+                   "text-[11px] tabular-nums font-medium size-6 flex items-center justify-center rounded-full",
+                  isDateToday ?  "bg-primary text-primary-foreground font-bold" : isCurrentMonth ? "text-foreground/70" : "text-muted-foreground/50",
                 )}>
                   {date.getDate()}
                 </span>
@@ -422,9 +422,9 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
         <div className="text-[9px] text-muted-foreground/50" />
         {days.map((d) => (
           <div key={d.toISOString()} className="text-center">
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium", isToday(d) ? "text-primary" : "text-muted-foreground/50")}>{weekdayShort(d)}</span>
+            <span className={cn( "text-[10px] font-medium", isToday(d) ? "text-primary" : "text-muted-foreground/50")}>{weekdayShort(d)}</span>
             <div className={cn(
-              /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm tabular-nums font-semibold mx-auto size-7 flex items-center justify-center rounded-full mt-0.5",
+               "text-body-sm tabular-nums font-semibold mx-auto size-7 flex items-center justify-center rounded-full mt-0.5",
               isToday(d) ? "bg-primary text-primary-foreground" : "text-foreground/60",
             )}>
               {d.getDate()}
@@ -514,10 +514,10 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
           "size-10 rounded-xl flex items-center justify-center",
           isViewToday ? "bg-primary text-primary-foreground" : "bg-border/10 text-foreground/70",
         )}>
-          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold tabular-nums")}>{currentDate.getDate()}</span>
+          <span className={cn( "text-body-lg font-bold tabular-nums")}>{currentDate.getDate()}</span>
         </div>
         <div>
-          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium", isViewToday ? "text-primary" : "text-foreground/70")}>{weekdayFull(currentDate)}</p>
+          <p className={cn( "text-body-sm font-medium", isViewToday ? "text-primary" : "text-foreground/70")}>{weekdayFull(currentDate)}</p>
           <p className="text-[10px] text-muted-foreground/60">{fmtDate(currentDate)} · {dayEvents.length} evento{dayEvents.length !== 1 ? "s" : ""}</p>
         </div>
       </div>
@@ -525,7 +525,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
       {/* All-day events */}
       {allDay.length > 0 && (
         <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "mb-3 pb-2 border-b border-border/10")}>
-          <span className={cn(/* design-system-escape: tracking-wider sem token DS; font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider font-medium")}>Dia inteiro</span>
+          <span className={cn(/* design-system-escape: tracking-wider sem token DS; */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider font-medium")}>Dia inteiro</span>
           <div className={cn("mt-1 stack-micro")}>
             {allDay.map((ev) => (
               <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />
@@ -597,7 +597,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
         {days.length === 0 && (
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "py-16 flex flex-col items-center text-center")}>
             <Calendar className="size-8 text-muted-foreground/45 mb-3" />
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>Nenhum evento encontrado</p>
+            <p className={cn( "text-body-sm font-medium text-muted-foreground/60")}>Nenhum evento encontrado</p>
             <Text variant="caption" className="text-muted-foreground/50">nos próximos 30 dias</Text>
           </div>
         )}
@@ -611,10 +611,10 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                   "size-8 rounded-lg flex items-center justify-center shrink-0",
                   isDateToday ? "bg-primary text-primary-foreground" : "bg-border/8",
                 )}>
-                  <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold tabular-nums", !isDateToday && "text-foreground/60")}>{date.getDate()}</span>
+                  <span className={cn( "text-body-sm font-bold tabular-nums", !isDateToday && "text-foreground/60")}>{date.getDate()}</span>
                 </div>
                 <div>
-                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
+                  <span className={cn( "text-caption font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
                   <span className="text-[10px] text-muted-foreground/55 ml-2">{fmtDate(date)}</span>
                 </div>
                 <span className="text-[9px] text-muted-foreground/45 ml-auto tabular-nums">{dayEvents.length}</span>
@@ -643,7 +643,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                         <div className={cn("size-1.5 rounded-full", c.dot)} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium truncate", c.text, past && "line-through")}>{ev.title}</p>
+                        <p className={cn( "text-caption font-medium truncate", c.text, past && "line-through")}>{ev.title}</p>
                         <div className={cn("flex items-center inline-tight mt-0.5")}>
                           <span className="text-[10px] text-muted-foreground/60 tabular-nums">
                             {ev.allDay ? "Dia inteiro" : `${fmtTime(ev.start)} – ${fmtTime(ev.end)}`}
@@ -694,13 +694,13 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
         <div className={cn("relative flex items-start inline-medium")}>
           <div className="size-1.5 rounded-full bg-primary animate-pulse mt-2 shrink-0" />
           <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-foreground/70 leading-relaxed")}>
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{saudacao}.</span>{" "}
-            Dia <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium", intensidade === "leve" ? "text-success" : intensidade === "moderado" ? "text-warning" : "text-destructive")}>{intensidade}</span>
-            {" "}com <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{audiencias.length} audiência{audiencias.length !== 1 ? "s" : ""}</span>
-            {primeira && <>. Primeira às <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{fmtTime(primeira.start)}</span>{primeira.modalidade === "presencial" ? " (presencial)" : " (virtual)"}</>}
+            <span className={cn( "font-medium text-foreground")}>{saudacao}.</span>{" "}
+            Dia <span className={cn( "font-medium", intensidade === "leve" ? "text-success" : intensidade === "moderado" ? "text-warning" : "text-destructive")}>{intensidade}</span>
+            {" "}com <span className={cn( "font-medium text-foreground")}>{audiencias.length} audiência{audiencias.length !== 1 ? "s" : ""}</span>
+            {primeira && <>. Primeira às <span className={cn( "font-medium tabular-nums")}>{fmtTime(primeira.start)}</span>{primeira.modalidade === "presencial" ? " (presencial)" : " (virtual)"}</>}
             .{" "}
             {needsPrep.length > 0
-              ? <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-warning/80 font-medium")}>{needsPrep.length} evento{needsPrep.length > 1 ? "s" : ""} precisa{needsPrep.length > 1 ? "m" : ""} de preparo.</span>
+              ? <span className={cn( "text-warning/80 font-medium")}>{needsPrep.length} evento{needsPrep.length > 1 ? "s" : ""} precisa{needsPrep.length > 1 ? "m" : ""} de preparo.</span>
               : <span className="text-success/70">Tudo preparado.</span>}
           </p>
         </div>
@@ -714,7 +714,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
             <div className="flex items-center justify-between mb-3">
               <div className={cn("flex items-center inline-tight")}>
                 <Clock className="size-3 text-muted-foreground/50" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Linha do Tempo</span>
+                <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Linha do Tempo</span>
               </div>
               <div className={cn("flex items-center inline-tight")}>
                 {(["audiencias", "agenda", "expedientes"] as EventSource[]).map((s) => (
@@ -730,7 +730,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
               {/* All-day events */}
               {allDay.length > 0 && (
                 <div className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "mb-3 pb-2 border-b border-border/8")}>
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
+                  <span className={cn( "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>Dia inteiro</span>
                   <div className={cn("mt-1 stack-micro")}>
                     {allDay.map((ev) => <EventChip key={ev.id} event={ev} compact onClick={() => onEventClick(ev)} />)}
                   </div>
@@ -773,16 +773,16 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
               <Shield className="size-3 text-warning/40" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Preparação</span>
+              <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Preparação</span>
               {needsPrep.length > 0 && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ "text-[9px] tabular-nums px-1.5 py-0.5 rounded-full bg-warning/8 text-warning/50 font-semibold ml-auto")}>{needsPrep.length}</span>
               )}
             </div>
             <div className={cn("stack-tight")}>
               {needsPrep.length > 0 ? needsPrep.map((ev) => <PrepRadarItem key={ev.id} event={ev} />) : (
                 <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "py-4 text-center")}>
                   <CheckCircle2 className="size-5 text-success/25 mx-auto mb-1.5" />
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] text-success/40 font-medium")}>Tudo pronto</p>
+                  <p className={cn( "text-[10px] text-success/40 font-medium")}>Tudo pronto</p>
                 </div>
               )}
             </div>
@@ -793,7 +793,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
             <GlassPanel className={cn("inset-card-compact")}>
               <div className={cn("flex items-center inline-tight mb-3")}>
                 <AlertTriangle className="size-3 text-destructive/40" />
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
+                <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
               </div>
               <div className={cn("stack-tight")}>
                 {dayEvents.filter((e) => e.prepStatus === "pendente").map((ev) => (
@@ -813,7 +813,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
           <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
               <Zap className="size-3 text-primary/40" />
-              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
+              <span className={cn( "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>
             </div>
             <div className={cn("stack-nano")}>
               {[
@@ -848,7 +848,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
   return (
     <div className={cn(/* design-system-escape: py-1 padding direcional sem Inset equiv. */ "flex items-stretch inline-medium py-1 group")}>
       <div className={cn(/* design-system-escape: pt-2.5 padding direcional sem Inset equiv. */ "w-11 shrink-0 flex flex-col items-end pt-2.5")}>
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] tabular-nums font-medium text-foreground/60")}>{fmtTime(event.start)}</span>
+        <span className={cn( "text-[11px] tabular-nums font-medium text-foreground/60")}>{fmtTime(event.start)}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/50">{fmtTime(event.end)}</span>
       </div>
       <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "flex flex-col items-center pt-3 shrink-0")}>
@@ -862,9 +862,9 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
           </div>
           <div className="min-w-0 flex-1">
             <div className={cn("flex items-center inline-tight")}>
-              <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[13px] font-medium text-foreground truncate")}>{event.title}</h3>
+              <h3 className={cn( "text-[13px] font-medium text-foreground truncate")}>{event.title}</h3>
               {prep && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center inline-nano px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0", prep.bg, prep.c)}>
+                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; */ "flex items-center inline-nano px-1.5 py-px rounded-full text-[8px] font-semibold shrink-0", prep.bg, prep.c)}>
                   {event.prepStatus === "preparado" ? <CheckCircle2 className="size-2" /> : event.prepStatus === "parcial" ? <Circle className="size-2" /> : <AlertTriangle className="size-2" />}
                   {prep.l}
                 </span>
@@ -881,9 +881,9 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
               <span className="text-[9px] text-muted-foreground/55 truncate max-w-40">{event.location}</span>
             </div>
           )}
-          {event.trt && <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{event.trt}</span>}
+          {event.trt && <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/40")}>{event.trt}</span>}
           {event.modalidade && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded", event.modalidade === "presencial" ? "bg-warning/8 text-warning/50" : "bg-info/8 text-info/50")}>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-[8px] font-semibold px-1.5 py-px rounded", event.modalidade === "presencial" ? "bg-warning/8 text-warning/50" : "bg-info/8 text-info/50")}>
               {event.modalidade === "presencial" ? "Presencial" : "Virtual"}
             </span>
           )}
@@ -912,7 +912,7 @@ function PhaseLabel({ label, icon: Icon }: { label: string; icon: LucideIcon }) 
   return (
     <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; pb-1.5 padding direcional sem Inset equiv.; first:pt-0 sem equivalente DS */ "flex items-center inline-tight pt-4 pb-1.5 first:pt-0")}>
       <Icon className="size-2.5 text-muted-foreground/60" />
-      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>{label}</span>
+      <span className={cn( "text-[8px] uppercase tracking-[0.15em] text-muted-foreground/45 font-semibold")}>{label}</span>
       <div className="flex-1 h-px bg-border/6" />
     </div>
   );
@@ -925,7 +925,7 @@ function FocusSlot({ inicio, fim, label }: { inicio: string; fim: string; label?
       <div className="size-1.5 rounded-full border border-dashed border-success/25 shrink-0" />
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center inline-tight px-3 py-1.5 rounded-lg border border-dashed border-success/10 bg-success/1.5")}>
         <Brain className="size-2.5 text-success/30" />
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-success/40 font-medium")}>{label ?? "Foco"}</span>
+        <span className={cn( "text-[9px] text-success/40 font-medium")}>{label ?? "Foco"}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/60 ml-auto">{inicio}–{fim}</span>
       </div>
     </div>
@@ -939,7 +939,7 @@ function TravelSlot({ minutes }: { minutes: number }) {
       <MapPin className="size-1.5 text-warning/30 shrink-0" />
       <div className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center inline-micro px-2.5 py-1 rounded-md bg-warning/3 border border-warning/8")}>
         <MapPin className="size-2 text-warning/35" />
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[8px] text-warning/50 font-medium")}>~{minutes}min deslocamento</span>
+        <span className={cn( "text-[8px] text-warning/50 font-medium")}>~{minutes}min deslocamento</span>
       </div>
     </div>
   );
@@ -952,7 +952,7 @@ function BreakSlot({ inicio, fim, label, icon: Icon }: { inicio: string; fim: st
       <div className="size-1.5 rounded-full border border-dashed border-muted-foreground/10 shrink-0" />
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex-1 flex items-center inline-tight px-3 py-1.5 rounded-lg border border-dashed border-muted-foreground/8 bg-muted/1")}>
         <Icon className="size-2.5 text-muted-foreground/45" />
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[9px] text-muted-foreground/45 font-medium")}>{label}</span>
+        <span className={cn( "text-[9px] text-muted-foreground/45 font-medium")}>{label}</span>
         <span className="text-[9px] tabular-nums text-muted-foreground/10 ml-auto">{inicio}–{fim}</span>
       </div>
     </div>
@@ -964,7 +964,7 @@ function NowLine() {
   const t = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
   return (
     <div className={cn(/* design-system-escape: py-0.5 padding direcional sem Inset equiv.; -my-0.5 sem equivalente DS */ "flex items-center inline-medium py-0.5 -my-0.5 z-10 relative")}>
-      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "w-11 text-right text-[10px] tabular-nums text-primary font-semibold shrink-0")}>{t}</span>
+      <span className={cn( "w-11 text-right text-[10px] tabular-nums text-primary font-semibold shrink-0")}>{t}</span>
       <div className="size-2 rounded-full bg-primary shadow-[0_0_6px_var(--glow-primary)] animate-pulse shrink-0" />
       <div className="flex-1 h-px bg-primary/25" />
     </div>
@@ -985,7 +985,7 @@ function PrepRadarItem({ event }: { event: MockCalendarEvent }) {
       </div>
       <div className="min-w-0 flex-1">
         <div className={cn("flex items-baseline justify-between inline-tight")}>
-          <h4 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium text-foreground truncate")}>{event.title}</h4>
+          <h4 className={cn( "text-[10px] font-medium text-foreground truncate")}>{event.title}</h4>
           <span className="text-[9px] tabular-nums text-muted-foreground/55 shrink-0">{fmtTime(event.start)}</span>
         </div>
         <div className="mt-1.5 h-0.5 rounded-full bg-border/8 overflow-hidden">
@@ -1013,7 +1013,7 @@ function AlertCard({ icon: Icon, title, desc, variant = "warning" }: { icon: Luc
     <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "p-2.5 rounded-xl border flex items-start inline-tight", cfg.bg, cfg.border)}>
       <Icon className={cn("size-3 mt-0.5 shrink-0", cfg.icon)} />
       <div className="min-w-0">
-        <h4 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[10px] font-medium leading-tight", cfg.title)}>{title}</h4>
+        <h4 className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] font-medium leading-tight", cfg.title)}>{title}</h4>
         <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[9px] text-muted-foreground/55 mt-0.5 leading-relaxed")}>{desc}</p>
       </div>
     </div>
@@ -1043,7 +1043,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
               <SrcIcon className={cn("size-4", c.text)} />
             </div>
             <div>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>{isAgenda ? "Editar Evento" : "Detalhes do Evento"}</p>
+              <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>{isAgenda ? "Editar Evento" : "Detalhes do Evento"}</p>
               <Heading level="card" className={cn("text-body-sm")}>{event.title}</Heading>
             </div>
           </div>
@@ -1054,7 +1054,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
 
         {/* Source badge */}
         <div className={cn("flex items-center inline-tight")}>
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-2 py-0.5 rounded-full", c.bg, c.text)}>{srcCfg.label}</span>
+          <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-semibold px-2 py-0.5 rounded-full", c.bg, c.text)}>{srcCfg.label}</span>
           {event.processo && <span className="text-[10px] font-mono text-muted-foreground/55 tabular-nums">{event.processo}</span>}
         </div>
 

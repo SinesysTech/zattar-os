@@ -45,7 +45,7 @@ export function CollaboratorsAvatars({ collaborators }: CollaboratorsAvatarsProp
               </Avatar>
             </TooltipTrigger>
             <TooltipContent>
-              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{collab.name}</p>
+              <p className={cn( "font-medium")}>{collab.name}</p>
               <Text variant="caption" className="text-muted-foreground">Editando agora</Text>
             </TooltipContent>
           </Tooltip>

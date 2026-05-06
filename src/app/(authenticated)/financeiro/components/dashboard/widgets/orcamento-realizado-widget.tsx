@@ -61,7 +61,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
     return (
       <Card className="h-full flex flex-col">
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-          <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
+          <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
             <Target className="h-4 w-4 text-muted-foreground" />
             Orçamento vs Realizado
           </CardTitle>
@@ -90,7 +90,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center inline-tight text-body-sm font-medium")}>
+        <CardTitle className={cn( "flex items-center inline-tight text-body-sm font-medium")}>
           <Target className="h-4 w-4 text-muted-foreground" />
           Orçamento vs Realizado
         </CardTitle>
@@ -147,7 +147,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
                   <Text variant="caption" className="flex items-center justify-between">
                     <span className="truncate max-w-[60%] text-muted-foreground">{descricao}</span>
                     <span className={cn(
-                      /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium tabular-nums',
+                       'font-medium tabular-nums',
                       isOver ? 'text-destructive' : 'text-muted-foreground'
                     )}>
                       {Math.round(percentExec)}%

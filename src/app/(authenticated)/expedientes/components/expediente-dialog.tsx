@@ -560,7 +560,7 @@ export function ExpedienteDialog({
                   <p
                     id="trt-error"
                     role="alert"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                    className={cn( "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.trt[0]}
                   </p>
@@ -598,7 +598,7 @@ export function ExpedienteDialog({
                   <p
                     id="grau-error"
                     role="alert"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                    className={cn( "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.grau[0]}
                   </p>
@@ -678,7 +678,7 @@ export function ExpedienteDialog({
                   {getErrors()?.processoId && (
                     <p
                       role="alert"
-                      className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                      className={cn( "text-body-sm font-medium text-destructive")}
                     >
                       {getErrors()!.processoId[0]}
                     </p>
@@ -695,7 +695,7 @@ export function ExpedienteDialog({
             icon={CheckCircle2}
             title="Processo vinculado"
           >
-            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold tabular-nums")}>
+            <p className={cn( "text-body font-semibold tabular-nums")}>
               {processoSelecionado.numeroProcesso}
             </p>
             <dl className={cn("grid grid-cols-1 inline-medium sm:grid-cols-2")}>
@@ -707,7 +707,7 @@ export function ExpedienteDialog({
                 >
                   Parte autora
                 </Text>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
+                <dd className={cn( "text-body-sm font-medium truncate")}>
                   {processoSelecionado.nomeParteAutora || '—'}
                 </dd>
               </div>
@@ -719,7 +719,7 @@ export function ExpedienteDialog({
                 >
                   Parte ré
                 </Text>
-                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
+                <dd className={cn( "text-body-sm font-medium truncate")}>
                   {processoSelecionado.nomeParteRe || '—'}
                 </dd>
               </div>
@@ -777,7 +777,7 @@ export function ExpedienteDialog({
                 {getErrors()?.tipoExpedienteId && (
                   <p
                     role="alert"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                    className={cn( "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.tipoExpedienteId[0]}
                   </p>
@@ -810,7 +810,7 @@ export function ExpedienteDialog({
                   <p
                     id="descricao-error"
                     role="alert"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                    className={cn( "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.descricao[0]}
                   </p>
@@ -867,7 +867,7 @@ export function ExpedienteDialog({
                   <p
                     id="prazo-error"
                     role="alert"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                    className={cn( "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.dataPrazoLegalParte?.[0] ||
                       getErrors()!.horaPrazo?.[0]}
@@ -906,7 +906,7 @@ export function ExpedienteDialog({
                 {getErrors()?.responsavelId && (
                   <p
                     role="alert"
-                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
+                    className={cn( "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.responsavelId[0]}
                   </p>

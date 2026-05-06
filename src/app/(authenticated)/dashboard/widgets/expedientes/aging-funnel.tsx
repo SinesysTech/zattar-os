@@ -117,7 +117,7 @@ export function AgingFunnel() {
                 }}
               />
               <span
-                className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "shrink-0 text-[11px] font-bold tabular-nums")}
+                className={cn( "shrink-0 text-[11px] font-bold tabular-nums")}
                 style={{ color: row.color }}
               >
                 {row.count}
@@ -131,7 +131,7 @@ export function AgingFunnel() {
         <span className={cn(/* design-system-escape: tracking-wide sem token DS */ "text-[9px] uppercase tracking-wide text-muted-foreground/60")}>
           Total
         </span>
-        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[13px] font-bold")}>{fmtNum(totalExibido)}</span>
+        <span className={cn( "text-[13px] font-bold")}>{fmtNum(totalExibido)}</span>
       </div>
     </WidgetContainer>
   );

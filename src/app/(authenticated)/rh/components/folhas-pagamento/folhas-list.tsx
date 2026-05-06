@@ -77,7 +77,7 @@ function criarColunas(
       cell: ({ row }) => {
         const folha = row.original;
         return (
-          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
+          <div className={cn( "font-medium")}>
             {MESES_LABELS[folha.mesReferencia]}/{folha.anoReferencia}
           </div>
         );
@@ -131,7 +131,7 @@ function criarColunas(
       enableSorting: true,
       size: 120,
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-center font-medium")}>
+        <div className={cn( "text-center font-medium")}>
           {row.original.totalFuncionarios}
         </div>
       ),
@@ -146,7 +146,7 @@ function criarColunas(
       enableSorting: true,
       size: 150,
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-right font-medium text-success")}>
+        <div className={cn( "text-right font-medium text-success")}>
           {formatarValor(row.original.valorTotal ?? 0)}
         </div>
       ),

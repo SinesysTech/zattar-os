@@ -61,7 +61,7 @@ function EventWrapper({
   return (
     <button
       className={cn(
-        /* design-system-escape: px-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; sm:px-2 sem equivalente DS */ "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full cursor-pointer overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through data-past-event:opacity-75 sm:px-2",
+        /* design-system-escape: px-1 padding direcional sem Inset equiv.; sm:px-2 sem equivalente DS */ "focus-visible:border-ring focus-visible:ring-ring/50 flex size-full cursor-pointer overflow-hidden px-1 text-left font-medium backdrop-blur-md transition outline-none select-none focus-visible:ring-[3px] data-dragging:cursor-grabbing data-dragging:shadow-lg data-past-event:line-through data-past-event:opacity-75 sm:px-2",
         getEventColorClasses(event.color),
         getBorderRadiusClasses(isFirstDay, isLastDay),
         className
@@ -203,7 +203,7 @@ export function EventItem({
           </div>
         ) : (
           <>
-            <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate font-medium")}>{event.title}</div>
+            <div className={cn( "truncate font-medium")}>{event.title}</div>
             {showTime && (
               <div className="truncate font-normal opacity-70 sm:text-[11px]">{getEventTime()}</div>
             )}
@@ -227,7 +227,7 @@ export function EventItem({
       onTouchStart={onTouchStart}
       {...dndListeners}
       {...dndAttributes}>
-      <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{event.title}</div>
+      <div className={cn( "text-body-sm font-medium")}>{event.title}</div>
       <Text variant="caption" className="opacity-70">
         {event.allDay ? (
           <span>Dia inteiro</span>

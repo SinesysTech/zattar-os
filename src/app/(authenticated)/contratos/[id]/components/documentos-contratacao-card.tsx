@@ -171,7 +171,7 @@ export function DocumentosContratacaoCard({
           <FileDown className="size-4" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
-          <Text variant="label" as="h4" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>
+          <Text variant="label" weight="semibold" as="h4" className={cn(/* "text-foreground" )}>
             Documentos de contratação
           </Text>
           <Text variant="caption" className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-muted-foreground mt-0.5 leading-relaxed")}>

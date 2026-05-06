@@ -132,7 +132,7 @@ export function PostHearingFlow({
         <div className="flex items-start justify-between mb-3">
           <div className={cn("flex items-center inline-tight")}>
             <div className="size-1.5 rounded-full bg-warning/50" />
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-warning/60")}>
+            <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption font-semibold uppercase tracking-wider text-warning/60")}>
               Concluída
             </span>
             <span className="text-micro-caption text-muted-foreground/75">
@@ -141,7 +141,7 @@ export function PostHearingFlow({
           </div>
           <div className={cn("flex items-center inline-micro")}>
             <Clock className={cn("size-2.5", urgencyColor)} />
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-micro-caption tabular-nums font-medium", urgencyColor)}>
+            <span className={cn( "text-micro-caption tabular-nums font-medium", urgencyColor)}>
               há {elapsedLabel}
             </span>
           </div>
@@ -151,7 +151,7 @@ export function PostHearingFlow({
         <div className={cn("flex items-center inline-tight mb-3")}>
           <span className="text-mono-num text-muted-foreground/60">{audiencia.numeroProcesso}</span>
           {audiencia.trt && (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>
+            <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv. */ "text-micro-badge font-semibold px-1.5 py-px rounded bg-primary/5 text-primary/65")}>{audiencia.trt}</span>
           )}
         </div>
 
@@ -172,7 +172,7 @@ export function PostHearingFlow({
                   key={opt.value}
                   onClick={() => handleSelectResult(opt.value)}
                   className={cn(
-                    /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center inline-snug px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
+                    /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; */ "flex items-center inline-snug px-3 py-1.5 rounded-lg text-micro-caption font-medium border transition-all cursor-pointer",
                     selectedResult === opt.value
                       ? "border-primary/30 bg-primary/8 text-primary"
                       : "border-border/15 text-muted-foreground/70 hover:text-foreground/75 hover:border-border/25",

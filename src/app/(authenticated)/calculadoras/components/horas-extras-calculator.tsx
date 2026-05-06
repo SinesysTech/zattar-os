@@ -104,7 +104,7 @@ export function HorasExtrasCalculator() {
               <Gavel className="text-primary w-6 h-6" />
             </div>
             <div>
-              <h4 className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-on-surface font-bold mb-1")}>Conformidade com a CLT</h4>
+              <h4 className={cn( "text-on-surface font-bold mb-1")}>Conformidade com a CLT</h4>
               <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-on-surface-variant text-body-sm leading-relaxed")}>Nossos algoritmos são atualizados com as últimas reformas trabalhistas, garantindo que seus cálculos sejam embasados para procedimentos legais.</p>
             </div>
           </div>
@@ -117,28 +117,28 @@ export function HorasExtrasCalculator() {
               <Text variant="caption" className="uppercase tracking-widest text-primary font-bold">Resultado da Análise</Text>
               <div className={cn("mt-4 flex items-baseline inline-tight")}>
                 <span className="text-5xl font-black font-headline text-on-surface">R$ {totalBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-on-surface-variant text-body-sm font-medium")}>TOTAL LÍQUIDO</span>
+                <span className={cn( "text-on-surface-variant text-body-sm font-medium")}>TOTAL LÍQUIDO</span>
               </div>
             </div>
             
             <div className={cn(/* design-system-escape: px-8 padding direcional sem Inset equiv. */ "px-8 stack-default mb-8")}>
               <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3 border-b border-foreground/5")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>Valor da Hora Base</span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-on-surface font-medium")}>R$ {valorHora.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                <span className={cn( "text-on-surface font-medium")}>R$ {valorHora.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
               <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3 border-b border-foreground/5")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>Valor da Hora Extra ({percentual}%)</span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-on-surface font-medium")}>R$ {valorHoraExtra.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                <span className={cn( "text-on-surface font-medium")}>R$ {valorHoraExtra.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
               <div className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "flex justify-between items-center py-3")}>
                 <span className={cn("text-on-surface-variant text-body-sm")}>DSR (Repouso Remunerado)</span>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-primary font-medium")}>R$ {dsr.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                <span className={cn( "text-primary font-medium")}>R$ {dsr.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
               </div>
             </div>
 
             <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 bg-foreground/5 flex inline-default")}>
-              <button className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; font-bold → className de <Text>/<Heading> */ "flex-1 py-3 border border-foreground/10 rounded-lg text-body-sm font-bold text-on-surface hover:bg-foreground/5 transition-all")}>Exportar PDF</button>
-              <button className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; font-bold → className de <Text>/<Heading> */ "flex-1 py-3 border border-foreground/10 rounded-lg text-body-sm font-bold text-on-surface hover:bg-foreground/5 transition-all")}>Compartilhar Relatório</button>
+              <button className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; */ "flex-1 py-3 border border-foreground/10 rounded-lg text-body-sm font-bold text-on-surface hover:bg-foreground/5 transition-all")}>Exportar PDF</button>
+              <button className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; */ "flex-1 py-3 border border-foreground/10 rounded-lg text-body-sm font-bold text-on-surface hover:bg-foreground/5 transition-all")}>Compartilhar Relatório</button>
             </div>
           </div>
         </div>

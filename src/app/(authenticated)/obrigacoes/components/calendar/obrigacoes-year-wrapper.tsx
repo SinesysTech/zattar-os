@@ -126,7 +126,7 @@ export function ObrigacoesYearWrapper({
       <Dialog open={dayDialogOpen} onOpenChange={setDayDialogOpen}>
         <DialogContent className=" max-w-lg">
           <DialogHeader>
-            <DialogTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
+            <DialogTitle className={cn( "text-body-sm font-medium")}>
               {selectedDayDate
                 ? format(selectedDayDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
                 : ''}
@@ -154,7 +154,7 @@ export function ObrigacoesYearWrapper({
                         <SemanticBadge
                           category="obrigacao_tipo"
                           value={item.acordo.tipo}
-                          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-semibold")}
+                          className={cn( "text-[9px] font-semibold")}
                         >
                           {item.acordo.tipo}
                         </SemanticBadge>

@@ -442,7 +442,7 @@ export default function CredenciaisPage() {
               {/* Sticky Bulk Actions Bar */}
               {selectedCount > 0 && (
                 <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "sticky bottom-0 left-0 right-0 flex items-center inline-medium bg-primary/95 backdrop-blur-sm border-t border-primary-foreground/12 px-5 py-2.5 text-primary-foreground rounded-b-2xl")}>
-                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold flex-1")}>{selectedCount} selecionada(s)</span>
+                  <span className={cn( "text-body-sm font-semibold flex-1")}>{selectedCount} selecionada(s)</span>
                   <Button
                     variant="secondary"
                     size="sm"
@@ -489,7 +489,7 @@ export default function CredenciaisPage() {
                       <Landmark className="w-4 h-4 text-primary" />
                     </div>
                     <div className="min-w-0">
-                      <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{credencial.tribunal}</div>
+                      <div className={cn( "text-body-sm font-semibold")}>{credencial.tribunal}</div>
                       <Text variant="caption" className="text-muted-foreground/55">
                         {GRAU_LABELS[credencial.grau] ?? credencial.grau}
                       </Text>
@@ -497,7 +497,7 @@ export default function CredenciaisPage() {
                     {/* Status dot */}
                     <div className={cn("ml-auto flex items-center inline-snug")}>
                       <div className={cn('size-2 rounded-full', credencial.active ? 'bg-success' : 'bg-muted-foreground/40')} />
-                      <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium', credencial.active ? 'text-success' : 'text-muted-foreground/50')}>
+                      <span className={cn( 'text-[11px] font-medium', credencial.active ? 'text-success' : 'text-muted-foreground/50')}>
                         {credencial.active ? 'Ativa' : 'Inativa'}
                       </span>
                     </div>

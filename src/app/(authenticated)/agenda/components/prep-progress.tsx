@@ -42,7 +42,7 @@ export function PrepProgress({
           {label && (
             <span className="text-[11px] text-muted-foreground/70 truncate">{label}</span>
           )}
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[10px] font-mono font-semibold tabular-nums", colors.text)}>
+          <span className={cn( "text-[10px] font-mono font-semibold tabular-nums", colors.text)}>
             {percent}%
           </span>
         </div>
@@ -60,7 +60,7 @@ export function PrepProgress({
           />
         </div>
         {!label && size === "sm" && (
-          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[9px] font-mono font-semibold tabular-nums", colors.text)}>
+          <span className={cn( "text-[9px] font-mono font-semibold tabular-nums", colors.text)}>
             {percent}%
           </span>
         )}

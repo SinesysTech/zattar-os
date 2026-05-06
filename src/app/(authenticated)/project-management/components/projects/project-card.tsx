@@ -64,7 +64,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           <div className="mb-6">
             <div className="mb-2 flex items-center justify-between">
               <Text variant="label" as="span" className="text-muted-foreground">Progresso</Text>
-              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>
+              <span className={cn( "text-body-sm font-semibold")}>
                 {projeto.progresso}%
               </span>
             </div>

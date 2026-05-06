@@ -69,7 +69,7 @@ export function WidgetPicker({
         <Button
           variant="outline"
           size="sm"
-          className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "inline-tight text-caption font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
+          className={cn( "inline-tight text-caption font-medium border-border/30 bg-transparent hover:bg-foreground/5 backdrop-blur-sm")}
           aria-label="Personalizar dashboard"
         >
           <LayoutGrid className="size-3.5" />
@@ -82,7 +82,7 @@ export function WidgetPicker({
         className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ "w-full sm:w-96 flex flex-col gap-0 p-0 bg-background/95 backdrop-blur-xl border-l border-border/20")}
       >
         <SheetHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-5 pt-6 pb-4 border-b border-border/10")}>
-          <SheetTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body font-semibold")}>
+          <SheetTitle className={cn( "font-heading text-body font-semibold")}>
             Personalizar Dashboard
           </SheetTitle>
           <SheetDescription className={cn("not-sr-only text-body-sm text-muted-foreground/60 mt-0.5")}>
@@ -93,9 +93,9 @@ export function WidgetPicker({
         {/* Resumo + reset */}
         <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-5 py-3 border-b border-border/10")}>
           <Text variant="caption" className="text-muted-foreground/60">
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{activeCount}</span>
+            <span className={cn( "font-semibold text-foreground")}>{activeCount}</span>
             {' '}de{' '}
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{totalCount}</span>
+            <span className={cn( "font-semibold text-foreground")}>{totalCount}</span>
             {' '}widgets ativos
           </Text>
           <Button
@@ -128,7 +128,7 @@ export function WidgetPicker({
                     aria-label={`${isEnabled ? 'Desativar' : 'Ativar'} widget ${widget.title}`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-medium leading-tight truncate flex items-center inline-tight")}>
+                    <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm font-medium leading-tight truncate flex items-center inline-tight")}>
                        {/* Opcional: mostrar um ícone bem sutil do módulo se quiser, mas o usuário pediu para não separar */}
                       {widget.title}
                     </p>

@@ -44,7 +44,7 @@ export function EventSignatureInfo({
 
             {/* Texto da assinatura */}
             <div>
-              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
+              <Text variant="label" weight="medium" as="p" className={cn(/* /* design-system-escape: leading-tight sem token DS */ "leading-tight" )}>
                 Assinado digitalmente por
               </Text>
               <p className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[13px] text-muted-foreground font-normal leading-tight mt-0.5")}>
@@ -70,7 +70,7 @@ export function EventSignatureInfo({
 
             {/* Texto do sigilo */}
             <div>
-              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "font-medium leading-tight")}>
+              <Text variant="label" weight="medium" as="p" className={cn(/* /* design-system-escape: leading-tight sem token DS */ "leading-tight" )}>
                 Documento sigiloso — acesso restrito
               </Text>
             </div>

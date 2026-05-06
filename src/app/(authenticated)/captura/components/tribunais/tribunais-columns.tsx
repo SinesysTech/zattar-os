@@ -38,7 +38,7 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
       accessorKey: 'tribunal_nome',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{row.original.tribunal_nome}</span>
+        <span className={cn( "text-body-sm font-medium")}>{row.original.tribunal_nome}</span>
       ),
       meta: { headerLabel: 'Tribunal' },
     },

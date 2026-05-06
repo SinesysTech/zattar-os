@@ -23,17 +23,44 @@ const HEADING_LEVELS = {
 
 type HeadingLevel = keyof typeof HEADING_LEVELS;
 
+/**
+ * FONT_WEIGHT — modificador ortogonal a tipografia.
+ * Evita combinatorial explosion de variants (`body-sm-medium`, `body-sm-bold`).
+ * Cada variant Text/Heading mantém peso default via @apply em globals.css;
+ * a prop `weight` sobrepõe quando ênfase pontual é necessária.
+ */
+const FONT_WEIGHT = {
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold',
+} as const;
+
+type FontWeight = keyof typeof FONT_WEIGHT;
+
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level: HeadingLevel;
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  /** Peso da fonte. Sobrepõe o default da variant quando definido. */
+  weight?: FontWeight;
   children: React.ReactNode;
 }
 
-function Heading({ level, as: asTag, className: userClassName, children, ...props }: HeadingProps) {
+function Heading({
+  level,
+  as: asTag,
+  weight,
+  className: userClassName,
+  children,
+  ...props
+}: HeadingProps) {
   const config = HEADING_LEVELS[level];
   const Tag = asTag ?? config.tag;
   return (
-    <Tag className={cn(config.className, userClassName)} {...props}>
+    <Tag
+      className={cn(config.className, weight && FONT_WEIGHT[weight], userClassName)}
+      {...props}
+    >
       {children}
     </Tag>
   );
@@ -63,14 +90,26 @@ type TextVariant = keyof typeof TEXT_VARIANTS;
 interface TextProps extends React.HTMLAttributes<HTMLElement> {
   variant: TextVariant;
   as?: React.ElementType;
+  /** Peso da fonte. Sobrepõe o default da variant quando definido. */
+  weight?: FontWeight;
   children: React.ReactNode;
 }
 
-function Text({ variant, as: asTag, className: userClassName, children, ...props }: TextProps) {
+function Text({
+  variant,
+  as: asTag,
+  weight,
+  className: userClassName,
+  children,
+  ...props
+}: TextProps) {
   const config = TEXT_VARIANTS[variant];
   const Tag = asTag ?? config.tag;
   return (
-    <Tag className={cn(config.className, userClassName)} {...props}>
+    <Tag
+      className={cn(config.className, weight && FONT_WEIGHT[weight], userClassName)}
+      {...props}
+    >
       {children}
     </Tag>
   );
@@ -78,5 +117,5 @@ function Text({ variant, as: asTag, className: userClassName, children, ...props
 Text.displayName = 'Text';
 
 export { Heading, Text };
-export type { HeadingLevel, TextVariant, HeadingProps, TextProps };
-export { HEADING_LEVELS, TEXT_VARIANTS };
+export type { HeadingLevel, TextVariant, HeadingProps, TextProps, FontWeight };
+export { HEADING_LEVELS, TEXT_VARIANTS, FONT_WEIGHT };

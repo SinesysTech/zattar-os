@@ -28,7 +28,7 @@ function SpacingScale() {
               className="w-5 rounded bg-primary"
               style={{ height: s.h }}
             />
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[10px] font-medium")}>{s.t}</span>
+            <span className={cn( "font-mono text-[10px] font-medium")}>{s.t}</span>
             <span className="font-mono text-[10px] text-muted-foreground">
               {s.v}
             </span>
@@ -44,7 +44,7 @@ function SpacingScale() {
             <span className="font-mono text-[10px] text-muted-foreground">
               {u.lbl}
             </span>
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[13px] font-semibold")}>{u.val}</span>
+            <span className={cn( "text-[13px] font-semibold")}>{u.val}</span>
           </div>
         ))}
       </div>
@@ -102,7 +102,7 @@ function ShadowScale() {
             key={t.lbl}
             className={`flex aspect-[1.1/1] flex-col justify-between rounded-xl border border-border/50 bg-white p-3.5 ${t.cls}`}
           >
-            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-[10px] font-medium text-muted-foreground")}>
+            <span className={cn( "font-mono text-[10px] font-medium text-muted-foreground")}>
               {t.lbl}
             </span>
             <span className="font-mono text-[9px] text-muted-foreground/70">
