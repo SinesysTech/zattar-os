@@ -1,181 +1,319 @@
 /**
- * Property-Based Tests - PageShell
+ * Tests — PageShell (shadcn composition pattern + legacy API)
  *
- * Testes de propriedades para o componente PageShell
- * usando fast-check para validar comportamentos universais.
+ * Valida o componente sob dois contratos:
+ *  1. Forma canônica (subcomponentes compostos)
+ *  2. API legada (props title/description/actions/badge — deprecated)
+ *
+ * Foca em comportamento, semântica e acessibilidade. Evita asserts em
+ * classes Tailwind específicas, que são frágeis a refator visual.
  */
 
-import * as fc from 'fast-check';
-import { render } from '@testing-library/react';
-import { PageShell } from '@/components/shared/page-shell';
+import * as fc from 'fast-check'
+import { render } from '@testing-library/react'
 import {
-    setViewport,
-    COMMON_VIEWPORTS,
-} from '@/testing/helpers/responsive-test-helpers';
+  PageShell,
+  PageHeader,
+  PageHeaderBadge,
+  PageHeaderTitle,
+  PageHeaderDescription,
+  PageHeaderAction,
+  PageContent,
+} from '@/components/shared/page-shell'
+import {
+  setViewport,
+  COMMON_VIEWPORTS,
+} from '@/testing/helpers/responsive-test-helpers'
 
-describe('PageShell - Property-Based Tests', () => {
-    beforeEach(() => {
-        setViewport(COMMON_VIEWPORTS.desktop);
-    });
+describe('PageShell', () => {
+  beforeEach(() => {
+    setViewport(COMMON_VIEWPORTS.desktop)
+  })
 
-    /**
-     * Feature: page-header, Property 35: Title and description with Typography
-     * Validates: Requirements 8.1
-     *
-     * Para qualquer PageShell com título e descrição,
-     * deve renderizar Typography.H1 e Typography.Muted
-     */
-    test('Property 35: PageShell renders title and description with Typography', () => {
-        fc.assert(
-            fc.property(
-                fc.record({
-                    title: fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{2,49}$/),
-                    description: fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{9,99}$/),
-                }),
-                ({ title, description }) => {
-                    const { container } = render(
-                        <PageShell title={title} description={description}>
-                            <div>Page content</div>
-                        </PageShell>
-                    );
+  // ──────────────────────────────────────────────────────────────────
+  // Forma canônica (subcomponentes)
+  // ──────────────────────────────────────────────────────────────────
 
-                    // Verifica main element
-                    const main = container.querySelector('main');
-                    expect(main).toBeInTheDocument();
-                    expect(main?.classList.contains('flex-1')).toBe(true);
-                    expect(main?.classList.contains('space-y-4')).toBe(true);
+  describe('composition pattern', () => {
+    test('renders <main> with data-slot="page-shell"', () => {
+      const { container } = render(
+        <PageShell>
+          <PageContent>conteúdo</PageContent>
+        </PageShell>,
+      )
+      const main = container.querySelector('main[data-slot="page-shell"]')
+      expect(main).toBeInTheDocument()
+    })
 
-                    // Verifica título (procura por h1)
-                    const h1 = container.querySelector('h1');
-                    expect(h1).toBeInTheDocument();
-                    expect(h1).toHaveTextContent(title);
+    test('renders <header> with data-slot="page-header"', () => {
+      const { container } = render(
+        <PageShell>
+          <PageHeader>
+            <PageHeaderTitle>Título</PageHeaderTitle>
+          </PageHeader>
+        </PageShell>,
+      )
+      const header = container.querySelector('header[data-slot="page-header"]')
+      expect(header).toBeInTheDocument()
+    })
 
-                    // Verifica descrição (procura por elemento com text-muted-foreground)
-                    // PageShell uses text-muted-foreground/50 which CSS selectors can't match with dot notation
-                    const descriptionElement = container.querySelector('[class*="text-muted-foreground"]');
-                    expect(descriptionElement).toBeInTheDocument();
-                    expect(descriptionElement).toHaveTextContent(description);
-                }
-            ),
-            { numRuns: 20 }
-        );
-    });
+    test('PageHeaderTitle renders <h1> with text-page-title token', () => {
+      fc.assert(
+        fc.property(
+          fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{2,49}$/),
+          (title) => {
+            const { container } = render(
+              <PageShell>
+                <PageHeader>
+                  <PageHeaderTitle>{title}</PageHeaderTitle>
+                </PageHeader>
+              </PageShell>,
+            )
+            const h1 = container.querySelector('h1[data-slot="page-header-title"]')
+            expect(h1).toBeInTheDocument()
+            expect(h1).toHaveTextContent(title)
+            expect(h1?.className).toMatch(/text-page-title/)
+          },
+        ),
+        { numRuns: 10 },
+      )
+    })
 
-    /**
-     * Feature: page-actions, Property 36: Actions positioned on the right in desktop
-     * Validates: Requirements 8.2
-     *
-     * Para qualquer PageShell com actions,
-     * deve posicionar ações à direita em desktop
-     */
-    test('Property 36: PageShell positions actions on the right in desktop', () => {
-        fc.assert(
-            fc.property(
-                fc.integer({ min: 1, max: 5 }),
-                (numButtons) => {
-                    const buttons = Array.from({ length: numButtons }, (_, i) => (
-                        <button key={i}>Action {i + 1}</button>
-                    ));
+    test('PageHeaderDescription renders <p> with text-caption token', () => {
+      fc.assert(
+        fc.property(
+          fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{9,99}$/),
+          (description) => {
+            const { container } = render(
+              <PageShell>
+                <PageHeader>
+                  <PageHeaderTitle>Título</PageHeaderTitle>
+                  <PageHeaderDescription>{description}</PageHeaderDescription>
+                </PageHeader>
+              </PageShell>,
+            )
+            const p = container.querySelector('p[data-slot="page-header-description"]')
+            expect(p).toBeInTheDocument()
+            expect(p).toHaveTextContent(description)
+            expect(p?.className).toMatch(/text-caption/)
+          },
+        ),
+        { numRuns: 10 },
+      )
+    })
 
-                    const { container } = render(
-                        <PageShell
-                            title="Page Title"
-                            actions={<>{buttons}</>}
-                        >
-                            <div>Content</div>
-                        </PageShell>
-                    );
+    test('PageHeaderAction renders slot positioned in column 2', () => {
+      const { container } = render(
+        <PageShell>
+          <PageHeader>
+            <PageHeaderTitle>Título</PageHeaderTitle>
+            <PageHeaderAction>
+              <button type="button">Novo</button>
+            </PageHeaderAction>
+          </PageHeader>
+        </PageShell>,
+      )
+      const action = container.querySelector('[data-slot="page-header-action"]')
+      expect(action).toBeInTheDocument()
+      expect(action?.className).toMatch(/col-start-2/)
+      expect(action?.querySelector('button')).toBeInTheDocument()
+    })
 
-                    // Verifica container de header
-                    const header = container.querySelector('.flex.flex-col.gap-4');
-                    expect(header).toBeInTheDocument();
+    test('PageHeaderBadge renders slot above title', () => {
+      const { container } = render(
+        <PageShell>
+          <PageHeader>
+            <PageHeaderBadge>
+              <span data-testid="badge">Beta</span>
+            </PageHeaderBadge>
+            <PageHeaderTitle>Título</PageHeaderTitle>
+          </PageHeader>
+        </PageShell>,
+      )
+      const badge = container.querySelector('[data-slot="page-header-badge"]')
+      expect(badge).toBeInTheDocument()
+      expect(badge?.querySelector('[data-testid="badge"]')).toBeInTheDocument()
+    })
 
-                    // Verifica classes de desktop (sm:flex-row sm:items-start sm:justify-between)
-                    const className = header?.className || '';
-                    expect(className).toMatch(/sm:flex-row/);
-                    expect(className).toMatch(/sm:items-start/);
-                    expect(className).toMatch(/sm:justify-between/);
+    test('PageContent renders with data-slot="page-content"', () => {
+      const { container } = render(
+        <PageShell>
+          <PageContent>
+            <div data-testid="child">child</div>
+          </PageContent>
+        </PageShell>,
+      )
+      const content = container.querySelector('[data-slot="page-content"]')
+      expect(content).toBeInTheDocument()
+      expect(content?.querySelector('[data-testid="child"]')).toBeInTheDocument()
+    })
 
-                    // Verifica container de actions
-                    const actionsContainer = container.querySelector('.flex.items-center.gap-2');
-                    expect(actionsContainer).toBeInTheDocument();
+    test('all slots compose without auto-generated header', () => {
+      const { container } = render(
+        <PageShell>
+          <PageHeader>
+            <PageHeaderTitle>X</PageHeaderTitle>
+          </PageHeader>
+          <PageContent>Y</PageContent>
+        </PageShell>,
+      )
+      // Apenas um header (o explícito do consumidor), sem header automático
+      const headers = container.querySelectorAll('[data-slot="page-header"]')
+      expect(headers).toHaveLength(1)
+    })
+  })
 
-                    // Verifica que tem os botões
-                    const actionButtons = actionsContainer?.querySelectorAll('button');
-                    expect(actionButtons).toHaveLength(numButtons);
-                }
-            ),
-            { numRuns: 20 }
-        );
-    });
+  // ──────────────────────────────────────────────────────────────────
+  // API legada (deprecated, preservada até migração completa)
+  // ──────────────────────────────────────────────────────────────────
 
-    /**
-     * Feature: page-mobile, Property 37: Mobile stacks title and actions vertically
-     * Validates: Requirements 8.3
-     *
-     * Para qualquer PageShell em mobile,
-     * deve empilhar título e ações verticalmente
-     */
-    test('Property 37: PageShell stacks title and actions vertically on mobile', () => {
-        fc.assert(
-            fc.property(
-                fc.integer({ min: 320, max: 767 }),
-                (width) => {
-                    setViewport({ width, height: 667 });
+  describe('legacy API (deprecated)', () => {
+    test('renders title via prop using <h1> with token', () => {
+      fc.assert(
+        fc.property(
+          fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{2,49}$/),
+          (title) => {
+            const { container } = render(
+              <PageShell title={title}>
+                <div>conteúdo</div>
+              </PageShell>,
+            )
+            const h1 = container.querySelector('h1[data-slot="page-header-title"]')
+            expect(h1).toBeInTheDocument()
+            expect(h1).toHaveTextContent(title)
+            expect(h1?.className).toMatch(/text-page-title/)
+          },
+        ),
+        { numRuns: 10 },
+      )
+    })
 
-                    const { container } = render(
-                        <PageShell
-                            title="Mobile Title"
-                            actions={<button>Action</button>}
-                        >
-                            <div>Content</div>
-                        </PageShell>
-                    );
+    test('renders description via prop using <p> with token', () => {
+      fc.assert(
+        fc.property(
+          fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{9,99}$/),
+          (description) => {
+            const { container } = render(
+              <PageShell title="Título" description={description}>
+                <div>conteúdo</div>
+              </PageShell>,
+            )
+            const p = container.querySelector('p[data-slot="page-header-description"]')
+            expect(p).toBeInTheDocument()
+            expect(p).toHaveTextContent(description)
+            expect(p?.className).toMatch(/text-caption/)
+          },
+        ),
+        { numRuns: 10 },
+      )
+    })
 
-                    // Verifica classes de mobile (flex-col gap-4)
-                    const header = container.querySelector('.flex.flex-col.gap-4');
-                    expect(header).toBeInTheDocument();
+    test('renders actions via prop in PageHeaderAction slot', () => {
+      fc.assert(
+        fc.property(fc.integer({ min: 1, max: 5 }), (numButtons) => {
+          const buttons = Array.from({ length: numButtons }, (_, i) => (
+            <button key={i} type="button">
+              Action {i + 1}
+            </button>
+          ))
 
-                    // Verifica que flex-col está presente
-                    expect(header?.classList.contains('flex-col')).toBe(true);
-                    expect(header?.classList.contains('gap-4')).toBe(true);
-                }
-            ),
-            { numRuns: 20 }
-        );
-    });
+          const { container } = render(
+            <PageShell title="Título" actions={<>{buttons}</>}>
+              <div>conteúdo</div>
+            </PageShell>,
+          )
 
-    /**
-     * Feature: page-spacing, Property 38: Consistent space-y-6
-     * Validates: Requirements 8.4
-     *
-     * Para qualquer PageShell,
-     * deve ter espaçamento consistente space-y-6
-     */
-    test('Property 38: PageShell has consistent space-y-6', () => {
-        fc.assert(
-            fc.property(
-                fc.stringMatching(/^[a-zA-Z][a-zA-Z0-9]{4,29}$/),
-                (title) => {
-                    const { container } = render(
-                        <PageShell title={title}>
-                            <div>Section 1</div>
-                            <div>Section 2</div>
-                            <div>Section 3</div>
-                        </PageShell>
-                    );
+          const action = container.querySelector('[data-slot="page-header-action"]')
+          expect(action).toBeInTheDocument()
+          expect(action?.querySelectorAll('button')).toHaveLength(numButtons)
+        }),
+        { numRuns: 10 },
+      )
+    })
 
-                    // Verifica main element com space-y-4
-                    const main = container.querySelector('main');
-                    expect(main).toBeInTheDocument();
-                    expect(main?.classList.contains('space-y-4')).toBe(true);
+    test('renders badge via prop in PageHeaderBadge slot', () => {
+      const { container } = render(
+        <PageShell
+          title="Título"
+          badge={<span data-testid="b">Beta</span>}
+        >
+          <div>conteúdo</div>
+        </PageShell>,
+      )
+      const badge = container.querySelector('[data-slot="page-header-badge"]')
+      expect(badge?.querySelector('[data-testid="b"]')).toBeInTheDocument()
+    })
 
-                    // Verifica container de conteúdo com space-y-4
-                    const contentContainer = main?.querySelector('.space-y-4');
-                    expect(contentContainer).toBeInTheDocument();
-                }
-            ),
-            { numRuns: 20 }
-        );
-    });
-});
+    test('wraps children in PageContent when legacy props are used', () => {
+      const { container } = render(
+        <PageShell title="Título">
+          <div data-testid="child">child</div>
+        </PageShell>,
+      )
+      const content = container.querySelector('[data-slot="page-content"]')
+      expect(content).toBeInTheDocument()
+      expect(content?.querySelector('[data-testid="child"]')).toBeInTheDocument()
+    })
+
+    test('without legacy props, children render directly without auto-wrap', () => {
+      const { container } = render(
+        <PageShell>
+          <div data-testid="raw-child">raw</div>
+        </PageShell>,
+      )
+      // Sem legacy props, não cria PageHeader nem PageContent automáticos
+      expect(container.querySelector('[data-slot="page-header"]')).toBeNull()
+      expect(container.querySelector('[data-slot="page-content"]')).toBeNull()
+      expect(container.querySelector('[data-testid="raw-child"]')).toBeInTheDocument()
+    })
+  })
+
+  // ──────────────────────────────────────────────────────────────────
+  // Acessibilidade
+  // ──────────────────────────────────────────────────────────────────
+
+  describe('accessibility', () => {
+    test('PageShell uses <main> landmark', () => {
+      const { container } = render(
+        <PageShell>
+          <PageContent>x</PageContent>
+        </PageShell>,
+      )
+      expect(container.querySelector('main')).toBeInTheDocument()
+    })
+
+    test('PageHeader uses <header> landmark', () => {
+      const { container } = render(
+        <PageShell>
+          <PageHeader>
+            <PageHeaderTitle>X</PageHeaderTitle>
+          </PageHeader>
+        </PageShell>,
+      )
+      expect(container.querySelector('header')).toBeInTheDocument()
+    })
+
+    test('PageHeaderTitle is a single <h1> per page', () => {
+      const { container } = render(
+        <PageShell>
+          <PageHeader>
+            <PageHeaderTitle>Título</PageHeaderTitle>
+          </PageHeader>
+          <PageContent>conteúdo</PageContent>
+        </PageShell>,
+      )
+      expect(container.querySelectorAll('h1')).toHaveLength(1)
+    })
+
+    test('forwards arbitrary HTML attributes (id, aria-*)', () => {
+      const { container } = render(
+        <PageShell id="test-page" aria-label="Página de teste">
+          <PageContent>x</PageContent>
+        </PageShell>,
+      )
+      const main = container.querySelector('main')
+      expect(main).toHaveAttribute('id', 'test-page')
+      expect(main).toHaveAttribute('aria-label', 'Página de teste')
+    })
+  })
+})

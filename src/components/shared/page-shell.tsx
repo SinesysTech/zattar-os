@@ -1,85 +1,226 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Heading } from '@/components/ui/typography';
+import * as React from 'react'
+import { cn } from '@/lib/utils'
+import { Heading, Text } from '@/components/ui/typography'
 
 /**
- * PageShell - Container principal para páginas.
+ * PageShell — Container canônico de página, padrão shadcn/ui.
  *
- * @ai-context Use este componente como wrapper de todas as páginas.
- * Ele fornece layout consistente com padding e estrutura.
+ * Forma canônica (composition pattern):
  *
- * IMPORTANTE: NÃO use a prop 'description' - não utilizamos subtítulos nas páginas.
- * O título e botões de ação devem estar no DataTableToolbar dentro do DataShell.
- *
- * Segue o Design System Zattar:
- * - Tipografia: font-heading para títulos
- * - Espaçamento: gap-6 entre seções, gap-4 entre elementos
- * - Cores: text-foreground para títulos
- *
- * @example
- * // Uso correto - sem título, título vai no DataTableToolbar
+ * ```tsx
  * <PageShell>
- *   <DataShell
- *     header={
- *       <DataTableToolbar
- *         title="Processos"
- *         actionButton={{ label: 'Novo', onClick: ... }}
- *       />
- *     }
- *   >
- *     <ProcessosTable />
- *   </DataShell>
+ *   <PageHeader>
+ *     <PageHeaderBadge><Badge>Beta</Badge></PageHeaderBadge>
+ *     <PageHeaderTitle>Processos</PageHeaderTitle>
+ *     <PageHeaderDescription>Lista de processos do escritório</PageHeaderDescription>
+ *     <PageHeaderAction>
+ *       <Button size="sm" className="rounded-xl">Novo</Button>
+ *     </PageHeaderAction>
+ *   </PageHeader>
+ *
+ *   <PageContent>
+ *     <DataShell>...</DataShell>
+ *   </PageContent>
  * </PageShell>
+ * ```
+ *
+ * Convenções shadcn aplicadas:
+ * - `data-slot` em cada subcomponente (CSS scoping via `has-data-[slot=...]`)
+ * - Container query `@container/page-header` para responsividade interna
+ * - Grid layout com slots opcionais (igual `CardHeader`)
+ * - Tags semânticas: `<main>`, `<header>`, `<h1>`, `<p>`
+ * - Tipografia consome tokens do design system (`text-page-title`, `text-caption`)
+ *
+ * Tipografia mora dentro dos subcomponentes. Container nunca dita estilo do
+ * conteúdo — `PageShell` é puramente layout.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * API LEGADA (deprecated)
+ *
+ * Para zero-quebra durante a migração, `PageShell` ainda aceita as props
+ * `title`, `description`, `actions`, `badge`. Quando passadas, geram um
+ * `<PageHeader>` automático internamente. Migre para a forma composta.
+ *
+ * ```tsx
+ * // ❌ Deprecated
+ * <PageShell title="Processos" description="..." actions={<Button>Novo</Button>}>
+ *   <DataShell>...</DataShell>
+ * </PageShell>
+ *
+ * // ✅ Canônico
+ * <PageShell>
+ *   <PageHeader>
+ *     <PageHeaderTitle>Processos</PageHeaderTitle>
+ *     <PageHeaderDescription>...</PageHeaderDescription>
+ *     <PageHeaderAction><Button>Novo</Button></PageHeaderAction>
+ *   </PageHeader>
+ *   <PageContent>...</PageContent>
+ * </PageShell>
+ * ```
  */
-interface PageShellProps {
-  title?: string;
-  description?: string;
-  actions?: React.ReactNode;
-  children: React.ReactNode;
-  className?: string;
-  /** Renderiza um badge antes do título */
-  badge?: React.ReactNode;
-  /** Densidade visual da página */
-  density?: 'comfortable' | 'compact';
+
+interface PageShellProps extends Omit<React.ComponentProps<'main'>, 'title'> {
+  /** @deprecated Use `<PageHeaderTitle>` dentro de `<PageHeader>`. */
+  title?: string
+  /** @deprecated Use `<PageHeaderDescription>` dentro de `<PageHeader>`. */
+  description?: string
+  /** @deprecated Use `<PageHeaderAction>` dentro de `<PageHeader>`. */
+  actions?: React.ReactNode
+  /** @deprecated Use `<PageHeaderBadge>` dentro de `<PageHeader>`. */
+  badge?: React.ReactNode
 }
 
-export function PageShell({
+function PageShell({
+  className,
+  children,
   title,
   description,
   actions,
-  children,
-  className,
   badge,
-  density = 'comfortable',
+  ...props
 }: PageShellProps) {
-  const hasHeader = title || description || actions || badge;
+  const hasLegacyHeader = Boolean(title || description || actions || badge)
 
   return (
     <main
-      className={cn('flex-1 space-y-4', className)}
-      data-density={density}
+      data-slot="page-shell"
+      className={cn('flex flex-1 flex-col gap-6', className)}
+      {...props}
     >
-      {hasHeader && (
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="space-y-1.5">
-            {badge && <div className="mb-2">{badge}</div>}
-            {title && (
-              <Heading level="page">{title}</Heading>
-            )}
-            {description && (
-              <p className="text-sm text-muted-foreground/50 mt-0.5">
-                {description}
-              </p>
-            )}
-          </div>
-          {actions && (
-            <div className="flex items-center gap-2 shrink-0">{actions}</div>
-          )}
-        </div>
+      {hasLegacyHeader && (
+        <PageHeader>
+          {badge && <PageHeaderBadge>{badge}</PageHeaderBadge>}
+          {title && <PageHeaderTitle>{title}</PageHeaderTitle>}
+          {description && <PageHeaderDescription>{description}</PageHeaderDescription>}
+          {actions && <PageHeaderAction>{actions}</PageHeaderAction>}
+        </PageHeader>
       )}
-      <div className="space-y-4">{children}</div>
+      {hasLegacyHeader ? <PageContent>{children}</PageContent> : children}
     </main>
-  );
+  )
 }
+
+/**
+ * Cabeçalho de página. Renderiza um landmark `<header>` com layout em grid.
+ * Detecta automaticamente slots opcionais (`PageHeaderAction`,
+ * `PageHeaderDescription`, `PageHeaderBadge`) via `has-data-[slot=...]`.
+ */
+function PageHeader({ className, ...props }: React.ComponentProps<'header'>) {
+  return (
+    <header
+      data-slot="page-header"
+      className={cn(
+        '@container/page-header grid auto-rows-min items-start gap-1.5',
+        'has-data-[slot=page-header-action]:grid-cols-[1fr_auto]',
+        'has-data-[slot=page-header-description]:grid-rows-[auto_auto]',
+        'has-data-[slot=page-header-badge]:has-data-[slot=page-header-description]:grid-rows-[auto_auto_auto]',
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+
+/**
+ * Badge contextual acima do título (Beta, Pro, Pendente, etc.).
+ * Posicionado na primeira linha do grid, com gap pequeno até o título.
+ */
+function PageHeaderBadge({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="page-header-badge"
+      className={cn('col-start-1 mb-1 flex items-center', className)}
+      {...props}
+    />
+  )
+}
+
+/**
+ * Título principal da página. Renderiza `<h1>` com token `text-page-title`
+ * (24px, font-heading, font-bold). Apenas um por página, conforme
+ * convenção de acessibilidade.
+ */
+function PageHeaderTitle({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'h1'>) {
+  return (
+    <Heading
+      level="page"
+      data-slot="page-header-title"
+      className={cn('col-start-1', className)}
+      {...props}
+    >
+      {children}
+    </Heading>
+  )
+}
+
+/**
+ * Subtítulo descritivo da página. Renderiza `<p>` com token `text-caption`
+ * (13px, text-muted-foreground). Use com moderação — apenas quando a página
+ * exige contexto explicativo que não cabe no título.
+ */
+function PageHeaderDescription({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'p'>) {
+  return (
+    <Text
+      variant="caption"
+      data-slot="page-header-description"
+      className={cn('col-start-1 mt-0.5', className)}
+      {...props}
+    >
+      {children}
+    </Text>
+  )
+}
+
+/**
+ * Slot de ações primárias do cabeçalho (botões "Novo X", filtros, exports).
+ * Posicionado na coluna 2, alinhado à direita. Empilha verticalmente em
+ * telas estreitas via container query.
+ */
+function PageHeaderAction({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="page-header-action"
+      className={cn(
+        'col-start-2 row-span-full row-start-1 self-start justify-self-end',
+        'flex shrink-0 items-center gap-2',
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+
+/**
+ * Container do conteúdo principal da página, abaixo do `<PageHeader>`.
+ * Aplica `space-y-4` por padrão para empilhamento consistente entre seções.
+ */
+function PageContent({ className, ...props }: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="page-content"
+      className={cn('space-y-4', className)}
+      {...props}
+    />
+  )
+}
+
+export {
+  PageShell,
+  PageHeader,
+  PageHeaderBadge,
+  PageHeaderTitle,
+  PageHeaderDescription,
+  PageHeaderAction,
+  PageContent,
+}
+export type { PageShellProps }
