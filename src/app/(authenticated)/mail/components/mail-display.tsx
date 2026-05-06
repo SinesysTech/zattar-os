@@ -371,7 +371,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "flex w-[calc(100vw-2rem)] sm:w-133.75 inset-none")}>
+            <PopoverContent className={cn("flex w-[calc(100vw-2rem)] sm:w-133.75 inset-none")}>
               <div className={cn("flex flex-col inline-tight border-r px-2 py-4")}>
                 <Text variant="label" className={cn("px-4")}>Adiar até</Text>
                 <div className={cn("grid min-w-62.5 inline-micro")}>
@@ -413,7 +413,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                   </Button>
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "inset-tight")}>
+              <div className={cn("inset-tight")}>
                 <Calendar />
               </div>
             </PopoverContent>
@@ -617,7 +617,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           )}
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "text-muted-foreground flex flex-1 flex-col items-center justify-center inline-tight inset-extra-loose")}>
+        <div className={cn("text-muted-foreground flex flex-1 flex-col items-center justify-center inline-tight inset-extra-loose")}>
           <MailOpen className="h-10 w-10 opacity-40" />
           <p className={cn("text-body-sm")}>Selecione um e-mail para visualizar</p>
         </div>

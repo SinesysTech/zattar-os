@@ -311,7 +311,7 @@ export function OrcamentoFormDialog({
                                                 : 'Selecione'}
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
+                                    <PopoverContent className={cn("w-auto inset-none")} align="start">
                                         <Calendar
                                             mode="single"
                                             selected={formData.dataInicio}
@@ -340,7 +340,7 @@ export function OrcamentoFormDialog({
                                                 : 'Selecione'}
                                         </Button>
                                     </PopoverTrigger>
-                                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
+                                    <PopoverContent className={cn("w-auto inset-none")} align="start">
                                         <Calendar
                                             mode="single"
                                             selected={formData.dataFim}

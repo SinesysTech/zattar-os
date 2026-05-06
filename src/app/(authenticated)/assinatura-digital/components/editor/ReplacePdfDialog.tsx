@@ -231,7 +231,7 @@ export default function ReplacePdfDialog({
             ) : (
               <>
                 {/* Indicador de arquivo selecionado */}
-                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "border rounded-lg inset-medium bg-card")}>
+                <div className={cn("border rounded-lg inset-medium bg-card")}>
                   <div className={cn("flex items-center justify-between inline-medium")}>
                     <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
                       <div className={`shrink-0 p-1.5 rounded-full ${

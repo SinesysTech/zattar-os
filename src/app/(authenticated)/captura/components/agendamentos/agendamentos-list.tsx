@@ -218,7 +218,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
           <div className="flex justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-8 w-8 inset-none")}>
+                <Button variant="ghost" className={cn("h-8 w-8 inset-none")}>
                   <span className="sr-only">Abrir menu</span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>

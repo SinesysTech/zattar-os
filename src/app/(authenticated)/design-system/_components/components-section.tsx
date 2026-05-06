@@ -171,7 +171,7 @@ function InputsSpecimen() {
           </span>
         </div>
       </div>
-      <div className={cn(/* design-system-escape: pt-1 padding direcional sem Inset equiv. */ "mt-5 flex flex-wrap items-center inline-default-plus pt-1")}>
+      <div className={cn("mt-5 flex flex-wrap items-center inline-default-plus pt-1")}>
         <div className={cn("flex items-center inline-tight-plus")}>
           <Switch defaultChecked id="ds-notif" />
           <Label htmlFor="ds-notif" className="text-[12px] font-normal">

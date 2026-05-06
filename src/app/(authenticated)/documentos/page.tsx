@@ -32,7 +32,7 @@ function FileManagerSkeleton() {
           <Skeleton className="h-8 w-28" />
         </div>
       </div>
-      <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col stack-tight rounded-lg border inset-tight")}>
+      <div className={cn("flex flex-col stack-tight rounded-lg border inset-tight")}>
         {[...Array(5)].map((_, i) => (
           <Skeleton key={i} className="h-16 w-full" />
         ))}

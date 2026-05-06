@@ -68,7 +68,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
         </CardHeader>
         <CardContent className="flex-1 flex items-center justify-center">
           <div className={cn("flex flex-col text-center stack-tight")}>
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted inset-medium mx-auto w-fit")}>
+            <div className={cn("rounded-full bg-muted inset-medium mx-auto w-fit")}>
               <Target className="h-5 w-5 text-muted-foreground" />
             </div>
             <p className={cn("text-body-sm text-muted-foreground")}>Nenhum orçamento em execução</p>

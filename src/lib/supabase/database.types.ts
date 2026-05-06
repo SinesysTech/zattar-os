@@ -4650,6 +4650,7 @@ export type Database = {
           fts: unknown
           id: number
           metadata: Json | null
+          parent_id: number | null
           posicao: number
           tokens: number | null
         }
@@ -4662,6 +4663,7 @@ export type Database = {
           fts?: unknown
           id?: never
           metadata?: Json | null
+          parent_id?: number | null
           posicao: number
           tokens?: number | null
         }
@@ -4674,6 +4676,7 @@ export type Database = {
           fts?: unknown
           id?: never
           metadata?: Json | null
+          parent_id?: number | null
           posicao?: number
           tokens?: number | null
         }
@@ -4690,6 +4693,13 @@ export type Database = {
             columns: ["document_id"]
             isOneToOne: false
             referencedRelation: "knowledge_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_chunks_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "knowledge_chunks"
             referencedColumns: ["id"]
           },
         ]

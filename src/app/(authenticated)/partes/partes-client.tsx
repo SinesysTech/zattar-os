@@ -137,7 +137,7 @@ function StatusFilterPills({
     <div
       role="radiogroup"
       aria-label="Filtrar por status"
-      className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "inline-flex items-center inline-nano rounded-xl border border-border/40 bg-muted/30 inset-nano")}
+      className={cn("inline-flex items-center inline-nano rounded-xl border border-border/40 bg-muted/30 inset-nano")}
     >
       {STATUS_OPTIONS.map((opt) => {
         const selected = value === opt.value;
@@ -201,7 +201,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
   }, [data.nome]);
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+    <GlassPanel className={cn("inset-default-plus")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div className={cn("flex items-center inline-medium")}>
@@ -232,7 +232,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
         <button
           onClick={onClose}
           aria-label="Fechar painel de detalhes"
-          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}
+          className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}
         >
           <X className="size-4 text-muted-foreground/60" />
         </button>
@@ -254,7 +254,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       </div>
 
       {/* Métricas */}
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-default inset-medium rounded-xl bg-foreground/3 border border-border/10 mb-5")}>
+      <div className={cn("flex inline-default inset-medium rounded-xl bg-foreground/3 border border-border/10 mb-5")}>
         <div className="flex-1 text-center">
           <Text variant="kpi-value">{data.metricas.ativos}</Text>
           <p className="text-[9px] text-muted-foreground/60">Ativos</p>
@@ -286,7 +286,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
 
       {/* Nome social */}
       {data.nomeSocial && (
-        <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "mb-4 inset-tight-plus rounded-lg bg-foreground/2.5 border border-border/10")}>
+        <div className={cn("mb-4 inset-tight-plus rounded-lg bg-foreground/2.5 border border-border/10")}>
           <p className={cn("text-[9px] text-muted-foreground/55 uppercase tracking-wider mb-0.5")}>Nome fantasia / Social</p>
           <Text variant="caption" className="text-muted-foreground/70">{data.nomeSocial}</Text>
         </div>
@@ -607,7 +607,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           {showTypeMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowTypeMenu(false)} />
-              <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute right-0 top-full mt-1.5 z-50 w-56 rounded-xl border border-border/20 bg-popover shadow-lg inset-snug animate-in fade-in slide-in-from-top-2 duration-150")}>
+              <div className={cn("absolute right-0 top-full mt-1.5 z-50 w-56 rounded-xl border border-border/20 bg-popover shadow-lg inset-snug animate-in fade-in slide-in-from-top-2 duration-150")}>
                 {createOptions.map((opt) => (
                   <button
                     key={opt.type}
@@ -615,7 +615,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
                       setCreateType(opt.type);
                       setShowTypeMenu(false);
                     }}
-                    className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus w-full px-3 py-2 rounded-lg text-body-sm hover:bg-accent transition-colors cursor-pointer text-left")}
+                    className={cn("flex items-center inline-tight-plus w-full px-3 py-2 rounded-lg text-body-sm hover:bg-accent transition-colors cursor-pointer text-left")}
                   >
                     <opt.icon className="size-4 text-muted-foreground/60" />
                     {opt.label}

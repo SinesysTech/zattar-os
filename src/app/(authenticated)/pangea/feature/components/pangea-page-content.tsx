@@ -412,7 +412,7 @@ export function PangeaPageContent() {
                         <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none w-105")} align="start">
+                    <PopoverContent className={cn("inset-none w-105")} align="start">
                       <Command>
                         <CommandInput
                           placeholder="Buscar órgão…"
@@ -469,7 +469,7 @@ export function PangeaPageContent() {
                         <ChevronDown className="ml-2 h-3 w-3 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none w-105")} align="start">
+                    <PopoverContent className={cn("inset-none w-105")} align="start">
                       <Command>
                         <CommandInput placeholder="Filtrar espécies…" className="h-9" />
                         <CommandList className="max-h-75">

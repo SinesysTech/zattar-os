@@ -66,7 +66,7 @@ export function AssinaturaDigitalPageNav({ action }: AssinaturaDigitalPageNavPro
       <nav
         aria-label="Navegação do módulo Assinatura Digital"
         className={cn(
-          /* design-system-escape: p-1 → usar <Inset> */ 'inline-flex items-center inline-micro rounded-2xl border border-border/40 bg-card/60 inset-micro',
+          'inline-flex items-center inline-micro rounded-2xl border border-border/40 bg-card/60 inset-micro',
           'backdrop-blur-xl',
         )}
       >

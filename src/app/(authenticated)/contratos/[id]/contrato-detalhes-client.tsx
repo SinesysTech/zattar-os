@@ -332,7 +332,7 @@ export function ContratoDetalhesClient({
         </TabsList>
 
         {/* ───────────────── Tab Resumo ───────────────── */}
-        <TabsContent value="resumo" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "flex flex-col inline-default-plus m-0")}>
+        <TabsContent value="resumo" className={cn("flex flex-col inline-default-plus m-0")}>
           {contrato.observacoes ? (
             <ObservacoesSection texto={contrato.observacoes} />
           ) : null}
@@ -358,7 +358,7 @@ export function ContratoDetalhesClient({
         </TabsContent>
 
         {/* ───────────────── Tab Documentos ───────────── */}
-        <TabsContent value="documentos" className={cn(/* design-system-escape: m-0 margin sem primitiva DS */ "flex flex-col inline-default-plus m-0")}>
+        <TabsContent value="documentos" className={cn("flex flex-col inline-default-plus m-0")}>
           <DocumentosContratacaoCard
             contratoId={contrato.id}
             segmentoId={contrato.segmentoId ?? null}

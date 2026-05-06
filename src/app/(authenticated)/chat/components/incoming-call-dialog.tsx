@@ -159,7 +159,7 @@ export function IncomingCallDialog({
                 {callData.iniciadorNome?.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute bottom-0 right-0 bg-background rounded-full inset-snug shadow-md")}>
+            <div className={cn("absolute bottom-0 right-0 bg-background rounded-full inset-snug shadow-md")}>
               {isVideo ? (
                 <Video className="h-5 w-5 text-primary" />
               ) : (

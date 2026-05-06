@@ -140,13 +140,13 @@ function NovoPopover({
       <PopoverContent
         align="end"
         sideOffset={8}
-        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-2xl glass-dropdown overflow-hidden inset-tight w-56")}
+        className={cn("rounded-2xl glass-dropdown overflow-hidden inset-tight w-56")}
       >
         <div className={cn("flex flex-col stack-nano")}>
           <button
             type="button"
             onClick={wrap(onCreateFolder)}
-            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight-plus rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
+            className={cn("w-full flex items-center inline-tight-plus rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-warning/10 text-warning">
               <FolderPlus className="size-3.5" />
@@ -161,7 +161,7 @@ function NovoPopover({
           <button
             type="button"
             onClick={wrap(onCreateDocument)}
-            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight-plus rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
+            className={cn("w-full flex items-center inline-tight-plus rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 text-info">
               <FileText className="size-3.5" />
@@ -177,7 +177,7 @@ function NovoPopover({
           <button
             type="button"
             onClick={wrap(onUpload)}
-            className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight-plus rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
+            className={cn("w-full flex items-center inline-tight-plus rounded-lg px-2.5 py-2 text-caption text-muted-foreground/80 hover:bg-muted/40 hover:text-foreground transition-colors cursor-pointer")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <UploadIcon className="size-3.5" />

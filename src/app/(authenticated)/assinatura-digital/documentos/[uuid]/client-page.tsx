@@ -273,10 +273,10 @@ export function DocumentoVerificacaoClient({
           </div>
         </CardHeader>
 
-        <CardContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "min-h-0 flex-1 inset-none")}>
+        <CardContent className={cn("min-h-0 flex-1 inset-none")}>
           <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
             <section className="relative min-h-0 border-b border-border/60 lg:border-b-0 lg:border-r">
-              <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center inline-micro rounded-full border border-border/60 bg-background/95 inset-micro shadow-sm backdrop-blur")}>
+              <div className={cn("absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center inline-micro rounded-full border border-border/60 bg-background/95 inset-micro shadow-sm backdrop-blur")}>
                     <Button
                       variant="ghost"
                       size="icon" aria-label="Reduzir"
@@ -309,7 +309,7 @@ export function DocumentoVerificacaoClient({
                   showControls={false}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
-                  viewportClassName=/* design-system-escape: p-0 → usar <Inset>; pb-20 padding direcional sem Inset equiv. */ "bg-background inset-none pb-20"
+                  viewportClassName="bg-background inset-none pb-20"
                   className="h-full [&_.react-pdf__Document]:flex [&_.react-pdf__Document]:justify-center [&_.react-pdf__Page]:max-w-full [&_.react-pdf__Page]:overflow-hidden [&_.react-pdf__Page]:bg-white [&_.react-pdf__Page]:shadow-lg"
                 />
               ) : isPdfLoading ? (

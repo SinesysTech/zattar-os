@@ -153,7 +153,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
 
         {transacao && (
           <div className={cn("grid inline-default md:grid-cols-2")}>
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-md border inset-medium stack-micro")}>
+            <div className={cn("flex flex-col rounded-md border inset-medium stack-micro")}>
               <Text variant="caption" className="uppercase">Transação importada</Text>
               <p className={cn( "text-body-sm font-medium")}>{transacao.descricao}</p>
               <p className={cn( "text-body-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
@@ -181,7 +181,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                 {topSugestoes.map((sugestao) => (
                   <div
                     key={sugestao.lancamentoId}
-                    className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-md border inset-medium stack-tight")}
+                    className={cn("flex flex-col rounded-md border inset-medium stack-tight")}
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -235,7 +235,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
               </div>
             </div>
 
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-md border inset-medium stack-tight")}>
+            <div className={cn("flex flex-col rounded-md border inset-medium stack-tight")}>
               <div className="flex items-center justify-between">
                 <p className={cn( "text-body-sm font-medium")}>Resultados da busca</p>
                 {buscando && <Text variant="caption">Buscando...</Text>}
@@ -245,7 +245,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
               )}
               <div className={cn("flex flex-col stack-tight")}>
                 {resultadosBusca.map((lancamento) => (
-                  <div key={lancamento.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border inset-tight")}>
+                  <div key={lancamento.id} className={cn("flex items-center justify-between rounded-md border inset-tight")}>
                     <div>
                       <p className={cn( "text-body-sm font-medium")}>{lancamento.descricao}</p>
                       <Text variant="caption">

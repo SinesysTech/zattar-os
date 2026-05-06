@@ -20,7 +20,7 @@ import type {
   MeioComunicacao,
 } from '@/app/(authenticated)/comunica-cnj/domain';
 
-const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden inset-none';
+const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden inset-none';
 
 const MEIO_OPTIONS: { value: MeioComunicacao; label: string }[] = [
   { value: 'D', label: 'Diário Eletrônico' },
@@ -79,7 +79,7 @@ function FilterDropdownTrigger({
               onClear();
             }
           }}
-          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
+          className={cn("ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
           aria-label={`Limpar ${label}`}
         >
           <X className="size-2.5" />
@@ -136,7 +136,7 @@ function StatusFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano")}>
+        <div className={cn("flex flex-col inset-tight stack-nano")}>
           {STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
@@ -375,7 +375,7 @@ function MeioFilter({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano")}>
+        <div className={cn("flex flex-col inset-tight stack-nano")}>
           {MEIO_OPTIONS.map((opt) => (
             <button
               key={opt.value}

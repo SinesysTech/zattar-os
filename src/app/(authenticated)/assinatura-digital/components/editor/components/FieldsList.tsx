@@ -70,7 +70,7 @@ const FieldsListItem = memo(function FieldsListItem({
   return (
     <div
       className={cn(
-        /* design-system-escape: p-2 → usar <Inset> */ 'group flex items-center inline-tight inset-tight rounded-md cursor-pointer transition-colors',
+        'group flex items-center inline-tight inset-tight rounded-md cursor-pointer transition-colors',
         isSelected
           ? 'bg-primary/10 border border-primary/20'
           : 'hover:bg-muted/50 border border-transparent',
@@ -188,7 +188,7 @@ export default function FieldsList({
 
   return (
     <ScrollArea className="h-full">
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inset-medium stack-default")}>
+      <div className={cn("flex flex-col inset-medium stack-default")}>
         {pages.map((page) => (
           <div key={page}>
             <Heading level="subsection" className={cn("text-caption text-muted-foreground uppercase tracking-wider mb-2 px-1")}>

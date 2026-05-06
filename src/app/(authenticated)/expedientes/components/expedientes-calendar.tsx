@@ -337,7 +337,7 @@ export function ExpedientesCalendar() {
                             Mostrando apenas seus expedientes.{' '}
                             <Button
                                 variant="link"
-                                className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-auto inset-none text-primary")}
+                                className={cn("h-auto inset-none text-primary")}
                                 onClick={() => setMostrarTodos(true)}
                             >
                                 Ver todos
@@ -349,7 +349,7 @@ export function ExpedientesCalendar() {
                             Mostrando todos os expedientes.{' '}
                             <Button
                                 variant="link"
-                                className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-auto inset-none text-primary")}
+                                className={cn("h-auto inset-none text-primary")}
                                 onClick={() => setMostrarTodos(false)}
                             >
                                 Ver apenas meus

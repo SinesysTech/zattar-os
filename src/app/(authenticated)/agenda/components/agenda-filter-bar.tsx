@@ -61,7 +61,7 @@ export function AgendaFilterBar({
       <div className={cn("flex items-center inline-micro")}>
         <button
           onClick={onPrev}
-          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer")}
+          className={cn("inset-snug rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer")}
           aria-label="Período anterior"
         >
           <ChevronLeft className="size-3.5" />
@@ -74,7 +74,7 @@ export function AgendaFilterBar({
         </button>
         <button
           onClick={onNext}
-          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer")}
+          className={cn("inset-snug rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 hover:text-muted-foreground cursor-pointer")}
           aria-label="Próximo período"
         >
           <ChevronRight className="size-3.5" />

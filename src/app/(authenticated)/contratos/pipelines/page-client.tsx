@@ -447,7 +447,7 @@ function EstagioDialog({ open, onOpenChange, pipelineId, estagio, onSuccess }: E
                       <div className={cn("flex items-center inline-medium")}>
                         <input
                           type="color"
-                          className={cn(/* design-system-escape: p-1 → usar <Inset> */ "h-9 w-12 cursor-pointer rounded-md border border-input inset-micro")}
+                          className={cn("h-9 w-12 cursor-pointer rounded-md border border-input inset-micro")}
                           value={field.value}
                           onChange={(e) => field.onChange(e.target.value)}
                         />
@@ -674,7 +674,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
-                    className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium rounded-md border bg-card inset-medium cursor-grab active:cursor-grabbing select-none")}
+                    className={cn("flex items-center inline-medium rounded-md border bg-card inset-medium cursor-grab active:cursor-grabbing select-none")}
                   >
                     <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
 
@@ -895,16 +895,16 @@ export function PipelinesPageClient() {
             ))}
           </div>
         ) : error ? (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "inset-extra-loose text-center text-body-sm text-destructive")}>{error}</div>
+          <div className={cn("inset-extra-loose text-center text-body-sm text-destructive")}>{error}</div>
         ) : pipelines.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center text-body-sm text-muted-foreground")}>
+          <div className={cn("inset-mega text-center text-body-sm text-muted-foreground")}>
             Nenhum pipeline cadastrado.
           </div>
         ) : (
           <div role="table" aria-label="Pipelines de Contratos">
             <div
               role="row"
-              className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; tracking-wide sem token DS; */ "text-overline grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default px-4 py-2.5 border-b border-border/40 text-muted-foreground/70")}
+              className={cn("text-overline grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] inline-default px-4 py-2.5 border-b border-border/40 text-muted-foreground/70")}
             >
               <span>Nome</span>
               <span>Segmento</span>

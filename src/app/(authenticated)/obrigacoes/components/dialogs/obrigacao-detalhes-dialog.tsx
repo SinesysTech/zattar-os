@@ -359,7 +359,7 @@ export function ObrigacaoDetalhesDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-h-[92vh] flex flex-col inset-none inline-none overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
+      <DialogContent className={cn("max-h-[92vh] flex flex-col inset-none inline-none overflow-hidden sm:max-w-2xl [scrollbar-width:thin]")}>
         <DialogDescription className="sr-only">
           Detalhes da obrigação financeira
         </DialogDescription>
@@ -450,7 +450,7 @@ export function ObrigacaoDetalhesDialog({
             )}
           </div>
 
-          <div className={cn(/* design-system-escape: pb-3.5 padding direcional sem Inset equiv. */ "grid grid-cols-2 inline-default-plus pb-3.5 mb-3.5 border-b border-border/40")}>
+          <div className={cn("grid grid-cols-2 inline-default-plus pb-3.5 mb-3.5 border-b border-border/40")}>
             {/* ──────── Valor (editável) ──────── */}
             <div className={cn("flex flex-col inline-micro")}>
               <div className={cn("flex items-center justify-between inline-tight")}>
@@ -796,7 +796,7 @@ export function ObrigacaoDetalhesDialog({
             {isParcela && (
               <div>
                 <SectionHeader icon={FileText} label="Prestação de contas" />
-                <SectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none overflow-hidden")}>
+                <SectionCard className={cn("inset-none overflow-hidden")}>
                   <div className="p-[14px_16px]">
                     <PrestacaoContasSection parcelaId={obrigacao.id} />
                   </div>

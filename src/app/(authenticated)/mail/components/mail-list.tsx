@@ -68,7 +68,7 @@ export function MailList({ items }: MailListProps) {
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center inline-medium inset-extra-loose text-center")}>
+      <div className={cn("flex h-full flex-col items-center justify-center inline-medium inset-extra-loose text-center")}>
         <AlertCircle className="text-destructive h-8 w-8" />
         <p className={cn("text-muted-foreground text-body-sm")}>{error}</p>
         <Button
@@ -89,7 +89,7 @@ export function MailList({ items }: MailListProps) {
     return (
       <div className={cn("flex flex-col inline-tight inset-card-compact")}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight rounded-lg border inset-medium")}>
+          <div key={i} className={cn("flex flex-col inline-tight rounded-lg border inset-medium")}>
             <div className={cn("flex items-center inline-tight")}>
               <Skeleton className="h-4 w-32" />
               <div className={cn("ml-auto flex items-center inline-tight")}>
@@ -108,7 +108,7 @@ export function MailList({ items }: MailListProps) {
 
   if (items.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "text-muted-foreground flex h-full items-center justify-center inset-extra-loose text-body-sm")}>
+      <div className={cn("text-muted-foreground flex h-full items-center justify-center inset-extra-loose text-body-sm")}>
         Nenhum e-mail encontrado
       </div>
     );
@@ -125,7 +125,7 @@ export function MailList({ items }: MailListProps) {
           <div
             key={item.uid}
             className={cn(
-              /* design-system-escape: p-3 → usar <Inset> */ "group flex inline-tight rounded-lg border inset-medium text-body-sm transition-colors duration-200",
+              "group flex inline-tight rounded-lg border inset-medium text-body-sm transition-colors duration-200",
               selectedMail?.uid === item.uid
                 ? "bg-accent"
                 : "hover:bg-muted/50"

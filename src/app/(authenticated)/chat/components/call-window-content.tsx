@@ -437,7 +437,7 @@ export function CallWindowContent({
       )}
 
       {error && (
-        <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-default inset-extra-loose text-center bg-video-surface")}>
+        <div className={cn("flex flex-col items-center justify-center h-full inline-default inset-extra-loose text-center bg-video-surface")}>
           <div className={cn("bg-destructive/10 inset-card-compact rounded-full")}>
             <RotateCcw className="w-12 h-12 text-destructive" />
           </div>

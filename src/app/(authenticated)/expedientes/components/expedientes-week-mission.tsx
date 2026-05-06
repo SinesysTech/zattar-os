@@ -140,7 +140,7 @@ function SectionDivider({ urgencia, count }: { urgencia: Urgencia; count: number
   const Icon = config.icon;
 
   return (
-    <div className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-1.5")}>
+    <div className={cn("flex items-center inline-tight-plus py-1.5")}>
       <div className={cn('flex items-center inline-snug rounded-md px-2 py-1', config.bgColor)}>
         <Icon className={cn('size-3.5', config.color)} />
         <span className={cn('text-overline', config.color)}>
@@ -452,7 +452,7 @@ export function ExpedientesWeekMission({
       {/* Timeline por urgência */}
       <div className={cn("flex flex-col inline-tight")}>
         {doDia.length === 0 ? (
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-45 flex-col items-center justify-center inset-extra-loose text-center")}>
+          <GlassPanel depth={1} className={cn("flex min-h-45 flex-col items-center justify-center inset-extra-loose text-center")}>
             <CalendarClock className="size-10 text-muted-foreground/40" />
             <Heading level="card" className={cn("mt-4 text-body-sm")}>Nenhum expediente neste dia</Heading>
             <p className={cn("mt-1.5 max-w-sm text-body-sm text-muted-foreground/55")}>

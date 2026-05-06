@@ -179,7 +179,7 @@ function Toolbar({
           {filterOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setFilterOpen(false)} />
-              <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute top-full left-0 mt-1 z-50 w-48 inset-snug rounded-xl border border-border/20 bg-background shadow-lg")}>
+              <div className={cn("absolute top-full left-0 mt-1 z-50 w-48 inset-snug rounded-xl border border-border/20 bg-background shadow-lg")}>
                 {(Object.keys(SOURCE_CONFIG) as EventSource[]).map((src) => {
                   const cfg = SOURCE_CONFIG[src];
                   const active = sourceFilter.has(src);
@@ -187,7 +187,7 @@ function Toolbar({
                     <button
                       key={src}
                       onClick={() => toggleSource(src)}
-                      className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight-plus px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
+                      className={cn("w-full flex items-center inline-tight-plus px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
                     >
                       <div className={cn("size-3.5 rounded border flex items-center justify-center", active ? "bg-primary border-primary" : "border-border/30")}>
                         {active && <Check className="size-2.5 text-primary-foreground" />}
@@ -206,13 +206,13 @@ function Toolbar({
 
         {/* Date Nav */}
         <div className={cn("flex items-center inline-micro")}>
-          <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
+          <button onClick={onPrev} className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
           <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
             Hoje
           </button>
-          <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
+          <button onClick={onNext} className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronRight className="size-4" />
           </button>
         </div>
@@ -221,14 +221,14 @@ function Toolbar({
         <div className="relative">
           <button
             onClick={() => setViewOpen(!viewOpen)}
-            className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 border border-border/15 transition-colors text-muted-foreground/60 hover:text-muted-foreground/60 cursor-pointer")}
+            className={cn("inset-snug rounded-lg hover:bg-foreground/4 border border-border/15 transition-colors text-muted-foreground/60 hover:text-muted-foreground/60 cursor-pointer")}
           >
             <Eye className="size-4" />
           </button>
           {viewOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setViewOpen(false)} />
-              <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute top-full right-0 mt-1 z-50 w-40 inset-snug rounded-xl border border-border/20 bg-background shadow-lg")}>
+              <div className={cn("absolute top-full right-0 mt-1 z-50 w-40 inset-snug rounded-xl border border-border/20 bg-background shadow-lg")}>
                 {VIEW_OPTIONS.map((opt) => (
                   <button
                     key={opt.id}
@@ -373,7 +373,7 @@ function MonthView({ events, currentDate, onEventClick }: { events: MockCalendar
             <div
               key={i}
               className={cn(
-                /* design-system-escape: p-1 → usar <Inset> */ "border-r border-b border-border/10 min-h-20 sm:min-h-24 inset-micro transition-colors",
+                "border-r border-b border-border/10 min-h-20 sm:min-h-24 inset-micro transition-colors",
                 !isCurrentMonth && "bg-muted/2",
               )}
             >
@@ -855,7 +855,7 @@ function BriefingEventCard({ event, onClick }: { event: MockCalendarEvent; onCli
         <div className={cn("size-2 rounded-full", c.dot)} />
         <div className="flex-1 w-px bg-border/8 mt-1" />
       </div>
-      <button onClick={onClick} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex-1 rounded-xl border-l-[3px] inset-medium transition-all duration-200 min-w-0 text-left", "border border-border/12 hover:border-border/20 hover:shadow-sm cursor-pointer", `border-l-${event.color === "sky" ? "sky" : event.color === "violet" ? "violet" : event.color === "rose" ? "rose" : event.color === "amber" ? "amber" : event.color === "emerald" ? "green" : "orange"}-500/50`, c.bg)}>
+      <button onClick={onClick} className={cn("flex-1 rounded-xl border-l-[3px] inset-medium transition-all duration-200 min-w-0 text-left", "border border-border/12 hover:border-border/20 hover:shadow-sm cursor-pointer", `border-l-${event.color === "sky" ? "sky" : event.color === "violet" ? "violet" : event.color === "rose" ? "rose" : event.color === "amber" ? "amber" : event.color === "emerald" ? "green" : "orange"}-500/50`, c.bg)}>
         <div className={cn("flex items-start inline-tight")}>
           <div className={cn("size-6 rounded-lg flex items-center justify-center shrink-0", c.bg)}>
             <SrcIcon className={cn("size-3", c.text)} />
@@ -979,7 +979,7 @@ function PrepRadarItem({ event }: { event: MockCalendarEvent }) {
   const c = COLOR_MAP[event.color];
 
   return (
-    <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex items-start inline-tight inset-tight-plus rounded-xl border border-border/8 hover:border-border/15 transition-all cursor-pointer")}>
+    <div className={cn("flex items-start inline-tight inset-tight-plus rounded-xl border border-border/8 hover:border-border/15 transition-all cursor-pointer")}>
       <div className={cn("size-5 rounded-md flex items-center justify-center shrink-0 mt-0.5", c.bg)}>
         <SrcIcon className={cn("size-2.5", c.text)} />
       </div>
@@ -1010,7 +1010,7 @@ function AlertCard({ icon: Icon, title, desc, variant = "warning" }: { icon: Luc
   }[variant];
 
   return (
-    <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "inset-tight-plus rounded-xl border flex items-start inline-tight", cfg.bg, cfg.border)}>
+    <div className={cn("inset-tight-plus rounded-xl border flex items-start inline-tight", cfg.bg, cfg.border)}>
       <Icon className={cn("size-3 mt-0.5 shrink-0", cfg.icon)} />
       <div className="min-w-0">
         <h4 className={cn(/* design-system-escape: leading-tight sem token DS */ "text-[10px] font-medium leading-tight", cfg.title)}>{title}</h4>
@@ -1047,7 +1047,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
               <Heading level="card" className={cn("text-body-sm")}>{event.title}</Heading>
             </div>
           </div>
-          <button onClick={onClose} className={cn(/* design-system-escape: p-1 → usar <Inset> */ "inset-micro rounded-lg hover:bg-foreground/4 text-muted-foreground/55 cursor-pointer")}>
+          <button onClick={onClose} className={cn("inset-micro rounded-lg hover:bg-foreground/4 text-muted-foreground/55 cursor-pointer")}>
             <X className="size-4" />
           </button>
         </div>

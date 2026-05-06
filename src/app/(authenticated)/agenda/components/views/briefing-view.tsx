@@ -298,7 +298,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick: ()
         <div className="flex-1 w-px bg-border/8 mt-1" />
       </div>
       <button onClick={onClick} className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ "flex-1 rounded-xl border-l-[3px] inset-medium transition-all duration-200 min-w-0 text-left",
+        "flex-1 rounded-xl border-l-[3px] inset-medium transition-all duration-200 min-w-0 text-left",
         "border border-border/12 hover:border-border/20 hover:shadow-sm cursor-pointer",
         isAudiencia && isOngoing && "ring-1 ring-success/20 border-success/15",
         isPast && "opacity-50",

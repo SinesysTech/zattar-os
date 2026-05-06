@@ -34,7 +34,7 @@ export function LayoutSwitcher({ currentLayout, onLayoutChange }: LayoutSwitcher
   };
 
   return (
-    <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "absolute top-4 left-4 z-50 flex inline-micro bg-video-surface/80 backdrop-blur-md rounded-lg inset-micro border border-video-border")}>
+    <div className={cn("absolute top-4 left-4 z-50 flex inline-micro bg-video-surface/80 backdrop-blur-md rounded-lg inset-micro border border-video-border")}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

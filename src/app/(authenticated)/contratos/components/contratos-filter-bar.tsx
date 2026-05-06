@@ -70,7 +70,7 @@ interface ContratosFilterBarProps {
 
 // ── Shared helpers ─────────────────────────────────────────────────────
 
-const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden inset-none';
+const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden inset-none';
 
 function FilterDropdownTrigger({
   label,
@@ -104,7 +104,7 @@ function FilterDropdownTrigger({
             e.stopPropagation();
             onClear();
           }}
-          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
+          className={cn("ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -239,7 +239,7 @@ function TipoContratoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano")}>
+        <div className={cn("flex flex-col inset-tight stack-nano")}>
           {options.map(([value, optLabel]) => (
             <button
               key={value}
@@ -298,7 +298,7 @@ function TipoCobrancaFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-48')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano")}>
+        <div className={cn("flex flex-col inset-tight stack-nano")}>
           {options.map(([value, optLabel]) => (
             <button
               key={value}
@@ -349,7 +349,7 @@ function SortFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent className={cn(POPOVER_CLASSES, 'w-56')} align="start" side="bottom">
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano")}>
+        <div className={cn("flex flex-col inset-tight stack-nano")}>
           <div className={cn("px-2 pt-1 pb-1.5 text-meta-label text-muted-foreground/70")}>
             Ordenar por
           </div>

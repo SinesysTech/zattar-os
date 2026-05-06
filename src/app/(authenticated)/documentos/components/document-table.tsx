@@ -60,7 +60,7 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
               onClick={() => onDocumentoClick(doc.id)}
             >
               <TableCell>
-                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded bg-primary/10 inset-tight w-fit")}>
+                <div className={cn("rounded bg-primary/10 inset-tight w-fit")}>
                   <FileText className="h-4 w-4 text-primary" />
                 </div>
               </TableCell>

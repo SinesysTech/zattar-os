@@ -72,7 +72,7 @@ export default function PreviewPanel({
               onError={onIframeError}
             />
           ) : (
-            <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex-1 min-h-0 flex items-center justify-center inset-extra-loose")}>
+            <div className={cn("flex-1 min-h-0 flex items-center justify-center inset-extra-loose")}>
               <div className={cn("flex flex-col text-center stack-default max-w-md")}>
                 <FileX2 className="mx-auto h-12 w-12 text-muted-foreground" />
                 <div>

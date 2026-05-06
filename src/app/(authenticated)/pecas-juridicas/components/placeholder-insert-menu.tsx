@@ -115,7 +115,7 @@ export function PlaceholderInsertMenu({
           </Button>
         )}
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-[calc(100vw-2rem)] sm:w-100 inset-none")} align="end">
+      <PopoverContent className={cn("w-[calc(100vw-2rem)] sm:w-100 inset-none")} align="end">
         <Command shouldFilter={false}>
           <CommandInput
             placeholder="Buscar placeholder..."

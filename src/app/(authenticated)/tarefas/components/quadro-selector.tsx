@@ -74,7 +74,7 @@ export function QuadroSelector({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-64 inset-none")} align="start">
+      <PopoverContent className={cn("w-64 inset-none")} align="start">
         <Command>
           <CommandInput placeholder="Buscar quadro..." className="h-9" />
           <CommandList>

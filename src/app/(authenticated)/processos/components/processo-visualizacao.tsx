@@ -302,9 +302,9 @@ export function ProcessoVisualizacao({ id }: ProcessoVisualizacaoProps) {
                 <Skeleton className="h-7 w-24" />
                 <Skeleton className="h-7 w-20" />
               </div>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-xl border bg-background/70 inset-medium stack-medium")}>
+              <div className={cn("flex flex-col rounded-xl border bg-background/70 inset-medium stack-medium")}>
                 {[...Array(3)].map((_, index) => (
-                  <div key={index} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col rounded-lg border inset-medium stack-tight")}>
+                  <div key={index} className={cn("flex flex-col rounded-lg border inset-medium stack-tight")}>
                     <div className={cn("flex items-center justify-between inline-medium")}>
                       <Skeleton className="h-4 w-32" />
                       <Skeleton className="h-6 w-28" />

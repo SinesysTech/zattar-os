@@ -227,7 +227,7 @@ export function ExpedientesBaixarDialog({
             </Text>
             <Label>Resultado da Decisão *</Label>
             <div className={cn("flex flex-col inline-medium")}>
-              <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md inset-medium hover:bg-muted/50 transition-colors")}>
+              <label className={cn("flex items-center space-x-2 cursor-pointer border rounded-md inset-medium hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"
                   name="resultadoDecisao"
@@ -237,7 +237,7 @@ export function ExpedientesBaixarDialog({
                 />
                 <span className={cn( "text-body-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.FAVORAVEL]}</span>
               </label>
-              <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md inset-medium hover:bg-muted/50 transition-colors")}>
+              <label className={cn("flex items-center space-x-2 cursor-pointer border rounded-md inset-medium hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"
                   name="resultadoDecisao"
@@ -247,7 +247,7 @@ export function ExpedientesBaixarDialog({
                 />
                 <span className={cn( "text-body-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.PARCIALMENTE_FAVORAVEL]}</span>
               </label>
-              <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md inset-medium hover:bg-muted/50 transition-colors")}>
+              <label className={cn("flex items-center space-x-2 cursor-pointer border rounded-md inset-medium hover:bg-muted/50 transition-colors")}>
                 <input
                   type="radio"
                   name="resultadoDecisao"
@@ -266,7 +266,7 @@ export function ExpedientesBaixarDialog({
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-destructive bg-destructive/10 inset-medium text-body-sm text-destructive")}>
+          <div role="alert" className={cn("rounded-lg border border-destructive bg-destructive/10 inset-medium text-body-sm text-destructive")}>
             {generalError}
           </div>
         )}

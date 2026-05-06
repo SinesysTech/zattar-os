@@ -133,7 +133,7 @@ export function ObrigacoesYearWrapper({
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[60vh]">
-            <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "flex flex-col stack-tight inset-micro")}>
+            <div className={cn("flex flex-col stack-tight inset-micro")}>
               {selectedDayParcelas.map((item, idx) => (
                 <GlassPanel
                   key={idx}

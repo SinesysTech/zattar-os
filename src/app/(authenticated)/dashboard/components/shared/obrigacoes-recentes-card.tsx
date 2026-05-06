@@ -115,7 +115,7 @@ export function ObrigacoesRecentesCard() {
 
   return (
     <GlassPanel className="col-span-full">
-      <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
+      <CardHeader className={cn("flex flex-row items-center justify-between stack-none pb-2")}>
         <CardTitle>Obrigações Recentes</CardTitle>
         <Button variant="ghost" size="sm" asChild>
           <Link href="/obrigacoes">

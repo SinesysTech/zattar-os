@@ -169,9 +169,9 @@ export function ClienteDocumentosViewer({
               className="group cursor-pointer transition-all hover:shadow-md"
               onClick={() => handlePreview(doc)}
             >
-              <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
+              <CardContent className={cn("inset-medium")}>
                 <div className={cn("flex items-center inline-medium")}>
-                  <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-muted inset-tight")}>
+                  <div className={cn("rounded-lg bg-muted inset-tight")}>
                     {getFileIcon(doc.contentType)}
                   </div>
 
@@ -214,7 +214,7 @@ export function ClienteDocumentosViewer({
 
       {/* Dialog de Preview de PDF */}
       <Dialog open={!!selectedDoc} onOpenChange={() => setSelectedDoc(null)}>
-        <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "max-w-[90vw] h-[90vh] flex flex-col inset-none inline-none")}>
+        <DialogContent className={cn("max-w-[90vw] h-[90vh] flex flex-col inset-none inline-none")}>
           <DialogHeader className={cn("inset-card-compact border-b")}>
             <DialogTitle>{selectedDoc?.name}</DialogTitle>
             <DialogDescription className="sr-only">

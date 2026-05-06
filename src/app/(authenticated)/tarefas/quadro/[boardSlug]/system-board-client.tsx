@@ -182,7 +182,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
               className="w-85 min-w-85 rounded-xl border border-border bg-card"
               disabled={!board.dndEnabled}
             >
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-0 padding direcional sem Inset equiv. */ "flex items-center justify-between inset-medium pb-0")}>
+              <div className={cn("flex items-center justify-between inset-medium pb-0")}>
                 <div className={cn("flex items-center inline-tight")}>
                   <span className={cn( "text-body-sm font-semibold")}>{col.label}</span>
                   <AppBadge variant="outline">
@@ -190,7 +190,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
                   </AppBadge>
                 </div>
               </div>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col inline-tight inset-medium")}>
+              <div className={cn("flex flex-col inline-tight inset-medium")}>
                 {(columns[col.id] ?? []).map((item) => (
                   <Kanban.KanbanItem
                     key={item.id}

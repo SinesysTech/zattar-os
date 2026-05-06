@@ -159,7 +159,7 @@ export default function EditTemplatePage({ params }: PageProps) {
         <div className="h-full flex items-center justify-center">
           <div className={cn("flex flex-col text-center stack-default max-w-md")}>
             <div className="flex justify-center">
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-destructive/10 inset-medium")}>
+              <div className={cn("rounded-full bg-destructive/10 inset-medium")}>
                 <AlertCircle className="h-10 w-10 text-destructive" />
               </div>
             </div>
@@ -186,7 +186,7 @@ export default function EditTemplatePage({ params }: PageProps) {
         <div className="h-full flex items-center justify-center">
           <div className={cn("flex flex-col text-center stack-default max-w-md")}>
             <div className="flex justify-center">
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-destructive/10 inset-medium")}>
+              <div className={cn("rounded-full bg-destructive/10 inset-medium")}>
                 <AlertCircle className="h-10 w-10 text-destructive" />
               </div>
             </div>

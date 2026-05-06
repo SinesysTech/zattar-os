@@ -131,7 +131,7 @@ export function AgendaToolbar({
           {filterOpen && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setFilterOpen(false)} />
-              <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "absolute top-full left-0 mt-1 z-50 w-48 inset-snug rounded-xl border border-border/20 bg-background shadow-lg")}>
+              <div className={cn("absolute top-full left-0 mt-1 z-50 w-48 inset-snug rounded-xl border border-border/20 bg-background shadow-lg")}>
                 {(Object.keys(SOURCE_CONFIG) as CalendarSource[]).map((src) => {
                   const cfg = SOURCE_CONFIG[src];
                   const active = sourceFilter.has(src);
@@ -139,7 +139,7 @@ export function AgendaToolbar({
                     <button
                       key={src}
                       onClick={() => onToggleSource(src)}
-                      className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full flex items-center inline-tight-plus px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
+                      className={cn("w-full flex items-center inline-tight-plus px-2.5 py-1.5 rounded-lg text-caption hover:bg-foreground/4 transition-colors cursor-pointer")}
                     >
                       <div className={cn(
                         "size-3.5 rounded border flex items-center justify-center",
@@ -160,13 +160,13 @@ export function AgendaToolbar({
 
         {/* Date Nav */}
         <div className={cn("flex items-center inline-micro")}>
-          <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
+          <button onClick={onPrev} className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronLeft className="size-4" />
           </button>
           <button onClick={onToday} className={cn(/* design-system-escape: px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; */ "px-2.5 py-1 rounded-lg text-[11px] font-medium bg-primary/8 text-primary hover:bg-primary/12 transition-colors cursor-pointer")}>
             Hoje
           </button>
-          <button onClick={onNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
+          <button onClick={onNext} className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 hover:text-muted-foreground/50 cursor-pointer")}>
             <ChevronRight className="size-4" />
           </button>
         </div>

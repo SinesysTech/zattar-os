@@ -286,7 +286,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-auto inset-tight")} align="start">
+                <PopoverContent className={cn("w-auto inset-tight")} align="start">
                   <Calendar
                     mode="single"
                     selected={startDate}
@@ -355,7 +355,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
                     />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-auto inset-tight")} align="start">
+                <PopoverContent className={cn("w-auto inset-tight")} align="start">
                   <Calendar
                     mode="single"
                     selected={endDate}

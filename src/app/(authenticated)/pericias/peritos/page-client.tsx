@@ -115,11 +115,11 @@ export function PeritosPageClient() {
           ))}
         </div>
       ) : error ? (
-        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center")}>
+        <GlassPanel depth={1} className={cn("inset-mega text-center")}>
           <p className={cn("text-body-sm text-destructive")}>{error}</p>
         </GlassPanel>
       ) : filtered.length === 0 ? (
-        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center")}>
+        <GlassPanel depth={1} className={cn("inset-mega text-center")}>
           <User className="size-10 text-muted-foreground/30 mx-auto mb-3" />
           <p className={cn("text-body-sm text-muted-foreground")}>
             {search

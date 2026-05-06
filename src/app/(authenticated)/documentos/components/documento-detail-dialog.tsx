@@ -188,7 +188,7 @@ export function DocumentoDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-md max-h-[90vh] overflow-hidden flex flex-col inline-none inset-none")}>
+      <DialogContent className={cn(" max-w-md max-h-[90vh] overflow-hidden flex flex-col inline-none inset-none")}>
         <DialogHeader className="sr-only">
           <DialogTitle>{nome}</DialogTitle>
           <DialogDescription>
@@ -236,7 +236,7 @@ export function DocumentoDetailDialog({
         </div>
 
         {/* ── Body ───────────────────────────────────────────── */}
-        <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex flex-col flex-1 overflow-y-auto px-6 py-5 stack-default-plus")}>
+        <div className={cn("flex flex-col flex-1 overflow-y-auto px-6 py-5 stack-default-plus")}>
           {/* Informações gerais */}
           <div>
             <SectionHeader icon={Info} label="Informações" />

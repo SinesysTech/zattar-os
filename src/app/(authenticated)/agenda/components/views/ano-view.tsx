@@ -260,7 +260,7 @@ function DayDetailDialog({
                     onEventClick?.(evt);
                     onOpenChange(false);
                   }}
-                  className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col w-full text-left rounded-xl border border-border/40 bg-muted/30 inset-medium stack-snug transition-colors hover:bg-muted/50 cursor-pointer")}
+                  className={cn("flex flex-col w-full text-left rounded-xl border border-border/40 bg-muted/30 inset-medium stack-snug transition-colors hover:bg-muted/50 cursor-pointer")}
                 >
                   <div className={cn("flex items-center inline-tight")}>
                     <span
@@ -435,7 +435,7 @@ export function AnoView({
           {/* Stats Sidebar */}
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col w-full xl:w-64 shrink-0 inset-default-plus stack-medium")}
+            className={cn("flex flex-col w-full xl:w-64 shrink-0 inset-default-plus stack-medium")}
           >
             {/* Total no Ano */}
             <StatCard

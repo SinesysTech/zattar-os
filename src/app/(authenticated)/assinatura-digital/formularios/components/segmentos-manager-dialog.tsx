@@ -96,7 +96,7 @@ export function SegmentosManagerDialog({
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <div className={cn("flex flex-col stack-default")}>
               {state.error && (
-                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
+                <div className={cn("rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
                   {state.error}
                 </div>
               )}
@@ -114,7 +114,7 @@ export function SegmentosManagerDialog({
                   {state.segmentos.map((segmento) => (
                     <div
                       key={segmento.id}
-                      className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inline-medium inset-medium")}
+                      className={cn("flex items-center justify-between inline-medium inset-medium")}
                     >
                       <div className="min-w-0">
                         <div className={cn("flex items-center inline-tight")}>

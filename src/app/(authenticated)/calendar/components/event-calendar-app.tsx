@@ -501,7 +501,7 @@ function CalendarViewPopover({
         </TooltipTrigger>
         <TooltipContent>Visualização: {currentOption?.label || "Selecionar"}</TooltipContent>
       </Tooltip>
-      <PopoverContent align="end" className={cn(/* design-system-escape: p-1 → usar <Inset> */ "w-44 inset-micro")}>
+      <PopoverContent align="end" className={cn("w-44 inset-micro")}>
         <div className={cn("flex flex-col inline-nano")}>
           {CALENDAR_VIEW_OPTIONS.map((option) => {
             const Icon = option.icon;

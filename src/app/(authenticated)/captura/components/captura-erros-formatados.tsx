@@ -142,7 +142,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
       {/* Erros agrupados por tribunal */}
       <div className={cn("flex flex-col stack-tight")}>
         {grupos.map((grupo) => (
-          <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border inset-medium")}>
+          <div key={grupo.tribunal} className={cn("rounded-lg border inset-medium")}>
             <div className={cn("mb-2.5 flex items-center inline-tight")}>
               <p className={cn( "text-body-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
               <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0 font-normal")}>

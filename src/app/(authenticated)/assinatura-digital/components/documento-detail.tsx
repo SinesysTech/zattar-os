@@ -32,7 +32,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
   const progress = getSignerProgress(doc);
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+    <GlassPanel className={cn("inset-default-plus")}>
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className={cn("flex items-center inline-medium")}>
@@ -64,7 +64,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
         </div>
         <button
           onClick={onClose}
-          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}
+          className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors cursor-pointer")}
         >
           <X className="size-4 text-muted-foreground/60" />
         </button>
@@ -72,7 +72,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
 
       {/* Progress */}
       {doc.assinantes.length > 0 && (
-        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium inset-medium rounded-xl bg-foreground/3 border border-border/10 mb-4")}>
+        <div className={cn("flex items-center inline-medium inset-medium rounded-xl bg-foreground/3 border border-border/10 mb-4")}>
           <ProgressRing
             percent={progress.percent}
             size={48}
@@ -110,7 +110,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             return (
               <div
                 key={i}
-                className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inline-tight-plus inset-tight rounded-lg hover:bg-foreground/3 transition-colors")}
+                className={cn("flex items-center inline-tight-plus inset-tight rounded-lg hover:bg-foreground/3 transition-colors")}
               >
                 <div
                   className={`size-2 rounded-full shrink-0 ${

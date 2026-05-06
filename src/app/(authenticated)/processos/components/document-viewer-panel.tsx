@@ -119,7 +119,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Estado vazio — nenhum documento selecionado
   if (!item) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-medium inset-extra-loose")}>
+      <div className={cn("flex flex-col items-center justify-center h-full text-center inline-medium inset-extra-loose")}>
         <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <MousePointerClick className="h-8 w-8 text-muted-foreground" />
         </div>
@@ -133,7 +133,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Documento sigiloso sem Backblaze
   if (item.documentoSigiloso && !item.backblaze) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-medium inset-extra-loose")}>
+      <div className={cn("flex flex-col items-center justify-center h-full text-center inline-medium inset-extra-loose")}>
         <div className={cn("rounded-full bg-destructive/10 inset-card-compact")}>
           <Lock className="h-8 w-8 text-destructive" />
         </div>
@@ -150,7 +150,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   // Documento sem Backblaze (não capturado)
   if (!item.backblaze) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-default inset-extra-loose")}>
+      <div className={cn("flex flex-col items-center justify-center h-full text-center inline-default inset-extra-loose")}>
         <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
@@ -194,7 +194,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   return (
     <div className="flex flex-col h-full">
       {/* Header do documento */}
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col flex-none border-b inset-medium stack-snug")}>
+      <div className={cn("flex flex-col flex-none border-b inset-medium stack-snug")}>
         <div className={cn("flex items-center justify-between inline-tight")}>
           <div className={cn("flex items-center inline-tight min-w-0 flex-1")}>
             {item.grauOrigem && (
@@ -265,7 +265,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         )}
 
         {error ? (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full inline-medium inset-extra-loose")}>
+          <div className={cn("flex flex-col items-center justify-center h-full inline-medium inset-extra-loose")}>
             <FileText className="h-12 w-12 text-destructive" />
             <p className={cn("text-body-sm text-destructive text-center")}>{error}</p>
           </div>

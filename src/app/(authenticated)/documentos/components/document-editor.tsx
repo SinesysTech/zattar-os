@@ -339,7 +339,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
         <div className="flex min-h-0 flex-1 overflow-auto">
           <div
             ref={editorContentRef}
-            className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex h-full w-full min-h-0 flex-col inset-extra-loose")}
+            className={cn("flex h-full w-full min-h-0 flex-col inset-extra-loose")}
           >
             <DocumentEditorProvider documentoId={documentoId}>
               <PlateEditor

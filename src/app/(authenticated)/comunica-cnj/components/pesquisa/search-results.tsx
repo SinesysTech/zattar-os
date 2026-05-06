@@ -123,7 +123,7 @@ export function SearchResults() {
   if (erro) {
     return (
       <div className="mx-auto w-full max-w-3xl">
-        <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex inline-tight border-destructive/30 bg-destructive/5 inset-default-plus text-center")}>
+        <GlassPanel className={cn("flex inline-tight border-destructive/30 bg-destructive/5 inset-default-plus text-center")}>
           <Heading level="widget" className="text-destructive">
             Não foi possível consultar
           </Heading>

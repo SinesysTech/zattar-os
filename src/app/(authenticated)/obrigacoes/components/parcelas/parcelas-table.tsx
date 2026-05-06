@@ -207,7 +207,7 @@ export function ParcelasTable({
                   <Button
                     size="sm"
                     variant="ghost"
-                    className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-7 w-7 inset-none")}
+                    className={cn("h-7 w-7 inset-none")}
                     onClick={() => onEdit(parcela)}
                     aria-label="Editar parcela"
                   >

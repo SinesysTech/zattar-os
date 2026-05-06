@@ -182,7 +182,7 @@ export function ComunicacaoDetalhesDialog({
             <div>
               <SectionHeading>Conteúdo</SectionHeading>
               <div
-                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 inset-medium text-body-sm dark:prose-invert")}
+                className={cn("prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 inset-medium text-body-sm dark:prose-invert")}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comunicacao.texto) }}
               />
             </div>

@@ -186,7 +186,7 @@ export function ExpedientesSemanaView({
       <div className={cn("flex items-center inline-tight")}>
         <button
           onClick={handlePrevWeek}
-          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
+          className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
         >
           <ChevronLeft className="size-4" />
         </button>
@@ -203,7 +203,7 @@ export function ExpedientesSemanaView({
         </button>
         <button
           onClick={handleNextWeek}
-          className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
+          className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/55 cursor-pointer")}
         >
           <ChevronRight className="size-4" />
         </button>
@@ -315,7 +315,7 @@ function WeekDayCard({
         }
       }}
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ 'w-full text-left inset-medium rounded-xl border border-l-[3px] transition-all duration-200 cursor-pointer',
+        'w-full text-left inset-medium rounded-xl border border-l-[3px] transition-all duration-200 cursor-pointer',
         'bg-card/80 border-border/40 hover:border-border/60 hover:shadow-sm hover:scale-[1.01]',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
         URGENCY_BORDER[urgency],

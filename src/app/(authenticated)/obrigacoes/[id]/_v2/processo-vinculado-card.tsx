@@ -21,7 +21,7 @@ interface ProcessoVinculadoCardProps {
 export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) {
   if (!processo) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus flex items-center justify-center min-h-[180px]")}>
+      <GlassPanel depth={1} className={cn("inset-default-plus flex items-center justify-center min-h-[180px]")}>
         <Text variant="caption" className="text-muted-foreground/60 text-center">
           Este acordo não está vinculado a um processo.
         </Text>
@@ -37,7 +37,7 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
   const parteRe = processo.nome_parte_re?.trim() || null;
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+    <GlassPanel depth={1} className={cn("inset-default-plus")}>
       <div className={cn("flex items-start justify-between inline-medium mb-4")}>
         <div className="min-w-0">
           <Text variant="meta-label" className="text-muted-foreground/60">

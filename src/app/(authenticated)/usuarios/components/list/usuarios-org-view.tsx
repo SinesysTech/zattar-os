@@ -57,7 +57,7 @@ function OrgNode({ usuario, isRoot, onClick }: OrgNodeProps) {
       onClick={() => onClick(usuario)}
       onKeyDown={handleKeyDown}
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ 'flex flex-col items-center inline-tight inset-medium rounded-2xl border cursor-pointer',
+        'flex flex-col items-center inline-tight inset-medium rounded-2xl border cursor-pointer',
         'transition-all duration-200 select-none',
         'hover:-translate-y-0.5 hover:shadow-md',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
@@ -184,7 +184,7 @@ export function UsuariosOrgView({ usuarios, onView }: UsuariosOrgViewProps) {
         }}
         className="transition-transform duration-200"
       >
-        <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex flex-col items-center inline-none py-2")}>
+        <div className={cn("flex flex-col items-center inline-none py-2")}>
           {groups.map(([cargoNome, { level, members }], groupIndex) => {
             const isRoot = level === 0;
             return (

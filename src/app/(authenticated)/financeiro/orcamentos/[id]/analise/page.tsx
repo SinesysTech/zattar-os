@@ -240,7 +240,7 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
             const centroCustoLabel = getCentroCustoLabel(item.centroCusto);
             return (
               <tr key={item.id} className="border-b hover:bg-muted/50">
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
+                <td className={cn("inset-medium")}>
                   <div className="flex flex-col">
                     <span className={cn( "font-medium")}>
                       {getContaLabel(item.contaContabil)}
@@ -252,16 +252,16 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
                     )}
                   </div>
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
+                <td className={cn("inset-medium text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
+                <td className={cn("inset-medium text-right font-mono")}>
                   {formatarValor(item.valorRealizado)}
                 </td>
                 <td className={`p-3 text-right font-mono ${getVariacaoColor(item.desvioPercentual)}`}>
                   {formatarPercentual(item.desvioPercentual)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-center")}>
+                <td className={cn("inset-medium text-center")}>
                   <Badge variant={statusBadge.variant}>
                     {statusBadge.label}
                   </Badge>
@@ -418,19 +418,19 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
             return (
               <tr key={index} className="border-b hover:bg-muted/50">
                 <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium font-medium")}>{item.mes}</td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
+                <td className={cn("inset-medium text-right font-mono")}>
                   {formatarValor(item.valorPrevisto)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
+                <td className={cn("inset-medium text-right font-mono")}>
                   {formatarValor(item.valorRealizado)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium text-right font-mono")}>
+                <td className={cn("inset-medium text-right font-mono")}>
                   {formatarValor(item.valorProjetado)}
                 </td>
                 <td className={`p-3 text-right font-mono ${getVariacaoColor(variacao)}`}>
                   {formatarPercentual(variacao)}
                 </td>
-                <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "inset-medium")}>
+                <td className={cn("inset-medium")}>
                   <div className={cn("flex items-center justify-center inline-micro")}>
                     {getTendenciaIcon(tendencia)}
                     <span className={cn("text-body-sm")}>{getTendenciaLabel(tendencia)}</span>

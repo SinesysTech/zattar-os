@@ -66,7 +66,7 @@ export function ProfileSidebar({
   return (
     <GlassPanel
       depth={1}
-      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden sticky top-6 self-start inset-none")}
+      className={cn("overflow-hidden sticky top-6 self-start inset-none")}
     >
       {/* 1. Cover area */}
       <div className="relative">
@@ -145,7 +145,7 @@ export function ProfileSidebar({
 
       {/* 5. Contacts section */}
       {contactItems.length > 0 && (
-        <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "flex flex-col px-5 py-4 mt-4 border-t border-border/10 stack-tight-plus")}>
+        <div className={cn("flex flex-col px-5 py-4 mt-4 border-t border-border/10 stack-tight-plus")}>
           {contactItems.map(({ icon: Icon, value, label }, idx) => (
             <div key={idx} className="flex items-center gap-2.5">
               <Icon className="size-3.5 text-muted-foreground/35 shrink-0" />

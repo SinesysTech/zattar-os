@@ -27,7 +27,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
 
   return (
     <div className="absolute right-2 top-16 bottom-20 w-[calc(100%-1rem)] sm:right-4 sm:top-20 sm:bottom-24 sm:w-80 bg-black/80 backdrop-blur-md border border-video-surface-hover rounded-lg shadow-lg flex flex-col z-50 transition-all duration-300 animate-in slide-in-from-right-10">
-      <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inset-medium border-b border-video-surface-hover")}>
+      <div className={cn("flex items-center justify-between inset-medium border-b border-video-surface-hover")}>
         <div className={cn("flex items-center inline-tight text-video-text")}>
           <MessageSquareText className="w-4 h-4" />
           <Heading level="widget">Transcrição em Tempo Real</Heading>

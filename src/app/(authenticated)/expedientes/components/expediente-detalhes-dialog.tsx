@@ -241,11 +241,11 @@ function ExpedienteSingleDetails({
             </div>
 
             <div className={cn("grid grid-cols-2 inline-default")}>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 inset-medium rounded-md border")}>
+              <div className={cn("bg-muted/10 inset-medium rounded-md border")}>
                 <Text variant="caption" className="mb-1">Data de Ciência</Text>
                 <div className={cn( "font-medium")}>{formatarData(expediente.dataCienciaParte)}</div>
               </div>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 inset-medium rounded-md border")}>
+              <div className={cn("bg-muted/10 inset-medium rounded-md border")}>
                 <Text variant="caption" className="mb-1">Prazo Legal</Text>
                 <div className={cn( "font-medium")}>{formatarData(expediente.dataPrazoLegalParte)}</div>
                 <PrazoEditor
@@ -268,7 +268,7 @@ function ExpedienteSingleDetails({
             </div>
 
             {expediente.baixadoEm && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-success/5 inset-medium rounded-md border border-success/15")}>
+              <div className={cn("bg-success/5 inset-medium rounded-md border border-success/15")}>
                 <div className={cn( "text-body-sm text-success font-semibold mb-1")}>Baixado em</div>
                 <div className={cn( "font-medium")}>{formatarData(expediente.baixadoEm)}</div>
                 {expediente.justificativaBaixa && (
@@ -278,7 +278,7 @@ function ExpedienteSingleDetails({
             )}
 
             {expediente.observacoes && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted inset-medium rounded-md text-body-sm")}>
+              <div className={cn("bg-muted inset-medium rounded-md text-body-sm")}>
                 <div className={cn( "font-semibold mb-1")}>Observações</div>
                 <div className="whitespace-pre-wrap">{expediente.observacoes}</div>
               </div>

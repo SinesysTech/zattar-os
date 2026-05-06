@@ -270,7 +270,7 @@ export function TaskDetailSheet() {
 
     return (
         <Dialog open={isTarefaSheetOpen} onOpenChange={handleClose}>
-            <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-2xl max-h-[90vh] w-full inset-none flex flex-col")}>
+            <DialogContent className={cn(" max-w-2xl max-h-[90vh] w-full inset-none flex flex-col")}>
                 {tarefa && (
                     <div className="flex flex-1 min-h-0 flex-col">
                         <DialogHeader className={cn("border-b border-border/30 inset-dialog shrink-0")}>
@@ -377,7 +377,7 @@ export function TaskDetailSheet() {
 
                                     <div className={cn("flex flex-col stack-tight")}>
                                         {tarefa.subTasks?.map((st) => (
-                                            <div key={st.id} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "group flex items-center justify-between inline-medium rounded-lg border inset-medium hover:bg-accent/50 transition-colors")}>
+                                            <div key={st.id} className={cn("group flex items-center justify-between inline-medium rounded-lg border inset-medium hover:bg-accent/50 transition-colors")}>
                                                 <div className={cn("flex items-center inline-medium")}>
                                                     <Checkbox
                                                         checked={st.completed}
@@ -443,7 +443,7 @@ export function TaskDetailSheet() {
                                         {tarefa.files?.map((file) => (
                                             <div
                                                 key={file.id}
-                                                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "group flex items-center inline-medium rounded-lg border inset-medium hover:bg-accent/50 transition-colors")}
+                                                className={cn("group flex items-center inline-medium rounded-lg border inset-medium hover:bg-accent/50 transition-colors")}
                                             >
                                                 <a
                                                     href={file.url}
@@ -451,7 +451,7 @@ export function TaskDetailSheet() {
                                                     rel="noopener noreferrer"
                                                     className={cn("flex items-center inline-medium flex-1 min-w-0")}
                                                 >
-                                                    <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded bg-primary/10 inset-tight shrink-0")}>
+                                                    <div className={cn("rounded bg-primary/10 inset-tight shrink-0")}>
                                                         <Paperclip className="h-4 w-4 text-primary" />
                                                     </div>
                                                     <div className="flex-1 min-w-0">

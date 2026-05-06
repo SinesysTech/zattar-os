@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 function CapturadasLoading() {
   return (
-    <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "flex flex-col inline-default-plus px-6 py-6")}>
+    <div className={cn("flex flex-col inline-default-plus px-6 py-6")}>
       <Skeleton className="h-9 w-40 rounded-xl" />
       <Skeleton className="h-10 w-60 rounded" />
       <div className={cn("grid grid-cols-2 inline-medium lg:grid-cols-4")}>

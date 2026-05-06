@@ -246,7 +246,7 @@ export function UsuarioCreateDialog({
             </div>
 
             {error && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
+              <div className={cn("rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
                 {error}
               </div>
             )}

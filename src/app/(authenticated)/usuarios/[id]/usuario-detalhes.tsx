@@ -213,7 +213,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
           </Button>
           <div className="h-5 w-48 bg-muted/40 animate-pulse rounded" />
         </div>
-        <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega")}>
+        <GlassPanel depth={1} className={cn("inset-mega")}>
           <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <p className={cn("text-body-sm text-muted-foreground")}>Carregando dados do usuário...</p>

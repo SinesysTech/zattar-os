@@ -101,7 +101,7 @@ function FilterDropdownTrigger({ label, active, open, onClear }: TriggerProps) {
             e.stopPropagation();
             onClear();
           }}
-          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
+          className={cn("ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
         >
           <X className="size-2.5" />
         </span>
@@ -118,7 +118,7 @@ function FilterDropdownTrigger({ label, active, open, onClear }: TriggerProps) {
 // PRIMITIVA INTERNA: SimpleSelect (para enums)
 // =============================================================================
 
-const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden inset-none';
+const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden inset-none';
 
 interface SimpleSelectProps<TValue extends string> {
   label: string;
@@ -157,7 +157,7 @@ function SimpleSelect<TValue extends string>({
         align="start"
         side="bottom"
       >
-        <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex flex-col inset-tight stack-nano max-h-64 overflow-y-auto")}>
+        <div className={cn("flex flex-col inset-tight stack-nano max-h-64 overflow-y-auto")}>
           {options.map((opt) => (
             <button
               key={opt.value}
@@ -502,7 +502,7 @@ export function DateRangePill({
                   e.stopPropagation();
                   onChange(undefined);
                 }}
-                className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
+                className={cn("ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
               >
                 <X className="size-2.5" />
               </span>
@@ -515,7 +515,7 @@ export function DateRangePill({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none rounded-2xl glass-dropdown border-border/40")}
+        className={cn("w-auto inset-none rounded-2xl glass-dropdown border-border/40")}
         align="start"
         side="bottom"
       >

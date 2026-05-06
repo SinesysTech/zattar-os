@@ -81,7 +81,7 @@ export function DayView({ currentDate, events, onEventSelect, onEventCreate }: D
                 Dia inteiro
               </span>
             </div>
-            <div className={cn(/* design-system-escape: p-1 → usar <Inset> */ "border-border/70 relative border-r inset-micro last:border-r-0")}>
+            <div className={cn("border-border/70 relative border-r inset-micro last:border-r-0")}>
               {allDayEvents.map((event) => {
                 const eventStart = new Date(event.start);
                 const eventEnd = new Date(event.end);

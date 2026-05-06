@@ -380,7 +380,7 @@ export default function ConciliacaoBancariaPage() {
           }
         >
           {error && (
-            <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS; p-3 → usar <Inset> */ "mx-6 mb-4 rounded-md border border-destructive/30 bg-destructive/5 inset-medium text-body-sm text-destructive")}>
+            <div className={cn("mx-6 mb-4 rounded-md border border-destructive/30 bg-destructive/5 inset-medium text-body-sm text-destructive")}>
               {error}
             </div>
           )}

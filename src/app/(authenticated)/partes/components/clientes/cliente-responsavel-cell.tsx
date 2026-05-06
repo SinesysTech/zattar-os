@@ -121,7 +121,7 @@ export function ClienteResponsavelCell({
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none")} align="start">
+            <PopoverContent className={cn("inset-none")} align="start">
                 <Command>
                     <CommandInput placeholder="Buscar usuário..." />
                     <CommandList>

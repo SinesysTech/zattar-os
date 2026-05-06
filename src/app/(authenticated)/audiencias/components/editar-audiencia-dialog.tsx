@@ -497,7 +497,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-5 [scrollbar-width:thin]">
       <form id="editar-audiencia-form" onSubmit={handleSubmit} className={cn("flex flex-col stack-default")}>
         {error && (
-          <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start inline-tight-plus rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
+          <div className={cn("flex items-start inline-tight-plus rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
             <span className="shrink-0 mt-0.5">⚠️</span>
             <span className={cn("text-body-sm leading-snug")}>{error}</span>
           </div>

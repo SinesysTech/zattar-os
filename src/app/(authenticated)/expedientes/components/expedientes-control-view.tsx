@@ -151,7 +151,7 @@ function DetailPanel({
   const grauLabel = GRAU_TRIBUNAL_LABELS[expediente.grau] ?? expediente.grau;
 
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+    <GlassPanel depth={2} className={cn("inset-default-plus")}>
       {/* Header */}
       <div className={cn("flex items-start justify-between inline-medium")}>
         <div className="min-w-0">
@@ -389,7 +389,7 @@ export function ExpedientesControlView({
   // Empty state
   if (expedientes.length === 0) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-52 flex-col items-center justify-center inset-extra-loose text-center")}>
+      <GlassPanel depth={1} className={cn("flex min-h-52 flex-col items-center justify-center inset-extra-loose text-center")}>
         <SearchX className="size-8 text-muted-foreground/20" />
         <Heading level="card" className={cn("mt-4 text-body-sm text-muted-foreground/70")}>
           Nenhum expediente encontrado

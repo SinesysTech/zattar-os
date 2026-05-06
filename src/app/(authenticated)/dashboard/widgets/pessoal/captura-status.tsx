@@ -132,7 +132,7 @@ export function WidgetCapturaStatus() {
           return (
             <div
               key={`${captura.trt}-${captura.grau}`}
-              className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-1.5 px-2 rounded-md hover:bg-border/5 transition-colors")}
+              className={cn("flex items-center inline-tight-plus py-1.5 px-2 rounded-md hover:bg-border/5 transition-colors")}
             >
               {/* Status dot */}
               <div className={`size-2.5 rounded-full shrink-0 ${dotClass}`} />

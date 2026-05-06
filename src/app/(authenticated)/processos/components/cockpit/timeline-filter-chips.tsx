@@ -63,7 +63,7 @@ export function TimelineFilterChips({
         </kbd>
       </div>
 
-      <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex inline-micro inset-nano rounded-lg bg-border/6 overflow-x-auto")} role="tablist">
+      <div className={cn("flex inline-micro inset-nano rounded-lg bg-border/6 overflow-x-auto")} role="tablist">
         {FILTER_CHIPS.map((chip) => {
           const isActive = activeFilter === chip.id;
           const Icon = chip.icon;
@@ -88,7 +88,7 @@ export function TimelineFilterChips({
       </div>
 
       {showGrauFilter && onGrauChange && (
-        <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex inline-micro inset-nano rounded-md bg-border/4 w-fit")} role="tablist" aria-label="Filtro de grau">
+        <div className={cn("flex inline-micro inset-nano rounded-md bg-border/4 w-fit")} role="tablist" aria-label="Filtro de grau">
           {(['todos', ...graus] as const).map((grau) => {
             const isActive = activeGrau === grau;
             return (

@@ -337,7 +337,7 @@ export function FormularioEditDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <form id="formulario-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn("flex flex-col stack-default inset-dialog")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
+              <div className={cn("rounded-md bg-destructive/15 inset-medium text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -420,7 +420,7 @@ export function FormularioEditDialog({
                         <button
                           type="button"
                           onClick={() => setTemplateIds(templateIds.filter((id) => id !== templateUuid))}
-                          className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-muted-foreground/20")}
+                          className={cn("ml-0.5 rounded-full inset-nano hover:bg-muted-foreground/20")}
                           disabled={isSubmitting}
                         >
                           <X className="h-3 w-3" />

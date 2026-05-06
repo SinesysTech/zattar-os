@@ -277,7 +277,7 @@ export function ShareDocumentDialog({
                       <button
                         key={usuario.id}
                         type="button"
-                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex w-full items-center inline-medium inset-tight hover:bg-accent text-left")}
+                        className={cn("flex w-full items-center inline-medium inset-tight hover:bg-accent text-left")}
                         onClick={() => {
                           setSelectedUser(usuario);
                           setSearchResults([]);
@@ -306,7 +306,7 @@ export function ShareDocumentDialog({
 
               {/* Usuário selecionado */}
               {selectedUser && (
-                <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-2 flex items-center justify-between rounded-md border bg-muted/50 inset-tight")}>
+                <div className={cn("mt-2 flex items-center justify-between rounded-md border bg-muted/50 inset-tight")}>
                   <div className={cn("flex items-center inline-tight")}>
                     <Avatar>
                       <AvatarFallback className={cn("text-caption")}>
@@ -362,7 +362,7 @@ export function ShareDocumentDialog({
                     {compartilhamentos.map((compartilhamento) => (
                       <div
                         key={compartilhamento.id}
-                        className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border inset-tight")}
+                        className={cn("flex items-center justify-between rounded-md border inset-tight")}
                       >
                         <div className={cn("flex items-center inline-medium")}>
                           <Avatar size="lg">

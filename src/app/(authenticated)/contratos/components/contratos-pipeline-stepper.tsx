@@ -196,7 +196,7 @@ export function ContratosPipelineStepper({
   if (compact) return body;
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+    <GlassPanel className={cn("inset-default-plus")}>
       <div className={cn("flex items-center inline-tight mb-4")}>
         <span className="inline-flex size-7 items-center justify-center rounded-lg bg-primary/8">
           <GitBranch className="size-3.5 text-primary/70" />

@@ -211,7 +211,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
   return (
     <DashboardProvider initialData={initialData}>
-    <div className={cn(/* design-system-escape: pb-8 padding direcional sem Inset equiv. */ "flex flex-col stack-default-plus pb-8")}>
+    <div className={cn("flex flex-col stack-default-plus pb-8")}>
       {/* ── Cabecalho ───────────────────────────────────────────── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>
@@ -275,7 +275,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
 
 function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega")}>
+    <GlassPanel depth={1} className={cn("inset-mega")}>
       <div className={cn("flex flex-col items-center justify-center text-center inline-default")}>
         <div className="size-14 rounded-2xl border border-border/20 bg-foreground/3 flex items-center justify-center">
           <LayoutGrid className="size-6 text-muted-foreground/55" />

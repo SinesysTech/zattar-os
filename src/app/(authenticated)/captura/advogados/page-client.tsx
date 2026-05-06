@@ -260,7 +260,7 @@ export default function AdvogadosPage() {
               const temCredenciais = ativas > 0;
 
               return (
-                <GlassPanel key={advogado.id} depth={2} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+                <GlassPanel key={advogado.id} depth={2} className={cn("inset-default-plus")}>
                   {/* Header: Avatar + Name + Status badge */}
                   <div className={cn("flex items-center inline-medium mb-3")}>
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -349,7 +349,7 @@ export default function AdvogadosPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(/* design-system-escape: p-0 → usar <Inset> */ "text-caption h-7 w-7 inset-none text-muted-foreground/65 hover:text-destructive")}
+                      className={cn("text-caption h-7 w-7 inset-none text-muted-foreground/65 hover:text-destructive")}
                       onClick={() => handleDelete(advogado)}
                       aria-label="Excluir"
                     >

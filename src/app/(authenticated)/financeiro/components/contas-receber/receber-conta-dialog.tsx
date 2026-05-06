@@ -368,7 +368,7 @@ export function ReceberContaDialog({
                       : 'Selecione a data'}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-auto inset-none")} align="start">
+                <PopoverContent className={cn("w-auto inset-none")} align="start">
                   <Calendar
                     mode="single"
                     selected={dataEfetivacao}
@@ -398,7 +398,7 @@ export function ReceberContaDialog({
               <Label htmlFor="comprovante">Comprovante de Recebimento</Label>
 
               {comprovanteFile ? (
-                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border bg-muted/50 inset-medium")}>
+                <div className={cn("flex items-center justify-between rounded-md border bg-muted/50 inset-medium")}>
                   <div className={cn("flex items-center inline-tight overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">

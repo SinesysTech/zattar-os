@@ -70,7 +70,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
       )}
       onClick={disabled ? undefined : onClick}
     >
-      <CardHeader className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "inset-medium pb-1")}>
+      <CardHeader className={cn("inset-medium pb-1")}>
         <div className={cn("flex items-center inline-snug flex-wrap")}>
           {/* Label badge */}
           <AppBadge variant="outline" className={cn("text-[10px] px-1 py-0 capitalize")}>
@@ -102,7 +102,7 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv. */ "flex flex-col inset-medium pt-0 stack-tight")}>
+      <CardContent className={cn("flex flex-col inset-medium pt-0 stack-tight")}>
         {/* Description */}
         {tarefa.description && (
           <Text variant="caption" className="line-clamp-2">

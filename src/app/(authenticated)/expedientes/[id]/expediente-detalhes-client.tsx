@@ -687,7 +687,7 @@ function DadosTab({
 function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
   if (arquivos.length === 0) {
     return (
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega text-center rounded-2xl")}>
+      <GlassPanel depth={1} className={cn("inset-mega text-center rounded-2xl")}>
         <Text variant="caption" className="text-muted-foreground/60">
           Nenhum arquivo vinculado a este expediente.
         </Text>
@@ -739,7 +739,7 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
           <li key={arq.id}>
             <button
               type="button"
-              className={cn(/* design-system-escape: py-5 padding direcional sem Inset equiv.; px-3 padding direcional sem Inset equiv.; -mx-3 sem equivalente DS */ "w-full group flex items-center inline-default-plus py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3")}
+              className={cn("w-full group flex items-center inline-default-plus py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3")}
             >
               <Text
                 variant="micro-caption"
@@ -1027,7 +1027,7 @@ function ResponsavelCard({
       .toUpperCase() ?? '??';
 
   return (
-    <GlassPanel depth={3} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus rounded-2xl")}>
+    <GlassPanel depth={3} className={cn("inset-default-plus rounded-2xl")}>
       <div className="flex items-center justify-between mb-4">
         <Text
           variant="overline"
@@ -1235,7 +1235,7 @@ function InlineTipoEditor({
           <Tag className="size-3 text-muted-foreground/65 group-hover:text-primary transition-colors" />
         </button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 inset-none rounded-2xl glass-dropdown overflow-hidden")} align="start">
+      <PopoverContent className={cn("w-72 inset-none rounded-2xl glass-dropdown overflow-hidden")} align="start">
         <Command className="bg-transparent">
           <div className={cn("px-3 pt-3 pb-1.5")}>
             <Text

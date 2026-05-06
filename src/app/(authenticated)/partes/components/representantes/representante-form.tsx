@@ -579,7 +579,7 @@ export function RepresentanteFormDialog({
                 <button
                   type="button"
                   onClick={() => handleRemoveOAB(index)}
-                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full inset-nano")}
+                  className={cn("ml-1 hover:bg-muted rounded-full inset-nano")}
                   aria-label={`Remover OAB ${oab.numero}/${oab.uf}`}
                   title={`Remover OAB ${oab.numero}/${oab.uf}`}
                 >
@@ -640,7 +640,7 @@ export function RepresentanteFormDialog({
                 <button
                   type="button"
                   onClick={() => handleRemoveEmail(index)}
-                  className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 hover:bg-muted rounded-full inset-nano")}
+                  className={cn("ml-1 hover:bg-muted rounded-full inset-nano")}
                   aria-label={`Remover e-mail ${email}`}
                   title={`Remover e-mail ${email}`}
                 >

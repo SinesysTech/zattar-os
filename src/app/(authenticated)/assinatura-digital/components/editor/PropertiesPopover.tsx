@@ -131,8 +131,8 @@ export default function PropertiesPopover({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-80 overflow-y-auto inset-default-plus")}>
-        <SheetHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "inset-none pb-1")}>
+      <SheetContent side="right" className={cn("w-80 overflow-y-auto inset-default-plus")}>
+        <SheetHeader className={cn("inset-none pb-1")}>
           <div className="flex items-center justify-between">
             <SheetTitle className={cn( "text-body font-semibold")}>Propriedades do Campo</SheetTitle>
             {selectedFieldTypeLabel && (
@@ -176,7 +176,7 @@ export default function PropertiesPopover({
                         <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-72 inset-none")} align="start" side="bottom" sideOffset={4}>
+                    <PopoverContent className={cn("w-72 inset-none")} align="start" side="bottom" sideOffset={4}>
                       <Command>
                         <CommandInput placeholder="Buscar variável..." className={cn("h-8 text-caption")} />
                         <CommandList className="max-h-64">

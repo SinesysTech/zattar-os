@@ -47,7 +47,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
         {/* Close button for mobile could go here */}
       </div>
 
-      <ScrollArea className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 inset-tight")}>
+      <ScrollArea className={cn("flex-1 inset-tight")}>
         {allParticipants.length === 0 ? (
           <EmptyState
             icon={Users}
@@ -58,7 +58,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
         ) : (
           <div className={cn("flex flex-col stack-micro")}>
             {allParticipants.map((p: DyteParticipant) => (
-              <div key={p.id} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center inline-medium inset-medium hover:bg-video-surface-hover/50 transition-colors rounded-lg group")}>
+              <div key={p.id} className={cn("flex items-center inline-medium inset-medium hover:bg-video-surface-hover/50 transition-colors rounded-lg group")}>
                 {/* Avatar */}
                 <div className={cn(
                    "w-10 h-10 rounded-full flex items-center justify-center text-body-sm font-bold text-video-text shadow-sm",

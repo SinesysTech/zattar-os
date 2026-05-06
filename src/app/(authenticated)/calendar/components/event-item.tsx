@@ -217,7 +217,7 @@ export function EventItem({
   return (
     <button
       className={cn(
-        /* design-system-escape: p-2 → usar <Inset> */ "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col inline-micro rounded inset-tight text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
+        "focus-visible:border-ring focus-visible:ring-ring/50 flex w-full flex-col inline-micro rounded inset-tight text-left transition outline-none focus-visible:ring-[3px] data-past-event:line-through data-past-event:opacity-90",
         getEventColorClasses(eventColor),
         className
       )}

@@ -17,7 +17,7 @@ export function TimelineEmpty() {
   const router = useRouter();
 
   return (
-    <Card className={cn(/* design-system-escape: p-12 → usar <Inset> */ "inset-mega")}>
+    <Card className={cn("inset-mega")}>
       <div className={cn("flex flex-col items-center justify-center text-center stack-default")}>
         <div className={cn("rounded-full bg-muted inset-dialog")}>
           <FileSearch className="h-12 w-12 text-muted-foreground" />

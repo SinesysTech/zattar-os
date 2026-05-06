@@ -131,7 +131,7 @@ export function AudienciasMissaoContent({
     <div className={cn("flex flex-col stack-default")}>
       {/* Date Navigator */}
       <div className={cn("flex items-center inline-tight")}>
-        <button onClick={handlePrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
+        <button onClick={handlePrev} className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronLeft className="size-4" />
         </button>
         <button onClick={handleToday} className={cn(
@@ -140,7 +140,7 @@ export function AudienciasMissaoContent({
         )}>
           Hoje
         </button>
-        <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
+        <button onClick={handleNext} className={cn("inset-snug rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
         <span className={cn( "text-body-sm font-medium capitalize ml-1")}>{dateLabel}</span>
@@ -302,7 +302,7 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
       <button
         onClick={onClick}
         className={cn(
-          /* design-system-escape: p-3 → usar <Inset> */ 'flex-1 rounded-xl inset-medium transition-all duration-200 min-w-0 text-left cursor-pointer',
+          'flex-1 rounded-xl inset-medium transition-all duration-200 min-w-0 text-left cursor-pointer',
           'border border-border/12 hover:border-border/40 hover:shadow-sm hover:scale-[1.005]',
           isPast && 'opacity-50',
           isOngoing && 'ring-1 ring-success/20 border-success/15',

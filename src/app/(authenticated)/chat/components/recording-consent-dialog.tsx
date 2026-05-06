@@ -51,7 +51,7 @@ export function RecordingConsentDialog({
               consentimento de todos os participantes.
             </p>
             
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted inset-medium rounded-md")}>
+            <div className={cn("bg-muted inset-medium rounded-md")}>
               <p className={cn( "text-body-sm font-medium mb-1")}>Participantes atuais:</p>
               <ul className={cn("text-body-sm list-disc list-inside")}>
                 {participantNames.map((name, idx) => (

@@ -45,8 +45,8 @@ function ObrigacaoItem({
   colorClass: string;
 }) {
   return (
-    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-start inline-medium rounded-lg border inset-medium")}>
-      <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-md inset-tight shrink-0', colorClass)}>
+    <div className={cn("flex items-start inline-medium rounded-lg border inset-medium")}>
+      <div className={cn('rounded-md inset-tight shrink-0', colorClass)}>
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
@@ -74,7 +74,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
         <CardContent>
           <div className={cn("flex flex-col stack-medium")}>
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex inline-medium rounded-lg border inset-medium")}>
+              <div key={i} className={cn("flex inline-medium rounded-lg border inset-medium")}>
                 <Skeleton className="h-8 w-8 rounded-md" />
                 <div className={cn("flex flex-col stack-snug flex-1")}>
                   <Skeleton className="h-3 w-16" />
@@ -102,7 +102,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
         {!hasData ? (
           <div className="flex items-center justify-center h-full min-h-32">
             <div className={cn("flex flex-col text-center stack-tight")}>
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted inset-medium mx-auto w-fit")}>
+              <div className={cn("rounded-full bg-muted inset-medium mx-auto w-fit")}>
                 <Scale className="h-5 w-5 text-muted-foreground" />
               </div>
               <p className={cn("text-body-sm text-muted-foreground")}>Sem obrigações pendentes</p>

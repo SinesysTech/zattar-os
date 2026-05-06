@@ -316,7 +316,7 @@ function PdfPreviewSection({
   const anchorsOnPage = documento.ancoras.filter((a) => a.pagina === currentPage);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-0 → usar <Inset> */ "overflow-hidden inset-none")}>
+    <GlassPanel depth={1} className={cn("overflow-hidden inset-none")}>
       <div className="relative bg-muted/20">
         <PdfPreviewDynamic
           pdfUrl={pdfUrl ?? undefined}
@@ -591,7 +591,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
         {documento.selfie_habilitada && (
           <GlassPanel
             depth={2}
-            className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "px-4 py-3 flex items-center inline-tight-plus border-info/25")}
+            className={cn("px-4 py-3 flex items-center inline-tight-plus border-info/25")}
           >
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
               <Camera className="size-3.5 text-info/70" />

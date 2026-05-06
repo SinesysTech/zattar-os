@@ -26,7 +26,7 @@ import { cn } from '@/lib/utils';
 import { usePesquisaStore } from '../hooks/use-pesquisa-store';
 import type { MeioComunicacao } from '@/app/(authenticated)/comunica-cnj/domain';
 
-const POPOVER_CLASSES = /* design-system-escape: p-0 → usar <Inset> */ 'rounded-2xl glass-dropdown overflow-hidden inset-none';
+const POPOVER_CLASSES = 'rounded-2xl glass-dropdown overflow-hidden inset-none';
 
 // TRTs principais + tribunais superiores (lista estática para evitar round-trip)
 const TRIBUNAIS = [
@@ -109,7 +109,7 @@ function FilterChip({
                   onClear();
                 }
               }}
-              className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
+              className={cn("ml-0.5 rounded-full inset-nano hover:bg-primary/10 transition-colors")}
               aria-label={`Limpar ${label}`}
             >
               <X className="size-2.5" aria-hidden />
@@ -264,7 +264,7 @@ export function SearchQuickFilters() {
             />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-2 → usar <Inset> */ 'w-56 inset-tight')} align="start">
+        <PopoverContent className={cn(POPOVER_CLASSES, 'w-56 inset-tight')} align="start">
           <div className={cn("flex flex-col inline-micro")}>
             {MEIO_OPTIONS.map((opt) => (
               <button

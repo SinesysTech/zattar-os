@@ -16,7 +16,7 @@ interface PermissionToggleProps {
 export function PermissionToggle({ operacao: _operacao, label, checked, disabled, changed, onToggle }: PermissionToggleProps) {
   return (
     <label className={cn(
-      /* design-system-escape: p-2 → usar <Inset> */ 'flex items-center inline-tight-plus inset-tight rounded-lg cursor-pointer transition-colors hover:bg-muted/4',
+      'flex items-center inline-tight-plus inset-tight rounded-lg cursor-pointer transition-colors hover:bg-muted/4',
       disabled && 'opacity-50 cursor-not-allowed',
       'relative',
     )}>

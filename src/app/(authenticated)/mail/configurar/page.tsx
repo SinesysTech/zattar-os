@@ -313,7 +313,7 @@ export default function ConfigurarEmailPage() {
 
           {/* Test result */}
           {testResult && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex flex-col stack-tight rounded-md border inset-medium")}>
+            <div className={cn("flex flex-col stack-tight rounded-md border inset-medium")}>
               <div className={cn("flex items-center inline-tight text-body-sm")}>
                 {testResult.imap.success ? (
                   <CheckCircle2 className="h-4 w-4 text-success" />

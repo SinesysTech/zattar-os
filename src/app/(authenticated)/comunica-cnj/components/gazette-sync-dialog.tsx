@@ -105,7 +105,7 @@ function SyncResultGrid({ result }: { result: MockSyncResult }) {
   ] as const;
 
   return (
-    <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "grid grid-cols-5 inline-snug rounded-lg bg-muted/20 border border-border/30 inset-medium")}>
+    <div className={cn("grid grid-cols-5 inline-snug rounded-lg bg-muted/20 border border-border/30 inset-medium")}>
       {items.map(({ label, value, color }) => (
         <div key={label} className={cn("flex flex-col items-center inline-nano")}>
           <span className={cn( 'text-body font-semibold tabular-nums', color)}>
@@ -157,7 +157,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
         </DialogHeader>
 
         {/* Section toggle */}
-        <div className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "flex items-center inset-nano bg-muted/30 rounded-md w-fit")}>
+        <div className={cn("flex items-center inset-nano bg-muted/30 rounded-md w-fit")}>
           <button
             type="button"
             onClick={() => setSection('sincronizar')}

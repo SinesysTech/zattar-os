@@ -62,7 +62,7 @@ export function ExpedientesTabsCarousel({
     <div className={cn('flex flex-col h-full', className)}>
       <Tabs value={activeTab} onValueChange={onTabChange} className={cn("flex flex-col inline-none h-full")}>
         {/* Tabs List - estilo lifted (tabs-13 pattern) */}
-        <TabsList className={cn(/* design-system-escape: p-0 → usar <Inset> */ "bg-background justify-start rounded-none border-b border-border inset-none h-auto")}>
+        <TabsList className={cn("bg-background justify-start rounded-none border-b border-border inset-none h-auto")}>
           {tabs.map((tab) => {
             const isActive = activeTab === tab.value;
             return (

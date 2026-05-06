@@ -59,7 +59,7 @@ const FLOW_STEPS_INFO = [
 
 function ContextPanel() {
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus h-fit")}>
+    <GlassPanel depth={1} className={cn("inset-default-plus h-fit")}>
       <h3 className={cn( "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
         Como funciona
       </h3>

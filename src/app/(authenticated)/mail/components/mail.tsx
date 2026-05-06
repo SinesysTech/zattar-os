@@ -109,7 +109,7 @@ export function Mail({
 
   if (serviceUnavailable) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center inline-default inset-extra-loose text-center")}>
+      <div className={cn("flex h-full flex-col items-center justify-center inline-default inset-extra-loose text-center")}>
         <MailWarning className="text-muted-foreground h-12 w-12" />
         <div className={cn("flex flex-col stack-tight")}>
           <Heading level="section" className={cn("text-body-lg")}>E-mail não configurado</Heading>

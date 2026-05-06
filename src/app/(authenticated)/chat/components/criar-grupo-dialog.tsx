@@ -219,7 +219,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
                     <button
                       type="button"
                       onClick={() => handleRemoveMembro(membro.id)}
-                      className={cn(/* design-system-escape: p-0.5 → usar <Inset> */ "ml-1 rounded-full inset-nano hover:bg-muted-foreground/20")}
+                      className={cn("ml-1 rounded-full inset-nano hover:bg-muted-foreground/20")}
                       aria-label={`Remover ${membro.nome} do grupo`}
                       title={`Remover ${membro.nome} do grupo`}
                     >

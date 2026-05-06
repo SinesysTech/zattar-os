@@ -161,7 +161,7 @@ export function FileUploadDialogUnified({
                                     id="file-upload-unified"
                                     name="file-upload"
                                     type="file"
-                                    className={cn(/* design-system-escape: p-0 → usar <Inset> */ "sr-only h-auto inset-none")}
+                                    className={cn("sr-only h-auto inset-none")}
                                     onChange={handleChange}
                                     multiple
                                     disabled={uploading}

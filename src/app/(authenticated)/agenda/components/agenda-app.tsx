@@ -361,7 +361,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
 
   // ── Render ────────────────────────────────────────────────────────
   return (
-    <div className={cn(/* design-system-escape: pb-12 padding direcional sem Inset equiv. */ "flex flex-col stack-default-plus pb-12")}>
+    <div className={cn("flex flex-col stack-default-plus pb-12")}>
       {/* ── 1. Header ── */}
       <div className={cn("flex items-end justify-between inline-default")}>
         <div>

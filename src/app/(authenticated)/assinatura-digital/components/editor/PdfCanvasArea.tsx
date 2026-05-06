@@ -238,7 +238,7 @@ export default function PdfCanvasArea({
         <div className={cn(
           "absolute inset-0 px-1 overflow-hidden",
           isRichTextField
-            ? /* design-system-escape: p-1.5 → usar <Inset> */ "flex items-start inset-snug text-left"
+            ? "flex items-start inset-snug text-left"
             : "flex items-center justify-center text-center"
         )}>
           <span className={cn(

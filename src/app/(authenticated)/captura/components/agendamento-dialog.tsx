@@ -165,7 +165,7 @@ export function AgendamentoDialog({ open, onOpenChange, onSuccess }: Props) {
           onCredenciaisChange={setCredencialIds}
         />
 
-        <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between rounded-md border inset-medium bg-background")}>
+        <div className={cn("flex items-center justify-between rounded-md border inset-medium bg-background")}>
           <div className={cn("flex flex-col stack-micro")}>
             <small className="text-sm font-semibold leading-none">Ativo</small>
             <p className="text-muted-foreground text-xs">

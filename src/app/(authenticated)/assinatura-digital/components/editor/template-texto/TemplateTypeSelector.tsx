@@ -81,7 +81,7 @@ export function TemplateTypeSelector({
             {/* Icon */}
             <div
               className={cn(
-                /* design-system-escape: p-2 → usar <Inset> */ 'rounded-lg inset-tight',
+                'rounded-lg inset-tight',
                 isSelected
                   ? 'bg-primary/10 text-primary'
                   : 'bg-muted text-muted-foreground'

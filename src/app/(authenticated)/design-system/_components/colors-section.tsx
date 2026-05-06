@@ -35,7 +35,7 @@ function PalettePrimary() {
           {swatches.map((s) => (
             <div
               key={s.label}
-              className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "flex aspect-[1.2/1] flex-col justify-between rounded-xl border inset-tight-plus")}
+              className={cn("flex aspect-[1.2/1] flex-col justify-between rounded-xl border inset-tight-plus")}
               style={{
                 background: s.bg,
                 color: s.dark ? "oklch(0.15 0.01 281)" : "white",
@@ -50,7 +50,7 @@ function PalettePrimary() {
         </div>
       </div>
       <div className={cn("mt-4 grid inline-medium sm:grid-cols-2")}>
-        <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus rounded-xl border border-border bg-card px-3.5 py-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span
             className="size-6 rounded-md"
             style={{ background: "var(--highlight)" }}
@@ -62,7 +62,7 @@ function PalettePrimary() {
             </span>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus rounded-xl border border-border bg-card px-3.5 py-2.5")}>
+        <div className={cn("flex items-center inline-tight-plus rounded-xl border border-border bg-card px-3.5 py-2.5")}>
           <span className="size-6 rounded-full bg-primary" />
           <span className="font-mono text-[11px]">ring focus · transparent</span>
         </div>
@@ -92,7 +92,7 @@ function PaletteNeutrals() {
         {tiles.map((t) => (
           <div
             key={t.l}
-            className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex aspect-square items-end rounded-xl border inset-tight font-mono text-[10px]")}
+            className={cn("flex aspect-square items-end rounded-xl border inset-tight font-mono text-[10px]")}
             style={{
               background: t.bg,
               color: t.dark ? "var(--foreground)" : "white",

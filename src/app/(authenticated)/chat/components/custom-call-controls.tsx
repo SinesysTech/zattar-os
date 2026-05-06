@@ -197,21 +197,21 @@ export function CustomCallControls({
                   onValueChange={(val) => onApplyEffect?.(val as 'none' | 'blur' | 'image')}
                   className={cn("grid grid-cols-1 inline-medium")}
                 >
-                  <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 inset-tight rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('none')}>
+                  <div className={cn("flex items-center space-x-3 inset-tight rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('none')}>
                     <RadioGroupItem value="none" id="effect-none" className="border-video-muted text-info" />
                     <Label htmlFor="effect-none" className="cursor-pointer flex-1">Normal</Label>
                     <Text variant="caption" className="w-12 h-8 rounded bg-video-surface-hover border border-video-muted flex items-center justify-center">
                       <span className="text-video-muted">OFF</span>
                     </Text>
                   </div>
-                  <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 inset-tight rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('blur')}>
+                  <div className={cn("flex items-center space-x-3 inset-tight rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('blur')}>
                     <RadioGroupItem value="blur" id="effect-blur" className="border-video-muted text-info" />
                     <Label htmlFor="effect-blur" className="cursor-pointer flex-1">Desfoque (Blur)</Label>
                     <Text variant="caption" className="w-12 h-8 rounded bg-linear-to-br from-video-muted to-video-surface-hover border border-video-muted flex items-center justify-center blur-sm">
                       <span className="text-video-text text-[10px]">BLUR</span>
                     </Text>
                   </div>
-                  <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 inset-tight rounded-lg hover:bg-video-surface-hover/50 transition-colors")} onClick={() => onApplyEffect?.('image')}>
+                  <div className={cn("flex items-center space-x-3 inset-tight rounded-lg hover:bg-video-surface-hover/50 transition-colors")} onClick={() => onApplyEffect?.('image')}>
                     <RadioGroupItem value="image" id="effect-image" className="border-video-muted text-info" />
                     <Label htmlFor="effect-image" className="flex-1 cursor-pointer">Imagem Virtual</Label>
                     <Text variant="caption" className="w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-video-muted flex items-center justify-center">

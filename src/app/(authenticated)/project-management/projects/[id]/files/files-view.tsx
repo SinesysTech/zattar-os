@@ -160,7 +160,7 @@ export function FilesView({
         </Card>
       ) : (
         <Card>
-          <CardContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ "inset-none")}>
+          <CardContent className={cn("inset-none")}>
             <div className="divide-y">
               {anexos.map((anexo) => (
                 <div

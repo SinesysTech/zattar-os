@@ -215,7 +215,7 @@ export function BlockedIpsContent() {
       {/* Stats Cards */}
       <div className={cn("grid inline-default md:grid-cols-4")}>
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
+          <CardHeader className={cn("flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Total Bloqueados</CardTitle>
             <ShieldX className="h-4 w-4 text-destructive" />
           </CardHeader>
@@ -225,7 +225,7 @@ export function BlockedIpsContent() {
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
+          <CardHeader className={cn("flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Permanentes</CardTitle>
             <Ban className="h-4 w-4 text-destructive" />
           </CardHeader>
@@ -235,7 +235,7 @@ export function BlockedIpsContent() {
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
+          <CardHeader className={cn("flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Temporários</CardTitle>
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
@@ -245,7 +245,7 @@ export function BlockedIpsContent() {
         </Card>
 
         <Card>
-          <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between stack-none pb-2")}>
+          <CardHeader className={cn("flex flex-row items-center justify-between stack-none pb-2")}>
             <CardTitle className={cn( "text-body-sm font-medium")}>Whitelist</CardTitle>
             <ShieldCheck className="h-4 w-4 text-success" />
           </CardHeader>

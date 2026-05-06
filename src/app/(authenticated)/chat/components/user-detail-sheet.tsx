@@ -52,7 +52,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
 
   return (
     <Dialog open={showProfileSheet} onOpenChange={toggleProfileSheet}>
-      <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset> */ " max-w-lg max-h-[90vh] inset-none flex flex-col")}>
+      <DialogContent className={cn(" max-w-lg max-h-[90vh] inset-none flex flex-col")}>
         <DialogHeader className={cn("px-6 pt-6 pb-2 shrink-0")}>
           <DialogTitle className="text-page-title">Perfil</DialogTitle>
           <DialogDescription className="sr-only">

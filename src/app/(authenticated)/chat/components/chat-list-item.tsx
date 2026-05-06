@@ -18,7 +18,7 @@ export function ChatListItem({ chat, active, onClick }: ChatListItemProps) {
   return (
     <div
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ "group/item flex items-center inline-medium inset-medium rounded-xl cursor-pointer transition-all duration-200",
+        "group/item flex items-center inline-medium inset-medium rounded-xl cursor-pointer transition-all duration-200",
         "border border-transparent relative",
         active
           ? "bg-chat-sidebar-active border-primary/8"

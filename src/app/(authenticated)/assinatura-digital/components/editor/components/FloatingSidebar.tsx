@@ -84,7 +84,7 @@ function FieldPaletteCard({
       }}
       onDragEnd={onDragEnd}
       className={cn(
-        /* design-system-escape: p-3 → usar <Inset> */ 'flex items-center inline-medium inset-medium rounded-xl border backdrop-blur-md select-none',
+        'flex items-center inline-medium inset-medium rounded-xl border backdrop-blur-md select-none',
         'glass-kpi border-border/40 bg-card/55',
         'cursor-grab active:cursor-grabbing',
         'hover:border-primary/40 hover:-translate-y-px hover:shadow-sm',
@@ -151,7 +151,7 @@ function SidebarContent(props: FloatingSidebarProps) {
   return (
     <div className="flex h-full min-h-0 flex-col bg-card/40 backdrop-blur-xl">
       {/* Scrollable content */}
-      <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "flex flex-col flex-1 min-h-0 stack-default-plus overflow-y-auto px-5 py-5")}>
+      <div className={cn("flex flex-col flex-1 min-h-0 stack-default-plus overflow-y-auto px-5 py-5")}>
         {/* ── Configurações ───────────────────────── */}
         <section className={cn("flex flex-col stack-medium")}>
           <SectionHeader title="Configurações" />
@@ -171,7 +171,7 @@ function SidebarContent(props: FloatingSidebarProps) {
               />
             </div>
 
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between inline-medium rounded-xl border border-border/40 bg-card/55 backdrop-blur-md inset-medium glass-kpi")}>
+            <div className={cn("flex items-center justify-between inline-medium rounded-xl border border-border/40 bg-card/55 backdrop-blur-md inset-medium glass-kpi")}>
               <div className={cn("flex items-center inline-tight-plus min-w-0")}>
                 <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
                   <Camera className="size-3.5 text-info/70" />
@@ -211,7 +211,7 @@ function SidebarContent(props: FloatingSidebarProps) {
 
           <div className={cn("flex flex-col stack-tight")}>
             {signers.length === 0 ? (
-              <div className={cn(/* design-system-escape: p-5 → usar <Inset> */ "flex flex-col items-center justify-center inline-tight inset-default-plus border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center")}>
+              <div className={cn("flex flex-col items-center justify-center inline-tight inset-default-plus border-2 border-dashed border-border/60 rounded-xl bg-card/30 text-center")}>
                 <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
                   <Settings className="size-4 text-muted-foreground" />
                 </span>
@@ -358,7 +358,7 @@ export default function FloatingSidebar(props: FloatingSidebarProps) {
               <Settings className="size-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className={cn(/* design-system-escape: p-0 → usar <Inset> */ "h-[85vh] inset-none rounded-t-xl")}>
+          <SheetContent side="bottom" className={cn("h-[85vh] inset-none rounded-t-xl")}>
             <SidebarContent {...props} />
           </SheetContent>
         </Sheet>

@@ -74,7 +74,7 @@ export function ProcessosRelacionadosCell({
               +{processosRestantes.length} mais
             </Button>
           </PopoverTrigger>
-          <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-80 inset-tight")} align="start">
+          <PopoverContent className={cn("w-80 inset-tight")} align="start">
             <div className={cn("flex flex-col stack-snug max-h-60 overflow-y-auto")}>
               <Text variant="caption" className="font-medium mb-2">
                 Todos os processos ({processos.length})
@@ -135,7 +135,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
             <span className="break-all">{numeroFormatado}</span>
           </Link>
         </HoverCardTrigger>
-        <HoverCardContent align="start" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "w-80 inset-medium")}>
+        <HoverCardContent align="start" className={cn("w-80 inset-medium")}>
           <div className={cn("flex flex-col stack-medium")}>
             {/* Header: Grau e Status */}
             <div className={cn("flex items-center justify-between inline-tight")}>

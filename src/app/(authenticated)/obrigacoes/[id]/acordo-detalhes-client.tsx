@@ -352,7 +352,7 @@ function ResumoTab({ acordo }: { acordo: AcordoComParcelas }) {
 
   return (
     <div className={cn("flex flex-col stack-default")}>
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+      <GlassPanel depth={1} className={cn("inset-default-plus")}>
         <Heading level="section" className="mb-4">
           Dados do acordo
         </Heading>
@@ -530,7 +530,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
   }
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-5 → usar <Inset> */ "inset-default-plus")}>
+    <GlassPanel depth={1} className={cn("inset-default-plus")}>
       <ol className={cn("flex flex-col relative border-l border-border/20 ml-2 stack-default-plus")}>
         {events.map((event, idx) => {
           const Icon = event.icon;

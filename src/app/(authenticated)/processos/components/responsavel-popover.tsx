@@ -93,7 +93,7 @@ export function ResponsavelPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-60 inset-none rounded-2xl glass-dropdown overflow-hidden")}
+        className={cn("w-60 inset-none rounded-2xl glass-dropdown overflow-hidden")}
         align="start"
         side="bottom"
         onClick={(e) => e.stopPropagation()}

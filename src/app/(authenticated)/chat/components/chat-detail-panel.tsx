@@ -81,7 +81,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
           </Text>
           <div className={cn("flex flex-col stack-none")}>
             {/* Email */}
-            <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
+            <div className={cn("flex items-center inline-tight-plus py-2")}>
               <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                 <Mail className="size-3 text-primary/70" />
               </div>
@@ -94,7 +94,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             </div>
             {/* Phone */}
             {user.phone && (
-              <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
+              <div className={cn("flex items-center inline-tight-plus py-2")}>
                 <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                   <Phone className="size-3 text-primary/70" />
                 </div>
@@ -106,7 +106,7 @@ export function ChatDetailPanel({ user }: ChatDetailPanelProps) {
             )}
             {/* Country / Membro desde */}
             {user.country && (
-              <div className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex items-center inline-tight-plus py-2")}>
+              <div className={cn("flex items-center inline-tight-plus py-2")}>
                 <div className="size-7 rounded-md flex items-center justify-center bg-primary/6 shrink-0">
                   <Calendar className="size-3 text-primary/70" />
                 </div>

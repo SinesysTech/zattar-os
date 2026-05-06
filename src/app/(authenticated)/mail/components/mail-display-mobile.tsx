@@ -185,7 +185,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
         </VisuallyHidden>
 
         <div className="flex h-full flex-col">
-          <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center inset-tight")}>
+          <div className={cn("flex items-center inset-tight")}>
             <div className={cn("flex items-center inline-tight")}>
               <Button
                 variant="ghost"
