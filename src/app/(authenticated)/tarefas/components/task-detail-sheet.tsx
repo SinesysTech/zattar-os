@@ -312,7 +312,7 @@ export function TaskDetailSheet() {
                                     </DropdownMenu>
                                 </div>
                             </div>
-                            <DialogTitle className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "mt-4 text-2xl font-bold leading-tight")}>
+                            <DialogTitle className="mt-4 text-page-title leading-tight">
                                 {tarefa.title}
                             </DialogTitle>
                             <DialogDescription className="sr-only">

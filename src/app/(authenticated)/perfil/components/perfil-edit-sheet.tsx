@@ -103,7 +103,7 @@ export function PerfilEditSheet({
       <DialogContent className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "max-h-[90vh] w-100 sm:w-135 overflow-y-auto p-6")}>
         <form onSubmit={handleSubmit}>
           <DialogHeader className={cn(/* design-system-escape: pb-5 padding direcional sem Inset equiv. */ "pb-5")}>
-            <DialogTitle className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>Editar Perfil</DialogTitle>
+            <DialogTitle className="text-section-title">Editar Perfil</DialogTitle>
             <DialogDescription>
               Atualize suas informações pessoais e de contato.
             </DialogDescription>
