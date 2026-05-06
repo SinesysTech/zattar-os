@@ -1,15 +1,9 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import { UserProvider, type UserData } from "@/providers/user-provider"
 import type { Permissao } from "@/app/(authenticated)/usuarios"
 
-const CopilotDashboard = dynamic(
-  () => import("@/components/layout/copilot-dashboard"),
-  { ssr: false }
-)
-
-export function AuthenticatedLayoutClient({
+export function FullScreenLayoutClient({
   children,
   initialUser,
   initialPermissoes,
@@ -20,7 +14,7 @@ export function AuthenticatedLayoutClient({
 }) {
   return (
     <UserProvider initialUser={initialUser} initialPermissoes={initialPermissoes}>
-      <CopilotDashboard>{children}</CopilotDashboard>
+      <div className="min-h-svh w-full bg-background">{children}</div>
     </UserProvider>
   )
 }

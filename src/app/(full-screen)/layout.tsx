@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { AuthenticatedLayoutClient } from "./layout-client"
+import { FullScreenLayoutClient } from "./layout-client"
 import { fetchAuthenticatedUserContext } from "@/app/_shared/fetch-authenticated-user"
 
 export const metadata: Metadata = {
@@ -14,12 +14,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
+export default async function FullScreenLayout({ children }: { children: React.ReactNode }) {
   const { initialUser, initialPermissoes } = await fetchAuthenticatedUserContext()
 
   return (
-    <AuthenticatedLayoutClient initialUser={initialUser} initialPermissoes={initialPermissoes}>
+    <FullScreenLayoutClient initialUser={initialUser} initialPermissoes={initialPermissoes}>
       {children}
-    </AuthenticatedLayoutClient>
+    </FullScreenLayoutClient>
   )
 }

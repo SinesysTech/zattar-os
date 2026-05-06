@@ -87,7 +87,7 @@ function DashboardLayout({ children, userId }: { children: React.ReactNode; user
     <>
       <div
         className={cn(
-          "fixed top-0 bottom-0 left-0 flex flex-col bg-background canvas-dots",
+          "fixed top-0 bottom-0 left-0 flex flex-col bg-background",
           "transition-[right] duration-300 ease-out"
         )}
         style={{ right: isSidebarOpen && !isMobile ? `${SIDEBAR_WIDTH}px` : 0 }}
