@@ -55,8 +55,11 @@ export function BuscarTab({ base }: { base: KnowledgeBase }) {
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label className="text-xs text-muted-foreground">Threshold (similaridade mínima): {threshold.toFixed(2)}</Label>
-            <Slider value={[threshold]} onValueChange={(v) => setThreshold(v[0])} min={0.5} max={0.95} step={0.05} />
+            <Label className="text-xs text-muted-foreground">
+              Threshold (similaridade mínima): {threshold.toFixed(2)}
+              {threshold < 0.3 && <span className="ml-2 text-warning">amplo — pode trazer ruído</span>}
+            </Label>
+            <Slider value={[threshold]} onValueChange={(v) => setThreshold(v[0])} min={0.1} max={0.95} step={0.05} />
           </div>
           <div>
             <Label className="text-xs text-muted-foreground">Resultados: {limit}</Label>
