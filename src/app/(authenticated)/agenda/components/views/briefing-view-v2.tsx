@@ -79,7 +79,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
     <button onClick={onClick} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-full text-left rounded-xl p-4 bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/6r:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start gap-4")}>
         <div className="text-right shrink-0 w-14">
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
+          <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
           {event.start.getTime() !== event.end.getTime() && <div className="text-[9px] text-muted-foreground/40 font-mono tabular-nums">{fmtTime(event.end)}</div>}
           {isFatal && <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-[9px] text-destructive/60 font-bold uppercase mt-0.5")}>FATAL</div>}
         </div>
@@ -173,7 +173,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
             <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center"><Sparkles className="size-4 text-primary" /></div>
             <div>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>Bom dia, {userName}</div>
+              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>Bom dia, {userName}</div>
               <Text variant="caption" className="text-muted-foreground/50">{dateStr}</Text>
             </div>
           </div>

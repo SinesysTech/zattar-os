@@ -246,7 +246,7 @@ function PericiaMissionCard({
                 </span>
                 <Heading
                   level="card"
-                  className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-0.5 truncate text-sm")}
+                  className={cn("mt-0.5 truncate text-body-sm")}
                 >
                   {especialidade || 'Perícia técnica'}
                 </Heading>
@@ -359,7 +359,7 @@ function GroupHeader({ group }: GroupHeaderProps) {
         <Icon className={cn('size-4', group.iconColor)} />
       </IconContainer>
       <div className="min-w-0 flex-1">
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tracking-tight text-foreground")}>
+        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight text-foreground")}>
           {group.label}
         </p>
         <p className="text-[11px] text-muted-foreground/65">{group.description}</p>
@@ -551,7 +551,7 @@ export function PericiasMissaoContent({
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 flex flex-col items-center justify-center text-center")}>
           <Sparkles className="size-10 text-primary/30 mb-3" />
           <Heading level="card">Nenhuma perícia ativa</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>
+          <p className={cn("text-body-sm text-muted-foreground/60 mt-1")}>
             {situacaoFilter !== 'todos'
               ? `Sem perícias na situação "${SITUACAO_PERICIA_LABELS[situacaoFilter as SituacaoPericiaCodigo]}"`
               : 'Todas as perícias estão finalizadas ou canceladas.'}

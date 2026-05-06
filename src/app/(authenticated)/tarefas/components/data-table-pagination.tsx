@@ -18,13 +18,13 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
   return (
     <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-2")}>
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground hidden flex-1 text-sm lg:inline")}>
+      <div className={cn("text-muted-foreground hidden flex-1 text-body-sm lg:inline")}>
         {table.getFilteredSelectedRowModel().rows.length} de{" "}
         {table.getFilteredRowModel().rows.length} linha(s) selecionada(s).
       </div>
       <div className={cn(/* design-system-escape: space-x-4 → migrar para <Inline gap="default">; lg:space-x-8 sem equivalente DS */ "flex items-center space-x-4 lg:space-x-8")}>
         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "hidden text-sm font-medium lg:inline")}>Linhas por página</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "hidden text-body-sm font-medium lg:inline")}>Linhas por página</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -42,7 +42,7 @@ export function DataTablePagination<TData>({ table }: DataTablePaginationProps<T
             </SelectContent>
           </Select>
         </div>
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex w-25 items-center justify-center text-sm font-medium")}>
+        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex w-25 items-center justify-center text-body-sm font-medium")}>
           Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </div>
         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>

@@ -179,7 +179,7 @@ export default function AudienciasDoc() {
           O módulo de Audiências oferece quatro modos de visualização, acessíveis pelos botões
           no canto superior direito da tela:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-2 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "list-disc list-inside space-y-2 text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Semana:</strong> agenda por hora para os sete dias da semana. Ideal para planejamento do dia a dia.</li>
           <li><strong>Mês:</strong> calendário mensal com marcações por dia. Facilita a visualização de concentrações de atos.</li>
           <li><strong>Ano:</strong> visão anual com densidade de audiências por mês. Útil para planejamento estratégico.</li>

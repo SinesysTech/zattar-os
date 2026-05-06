@@ -97,7 +97,7 @@ export function AllDetailsSheet({
         ) : (
           <Tabs defaultValue="expedientes">
             <TabsList variant="line" className="w-full justify-start">
-              <TabsTrigger value="expedientes" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "gap-1.5 text-sm")}>
+              <TabsTrigger value="expedientes" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
                 <FileText className="size-3.5" />
                 Expedientes
                 {totalExpedientes > 0 && (
@@ -112,7 +112,7 @@ export function AllDetailsSheet({
                   </SemanticBadge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="audiencias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "gap-1.5 text-sm")}>
+              <TabsTrigger value="audiencias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
                 <Calendar className="size-3.5" />
                 Audiências
                 {totalAudiencias > 0 && (
@@ -127,7 +127,7 @@ export function AllDetailsSheet({
                   </SemanticBadge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="pericias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "gap-1.5 text-sm")}>
+              <TabsTrigger value="pericias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
                 <Microscope className="size-3.5" />
                 Perícias
                 {totalPericias > 0 && (
@@ -146,7 +146,7 @@ export function AllDetailsSheet({
 
             <TabsContent value="expedientes" className="mt-3">
               {totalExpedientes === 0 ? (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-6 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground/60 py-6 text-center")}>
+                <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground/60 py-6 text-center")}>
                   Nenhum expediente.
                 </p>
               ) : (
@@ -169,7 +169,7 @@ export function AllDetailsSheet({
 
             <TabsContent value="audiencias" className="mt-3">
               {totalAudiencias === 0 ? (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-6 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground/60 py-6 text-center")}>
+                <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground/60 py-6 text-center")}>
                   Nenhuma audiência.
                 </p>
               ) : (
@@ -191,7 +191,7 @@ export function AllDetailsSheet({
 
             <TabsContent value="pericias" className="mt-3">
               {totalPericias === 0 ? (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-6 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground/60 py-6 text-center")}>
+                <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground/60 py-6 text-center")}>
                   Nenhuma perícia.
                 </p>
               ) : (

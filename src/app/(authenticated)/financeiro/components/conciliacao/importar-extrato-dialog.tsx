@@ -138,7 +138,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
             {file ? (
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                 <div className="text-left">
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{file.name}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{file.name}</p>
                   <Text variant="caption">
                     {(file.size / 1024).toFixed(1)} KB
                   </Text>
@@ -148,7 +148,7 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
                 </Button>
               </div>
             ) : (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Arraste e solte o arquivo aqui ou clique para selecionar (OFX, CSV, TXT)
               </p>
             )}

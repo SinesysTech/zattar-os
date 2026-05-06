@@ -198,7 +198,7 @@ export function TableRecentProjects({ projetos }: TableRecentProjectsProps) {
           </Table>
         </div>
         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; pt-4 padding direcional sem Inset equiv. */ "flex items-center justify-end space-x-2 pt-4")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground flex-1 text-sm")}>
+          <div className={cn("text-muted-foreground flex-1 text-body-sm")}>
             Página {table.getState().pagination.pageIndex + 1} de{" "}
             {table.getPageCount()} ({projetos.length} projetos)
           </div>

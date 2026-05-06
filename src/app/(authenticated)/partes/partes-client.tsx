@@ -589,7 +589,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Partes</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>
+          <p className={cn("text-body-sm text-muted-foreground/70 mt-0.5")}>
             {totalGeral > 0
               ? `${totalGeral.toLocaleString('pt-BR')} registros${novosEsteMes > 0 ? ` · ${novosEsteMes} novos este mês` : ''}`
               : total > 0
@@ -615,7 +615,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
                       setCreateType(opt.type);
                       setShowTypeMenu(false);
                     }}
-                    className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-sm hover:bg-accent transition-colors cursor-pointer text-left")}
+                    className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-body-sm hover:bg-accent transition-colors cursor-pointer text-left")}
                   >
                     <opt.icon className="size-4 text-muted-foreground/60" />
                     {opt.label}
@@ -704,7 +704,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
           {!isLoading && !error && partes.length === 0 && (
             <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "col-span-full flex flex-col items-center justify-center py-16 text-center")}>
               <Users className="size-8 text-muted-foreground/65 mb-3" />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>
                 Nenhuma parte encontrada
               </p>
               <Text variant="caption" className="text-muted-foreground/55 mt-1">

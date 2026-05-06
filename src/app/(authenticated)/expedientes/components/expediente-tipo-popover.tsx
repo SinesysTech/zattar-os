@@ -189,7 +189,7 @@ export function TipoTriggerContent({
       )}
       <span className={cn(
         'italic',
-        size === 'sm' ? 'text-[11px] text-muted-foreground/70' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm text-muted-foreground/70',
+        size === 'sm' ? 'text-[11px] text-muted-foreground/70' : 'text-body-sm text-muted-foreground/70',
       )}>
         Sem tipo
       </span>

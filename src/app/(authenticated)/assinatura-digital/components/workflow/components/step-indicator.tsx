@@ -39,7 +39,7 @@ export function StepIndicator({
 
   const sizeClasses = {
     sm: 'h-6 w-6 text-caption',
-    md: /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'h-8 w-8 text-sm',
+    md: 'h-8 w-8 text-body-sm',
   };
 
   const iconSizes = {

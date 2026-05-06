@@ -236,7 +236,7 @@ function criarColunas(
         const orcamento = row.original;
         return (
           <div className="flex flex-col justify-center">
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{orcamento.nome}</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{orcamento.nome}</span>
             {orcamento.descricao && (
               <Text variant="caption" className="line-clamp-1">
                 {orcamento.descricao}
@@ -289,7 +289,7 @@ function criarColunas(
       cell: ({ row }) => {
         const orcamento = row.original;
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center text-sm")}>
+          <div className={cn("flex items-center text-body-sm")}>
             {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
           </div>
         );
@@ -305,7 +305,7 @@ function criarColunas(
       cell: ({ row }) => {
         const total = calcularTotalOrcado(row.original);
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center font-mono text-sm font-medium")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "flex items-center font-mono text-body-sm font-medium")}>
             {formatarValor(total)}
           </div>
         );
@@ -314,7 +314,7 @@ function criarColunas(
     {
       id: 'itens',
       header: () => (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Itens</div>
+        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Itens</div>
       ),
       size: 70,
       meta: { align: 'left' as const },
@@ -352,7 +352,7 @@ function criarColunas(
     {
       id: 'acoes',
       header: () => (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
+        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
       ),
       enableSorting: false,
       size: 80,

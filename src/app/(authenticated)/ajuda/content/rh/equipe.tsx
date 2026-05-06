@@ -137,7 +137,7 @@ export default function Equipe() {
         <p className="text-muted-foreground mb-4">
           O sistema possui perfis de acesso predefinidos, cada um com um conjunto de permissões:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-3 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "space-y-3 text-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>
             <strong>Administrador:</strong> acesso total a todos os módulos, incluindo configurações
             e gestão de usuários.

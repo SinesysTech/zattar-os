@@ -71,7 +71,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         <DataTableColumnHeader column={column} title="ID" />
       ),
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center text-sm font-medium")}>
+        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center text-body-sm font-medium")}>
           #{row.getValue("id")}
         </div>
       ),
@@ -89,7 +89,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const titulo = row.getValue("titulo") as string | null;
         const id = row.original.id;
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center text-sm")}>
+          <div className={cn("min-h-10 flex items-center text-body-sm")}>
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "max-w-75 truncate font-medium")}>
               {titulo || `Documento #${id}`}
             </span>
@@ -177,7 +177,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
         const concluidos = row.original._assinantes_concluidos ?? 0;
         const total = row.original._assinantes_count ?? 0;
         return (
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center gap-1.5 text-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "min-h-10 flex items-center gap-1.5 text-body-sm text-muted-foreground")}>
             <Users className="h-4 w-4" />
             {concluidos}/{total}
           </div>
@@ -195,7 +195,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
       cell: ({ row }) => {
         const date = row.getValue("created_at") as string;
         return (
-          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center gap-1.5 text-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "min-h-10 flex items-center gap-1.5 text-body-sm text-muted-foreground")}>
             <Calendar className="h-4 w-4" />
             {format(new Date(date), "dd/MM/yyyy HH:mm", { locale: ptBR })}
           </div>
@@ -207,7 +207,7 @@ export function createColumns(actions: ColumnActions): ColumnDef<DocumentoListIt
     },
     {
       id: "acoes",
-      header: () => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</span>,
+      header: () => <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</span>,
       cell: ({ row }) => {
         const doc = row.original;
         const isFormulario = doc._origem === "formulario";

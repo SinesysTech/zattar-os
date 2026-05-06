@@ -86,7 +86,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
     >
       <div className="flex items-center justify-between mb-3">
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>{label}</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{label}</span>
           <AppBadge variant="outline">{tasks.length}</AppBadge>
         </div>
       </div>
@@ -104,7 +104,7 @@ function DroppableColumn({ status, label, tasks, onCardClick }: DroppableColumnP
           </div>
         ) : (
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; pt-4 padding direcional sem Inset equiv. */ "flex flex-col justify-center gap-4 pt-4")}>
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm text-center")}>
+            <div className={cn("text-muted-foreground text-body-sm text-center")}>
               Nenhuma tarefa aqui.
             </div>
           </div>

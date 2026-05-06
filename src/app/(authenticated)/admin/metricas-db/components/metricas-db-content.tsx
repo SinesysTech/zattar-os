@@ -61,7 +61,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
           <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <div>
               <div className="flex items-center justify-between">
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Index hit rate</span>
+                <span className={cn("text-body-sm text-muted-foreground")}>Index hit rate</span>
                 <span className={`text-sm font-semibold ${getColorClass(indexHitRate)}`}>
                   {formatPercent(indexHitRate)}
                 </span>
@@ -70,7 +70,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
             </div>
             <div>
               <div className="flex items-center justify-between">
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Table hit rate</span>
+                <span className={cn("text-body-sm text-muted-foreground")}>Table hit rate</span>
                 <span className={`text-sm font-semibold ${getColorClass(tableHitRate)}`}>
                   {formatPercent(tableHitRate)}
                 </span>
@@ -97,7 +97,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
               <TableBody>
                 {metricas.indicesNaoUtilizados.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={3} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-center text-sm text-muted-foreground")}>
+                    <TableCell colSpan={3} className={cn("text-center text-body-sm text-muted-foreground")}>
                       Nenhum índice sem uso recente.
                     </TableCell>
                   </TableRow>
@@ -134,7 +134,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
             <TableBody>
               {metricas.queriesLentas.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-center text-sm text-muted-foreground")}>
+                  <TableCell colSpan={5} className={cn("text-center text-body-sm text-muted-foreground")}>
                     Nenhuma query lenta registrada.
                   </TableCell>
                 </TableRow>
@@ -172,7 +172,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
               <TableBody>
                 {metricas.tabelasSeqScan.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-center text-sm text-muted-foreground")}>
+                    <TableCell colSpan={4} className={cn("text-center text-body-sm text-muted-foreground")}>
                       Nenhuma tabela crítica.
                     </TableCell>
                   </TableRow>
@@ -208,7 +208,7 @@ export function MetricasDBContent({ metricas }: MetricasDBContentProps) {
               <TableBody>
                 {metricas.bloat.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-center text-sm text-muted-foreground")}>
+                    <TableCell colSpan={4} className={cn("text-center text-body-sm text-muted-foreground")}>
                       Nenhum bloat reportado.
                     </TableCell>
                   </TableRow>

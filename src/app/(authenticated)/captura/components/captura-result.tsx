@@ -70,7 +70,7 @@ function StatCard({ icon, label, value, variant = 'default' }: StatCardProps) {
       <div className="text-muted-foreground shrink-0">{icon}</div>
       <div>
         <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>{label}</p>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{value}</p>
+        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{value}</p>
       </div>
     </div>
   );
@@ -84,7 +84,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/6 p-4")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-destructive")}>Erro na Captura</p>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>Erro na Captura</p>
           <Text variant="caption" className="mt-1">{error || 'Erro desconhecido'}</Text>
         </div>
       </div>

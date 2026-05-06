@@ -53,7 +53,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
       return (
         <div className={cn(/* design-system-escape: p-8 → usar <Inset>; space-y-4 → migrar para <Stack gap="default"> */ "flex flex-col items-center justify-center p-8 space-y-4")}>
           <Heading level="section" className="text-destructive">App Dify não encontrado</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             O app Dify vinculado a este assistente foi removido.
           </p>
           <Button asChild variant="outline">

@@ -137,7 +137,7 @@ export function PlanoContaEditDialog({
 
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -176,7 +176,7 @@ export function PlanoContaEditDialog({
                 disabled={isSubmitting}
               />
               {errors.nome && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.nome.message}</p>
               )}
             </div>
 
@@ -190,7 +190,7 @@ export function PlanoContaEditDialog({
                 disabled={isSubmitting}
               />
               {errors.descricao && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.descricao.message}</p>
               )}
             </div>
 
@@ -220,7 +220,7 @@ export function PlanoContaEditDialog({
                   </SelectContent>
                 </Select>
                 {errors.tipoConta && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.tipoConta.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.tipoConta.message}</p>
                 )}
               </div>
 
@@ -246,7 +246,7 @@ export function PlanoContaEditDialog({
                   </SelectContent>
                 </Select>
                 {errors.natureza && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.natureza.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.natureza.message}</p>
                 )}
               </div>
             </div>

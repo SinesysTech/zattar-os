@@ -28,7 +28,7 @@ import {
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 const SELECT_CLASS =
-  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
+  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ 'flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50';
 
 const editFormularioSchema = z.object({
   nome: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -337,7 +337,7 @@ export function FormularioEditDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <form id="formulario-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-6 → migrar para <Inset variant="dialog"> */ "space-y-4 p-6")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -352,7 +352,7 @@ export function FormularioEditDialog({
                 placeholder="Nome do formulário"
                 disabled={isSubmitting}
               />
-              {errors.nome && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>}
+              {errors.nome && <p className={cn("text-body-sm text-destructive")}>{errors.nome.message}</p>}
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -365,7 +365,7 @@ export function FormularioEditDialog({
                 placeholder="Slug único"
                 disabled={isSubmitting}
               />
-              {errors.slug && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>}
+              {errors.slug && <p className={cn("text-body-sm text-destructive")}>{errors.slug.message}</p>}
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -381,7 +381,7 @@ export function FormularioEditDialog({
                 disabled={isSubmitting}
               />
               {errors.segmento_id && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.segmento_id.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.segmento_id.message}</p>
               )}
             </div>
 
@@ -394,7 +394,7 @@ export function FormularioEditDialog({
                 disabled={isSubmitting}
               />
               {errors.descricao && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.descricao.message}</p>
               )}
             </div>
 
@@ -459,7 +459,7 @@ export function FormularioEditDialog({
             {/* Campos de configuração de contrato */}
             {tipoFormulario === 'contrato' && (
               <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-md border p-4")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
                   Configuração do Contrato
                 </p>
 
@@ -483,7 +483,7 @@ export function FormularioEditDialog({
                     ))}
                   </select>
                   {errors.contrato_config?.tipo_contrato_id && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                    <p className={cn("text-body-sm text-destructive")}>
                       {errors.contrato_config.tipo_contrato_id.message}
                     </p>
                   )}
@@ -509,7 +509,7 @@ export function FormularioEditDialog({
                     ))}
                   </select>
                   {errors.contrato_config?.tipo_cobranca_id && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                    <p className={cn("text-body-sm text-destructive")}>
                       {errors.contrato_config.tipo_cobranca_id.message}
                     </p>
                   )}
@@ -530,7 +530,7 @@ export function FormularioEditDialog({
                     <option value="re">Ré</option>
                   </select>
                   {errors.contrato_config?.papel_cliente && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                    <p className={cn("text-body-sm text-destructive")}>
                       {errors.contrato_config.papel_cliente.message}
                     </p>
                   )}
@@ -560,7 +560,7 @@ export function FormularioEditDialog({
                     ))}
                   </select>
                   {errors.contrato_config?.pipeline_id && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                    <p className={cn("text-body-sm text-destructive")}>
                       {errors.contrato_config.pipeline_id.message}
                     </p>
                   )}

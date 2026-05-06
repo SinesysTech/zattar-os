@@ -126,7 +126,7 @@ export function ObrigacoesYearWrapper({
       <Dialog open={dayDialogOpen} onOpenChange={setDayDialogOpen}>
         <DialogContent className=" max-w-lg">
           <DialogHeader>
-            <DialogTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+            <DialogTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
               {selectedDayDate
                 ? format(selectedDayDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
                 : ''}

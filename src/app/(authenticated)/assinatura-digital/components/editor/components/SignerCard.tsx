@@ -80,7 +80,7 @@ const SignerCard = memo(function SignerCard({
 
       {/* Info */}
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground truncate")}>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground truncate")}>
           {signer.nome}
           {isCurrentUser && ' (Você)'}
         </p>

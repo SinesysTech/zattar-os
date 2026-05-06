@@ -51,7 +51,7 @@ export function SearchHero({ onBuscar }: SearchHeroProps) {
           onChange={(e) => setTermo(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Número do processo, nome da parte, OAB..."
-          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/60")}
+          className={cn("flex-1 bg-transparent text-body-sm text-foreground outline-none placeholder:text-muted-foreground/60")}
           autoComplete="off"
           spellCheck={false}
           aria-label="Termo de busca"

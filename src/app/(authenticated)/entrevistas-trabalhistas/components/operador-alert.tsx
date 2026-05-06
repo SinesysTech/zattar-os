@@ -15,7 +15,7 @@ export function OperadorAlert({ tipo = 'info', children }: OperadorAlertProps) {
   return (
     <Alert variant={tipo === 'aviso' ? 'destructive' : 'default'} className="mt-3">
       <Icon className="h-4 w-4" />
-      <AlertDescription className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{children}</AlertDescription>
+      <AlertDescription className={cn("text-body-sm")}>{children}</AlertDescription>
     </Alert>
   );
 }

@@ -126,7 +126,7 @@ export function CaseIdentityBar({
       <span className="w-px h-5 bg-border/10 shrink-0" />
 
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm text-foreground/80")}>{numeroProcesso}</span>
+        <span className={cn("font-mono text-body-sm text-foreground/80")}>{numeroProcesso}</span>
         <CopyButton text={numeroProcesso} label="Copiar número" />
       </div>
 

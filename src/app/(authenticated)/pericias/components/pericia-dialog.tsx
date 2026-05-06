@@ -112,7 +112,7 @@ export function PericiaDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Responsável</div>
               <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
                 <SelectTrigger className="w-full bg-card">
                   <SelectValue placeholder="Selecione..." />
@@ -129,7 +129,7 @@ export function PericiaDialog({
             </div>
 
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "md:col-span-2 grid gap-2")}>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Observações</div>
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Observações</div>
               <Textarea
                 value={observacoes}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setObservacoes(e.target.value)}
@@ -139,7 +139,7 @@ export function PericiaDialog({
               />
             </div>
 
-            {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "md:col-span-2 text-sm text-destructive")}>{error}</div>}
+            {error && <div className={cn("md:col-span-2 text-body-sm text-destructive")}>{error}</div>}
           </div>
         </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">

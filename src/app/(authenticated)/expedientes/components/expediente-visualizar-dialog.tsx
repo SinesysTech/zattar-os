@@ -153,7 +153,7 @@ function DataRow({
           'min-w-0',
           editable
             ? 'flex-1 flex justify-end'
-            : /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-right text-sm font-medium text-foreground/90',
+            : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-right text-body-sm font-medium text-foreground/90',
         )}
       >
         {children}
@@ -194,7 +194,7 @@ function MetaItem({
       <Text variant="micro-caption" className={cn(/* design-system-escape: tracking-wider sem token DS */ "uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </Text>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm")}>{children}</div>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm")}>{children}</div>
     </div>
   );
 }
@@ -267,7 +267,7 @@ export function ExpedienteVisualizarDialog({
               <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
                 Expediente não encontrado
               </Heading>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground max-w-sm")}>
+              <p className={cn("text-body-sm text-muted-foreground max-w-sm")}>
                 Os detalhes do expediente não estão disponíveis.
               </p>
             </div>

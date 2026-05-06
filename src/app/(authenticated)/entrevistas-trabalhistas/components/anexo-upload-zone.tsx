@@ -68,7 +68,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
         <Paperclip className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div>
-          <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Anexos de apoio da etapa</h4>
+          <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Anexos de apoio da etapa</h4>
           <Text variant="caption">
             Envie audios, documentos, imagens ou videos relacionados a esta pergunta.
           </Text>

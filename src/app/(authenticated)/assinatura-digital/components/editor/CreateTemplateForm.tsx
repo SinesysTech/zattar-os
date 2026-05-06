@@ -96,7 +96,7 @@ export default function CreateTemplateForm({
         {/* Header */}
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pb-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 pb-3 border-b")}>
           <FileText className="h-4 w-4" />
-          <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Informações do Novo Template</Heading>
+          <Heading level="card" className={cn("text-body-sm")}>Informações do Novo Template</Heading>
         </div>
 
         {/* Nome */}
@@ -107,7 +107,7 @@ export default function CreateTemplateForm({
           <Input
             id="template-nome-create"
             placeholder="Ex: Contrato Apps - Uber 2024"
-            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-9 text-sm")}
+            className={cn("h-9 text-body-sm")}
             value={formData.nome}
             onChange={(e) => setFormData((prev) => ({ ...prev, nome: e.target.value }))}
             autoFocus
@@ -122,7 +122,7 @@ export default function CreateTemplateForm({
           <Textarea
             id="template-desc-create"
             placeholder="Informações adicionais sobre o uso deste template (opcional)"
-            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm resize-none")}
+            className={cn("text-body-sm resize-none")}
             rows={2}
             value={formData.descricao}
             onChange={(e) => setFormData((prev) => ({ ...prev, descricao: e.target.value }))}

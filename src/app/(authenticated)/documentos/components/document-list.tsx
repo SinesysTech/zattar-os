@@ -248,7 +248,7 @@ export function DocumentList() {
           {/* Tags ativas */}
           {tagsAtivas.length > 0 && (
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-3 flex flex-wrap gap-2")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Tags:</span>
+              <span className={cn("text-body-sm text-muted-foreground")}>Tags:</span>
               {tagsAtivas.map((tag) => (
                 <Badge key={tag} variant="secondary" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "gap-1")}>
                   {tag}
@@ -290,7 +290,7 @@ export function DocumentList() {
                 <Heading level="card" className="mt-4">
                   Nenhum documento encontrado
                 </Heading>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
+                <p className={cn("mt-2 text-body-sm text-muted-foreground")}>
                   {busca
                     ? 'Tente buscar com outros termos'
                     : filtroTipo === 'compartilhados'
@@ -330,7 +330,7 @@ export function DocumentList() {
         {!loading && documentos.length > 0 && total > ITEMS_PER_PAGE && (
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "border-t px-4 py-3")}>
             <div className="flex items-center justify-between">
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Mostrando {(params.offset || 0) + 1} -{' '}
                 {Math.min((params.offset || 0) + documentos.length, total)} de{' '}
                 {total} documentos
@@ -345,7 +345,7 @@ export function DocumentList() {
                   <ChevronLeft className="mr-1 h-4 w-4" />
                   Anterior
                 </Button>
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                <span className={cn("text-body-sm text-muted-foreground")}>
                   Página {currentPage} de {totalPages}
                 </span>
                 <Button

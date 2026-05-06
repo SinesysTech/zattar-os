@@ -265,7 +265,7 @@ export function RepresentantesTableWrapper() {
               )}
               {/* Linha 2: Nome */}
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm")} title={nome}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm")} title={nome}>
                   {nome}
                 </span>
                 <CopyButton text={representante.nome} label="Copiar nome" />

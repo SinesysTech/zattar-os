@@ -66,7 +66,7 @@ export function AssinaturaDigitalTabsContent({
       case "documentos":
         return (
           documentosContent || (
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <div className={cn("text-body-sm text-muted-foreground")}>
               Carregando documentos...
             </div>
           )
@@ -74,7 +74,7 @@ export function AssinaturaDigitalTabsContent({
       case "templates":
         return (
           templatesContent || (
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <div className={cn("text-body-sm text-muted-foreground")}>
               Carregando templates...
             </div>
           )
@@ -82,7 +82,7 @@ export function AssinaturaDigitalTabsContent({
       case "formularios":
         return (
           formulariosContent || (
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <div className={cn("text-body-sm text-muted-foreground")}>
               Carregando formulários...
             </div>
           )
@@ -90,7 +90,7 @@ export function AssinaturaDigitalTabsContent({
       default:
         return (
           documentosContent || (
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <div className={cn("text-body-sm text-muted-foreground")}>
               Carregando documentos...
             </div>
           )

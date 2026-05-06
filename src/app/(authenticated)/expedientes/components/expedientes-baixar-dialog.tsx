@@ -126,8 +126,8 @@ export function ExpedientesBaixarDialog({
 
         {/* Informações do expediente */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Expediente</div>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; space-y-1 sem token DS */ "text-sm space-y-1")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
             <div>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
@@ -153,7 +153,7 @@ export function ExpedientesBaixarDialog({
                 onChange={(e) => setModo(e.target.value as 'protocolo')}
                 className="h-4 w-4"
               />
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Com Protocolo</span>
+              <span className={cn("text-body-sm")}>Com Protocolo</span>
             </label>
             <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2 cursor-pointer")}>
               <input
@@ -164,7 +164,7 @@ export function ExpedientesBaixarDialog({
                 onChange={(e) => setModo(e.target.value as 'justificativa')}
                 className="h-4 w-4"
               />
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Sem Protocolo</span>
+              <span className={cn("text-body-sm")}>Sem Protocolo</span>
             </label>
           </div>
         </div>
@@ -182,7 +182,7 @@ export function ExpedientesBaixarDialog({
               required={modo === 'protocolo'}
             />
             {protocoloIdError && (
-              <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{protocoloIdError}</p>
+              <p role="alert" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{protocoloIdError}</p>
             )}
             <Text variant="caption">
               Informe o ID do protocolo da peça protocolada em resposta ao expediente (pode conter números e letras).
@@ -201,10 +201,10 @@ export function ExpedientesBaixarDialog({
               disabled={isPending}
               rows={4}
               required={modo === 'justificativa'}
-              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50")}
+              className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex min-h-20 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50")}
             />
             {justificativaBaixaError && (
-              <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{justificativaBaixaError}</p>
+              <p role="alert" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{justificativaBaixaError}</p>
             )}
             <Text variant="caption">
               Informe o motivo pelo qual o expediente está sendo baixado sem protocolo de peça.
@@ -235,7 +235,7 @@ export function ExpedientesBaixarDialog({
                   required
                   className="h-4 w-4"
                 />
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.FAVORAVEL]}</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.FAVORAVEL]}</span>
               </label>
               <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>
                 <input
@@ -245,7 +245,7 @@ export function ExpedientesBaixarDialog({
                   required
                   className="h-4 w-4"
                 />
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.PARCIALMENTE_FAVORAVEL]}</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.PARCIALMENTE_FAVORAVEL]}</span>
               </label>
               <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>
                 <input
@@ -255,18 +255,18 @@ export function ExpedientesBaixarDialog({
                   required
                   className="h-4 w-4"
                 />
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.DESFAVORAVEL]}</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{RESULTADO_DECISAO_LABELS[ResultadoDecisao.DESFAVORAVEL]}</span>
               </label>
             </div>
             {resultadoDecisaoError && (
-              <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{resultadoDecisaoError}</p>
+              <p role="alert" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{resultadoDecisaoError}</p>
             )}
           </div>
         )}
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive")}>
+          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-body-sm text-destructive")}>
             {generalError}
           </div>
         )}

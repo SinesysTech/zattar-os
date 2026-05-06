@@ -134,7 +134,7 @@ export function ExpedientesBulkBaixarDialog({
                 Esta justificativa será aplicada a todos os {expedienteIds.length} expediente(s) selecionado(s).
               </Text>
               {generalError && (
-                <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
+                <p role="alert" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{generalError}</p>
               )}
             </div>
           </form>

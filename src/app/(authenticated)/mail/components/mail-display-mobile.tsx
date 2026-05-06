@@ -123,7 +123,7 @@ function MailBodyMobile({ mail }: { mail: MailMessagePreview }) {
     );
   }
 
-  return <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-pre-wrap")}>{textContent}</div>;
+  return <div className={cn("text-body-sm whitespace-pre-wrap")}>{textContent}</div>;
 }
 
 export function MailDisplayMobile({ mail }: MailDisplayProps) {
@@ -277,7 +277,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
           {mail && (
             <div className="flex flex-1 flex-col overflow-hidden">
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-wrap items-start gap-3 p-4")}>
-                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "flex min-w-0 flex-1 items-start gap-4 text-sm")}>
+                <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex min-w-0 flex-1 items-start gap-4 text-body-sm")}>
                   <Avatar>
                     <AvatarFallback>{participantInitials}</AvatarFallback>
                   </Avatar>
@@ -306,7 +306,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                 <div ref={replyAreaRef} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
                   <form onSubmit={handleReply}>
                     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
-                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                      <div className={cn("text-body-sm text-muted-foreground")}>
                         {replyMode === "reply-all"
                           ? "Responder a todos"
                           : "Responder para"}{" "}

@@ -154,7 +154,7 @@ export function SegmentoEditDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <form id="segmento-edit-form" onSubmit={handleSubmit(onSubmit)} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -173,7 +173,7 @@ export function SegmentoEditDialog({
                   disabled={isSubmitting}
                 />
                 {errors.nome && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.nome.message}</p>
                 )}
               </div>
 
@@ -188,7 +188,7 @@ export function SegmentoEditDialog({
                   disabled={isSubmitting}
                 />
                 {errors.slug && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.slug.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.slug.message}</p>
                 )}
               </div>
 
@@ -202,7 +202,7 @@ export function SegmentoEditDialog({
                   rows={3}
                 />
                 {errors.descricao && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.descricao.message}</p>
                 )}
               </div>
 

@@ -223,7 +223,7 @@ export function ProcessoHeader({
                 )}
               </div>
 
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex flex-wrap items-center gap-x-3 gap-y-2 text-sm")}>
+              <div className={cn("flex flex-wrap items-center gap-x-3 gap-y-2 text-body-sm")}>
                 <SemanticBadge category="tribunal" value={trt} className={cn("text-caption")}>
                   {trt}
                 </SemanticBadge>
@@ -292,7 +292,7 @@ export function ProcessoHeader({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 flex-wrap text-sm sm:hidden")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap text-body-sm sm:hidden")}>
         {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
         {instancias && instancias.length > 1 && (
           <Text variant="caption" className="inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2.5 py-1">
@@ -303,7 +303,7 @@ export function ProcessoHeader({
       </div>
 
       {instancias && instancias.length > 1 && (
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 flex-wrap text-sm")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap text-body-sm")}>
           {instancias.map((inst) => (
             <div key={inst.id} className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1")}>
               <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">

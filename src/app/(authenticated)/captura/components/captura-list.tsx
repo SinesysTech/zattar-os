@@ -226,7 +226,7 @@ function criarColunas(
       size: 140,
       meta: { align: 'left' },
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
+        <span className={cn("text-body-sm")}>{formatarTipoCaptura(row.getValue('tipo_captura'))}</span>
       ),
     },
     {
@@ -242,7 +242,7 @@ function criarColunas(
         const advogadoId = row.getValue('advogado_id') as number | null;
         const nomeAdvogado = advogadoId ? advogadosMap.get(advogadoId) : null;
         return (
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+          <span className={cn("text-body-sm")}>
             {nomeAdvogado || '-'}
           </span>
         );
@@ -261,7 +261,7 @@ function criarColunas(
 
         // Validar que credencial_ids existe e é um array válido
         if (!credencialIds || !Array.isArray(credencialIds) || credencialIds.length === 0) {
-          return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
+          return <span className={cn("text-body-sm text-muted-foreground")}>-</span>;
         }
 
         // Mapear credencial_ids para { tribunal, grau }
@@ -286,9 +286,9 @@ function criarColunas(
         if (tribunaisUnicos.length === 0) {
           // Se não encontrou nenhum tribunal, pode ser que as credenciais ainda estejam carregando
           if (credenciaisMap.size === 0) {
-            return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Carregando...</span>;
+            return <span className={cn("text-body-sm text-muted-foreground")}>Carregando...</span>;
           }
-          return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
+          return <span className={cn("text-body-sm text-muted-foreground")}>-</span>;
         }
 
         return (
@@ -336,7 +336,7 @@ function criarColunas(
         const iniciadoEm = row.getValue('iniciado_em') as string | null;
         const concluidoEm = row.original.concluido_em;
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex flex-col text-sm")}>
+          <div className={cn("flex flex-col text-body-sm")}>
             <span>
               <span className="text-muted-foreground">Início:</span> {formatarDataHora(iniciadoEm)}
             </span>
@@ -363,7 +363,7 @@ function criarColunas(
         const credencialIds = row.original.credencial_ids;
 
         if (!erro) {
-          return <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>;
+          return <span className={cn("text-body-sm text-muted-foreground")}>-</span>;
         }
 
         // Prioridade 1: Extrair tribunais com erro do campo resultado

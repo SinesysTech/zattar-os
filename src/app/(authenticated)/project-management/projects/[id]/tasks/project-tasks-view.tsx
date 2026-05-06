@@ -46,7 +46,7 @@ export function ProjectTasksView({
             <Heading level="page">
               Tarefas
             </Heading>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
+            <p className={cn("text-muted-foreground text-body-sm")}>
               {projeto.nome}
             </p>
           </div>

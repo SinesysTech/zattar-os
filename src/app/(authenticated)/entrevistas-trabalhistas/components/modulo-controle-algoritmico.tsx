@@ -37,7 +37,7 @@ export function ModuloControleAlgoritmico({ data, onChange }: ModuloControleAlgo
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">O Algoritmo que Manda</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Investigar como a plataforma controla o trabalhador por meio de algoritmos
         </p>
       </div>

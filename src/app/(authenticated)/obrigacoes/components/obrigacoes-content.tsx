@@ -148,7 +148,7 @@ export function ObrigacoesContent({
         <div>
           <Heading level="page">Obrigações</Heading>
           <p
-            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}
+            className={cn("text-body-sm text-muted-foreground mt-0.5")}
             aria-live="polite"
           >
             {subtitle}

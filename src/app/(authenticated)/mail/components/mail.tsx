@@ -113,7 +113,7 @@ export function Mail({
         <MailWarning className="text-muted-foreground h-12 w-12" />
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <Heading level="section" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>E-mail não configurado</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground max-w-md text-sm")}>
+          <p className={cn("text-muted-foreground max-w-md text-body-sm")}>
             Configure sua conta de e-mail para começar a enviar e receber mensagens.
           </p>
         </div>

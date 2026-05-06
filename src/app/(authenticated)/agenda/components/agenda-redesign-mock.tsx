@@ -162,7 +162,7 @@ export function AgendaRedesignMock() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center justify-between flex-wrap gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
             {label} · {eventCount} eventos
           </p>
         </div>

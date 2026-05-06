@@ -346,7 +346,7 @@ export function ContaReceberFormDialog({
 
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {Object.keys(errors).length > 0 && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 Corrija os erros no formulário antes de continuar.
               </div>
             )}
@@ -363,7 +363,7 @@ export function ContaReceberFormDialog({
                 disabled={isSubmitting}
               />
               {errors.descricao && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.descricao.message}</p>
               )}
             </div>
 
@@ -386,7 +386,7 @@ export function ContaReceberFormDialog({
                   disabled={isSubmitting}
                 />
                 {errors.valor && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.valor.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.valor.message}</p>
                 )}
               </div>
 
@@ -424,7 +424,7 @@ export function ContaReceberFormDialog({
                   </PopoverContent>
                 </Popover>
                 {errors.dataVencimento && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.dataVencimento.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.dataVencimento.message}</p>
                 )}
               </div>
             </div>
@@ -590,7 +590,7 @@ export function ContaReceberFormDialog({
                   </SelectContent>
                 </Select>
                 {errors.contaContabilId && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.contaContabilId.message}</p>
+                  <p className={cn("text-body-sm text-destructive")}>{errors.contaContabilId.message}</p>
                 )}
               </div>
 
@@ -625,7 +625,7 @@ export function ContaReceberFormDialog({
                   <Label htmlFor="recorrente" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>
                     Conta Recorrente
                   </Label>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <p className={cn("text-body-sm text-muted-foreground")}>
                     Gera contas automaticamente em intervalos regulares
                   </p>
                 </div>
@@ -666,7 +666,7 @@ export function ContaReceberFormDialog({
                     </SelectContent>
                   </Select>
                   {errors.frequenciaRecorrencia && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.frequenciaRecorrencia.message}</p>
+                    <p className={cn("text-body-sm text-destructive")}>{errors.frequenciaRecorrencia.message}</p>
                   )}
                 </div>
               )}
@@ -683,7 +683,7 @@ export function ContaReceberFormDialog({
                 rows={3}
               />
               {errors.observacoes && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.observacoes.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.observacoes.message}</p>
               )}
             </div>
           </div>

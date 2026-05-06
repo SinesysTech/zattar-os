@@ -170,7 +170,7 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
             />
           </div>
         ) : (
-          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "rounded-lg border border-dashed bg-muted/10 py-10 text-center text-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "rounded-lg border border-dashed bg-muted/10 py-10 text-center text-body-sm text-muted-foreground")}>
             Selecione um processo para continuar
           </div>
         )}

@@ -55,7 +55,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground mb-4 text-sm")}>
+          <div className={cn("text-muted-foreground mb-4 text-body-sm")}>
             {projeto.dataInicio
               ? new Date(projeto.dataInicio).toLocaleDateString("pt-BR")
               : "Sem data de início"}
@@ -64,7 +64,7 @@ export function ProjectCard({ projeto }: ProjectCardProps) {
           <div className="mb-6">
             <div className="mb-2 flex items-center justify-between">
               <Text variant="label" as="span" className="text-muted-foreground">Progresso</Text>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>
                 {projeto.progresso}%
               </span>
             </div>

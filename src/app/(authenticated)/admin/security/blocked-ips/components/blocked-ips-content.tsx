@@ -216,7 +216,7 @@ export function BlockedIpsContent() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Total Bloqueados</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Total Bloqueados</CardTitle>
             <ShieldX className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -226,7 +226,7 @@ export function BlockedIpsContent() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Permanentes</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Permanentes</CardTitle>
             <Ban className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -236,7 +236,7 @@ export function BlockedIpsContent() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Temporários</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Temporários</CardTitle>
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
@@ -246,7 +246,7 @@ export function BlockedIpsContent() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Whitelist</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Whitelist</CardTitle>
             <ShieldCheck className="h-4 w-4 text-success" />
           </CardHeader>
           <CardContent>

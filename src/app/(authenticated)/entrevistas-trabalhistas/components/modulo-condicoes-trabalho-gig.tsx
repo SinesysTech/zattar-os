@@ -36,7 +36,7 @@ export function ModuloCondicoesTrabalhoGig({ data, onChange }: ModuloCondicoesTr
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Precarização do Trabalho</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Condições reais de trabalho: jornada, segurança e dignidade do trabalhador de plataforma
         </p>
       </div>

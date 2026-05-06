@@ -36,7 +36,7 @@ export function ModuloDependenciaEconomica({ data, onChange }: ModuloDependencia
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Preso na Plataforma</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Avaliar o grau de dependência econômica do trabalhador em relação à plataforma
         </p>
       </div>

@@ -505,7 +505,7 @@ export function GazetteOrphanResolver() {
             <Text variant="overline" className="text-muted-foreground/70">
               Processo
             </Text>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium tabular-nums text-foreground")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums text-foreground")}>
               {highlightSegments(
                 current.numeroProcessoMascara ?? current.numeroProcesso,
                 matchHighlights,
@@ -581,7 +581,7 @@ export function GazetteOrphanResolver() {
                   </div>
                   <span
                     className={cn(
-                      /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold tabular-nums',
+                      /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold tabular-nums',
                       confidenceColor(match.confianca),
                     )}
                   >
@@ -594,7 +594,7 @@ export function GazetteOrphanResolver() {
               <div className={cn(/* design-system-escape: space-y-2.5 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 p-4")}>
                 <div>
                   <Text variant="micro-caption">Expediente</Text>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>
+                  <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>
                     #{match.expedienteNumero}
                   </p>
                 </div>

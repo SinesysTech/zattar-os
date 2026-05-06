@@ -197,7 +197,7 @@ export default function ConfigurarEmailPage() {
         </Button>
         <div>
           <Heading level="page">Configurar E-mail</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
+          <p className={cn("text-muted-foreground text-body-sm")}>
             Conecte sua conta de e-mail do Cloudron
           </p>
         </div>
@@ -265,7 +265,7 @@ export default function ConfigurarEmailPage() {
 
           <Accordion type="single" collapsible>
             <AccordionItem value="advanced">
-              <AccordionTrigger className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+              <AccordionTrigger className={cn("text-body-sm")}>
                 Configurações avançadas
               </AccordionTrigger>
               <AccordionContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pt-2 padding direcional sem Inset equiv. */ "space-y-4 pt-2")}>
@@ -314,7 +314,7 @@ export default function ConfigurarEmailPage() {
           {/* Test result */}
           {testResult && (
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-3 → usar <Inset> */ "space-y-2 rounded-md border p-3")}>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm")}>
                 {testResult.imap.success ? (
                   <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : (
@@ -324,7 +324,7 @@ export default function ConfigurarEmailPage() {
                   IMAP: {testResult.imap.success ? "Conectado" : testResult.imap.error}
                 </span>
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
+              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm")}>
                 {testResult.smtp.success ? (
                   <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : (
@@ -338,7 +338,7 @@ export default function ConfigurarEmailPage() {
           )}
 
           {error && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
+            <p className={cn("text-body-sm text-destructive")}>{error}</p>
           )}
 
           {/* Actions */}

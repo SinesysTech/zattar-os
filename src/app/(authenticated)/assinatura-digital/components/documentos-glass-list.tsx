@@ -152,7 +152,7 @@ function GlassRow({
             <Icon className={cn('size-4', cfg.iconColor)} />
           </div>
           <div className="min-w-0">
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>{doc.titulo}</p>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{doc.titulo}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5 truncate">
               {doc.criadoPor} · {timeAgo(doc.criadoEm)}
             </p>
@@ -276,7 +276,7 @@ function GlassCard({
       </div>
 
       <div className="min-w-0">
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-sm font-semibold line-clamp-2 leading-snug")}>
+        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-semibold line-clamp-2 leading-snug")}>
           {doc.titulo}
         </p>
         <p className="text-[11px] text-muted-foreground mt-1 truncate">
@@ -355,7 +355,7 @@ function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
       <FileSignature className="size-10 text-muted-foreground/55 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>
         Nenhum documento encontrado
       </p>
       <Text variant="caption" className="text-muted-foreground/70 mt-1">

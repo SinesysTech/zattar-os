@@ -155,26 +155,26 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
             <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1 sem token DS */ "rounded-md border p-3 space-y-1")}>
               <Text variant="caption" className="uppercase">Transação importada</Text>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{transacao.descricao}</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{transacao.descricao}</p>
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
               {transacao.documento && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Documento: {transacao.documento}</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento}</p>
               )}
             </div>
 
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className="flex items-center justify-between">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Sugestões automáticas</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões automáticas</p>
                 <Button variant="outline" size="sm" onClick={handleIgnorar}>
                   Marcar como ignorado
                 </Button>
               </div>
 
-              {isLoadingSugestoes && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Carregando sugestões...</p>}
+              {isLoadingSugestoes && <p className={cn("text-body-sm text-muted-foreground")}>Carregando sugestões...</p>}
 
               {!isLoadingSugestoes && topSugestoes.length === 0 && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma sugestão encontrada.</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Nenhuma sugestão encontrada.</p>
               )}
 
               <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
@@ -185,7 +185,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{sugestao.lancamento.descricao}</p>
+                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{sugestao.lancamento.descricao}</p>
                         <Text variant="caption">
                           Data {sugestao.lancamento.dataLancamento} - {formatarValor(sugestao.lancamento.valor)}
                         </Text>
@@ -218,7 +218,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap items-end gap-3")}>
               <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Busca manual</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Busca manual</p>
                 <Input
                   placeholder="Buscar por descrição ou documento"
                   value={buscaManual}
@@ -226,28 +226,28 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                 />
               </div>
               <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Data inicial</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Data inicial</p>
                 <Input type="date" value={dataInicio} onChange={(e) => setDataInicio(e.target.value)} />
               </div>
               <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Data final</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Data final</p>
                 <Input type="date" value={dataFim} onChange={(e) => setDataFim(e.target.value)} />
               </div>
             </div>
 
             <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-md border p-3 space-y-2")}>
               <div className="flex items-center justify-between">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Resultados da busca</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Resultados da busca</p>
                 {buscando && <Text variant="caption">Buscando...</Text>}
               </div>
               {resultadosBusca.length === 0 && !buscando && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum lançamento encontrado.</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Nenhum lançamento encontrado.</p>
               )}
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                 {resultadosBusca.map((lancamento) => (
                   <div key={lancamento.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border p-2")}>
                     <div>
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{lancamento.descricao}</p>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{lancamento.descricao}</p>
                       <Text variant="caption">
                         {lancamento.dataLancamento} - {formatarValor(lancamento.valor)}
                       </Text>

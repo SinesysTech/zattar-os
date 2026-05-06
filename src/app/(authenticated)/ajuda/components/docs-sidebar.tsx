@@ -24,7 +24,7 @@ function SidebarItem({ entry, level = 0 }: { entry: DocEntry; level?: number }) 
         <button
           onClick={() => setExpanded(!expanded)}
           className={cn(
-            /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium transition-colors hover:bg-accent',
+            /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-body-sm font-medium transition-colors hover:bg-accent',
             (isActive || isParentActive) && 'text-primary',
           )}
           style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -49,7 +49,7 @@ function SidebarItem({ entry, level = 0 }: { entry: DocEntry; level?: number }) 
     <Link
       href={href}
       className={cn(
-        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex items-center rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent',
+        /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ 'flex items-center rounded-md px-2 py-1.5 text-body-sm transition-colors hover:bg-accent',
         isActive ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'bg-accent text-primary font-medium' : 'text-muted-foreground',
       )}
       style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -114,7 +114,7 @@ export function DocsSidebar() {
             <SidebarItem key={entry.slug} entry={entry} />
           ))}
           {filteredEntries.length === 0 && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground px-2 py-4")}>
+            <p className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground px-2 py-4")}>
               Nenhum resultado encontrado.
             </p>
           )}

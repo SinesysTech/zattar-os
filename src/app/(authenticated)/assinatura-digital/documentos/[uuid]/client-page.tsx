@@ -117,7 +117,7 @@ function MetadataItem({
         {label}
       </p>
       <div
-        className={mono ? /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm font-mono text-foreground" : /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "mt-1 text-sm font-medium text-foreground"}
+        className={mono ? "mt-1 text-body-sm font-mono text-foreground" : /* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-1 text-body-sm font-medium text-foreground"}
       >
         {value}
       </div>
@@ -203,7 +203,7 @@ export function DocumentoVerificacaoClient({
                 <Heading level="page" className="truncate lg:text-[2rem]">
                   {displayTitle}
                 </Heading>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground")}>
+                <div className={cn("mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-body-sm text-muted-foreground")}>
                   <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "inline-flex items-center gap-1.5")}>
                     <Calendar className="h-3.5 w-3.5" />
                     Criado em {createdAtLabel}
@@ -286,7 +286,7 @@ export function DocumentoVerificacaoClient({
                     >
                       <ZoomOut className="h-4 w-4" />
                     </Button>
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-w-14 text-center text-sm font-medium text-foreground")}>
+                    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-w-14 text-center text-body-sm font-medium text-foreground")}>
                       {Math.round(zoom * 100)}%
                     </div>
                     <Button
@@ -316,7 +316,7 @@ export function DocumentoVerificacaoClient({
                 <div className="flex h-full items-center justify-center">
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <p className={cn("text-body-sm text-muted-foreground")}>
                       Carregando PDF...
                     </p>
                   </div>
@@ -328,7 +328,7 @@ export function DocumentoVerificacaoClient({
                       <FileText className="h-8 w-8" />
                     </div>
                     <div>
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                         Visualização indisponível
                       </p>
                       <Text variant="caption">
@@ -365,7 +365,7 @@ export function DocumentoVerificacaoClient({
               <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "mt-6 space-y-3")}>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <Info className="h-4 w-4 text-muted-foreground" />
-                  <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm uppercase tracking-[0.14em] text-foreground/90")}>
+                  <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
                     Documento
                   </Heading>
                 </div>
@@ -405,7 +405,7 @@ export function DocumentoVerificacaoClient({
                   <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <ShieldCheck className="h-4 w-4 text-muted-foreground" />
-                      <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm uppercase tracking-[0.14em] text-foreground/90")}>
+                      <Heading level="section" className={cn("text-body-sm uppercase tracking-[0.14em] text-foreground/90")}>
                         Integridade
                       </Heading>
                     </div>

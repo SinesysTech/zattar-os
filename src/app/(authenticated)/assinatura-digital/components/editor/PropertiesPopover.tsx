@@ -151,7 +151,7 @@ export default function PropertiesPopover({
         <div className={cn(/* design-system-escape: space-y-5 sem token DS */ "space-y-5")}>
           {/* Informacoes Gerais */}
           <Collapsible defaultOpen>
-            <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50")}>
+            <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Info className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                 <span>Informações gerais</span>
@@ -239,7 +239,7 @@ export default function PropertiesPopover({
 
           {/* Posicionamento */}
           <Collapsible defaultOpen>
-            <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50")}>
+            <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <Move className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                 <span>Posicionamento</span>
@@ -325,7 +325,7 @@ export default function PropertiesPopover({
           {/* Estilo (para campos de texto e texto_composto) */}
           {(selectedField.tipo === 'texto' || selectedField.tipo === 'texto_composto') && (
             <Collapsible>
-              <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm font-medium text-foreground hover:bg-muted/50")}>
+              <CollapsibleTrigger className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex w-full items-center justify-between rounded-md px-2 py-1.5 text-body-sm font-medium text-foreground hover:bg-muted/50")}>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <Palette className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
                   <span>Estilo</span>

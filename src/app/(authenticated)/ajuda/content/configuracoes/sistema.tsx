@@ -48,7 +48,7 @@ export default function Sistema() {
             <ShieldCheck className="h-4 w-4 text-primary" />
             Autenticação em Dois Fatores (2FAuth)
           </h3>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             Configure um servidor 2FAuth auto-hospedado para centralizar o gerenciamento dos
             códigos TOTP da equipe, permitindo autenticação unificada.
           </p>
@@ -82,7 +82,7 @@ export default function Sistema() {
             <MessageSquare className="h-4 w-4 text-primary" />
             Chatwoot (Chat e Atendimento)
           </h3>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             Integre o Chatwoot para gerenciar conversas com clientes diretamente do ZattarOS,
             sem precisar alternar entre sistemas.
           </p>
@@ -126,7 +126,7 @@ export default function Sistema() {
             <Video className="h-4 w-4 text-primary" />
             Dyte (Videoconferências)
           </h3>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             Configure o Dyte para realizar videoconferências diretamente do ZattarOS, integradas
             ao Planner e ao módulo de Audiências.
           </p>

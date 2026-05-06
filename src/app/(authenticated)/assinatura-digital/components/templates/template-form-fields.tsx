@@ -174,7 +174,7 @@ export function TemplateFormFields({
             disabled={isSubmitting}
           />
           {getErrorMessage('nome') && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('nome')}</p>
+            <p className={cn("text-body-sm text-destructive")}>{getErrorMessage('nome')}</p>
           )}
         </div>
 
@@ -209,7 +209,7 @@ export function TemplateFormFields({
             </Button>
           )}
           {getErrorMessage('segmento_id') && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('segmento_id')}</p>
+            <p className={cn("text-body-sm text-destructive")}>{getErrorMessage('segmento_id')}</p>
           )}
         </div>
       </div>
@@ -225,7 +225,7 @@ export function TemplateFormFields({
           rows={2}
         />
         {getErrorMessage('descricao') && (
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('descricao')}</p>
+          <p className={cn("text-body-sm text-destructive")}>{getErrorMessage('descricao')}</p>
         )}
       </div>
 
@@ -257,7 +257,7 @@ export function TemplateFormFields({
                 formularios={[]}
               />
               {getErrorMessage('conteudo_markdown') && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{getErrorMessage('conteudo_markdown')}</p>
+                <p className={cn("text-body-sm text-destructive")}>{getErrorMessage('conteudo_markdown')}</p>
               )}
             </div>
           )}

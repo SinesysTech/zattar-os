@@ -195,13 +195,13 @@ function MissionItem({
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex min-w-0 flex-1 items-start gap-3")}>
         <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 flex-1 space-y-1")}>
           {/* Tipo de expediente */}
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium', isBaixado && 'line-through')}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium', isBaixado && 'line-through')}>
             {tipoExpedienteNome || 'Sem tipo'}
           </p>
 
           {/* Cabeçalho: Partes (autora vs ré) */}
           {(expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || expediente.nomeParteReOrigem || expediente.nomeParteRe) && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
               <span>{expediente.nomeParteAutoraOrigem || expediente.nomeParteAutora || '—'}</span>
               <span className={cn(/* design-system-escape: mx-1.5 margin sem primitiva DS */ "mx-1.5 font-normal text-muted-foreground/60")}>vs</span>
               <span>{expediente.nomeParteReOrigem || expediente.nomeParteRe || '—'}</span>
@@ -454,8 +454,8 @@ export function ExpedientesWeekMission({
         {doDia.length === 0 ? (
           <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-45 flex-col items-center justify-center p-8 text-center")}>
             <CalendarClock className="size-10 text-muted-foreground/40" />
-            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm")}>Nenhum expediente neste dia</Heading>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1.5 max-w-sm text-sm text-muted-foreground/55")}>
+            <Heading level="card" className={cn("mt-4 text-body-sm")}>Nenhum expediente neste dia</Heading>
+            <p className={cn("mt-1.5 max-w-sm text-body-sm text-muted-foreground/55")}>
               Selecione outro dia na barra de semana acima.
             </p>
           </GlassPanel>

@@ -119,7 +119,7 @@ export const PendentesForm = forwardRef<CapturaFormHandle, PendentesFormProps>(
                 {FILTROS_PRAZO.map((opcao) => (
                   <label
                     key={opcao.value}
-                    className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-3 rounded-md border px-3 py-2 text-sm")}
+                    className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-3 rounded-md border px-3 py-2 text-body-sm")}
                   >
                     <Checkbox
                       id={`filtro-${opcao.value}`}
@@ -130,7 +130,7 @@ export const PendentesForm = forwardRef<CapturaFormHandle, PendentesFormProps>(
                   </label>
                 ))}
               </div>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Os filtros selecionados são executados sequencialmente: primeiro Sem Prazo e,
                 em seguida, No Prazo.
               </p>

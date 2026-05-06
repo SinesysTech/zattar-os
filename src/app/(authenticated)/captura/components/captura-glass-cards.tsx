@@ -188,7 +188,7 @@ function CapturaCard({
         <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', getTipoIconBg(captura.tipo_captura))}>
           <TipoIcon className={cn('w-5 h-5', getTipoIconColor(captura.tipo_captura))} />
         </div>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate min-w-0")}>
+        <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate min-w-0")}>
           {formatarTipo(captura.tipo_captura)}
         </span>
       </div>

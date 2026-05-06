@@ -30,7 +30,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">O Corpo e o Ambiente</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Exposição a riscos, insalubridade, periculosidade e assédio
         </p>
       </div>
@@ -71,7 +71,7 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
                     checked={tiposRisco.includes(opt.value)}
                     onCheckedChange={(checked) => toggleRisco(opt.value, checked === true)}
                   />
-                  <Label htmlFor={`risco-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
+                  <Label htmlFor={`risco-${opt.value}`} className={cn("cursor-pointer text-body-sm font-normal")}>
                     {opt.label}
                   </Label>
                 </div>

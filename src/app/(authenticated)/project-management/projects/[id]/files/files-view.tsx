@@ -121,7 +121,7 @@ export function FilesView({
           </Button>
           <div>
             <Heading level="page">Arquivos</Heading>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{projeto.nome}</p>
+            <p className={cn("text-muted-foreground text-body-sm")}>{projeto.nome}</p>
           </div>
         </div>
 
@@ -170,7 +170,7 @@ export function FilesView({
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
                     <FileIcon className="size-5 text-muted-foreground shrink-0" />
                     <div className="min-w-0">
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
                         {anexo.nomeArquivo}
                       </p>
                       <Text variant="caption">

@@ -114,7 +114,7 @@ export function WidgetParcelasStatus() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums")}>
               {fmtMoeda(totalValor)}
             </p>
           </div>
@@ -122,7 +122,7 @@ export function WidgetParcelasStatus() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Pendente
             </p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-warning/80")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums text-warning/80")}>
               {fmtMoeda(valorPendente)}
             </p>
           </div>

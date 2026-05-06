@@ -45,7 +45,7 @@ export default function RelatorioMensalFolhaPage() {
         </CardHeader>
         <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-3")}>
           <div>
-            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Mês</label>
+            <label className={cn("text-body-sm text-muted-foreground")}>Mês</label>
             <Select value={mes.toString()} onValueChange={(value) => setMes(Number(value))}>
               <SelectTrigger>
                 <SelectValue />
@@ -60,7 +60,7 @@ export default function RelatorioMensalFolhaPage() {
             </Select>
           </div>
           <div>
-            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Ano</label>
+            <label className={cn("text-body-sm text-muted-foreground")}>Ano</label>
             <Select value={ano.toString()} onValueChange={(value) => setAno(Number(value))}>
               <SelectTrigger>
                 <SelectValue />
@@ -97,21 +97,21 @@ export default function RelatorioMensalFolhaPage() {
             </CardHeader>
             <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
               <div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Funcionários</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Funcionários</p>
                 <Text variant="kpi-value">{folha.totalFuncionarios}</Text>
               </div>
               <div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Valor Total</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Valor Total</p>
                 <Text variant="kpi-value" className="text-success">
                   {formatCurrency(folha.valorTotal ?? 0)}
                 </Text>
               </div>
               <div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Status</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Status</p>
                 <Text variant="kpi-value">{STATUS_FOLHA_LABELS[folha.status]}</Text>
               </div>
               <div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data Pagamento</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Data Pagamento</p>
                 <Text variant="kpi-value">
                   {folha.dataPagamento
                     ? new Date(folha.dataPagamento).toLocaleDateString('pt-BR')

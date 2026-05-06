@@ -266,11 +266,11 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
 
       {/* Erro */}
       {error && (
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
+        <p className={cn("text-body-sm text-destructive")}>{error}</p>
       )}
 
       {bloqueioFinalizacao && (
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{bloqueioFinalizacao}</p>
+        <p className={cn("text-body-sm text-destructive")}>{bloqueioFinalizacao}</p>
       )}
 
       {currentModulo === 'consolidacao_final' && (
@@ -287,7 +287,7 @@ export function EntrevistaWizard({ entrevista, contratoId, onFinish }: Entrevist
       )}
 
       {integracaoMensagem && (
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{integracaoMensagem}</p>
+        <p className={cn("text-body-sm text-muted-foreground")}>{integracaoMensagem}</p>
       )}
 
       {/* Navegação */}

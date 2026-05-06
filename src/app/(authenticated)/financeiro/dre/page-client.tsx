@@ -243,7 +243,7 @@ function ResumoCards({
 
   if (!resumo) {
     return (
-      <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-center py-6 text-sm text-muted-foreground")}>
+      <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-center py-6 text-body-sm text-muted-foreground")}>
         Selecione um período para visualizar o DRE.
       </div>
     );
@@ -416,7 +416,7 @@ function DRETable({ resumo }: { resumo: ResumoDRE }) {
 function CategoriaPieChart({ categorias }: { categorias: CategoriaDRE[] }) {
   if (categorias.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-center h-64 text-muted-foreground text-sm")}>
+      <div className={cn("flex items-center justify-center h-64 text-muted-foreground text-body-sm")}>
         Sem dados para exibir
       </div>
     );
@@ -504,10 +504,10 @@ function CategoriaTab({
                       className="w-2.5 h-2.5 rounded-full shrink-0"
                       style={{ backgroundColor: CHART_COLORS[i % CHART_COLORS.length] } as React.CSSProperties}
                     />
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{cat.categoria}</span>
+                    <span className={cn("text-body-sm")}>{cat.categoria}</span>
                   </div>
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-right flex items-center gap-2")}>
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm tabular-nums")}>{formatarValor(cat.valor)}</span>
+                    <span className={cn("font-mono text-body-sm tabular-nums")}>{formatarValor(cat.valor)}</span>
                     <Text variant="caption" className="tabular-nums w-14 text-right">
                       {formatarPercentual(cat.percentualReceita)}
                     </Text>
@@ -517,7 +517,7 @@ function CategoriaTab({
             </div>
           </div>
         ) : (
-          <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-center py-6 text-sm text-muted-foreground")}>
+          <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-center py-6 text-body-sm text-muted-foreground")}>
             {emptyMessage}
           </p>
         )}
@@ -533,7 +533,7 @@ function CategoriaTab({
 function EvolucaoChart({ evolucao }: { evolucao: EvolucaoDRE[] }) {
   if (evolucao.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-center h-64 text-muted-foreground text-sm")}>
+      <div className={cn("flex items-center justify-center h-64 text-muted-foreground text-body-sm")}>
         Sem dados de evolução
       </div>
     );
@@ -775,7 +775,7 @@ export default function DREClient() {
             <DataTableToolbar title="Demonstração de Resultado do Exercício" />
           }
         >
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar DRE</p>
             <p>{error}</p>
           </div>
@@ -807,7 +807,7 @@ export default function DREClient() {
                   defaultValue="nenhuma"
                 />
 
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm text-muted-foreground")}>
+                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm text-muted-foreground")}>
                   <Calendar className="h-3.5 w-3.5" />
                   <span>
                     {format(new Date(periodo.dataInicio), "dd MMM", { locale: ptBR })} — {format(new Date(periodo.dataFim), "dd MMM yyyy", { locale: ptBR })}
@@ -895,7 +895,7 @@ export default function DREClient() {
                 ) : dre?.resumo ? (
                   <DRETable resumo={dre.resumo} />
                 ) : (
-                  <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-center py-6 text-sm text-muted-foreground")}>
+                  <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-center py-6 text-body-sm text-muted-foreground")}>
                     Selecione um período para visualizar o DRE
                   </p>
                 )}

@@ -167,7 +167,7 @@ export default function EditTemplatePage({ params }: PageProps) {
               <Heading level="card" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-foreground")}>
                 Acesso negado
               </Heading>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Você não tem permissão para editar templates.
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function EditTemplatePage({ params }: PageProps) {
               <Heading level="card" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-foreground")}>
                 Erro ao carregar template
               </Heading>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
             </div>
             <Button onClick={handleRetry} variant="outline" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}>
               <RefreshCw className="h-4 w-4" />

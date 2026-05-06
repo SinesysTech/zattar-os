@@ -69,7 +69,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5 text-success" />
-            <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Ata de Audiência</Heading>
+            <Heading level="subsection" className={cn("text-body-sm")}>Ata de Audiência</Heading>
           </div>
           <Text variant="caption">
             A ata desta audiência está disponível para visualização.
@@ -184,7 +184,7 @@ function ObservacoesCell({
         <button
           type="button"
           className={cn(
-            /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ 'text-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
+            /* design-system-escape: px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ 'text-body-sm w-full min-w-0 text-left rounded px-1 -mx-1 transition-colors',
             'hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1',
             hasObservacoes ? 'text-foreground' : 'text-muted-foreground'
           )}
@@ -201,7 +201,7 @@ function ObservacoesCell({
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <MessageSquareText className="h-4 w-4 text-primary" />
-            <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Observações</Heading>
+            <Heading level="subsection" className={cn("text-body-sm")}>Observações</Heading>
           </div>
           <Textarea
             value={value}
@@ -337,7 +337,7 @@ function ModalidadeCell({
           {/* Seção Virtual */}
           {isVirtual && (
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; gap-2 → migrar para <Inline gap="tight"> */ "text-sm flex items-center gap-2")}>
+              <Heading level="subsection" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm flex items-center gap-2")}>
                 <ExternalLink className="h-4 w-4 text-primary" />
                 Link da Audiência Virtual
               </Heading>
@@ -392,7 +392,7 @@ function ModalidadeCell({
           {isPresencial && (
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               {isVirtual && <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t pt-3")} />}
-              <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; gap-2 → migrar para <Inline gap="tight"> */ "text-sm flex items-center gap-2")}>
+              <Heading level="subsection" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm flex items-center gap-2")}>
                 <MapPin className="h-4 w-4 text-primary" />
                 Endereço Presencial
               </Heading>
@@ -550,7 +550,7 @@ export function getAudienciasColumns(
             {hasAta && <AtaAudienciaButton audiencia={audiencia} />}
 
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col items-start gap-1.5")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-nowrap")}>
+              <span className={cn("text-body-sm text-muted-foreground whitespace-nowrap")}>
                 {formatarDataHora(audiencia.dataInicio)}
               </span>
               {audiencia.status && (
@@ -631,13 +631,13 @@ export function getAudienciasColumns(
             ) : null}
             {/* Tipo segundo */}
             {audiencia.tipoDescricao ? (
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground whitespace-normal wrap-break-word")}>
+              <span className={cn("text-body-sm text-muted-foreground whitespace-normal wrap-break-word")}>
                 {audiencia.tipoDescricao}
               </span>
             ) : null}
             {/* Fallback se ambos estiverem vazios */}
             {!audiencia.modalidade && !audiencia.tipoDescricao && (
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>-</span>
+              <span className={cn("text-body-sm text-muted-foreground")}>-</span>
             )}
           </div>
         );

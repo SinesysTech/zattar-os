@@ -132,7 +132,7 @@ function AvisoExclusaoCard() {
     <Card className="border-warning/15 bg-warning/5">
       <CardContent className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 p-4")}>
         <AlertTriangle className="h-5 w-5 text-warning" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-warning")}>
+        <p className={cn("text-body-sm text-warning")}>
           Documentos na lixeira serão deletados permanentemente após 30 dias.
         </p>
       </CardContent>
@@ -200,7 +200,7 @@ function DocumentoCard({
       </CardHeader>
       {documento.descricao && (
         <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-2")}>
+          <p className={cn("text-body-sm text-muted-foreground line-clamp-2")}>
             {documento.descricao}
           </p>
         </CardContent>
@@ -341,7 +341,7 @@ export default function LixeiraClient() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between")}>
         <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
           <Heading level="page">Lixeira</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
             Documentos excluídos que serão deletados permanentemente após 30 dias
           </p>
         </div>

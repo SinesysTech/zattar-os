@@ -198,7 +198,7 @@ export function PermissoesMatriz({
                   <GlassPanel key={grupo.chave} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
                     {/* Group header */}
                     <div className="flex items-center justify-between">
-                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>
+                      <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>
                         {grupo.titulo}
                       </span>
                       <span

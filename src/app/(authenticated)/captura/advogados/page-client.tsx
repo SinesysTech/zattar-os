@@ -264,12 +264,12 @@ export default function AdvogadosPage() {
                   {/* Header: Avatar + Name + Status badge */}
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold text-primary font-heading")}>
+                      <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold text-primary font-heading")}>
                         {advogado.nome_completo.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase()}
                       </span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate font-heading")}>{advogado.nome_completo}</div>
+                      <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate font-heading")}>{advogado.nome_completo}</div>
                       <Text variant="caption" className="text-muted-foreground/55">
                         {advogado.oabs.map((o: { numero: string; uf: string }) => `OAB/${o.uf} ${o.numero}`).join(', ') || 'Sem OAB'}
                       </Text>

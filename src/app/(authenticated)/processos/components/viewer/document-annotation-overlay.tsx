@@ -109,7 +109,7 @@ export function DocumentAnnotationOverlay({
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 pr-1")}>
           {annotations.length === 0 ? (
             <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-5 padding direcional sem Inset equiv. */ "rounded-xl border border-dashed bg-muted/25 px-4 py-5 text-center")}>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>Nenhuma anotação ainda</p>
               <p className={cn(/* design-system-escape: leading-4 sem token DS */ "mt-1 text-[11px] leading-4 text-muted-foreground")}>
                 Use este painel sem sair do documento.
               </p>
@@ -141,7 +141,7 @@ export function DocumentAnnotationOverlay({
                     <Trash2 className="size-3.5" />
                   </Button>
                 </div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-5 sem token DS */ "text-sm leading-5 text-foreground")}>{annotation.content}</p>
+                <p className={cn(/* design-system-escape: leading-5 sem token DS */ "text-body-sm leading-5 text-foreground")}>{annotation.content}</p>
               </article>
             ))
           )}

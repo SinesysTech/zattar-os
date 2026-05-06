@@ -209,7 +209,7 @@ export default function ContasReceber() {
           O relatório de inadimplência consolida todos os títulos vencidos e não recebidos. Ele
           exibe:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm text-muted-foreground list-disc list-inside")}>
+        <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 text-body-sm text-muted-foreground list-disc list-inside")}>
           <li>Nome do cliente</li>
           <li>Valor original e valor atualizado (se configurado)</li>
           <li>Dias de atraso</li>

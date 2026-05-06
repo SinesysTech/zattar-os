@@ -172,7 +172,7 @@ export function IncomingCallDialog({
             <Heading level="card">
               {callData.iniciadorNome}
             </Heading>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground animate-pulse")}>
+            <p className={cn("text-body-sm text-muted-foreground animate-pulse")}>
               Chamada de {isVideo ? 'vídeo' : 'áudio'} recebida...
             </p>
           </div>

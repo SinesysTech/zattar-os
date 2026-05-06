@@ -190,7 +190,7 @@ export function TerceirosTableWrapper() {
                 </Badge>
               )}
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 max-w-full")}>
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium wrap-break-word whitespace-normal")}>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium wrap-break-word whitespace-normal")}>
                   {formatarNome(terceiro.nome)}
                 </span>
                 <CopyButton text={terceiro.nome} label="Copiar nome" />
@@ -246,7 +246,7 @@ export function TerceirosTableWrapper() {
           return (
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-start gap-1 max-w-full overflow-hidden")}>
               <span
-                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-normal wrap-break-word flex-1")}
+                className={cn("text-body-sm whitespace-normal wrap-break-word flex-1")}
                 title={enderecoFormatado}
               >
                 {enderecoFormatado || '-'}

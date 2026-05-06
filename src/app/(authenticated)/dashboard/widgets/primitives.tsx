@@ -346,7 +346,7 @@ export function GallerySection({
     <section>
       <div className="mb-5">
         <h2 className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-card-title tracking-tight")}>{title}</h2>
-        {description && <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{description}</p>}
+        {description && <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{description}</p>}
       </div>
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto")}>
         {children}

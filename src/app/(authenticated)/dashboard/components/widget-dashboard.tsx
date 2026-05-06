@@ -218,7 +218,7 @@ export function WidgetDashboard({ currentUserId, currentUserName, initialData }:
           <Heading level="page">
             {saudacao}, {primeiroNome}.
           </Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-0.5")}>
+          <p className={cn("text-body-sm text-muted-foreground/60 mt-0.5")}>
             {hoje} &mdash;{' '}
             {visibleWidgets.length === 0
               ? 'nenhum widget ativo'
@@ -284,7 +284,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
           <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "font-heading text-base font-semibold text-foreground/70")}>
             Nenhum widget selecionado
           </p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-1 max-w-xs")}>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-1 max-w-xs")}>
             Clique em{' '}
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/60")}>Personalizar</span>{' '}
             para escolher quais informacoes exibir no seu painel.

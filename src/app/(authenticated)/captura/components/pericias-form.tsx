@@ -120,14 +120,14 @@ export const PericiasForm = forwardRef<CapturaFormHandle, PericiasFormProps>(
                   />
                   <Label
                     htmlFor={`situacao-${option.value}`}
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal cursor-pointer")}
+                    className={cn("text-body-sm font-normal cursor-pointer")}
                   >
                     {option.label}
                   </Label>
                 </div>
               ))}
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               Selecione as situações das perícias que deseja capturar
             </p>
           </div>

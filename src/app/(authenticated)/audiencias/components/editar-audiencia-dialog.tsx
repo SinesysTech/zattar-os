@@ -499,7 +499,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
         {error && (
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/8 px-3.5 py-3 text-destructive")}>
             <span className="shrink-0 mt-0.5">⚠️</span>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-snug sem token DS */ "text-sm leading-snug")}>{error}</span>
+            <span className={cn(/* design-system-escape: leading-snug sem token DS */ "text-body-sm leading-snug")}>{error}</span>
           </div>
         )}
 
@@ -559,7 +559,7 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
                 <Text variant="label">Processo *</Text>
               </Label>
               {!trt || !grau ? (
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75 text-sm")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 text-muted-foreground/75 text-body-sm")}>
                   <span className="shrink-0">⏳</span>
                   <Text variant="caption">Selecione o TRT e Grau primeiro</Text>
                 </div>

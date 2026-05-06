@@ -183,7 +183,7 @@ export default function ExpedientesDoc() {
         <p className="text-muted-foreground">
           O sistema calcula automaticamente a data de vencimento do prazo levando em consideração:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
           <li>Apenas dias úteis (exclui sábados e domingos).</li>
           <li>Feriados nacionais e estaduais configurados no sistema.</li>
           <li>Suspensões de prazo (férias forenses, recesso do judiciário).</li>

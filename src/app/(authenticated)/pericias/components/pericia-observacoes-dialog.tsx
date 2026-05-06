@@ -83,7 +83,7 @@ export function PericiaObservacoesDialog({
               className="min-h-35ne"
               disabled={isSaving}
             />
-            {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</div>}
+            {error && <div className={cn("text-body-sm text-destructive")}>{error}</div>}
           </div>
         </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">

@@ -236,7 +236,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const count = row.original.participantes.length;
         return (
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{count}</span>
+            <span className={cn("text-body-sm")}>{count}</span>
             <Text variant="caption">participantes</Text>
           </div>
         );

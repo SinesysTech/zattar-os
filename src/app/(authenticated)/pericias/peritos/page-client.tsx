@@ -56,7 +56,7 @@ export function PeritosPageClient() {
           </div>
           <Heading level="page">Peritos</Heading>
           {!isLoading && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>
+            <p className={cn("text-body-sm text-muted-foreground/70 mt-0.5")}>
               {total} perito{total !== 1 ? 's' : ''} ativo{total !== 1 ? 's' : ''}{' '}
               · gestão completa em Partes / Terceiros
             </p>
@@ -90,7 +90,7 @@ export function PeritosPageClient() {
           <User className="size-4 text-info/70" />
         </IconContainer>
         <div className="flex-1 min-w-0">
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90")}>
             Peritos são cadastrados como Terceiros
           </p>
           <Text variant="caption" className="text-muted-foreground/70 mt-0.5">
@@ -116,12 +116,12 @@ export function PeritosPageClient() {
         </div>
       ) : error ? (
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
+          <p className={cn("text-body-sm text-destructive")}>{error}</p>
         </GlassPanel>
       ) : filtered.length === 0 ? (
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
           <User className="size-10 text-muted-foreground/30 mx-auto mb-3" />
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             {search
               ? 'Nenhum perito encontrado para esta busca.'
               : 'Nenhum perito ativo cadastrado.'}
@@ -139,7 +139,7 @@ export function PeritosPageClient() {
                 <User className="size-4 text-muted-foreground/60" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground/90 truncate")}>
+                <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground/90 truncate")}>
                   {p.nome}
                 </p>
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>

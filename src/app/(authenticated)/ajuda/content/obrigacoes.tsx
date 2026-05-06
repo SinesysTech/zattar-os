@@ -198,7 +198,7 @@ export default function ObrigacoesDoc() {
           Após cadastrar uma obrigação parcelada, o sistema gera automaticamente todas as parcelas
           com as respectivas datas de vencimento. Cada parcela pode ter um dos seguintes status:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Pendente:</strong> não venceu e ainda não foi paga.</li>
           <li><strong>Paga:</strong> pagamento confirmado e registrado.</li>
           <li><strong>Vencida:</strong> prazo ultrapassado sem registro de pagamento.</li>

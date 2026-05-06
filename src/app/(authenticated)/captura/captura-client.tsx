@@ -139,7 +139,7 @@ export function CapturaClient() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4 relative")}>
         <div>
           <Heading level="page">Captura</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
             Automação de captura judicial
           </p>
         </div>

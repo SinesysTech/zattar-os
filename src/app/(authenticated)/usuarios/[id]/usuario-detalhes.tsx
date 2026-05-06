@@ -216,7 +216,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-center gap-3")}>
             <LoadingSpinner size="lg" className="text-primary" />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Carregando dados do usuário...</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>Carregando dados do usuário...</p>
           </div>
         </GlassPanel>
       </div>
@@ -289,7 +289,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
             >
               <ArrowLeft className="size-4" />
             </Button>
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50")}>
+            <div className={cn("text-body-sm text-muted-foreground/50")}>
               <span
                 className="hover:text-foreground cursor-pointer transition-colors"
                 onClick={() => router.push('/app/usuarios')}

@@ -108,7 +108,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
           </Button>
           <div>
             <Heading level="page">Equipe</Heading>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{projeto.nome}</p>
+            <p className={cn("text-muted-foreground text-body-sm")}>{projeto.nome}</p>
           </div>
         </div>
 
@@ -152,7 +152,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                           <AvatarFallback>{initials}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+                          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
                             {membro.usuarioNome ?? "Usuário"}
                           </p>
                           {membro.usuarioEmail && (

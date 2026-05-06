@@ -37,7 +37,7 @@ function DetailRow({
       <Text variant="meta-label" className="text-muted-foreground">
         {label}
       </Text>
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{children}</div>
+      <div className={cn("mt-1 text-body-sm text-foreground")}>{children}</div>
     </div>
   );
 }
@@ -124,7 +124,7 @@ export function ComunicacaoDetalhesDialog({
           {/* Partes */}
           <div>
             <SectionHeading>Partes</SectionHeading>
-            <div className={cn(/* design-system-escape: space-y-3 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "space-y-3 text-sm")}>
+            <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 text-body-sm")}>
               {comunicacao.partesAutoras && comunicacao.partesAutoras.length > 0 && (
                 <div>
                   <Text variant="meta-label" className="text-muted-foreground">
@@ -162,7 +162,7 @@ export function ComunicacaoDetalhesDialog({
           {comunicacao.advogados && comunicacao.advogados.length > 0 && (
             <div>
               <SectionHeading>Advogados</SectionHeading>
-              <ul className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-4 list-disc text-sm")}>
+              <ul className={cn("ml-4 list-disc text-body-sm")}>
                 {comunicacao.advogados.map((advogado, idx) => (
                   <li key={idx}>
                     {advogado}
@@ -182,7 +182,7 @@ export function ComunicacaoDetalhesDialog({
             <div>
               <SectionHeading>Conteúdo</SectionHeading>
               <div
-                className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 p-3 text-sm dark:prose-invert")}
+                className={cn(/* design-system-escape: p-3 → usar <Inset> */ "prose prose-sm max-w-none rounded-md border border-border/40 bg-muted/40 p-3 text-body-sm dark:prose-invert")}
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(comunicacao.texto) }}
               />
             </div>

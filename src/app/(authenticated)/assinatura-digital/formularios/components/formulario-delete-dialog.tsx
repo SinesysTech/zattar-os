@@ -114,7 +114,7 @@ export function FormularioDeleteDialog({
               : `Tem certeza que deseja excluir o formulário '${formularios[0]?.nome ?? ''}'?`}
             {getFormularioNamesList()}
             {error && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-destructive text-sm mt-2")}>{error}</p>
+              <p className={cn("text-destructive text-body-sm mt-2")}>{error}</p>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>

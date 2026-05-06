@@ -131,7 +131,7 @@ export function TemplateTextoEditor({
 
       {/* Variable insertion helper */}
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 rounded-lg border bg-muted/30 p-4")}>
-        <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mb-2 text-sm")}>Inserir Variáveis</Heading>
+        <Heading level="subsection" className={cn("mb-2 text-body-sm")}>Inserir Variáveis</Heading>
         <Text variant="caption" className="mb-3">
           Digite <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "rounded bg-muted px-1.5 py-0.5 font-mono text-caption")}>@</kbd> no editor para inserir variáveis dinâmicas.
         </Text>

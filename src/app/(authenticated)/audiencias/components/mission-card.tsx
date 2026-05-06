@@ -188,13 +188,13 @@ export function MissionCard({
               <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 tabular-nums")}>
                 {hours > 0 && (
                   <>
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold', urgency.text)}>{pad(hours)}</span>
+                    <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(hours)}</span>
                     <span className="text-micro-caption text-muted-foreground/60">:</span>
                   </>
                 )}
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold', urgency.text)}>{pad(minutes)}</span>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(minutes)}</span>
                 <span className="text-micro-caption text-muted-foreground/60">:</span>
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold', urgency.text)}>{pad(seconds)}</span>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold', urgency.text)}>{pad(seconds)}</span>
               </div>
             </div>
           )}
@@ -204,14 +204,14 @@ export function MissionCard({
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4")}>
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Horário</span>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium tabular-nums")}>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium tabular-nums")}>
               {format(dataInicio, 'HH:mm', { locale: ptBR })} – {format(dataFim, 'HH:mm', { locale: ptBR })}
             </span>
           </div>
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Tribunal</span>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{audiencia.trt || '–'}</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{audiencia.trt || '–'}</span>
               {audiencia.grau && (
                 <span className="text-micro-caption text-muted-foreground/60">
                   {audiencia.grau === 'primeiro_grau' ? '1º grau' : audiencia.grau === 'segundo_grau' ? '2º grau' : 'Superior'}
@@ -229,7 +229,7 @@ export function MissionCard({
             <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-micro-caption text-muted-foreground/60 uppercase tracking-wider")}>Modalidade</span>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
               <ModalIcon className="size-3 text-muted-foreground/60" />
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{modalidadeLabel || '–'}</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{modalidadeLabel || '–'}</span>
             </div>
           </div>
         </div>

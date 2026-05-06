@@ -218,7 +218,7 @@ export function SemanaView({
               <div key={i} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "flex-1 text-center py-2 border-l border-border/6 first:border-l-0")}>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] text-muted-foreground/40 font-medium")}>{WEEKDAYS[day.getDay()]}</div>
                 <div className={cn(
-                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center justify-center size-7 rounded-full mt-0.5 text-sm font-semibold",
+                  /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "inline-flex items-center justify-center size-7 rounded-full mt-0.5 text-body-sm font-semibold",
                   isToday ? "bg-primary text-primary-foreground" : "text-muted-foreground/70",
                 )}>
                   {day.getDate()}

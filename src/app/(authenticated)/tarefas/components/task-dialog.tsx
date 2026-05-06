@@ -162,7 +162,7 @@ export function TaskDialog({ open, onOpenChange }: TaskDialogProps) {
                 </div>
 
                 {errorMessage && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-destructive")} role="alert">
+                    <p className={cn("mt-4 text-body-sm text-destructive")} role="alert">
                         {errorMessage}
                     </p>
                 )}

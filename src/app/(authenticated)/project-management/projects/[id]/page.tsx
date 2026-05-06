@@ -81,7 +81,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <ProjectStatusBadge status={projeto.status} />
             <PriorityIndicator prioridade={projeto.prioridade} />
             {projeto.clienteNome && (
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
+              <span className={cn("text-muted-foreground text-body-sm")}>
                 {projeto.clienteNome}
               </span>
             )}
@@ -146,7 +146,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
+              <p className={cn("text-muted-foreground text-body-sm")}>
                 {tarefasPendentes} pendentes
               </p>
             </CardContent>
@@ -166,7 +166,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             </CardHeader>
             <CardContent>
               {projeto.valorGasto != null && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
+                <p className={cn("text-muted-foreground text-body-sm")}>
                   Gasto:{" "}
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -208,7 +208,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <CardTitle>Informações</CardTitle>
           </CardHeader>
           <CardContent>
-            <dl className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-1 gap-4 text-sm sm:grid-cols-2")}>
+            <dl className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 text-body-sm sm:grid-cols-2")}>
               <div>
                 <dt className="text-muted-foreground">Responsável</dt>
                 <dd>{projeto.responsavelNome ?? "—"}</dd>

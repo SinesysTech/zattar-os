@@ -36,7 +36,7 @@ export function EventAttachmentsList({
 
   return (
     <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-6 padding direcional sem Inset equiv. */ "px-6 py-6")}>
-      <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm mb-4")}>Arquivos Anexos</Heading>
+      <Heading level="card" className={cn("text-body-sm mb-4")}>Arquivos Anexos</Heading>
 
       {!temArquivo ? (
         /* Estado vazio */

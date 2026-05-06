@@ -95,12 +95,12 @@ function AlertaCard({
             <Icon className={cn('h-5 w-5', styles.icon)} />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium', styles.text)}>{titulo}</p>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium', styles.text)}>{titulo}</p>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
               <Badge variant="secondary" className={cn("text-caption")}>
                 {quantidade} {quantidade === 1 ? 'conta' : 'contas'}
               </Badge>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ 'text-sm font-semibold', styles.value)}>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body-sm font-semibold', styles.value)}>
                 {formatarValor(valorTotal)}
               </span>
             </div>

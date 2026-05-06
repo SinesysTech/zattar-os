@@ -20,7 +20,7 @@ export function ScreenshareBanner({
 
   return (
     <div className={cn(
-      /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-sm shadow-md transition-transform duration-300 transform",
+      /* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "absolute top-0 left-0 right-0 z-50 px-4 py-2 flex items-center justify-between text-body-sm shadow-md transition-transform duration-300 transform",
       isSelf ? "bg-info text-white" : "bg-video-surface-hover text-video-text"
     )}>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>

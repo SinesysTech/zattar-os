@@ -83,7 +83,7 @@ export function TimelineError({ error, onRetry, message }: TimelineErrorProps) {
 
             {/* Detalhes técnicos (colapsível) */}
             <details className="mt-3">
-              <summary className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "cursor-pointer text-sm font-medium")}>
+              <summary className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "cursor-pointer text-body-sm font-medium")}>
                 Detalhes técnicos
               </summary>
               <pre className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-2 text-caption bg-muted p-3 rounded overflow-x-auto")}>

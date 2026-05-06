@@ -184,7 +184,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
             >
               <div className={cn(/* design-system-escape: p-3 → usar <Inset>; pb-0 padding direcional sem Inset equiv. */ "flex items-center justify-between p-3 pb-0")}>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>{col.label}</span>
+                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>{col.label}</span>
                   <AppBadge variant="outline">
                     {columns[col.id]?.length ?? 0}
                   </AppBadge>
@@ -202,7 +202,7 @@ export function SystemBoardClient({ board, events, quadros }: SystemBoardClientP
                   </Kanban.KanbanItem>
                 ))}
                 {(columns[col.id]?.length ?? 0) === 0 && (
-                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-4 padding direcional sem Inset equiv. */ "text-muted-foreground text-sm text-center py-4")}>
+                  <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-muted-foreground text-body-sm text-center py-4")}>
                     Nenhum item.
                   </div>
                 )}

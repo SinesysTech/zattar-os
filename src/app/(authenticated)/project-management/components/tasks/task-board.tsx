@@ -57,7 +57,7 @@ function KanbanColumn({
       )}
     >
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center justify-between px-3 py-2")}>
-        <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+        <Heading level="subsection" className={cn("text-body-sm")}>
           {STATUS_TAREFA_LABELS[status]}
         </Heading>
         <Text variant="caption" className="bg-muted rounded-full px-2 py-0.5">

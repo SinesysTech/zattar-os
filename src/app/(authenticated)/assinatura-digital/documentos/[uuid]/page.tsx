@@ -179,7 +179,7 @@ export default async function DocumentoVerificacaoPage({
           <div className="flex h-96 w-full items-center justify-center">
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
               <LoadingSpinner className="size-8 text-muted-foreground" />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Carregando verificação...
               </p>
             </div>

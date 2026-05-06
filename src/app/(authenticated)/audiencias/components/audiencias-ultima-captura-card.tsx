@@ -85,7 +85,7 @@ export function AudienciasUltimaCapturaCard({
         <p className="text-meta-label text-muted-foreground/70">
           ÚLTIMA CAPTURA
         </p>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>Nenhuma captura de audiências realizada</p>
+        <p className={cn("text-body-sm text-muted-foreground/60 mt-1")}>Nenhuma captura de audiências realizada</p>
       </GlassPanel>
     );
   }

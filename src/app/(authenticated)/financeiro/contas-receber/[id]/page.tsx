@@ -124,7 +124,7 @@ function DetalheItem({
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{label}</p>
+        <p className={cn("text-body-sm text-muted-foreground")}>{label}</p>
         <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{value}</div>
       </div>
     </div>
@@ -220,7 +220,7 @@ export default function ContaReceberDetalhesPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar conta:</p>
           <p>{error}</p>
         </div>
@@ -238,7 +238,7 @@ export default function ContaReceberDetalhesPage() {
         </Button>
         <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted p-8 text-center")}>
           <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Conta não encontrada</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             A conta solicitada não existe ou foi removida.
           </p>
         </div>
@@ -293,7 +293,7 @@ export default function ContaReceberDetalhesPage() {
           <AlertTriangle className="h-5 w-5 text-destructive" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>Conta Inadimplente</p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive/80")}>
+            <p className={cn("text-body-sm text-destructive/80")}>
               Esta conta venceu em {formatarData(contaReceber.dataVencimento)}. Entre em contato
               com o cliente para regularização.
             </p>
@@ -413,7 +413,7 @@ export default function ContaReceberDetalhesPage() {
                       {contaReceber.cliente.nomeFantasia || contaReceber.cliente.razaoSocial}
                     </p>
                     {contaReceber.cliente.cnpj && (
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                      <p className={cn("text-body-sm text-muted-foreground")}>
                         CNPJ: {contaReceber.cliente.cnpj}
                       </p>
                     )}
@@ -421,7 +421,7 @@ export default function ContaReceberDetalhesPage() {
                 }
               />
             ) : (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum cliente vinculado</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>Nenhum cliente vinculado</p>
             )}
             {contaReceber.contrato && (
               <DetalheItem
@@ -431,7 +431,7 @@ export default function ContaReceberDetalhesPage() {
                   <div>
                     <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{contaReceber.contrato.numero}</p>
                     {contaReceber.contrato.descricao && (
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                      <p className={cn("text-body-sm text-muted-foreground")}>
                         {contaReceber.contrato.descricao}
                       </p>
                     )}
@@ -531,11 +531,11 @@ export default function ContaReceberDetalhesPage() {
                             <div>
                               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>
                                 {formatarValor(recebimento.valor)}
-                                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-2 text-sm font-normal text-muted-foreground")}>
+                                <span className={cn("ml-2 text-body-sm font-normal text-muted-foreground")}>
                                   via {FORMA_PAGAMENTO_LABELS[recebimento.formaRecebimento] || recebimento.formaRecebimento}
                                 </span>
                               </p>
-                              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                              <p className={cn("text-body-sm text-muted-foreground")}>
                                 {formatarData(recebimento.dataRecebimento)}
                               </p>
                             </div>
@@ -544,7 +544,7 @@ export default function ContaReceberDetalhesPage() {
                                 href={recebimento.comprovante.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-sm text-primary hover:underline")}
+                                className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-body-sm text-primary hover:underline")}
                               >
                                 <Paperclip className="h-3 w-3" />
                                 Comprovante
@@ -552,7 +552,7 @@ export default function ContaReceberDetalhesPage() {
                             )}
                           </div>
                           {recebimento.observacoes && (
-                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-muted-foreground")}>
+                            <p className={cn("mt-1 text-body-sm text-muted-foreground")}>
                               {recebimento.observacoes}
                             </p>
                           )}
@@ -576,7 +576,7 @@ export default function ContaReceberDetalhesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "whitespace-pre-wrap text-sm")}>{contaReceber.observacoes}</p>
+              <p className={cn("whitespace-pre-wrap text-body-sm")}>{contaReceber.observacoes}</p>
             </CardContent>
           </Card>
         )}
@@ -612,7 +612,7 @@ export default function ContaReceberDetalhesPage() {
                         <FileIcon className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{anexo.nome}</p>
+                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{anexo.nome}</p>
                         <Text variant="caption">
                           {anexo.tamanho
                             ? `${(anexo.tamanho / 1024).toFixed(1)} KB`

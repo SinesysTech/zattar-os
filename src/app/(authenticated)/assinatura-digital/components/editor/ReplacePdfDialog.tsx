@@ -205,7 +205,7 @@ export default function ReplacePdfDialog({
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               Faça upload de um novo arquivo PDF. O arquivo atual será substituído permanentemente.
             </p>
 
@@ -221,7 +221,7 @@ export default function ReplacePdfDialog({
               >
                 <input {...getInputProps()} ref={fileInputRef} className="hidden" />
                 <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium mb-1")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium mb-1")}>
                   {isDragActive ? 'Solte o arquivo aqui' : 'Arraste um PDF ou clique para selecionar'}
                 </p>
                 <Text variant="caption">
@@ -246,7 +246,7 @@ export default function ReplacePdfDialog({
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{uploadedFile.file.name}</p>
+                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{uploadedFile.file.name}</p>
                         <Text variant="caption">
                           {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
                         </Text>

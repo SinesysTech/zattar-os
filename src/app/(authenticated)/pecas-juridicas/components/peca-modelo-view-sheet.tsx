@@ -118,7 +118,7 @@ export function PecaModeloViewSheet({
                 <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 flex-1 min-w-0")}>
                   <Heading level="card">{modelo.titulo}</Heading>
                   {modelo.descricao && (
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <p className={cn("text-body-sm text-muted-foreground")}>
                       {modelo.descricao}
                     </p>
                   )}
@@ -142,7 +142,7 @@ export function PecaModeloViewSheet({
             </div>
 
             {/* Metadados */}
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-muted-foreground")}>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-muted-foreground")}>
               <Calendar className="h-4 w-4" />
               <span>
                 Criado em{' '}
@@ -170,12 +170,12 @@ export function PecaModeloViewSheet({
                 </div>
               ) : conteudoPreview ? (
                 <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/30")}>
-                  <pre className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "whitespace-pre-wrap font-mono text-sm text-foreground/80 max-h-80 overflow-auto")}>
+                  <pre className={cn("whitespace-pre-wrap font-mono text-body-sm text-foreground/80 max-h-80 overflow-auto")}>
                     {conteudoPreview}
                   </pre>
                 </GlassPanel>
               ) : (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground italic")}>
+                <p className={cn("text-body-sm text-muted-foreground italic")}>
                   Nenhum conteúdo definido
                 </p>
               )}

@@ -391,7 +391,7 @@ export function ExpedientesControlView({
     return (
       <GlassPanel depth={1} className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex min-h-52 flex-col items-center justify-center p-8 text-center")}>
         <SearchX className="size-8 text-muted-foreground/20" />
-        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground/70")}>
+        <Heading level="card" className={cn("mt-4 text-body-sm text-muted-foreground/70")}>
           Nenhum expediente encontrado
         </Heading>
         <Text variant="caption" className="mt-1.5 max-w-sm text-muted-foreground/55">

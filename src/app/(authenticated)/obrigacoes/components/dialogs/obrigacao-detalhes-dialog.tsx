@@ -481,7 +481,7 @@ export function ObrigacaoDetalhesDialog({
                     min="0"
                     value={valorDraft}
                     onChange={(e) => setValorDraft(e.target.value)}
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-8 text-sm tabular-nums flex-1 min-w-0")}
+                    className={cn("h-8 text-body-sm tabular-nums flex-1 min-w-0")}
                     autoFocus
                     disabled={savingValor}
                     onKeyDown={(e) => {
@@ -549,7 +549,7 @@ export function ObrigacaoDetalhesDialog({
                     type="date"
                     value={vencimentoDraft}
                     onChange={(e) => setVencimentoDraft(e.target.value)}
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-8 text-sm tabular-nums flex-1 min-w-0")}
+                    className={cn("h-8 text-body-sm tabular-nums flex-1 min-w-0")}
                     autoFocus
                     disabled={savingVencimento}
                     onKeyDown={(e) => {
@@ -696,7 +696,7 @@ export function ObrigacaoDetalhesDialog({
                           onChange={(e) =>
                             setDataEfetivacaoDraft(e.target.value)
                           }
-                          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-8 text-sm tabular-nums")}
+                          className={cn("h-8 text-body-sm tabular-nums")}
                           autoFocus
                           disabled={savingEfetivacao}
                           onKeyDown={(e) => {

@@ -58,7 +58,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
     return (
       <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center p-8 text-muted-foreground border border-dashed rounded-lg")}>
         <FileText className="w-8 h-8 mb-2 opacity-50" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Nenhuma transcrição disponível para esta chamada.</p>
+        <p className={cn("text-body-sm")}>Nenhuma transcrição disponível para esta chamada.</p>
       </div>
     );
   }
@@ -122,7 +122,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                     </Button>
                  </div>
               </div>
-              <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "flex-1 p-4 font-mono text-sm leading-relaxed")}>
+              <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; leading-relaxed sem token DS */ "flex-1 p-4 font-mono text-body-sm leading-relaxed")}>
                 <div className="whitespace-pre-wrap text-foreground/90">
                   {chamada.transcricao}
                 </div>

@@ -116,17 +116,17 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         </CardHeader>
         <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           <div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Funcionários</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>Funcionários</p>
             <Text variant="kpi-value">{folha.totalFuncionarios}</Text>
           </div>
           <div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Valor Total</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>Valor Total</p>
             <Text variant="kpi-value" className="text-success">
               {formatCurrency(folha.valorTotal ?? 0)}
             </Text>
           </div>
           <div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data de Pagamento</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>Data de Pagamento</p>
             <Text variant="kpi-value">
               {folha.dataPagamento
                 ? new Date(folha.dataPagamento).toLocaleDateString('pt-BR')
@@ -198,7 +198,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                 Ver no Financeiro
               </Button>
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               Lançamentos criados quando a folha foi aprovada
             </p>
           </CardHeader>
@@ -220,7 +220,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                           Lançamento #{item.lancamentoFinanceiroId}
                         </Badge>
                       </div>
-                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-4 text-sm text-muted-foreground")}>
+                      <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4 text-body-sm text-muted-foreground")}>
                         <span>Salário: {formatCurrency(item.valorBruto)}</span>
                         {folha.status === 'paga' && (
                           <Badge variant={getSemanticBadgeVariant('folha_status', 'PAGA')}>
@@ -244,7 +244,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                   </div>
                 ))}
             </div>
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "mt-4 rounded-md bg-muted/50 p-3 text-sm text-muted-foreground")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mt-4 rounded-md bg-muted/50 p-3 text-body-sm text-muted-foreground")}>
               <strong>Nota:</strong> Os lançamentos financeiros são criados automaticamente quando
               a folha é aprovada. Para visualizar todos os detalhes e realizar o pagamento, acesse o
               módulo Financeiro.

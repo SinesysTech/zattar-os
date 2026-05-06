@@ -62,7 +62,7 @@ export function TimelineLoading({
               {isCapturing && (
                 <>
                   <Progress value={undefined} className="w-64 mx-auto" />
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <p className={cn("text-body-sm text-muted-foreground")}>
                     Você pode seguir navegando. A captura continua integrada ao workspace.
                   </p>
                 </>
@@ -108,7 +108,7 @@ export function TimelineLoading({
             {isCapturing && (
               <>
                 <Progress value={undefined} className="w-64 mx-auto" />
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                <p className={cn("text-body-sm text-muted-foreground")}>
                   Você pode navegar para outras páginas. A captura continuará em segundo
                   plano.
                 </p>

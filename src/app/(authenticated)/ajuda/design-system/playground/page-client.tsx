@@ -50,7 +50,7 @@ export default function PlaygroundPage() {
             <div className="flex items-center justify-between">
               <div>
                 <Heading level="page">Design System Playground</Heading>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
+                <p className={cn("text-body-sm text-muted-foreground mt-1")}>
                   Teste e explore os componentes do ZattarOS
                 </p>
               </div>
@@ -363,7 +363,7 @@ function ColorSwatch({ name, className }: { name: string; className: string }) {
   return (
     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
       <div className={cn('h-20 rounded-md', className)} />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-center")}>{name}</p>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-center")}>{name}</p>
     </div>
   );
 }

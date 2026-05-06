@@ -383,7 +383,7 @@ export function PecaModeloFormSheet({
 
 {{autor_1.qualificacao_completa}}, vem, respeitosamente, perante V. Exa., por seu advogado que esta subscreve...`}
                         rows={15}
-                        className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}
+                        className={cn("font-mono text-body-sm")}
                         disabled={isViewMode || loading}
                       />
                     </FormControl>
@@ -395,7 +395,7 @@ export function PecaModeloFormSheet({
               {/* Placeholders detectados */}
               {form.watch('conteudo') && (
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>
                     Placeholders detectados:
                   </p>
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-wrap gap-1")}>
@@ -408,7 +408,7 @@ export function PecaModeloFormSheet({
                     )}
                     {extractPlaceholdersFromText(form.watch('conteudo') || '').length ===
                       0 && (
-                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum</span>
+                      <span className={cn("text-body-sm text-muted-foreground")}>Nenhum</span>
                     )}
                   </div>
                 </div>

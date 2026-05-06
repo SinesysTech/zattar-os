@@ -57,7 +57,7 @@ export function DepartmentGroupHeader({
           />
 
           {/* Cargo name */}
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground truncate")}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground truncate")}>
             {cargoNome}
           </span>
 

@@ -68,7 +68,7 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
                 <div>
                   <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{doc.titulo}</div>
                   {doc.descricao && (
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-1")}>
+                    <div className={cn("text-body-sm text-muted-foreground line-clamp-1")}>
                       {doc.descricao}
                     </div>
                   )}
@@ -93,10 +93,10 @@ export function DocumentTable({ documentos, onDocumentoClick }: DocumentTablePro
                 )}
               </TableCell>
               <TableCell>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{doc.criador.nomeCompleto}</div>
+                <div className={cn("text-body-sm")}>{doc.criador.nomeCompleto}</div>
               </TableCell>
               <TableCell>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                <div className={cn("text-body-sm text-muted-foreground")}>
                   {formatDistanceToNow(new Date(doc.updated_at), {
                     addSuffix: true,
                     locale: ptBR,

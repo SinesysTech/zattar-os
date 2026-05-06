@@ -48,7 +48,7 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
       </div>
 
       {error && (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; gap-2 → migrar para <Inline gap="tight"> */ "text-sm text-destructive flex items-center gap-2")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm text-destructive flex items-center gap-2")}>
           <AlertCircle className="h-4 w-4" />
           {error}
         </div>

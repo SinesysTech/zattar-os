@@ -133,7 +133,7 @@ function Toolbar({
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
         </div>
         <Button size="sm" className="rounded-xl" onClick={onNewEvent}>
           <Plus className="size-3.5" />
@@ -286,7 +286,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.c)} />
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold tabular-nums")}>{s.v}</span>
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums")}>{s.v}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.l}</span>
             </div>
           </div>
@@ -424,7 +424,7 @@ function WeekView({ events, currentDate, onEventClick }: { events: MockCalendarE
           <div key={d.toISOString()} className="text-center">
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium", isToday(d) ? "text-primary" : "text-muted-foreground/50")}>{weekdayShort(d)}</span>
             <div className={cn(
-              /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm tabular-nums font-semibold mx-auto size-7 flex items-center justify-center rounded-full mt-0.5",
+              /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm tabular-nums font-semibold mx-auto size-7 flex items-center justify-center rounded-full mt-0.5",
               isToday(d) ? "bg-primary text-primary-foreground" : "text-foreground/60",
             )}>
               {d.getDate()}
@@ -517,7 +517,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
           <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold tabular-nums")}>{currentDate.getDate()}</span>
         </div>
         <div>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium", isViewToday ? "text-primary" : "text-foreground/70")}>{weekdayFull(currentDate)}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium", isViewToday ? "text-primary" : "text-foreground/70")}>{weekdayFull(currentDate)}</p>
           <p className="text-[10px] text-muted-foreground/60">{fmtDate(currentDate)} · {dayEvents.length} evento{dayEvents.length !== 1 ? "s" : ""}</p>
         </div>
       </div>
@@ -597,7 +597,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
         {days.length === 0 && (
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "py-16 flex flex-col items-center text-center")}>
             <Calendar className="size-8 text-muted-foreground/45 mb-3" />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>Nenhum evento encontrado</p>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>Nenhum evento encontrado</p>
             <Text variant="caption" className="text-muted-foreground/50">nos próximos 30 dias</Text>
           </div>
         )}
@@ -611,7 +611,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
                   "size-8 rounded-lg flex items-center justify-center shrink-0",
                   isDateToday ? "bg-primary text-primary-foreground" : "bg-border/8",
                 )}>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold tabular-nums", !isDateToday && "text-foreground/60")}>{date.getDate()}</span>
+                  <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold tabular-nums", !isDateToday && "text-foreground/60")}>{date.getDate()}</span>
                 </div>
                 <div>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-caption font-medium", isDateToday ? "text-primary" : "text-foreground/60")}>{weekdayFull(date)}</span>
@@ -1044,7 +1044,7 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
             </div>
             <div>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/60 uppercase tracking-wider")}>{isAgenda ? "Editar Evento" : "Detalhes do Evento"}</p>
-              <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{event.title}</Heading>
+              <Heading level="card" className={cn("text-body-sm")}>{event.title}</Heading>
             </div>
           </div>
           <button onClick={onClose} className={cn(/* design-system-escape: p-1 → usar <Inset> */ "p-1 rounded-lg hover:bg-foreground/4 text-muted-foreground/55 cursor-pointer")}>

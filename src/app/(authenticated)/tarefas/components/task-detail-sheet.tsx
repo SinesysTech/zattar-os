@@ -328,19 +328,19 @@ export function TaskDetailSheet() {
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
-                                            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
+                                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
-                                            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
+                                            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 col-span-2 sm:col-span-1")}>
                                         <Text variant="caption" className="font-medium uppercase tracking-wider">Prazo</Text>
-                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
+                                        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm")}>
                                             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                                             <span>{tarefa.dueDate ? format(new Date(tarefa.dueDate), "dd/MM/yyyy", { locale: ptBR }) : "Sem prazo"}</span>
                                         </div>
@@ -352,7 +352,7 @@ export function TaskDetailSheet() {
                                         <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
                                         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                                             <Text variant="caption" className="font-medium uppercase tracking-wider">Descrição</Text>
-                                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
+                                            <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
                                                 {tarefa.description}
                                             </p>
                                         </div>
@@ -366,7 +366,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                                            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Subtarefas</Heading>
+                                            <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Subtarefas</Heading>
                                         </div>
                                         {tarefa.subTasks && tarefa.subTasks.length > 0 && (
                                             <Text variant="caption">
@@ -403,7 +403,7 @@ export function TaskDetailSheet() {
                                                 placeholder="Adicionar subtarefa..."
                                                 value={newSubtask}
                                                 onChange={(e) => setNewSubtask(e.target.value)}
-                                                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-10 text-sm")}
+                                                className={cn("h-10 text-body-sm")}
                                             />
                                             <Button type="submit" size="icon" aria-label="Adicionar" className="h-10 w-10 shrink-0" disabled={!newSubtask.trim() || isPending}>
                                                 <Plus className="h-4 w-4" />
@@ -419,7 +419,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Anexos</Heading>
+                                            <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Anexos</Heading>
                                         </div>
                                         <Button
                                             variant="ghost"
@@ -483,7 +483,7 @@ export function TaskDetailSheet() {
                                 <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                                        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Comentários</Heading>
+                                        <Heading level="card" className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Comentários</Heading>
                                     </div>
 
                                     <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; pb-4 padding direcional sem Inset equiv. */ "space-y-4 pb-4")}>
@@ -492,7 +492,7 @@ export function TaskDetailSheet() {
                                                 placeholder="Escreva um comentário..."
                                                 value={newComment}
                                                 onChange={(e) => setNewComment(e.target.value)}
-                                                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-20 text-sm resize-none")}
+                                                className={cn("min-h-20 text-body-sm resize-none")}
                                             />
                                             <div className="flex justify-end">
                                                 <Button type="submit" size="sm" disabled={!newComment.trim() || isPending}>
@@ -514,7 +514,7 @@ export function TaskDetailSheet() {
                                                                 {format(new Date(comment.createdAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                                             </span>
                                                         </div>
-                                                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm text-foreground/90 leading-relaxed")}>
+                                                        <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground/90 leading-relaxed")}>
                                                             {comment.body}
                                                         </p>
                                                         <Button

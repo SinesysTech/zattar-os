@@ -37,7 +37,7 @@ export function DiarioOficialPageNav({
         <div>
           <Heading level="page">Diário Oficial</Heading>
           {subtitle && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
+            <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
           )}
         </div>
         {action}

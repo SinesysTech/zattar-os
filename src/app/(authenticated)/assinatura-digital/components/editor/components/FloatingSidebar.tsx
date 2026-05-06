@@ -167,7 +167,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 placeholder="Ex: Contrato de Prestação de Serviços"
                 defaultValue={documentTitle ?? ''}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "h-9 text-sm")}
+                className={cn("h-9 text-body-sm")}
               />
             </div>
 
@@ -289,7 +289,7 @@ function SidebarContent(props: FloatingSidebarProps) {
       {/* ── Footer CTA ─────────────────────────────── */}
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 border-t border-border/30 p-4 bg-background/50 backdrop-blur-md")}>
         <Button
-          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "w-full h-11 text-sm font-semibold shadow-sm gap-2")}
+          className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "w-full h-11 text-body-sm font-semibold shadow-sm gap-2")}
           onClick={onReviewAndSend}
           disabled={!hasFieldsAndSigners}
         >

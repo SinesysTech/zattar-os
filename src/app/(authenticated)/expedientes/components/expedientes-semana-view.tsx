@@ -207,7 +207,7 @@ export function ExpedientesSemanaView({
         >
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{weekLabel}</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize ml-1")}>{weekLabel}</span>
       </div>
 
       {/* Week Grid — 5 colunas (seg-sex) */}
@@ -236,7 +236,7 @@ export function ExpedientesSemanaView({
                   </span>
                   <span
                     className={cn(
-                      /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ 'text-sm font-bold tabular-nums',
+                      /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'text-body-sm font-bold tabular-nums',
                       today
                         ? 'bg-primary text-primary-foreground size-6 rounded-full flex items-center justify-center text-[11px]'
                         : 'text-foreground/80',

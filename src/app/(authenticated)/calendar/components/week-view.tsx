@@ -93,7 +93,7 @@ export function WeekView({ currentDate, events, onEventSelect, onEventCreate }: 
         {days.map((day) => (
           <div
             key={day.toString()}
-            className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; data-today:font-medium sem equivalente DS */ "data-today:text-foreground text-muted-foreground/70 py-2 text-center text-sm data-today:font-medium")}
+            className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; data-today:font-medium sem equivalente DS */ "data-today:text-foreground text-muted-foreground/70 py-2 text-center text-body-sm data-today:font-medium")}
             data-today={isToday(day) || undefined}>
             <span className="sm:hidden" aria-hidden="true">
               {capitalizeFirst(format(day, "EEEEE", { locale: ptBR }))} {format(day, "d")}

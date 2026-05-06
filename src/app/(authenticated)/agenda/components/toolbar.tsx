@@ -94,7 +94,7 @@ export function AgendaToolbar({
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{dateLabel}</p>
         </div>
         <Button size="sm" className="rounded-xl" onClick={onNewEvent}>
           <Plus className="size-3.5" />

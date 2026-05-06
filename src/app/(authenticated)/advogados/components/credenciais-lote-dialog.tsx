@@ -143,7 +143,7 @@ export function CredenciaisLoteDialog({
         </DialogHeader>
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv.; space-y-6 → migrar para <Stack gap="loose"> */ "px-6 py-4 space-y-6")}>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Advogado: {advogado.nome_completo} (CPF: {formatCpf(advogado.cpf)})
         </p>
         {resultado ? (
@@ -191,7 +191,7 @@ export function CredenciaisLoteDialog({
                       />
                       <label
                         htmlFor={`trt-${trt}`}
-                        className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
+                        className={cn("text-body-sm cursor-pointer")}
                         title={TRIBUNAIS_LABELS[trt]}
                       >
                         {trt}
@@ -222,7 +222,7 @@ export function CredenciaisLoteDialog({
                       onCheckedChange={() => toggleGrau(grau)}
                       disabled={isSaving}
                     />
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{GRAUS_LABELS[grau]}</span>
+                    <span className={cn("text-body-sm")}>{GRAUS_LABELS[grau]}</span>
                   </label>
                 ))}
               </div>
@@ -260,7 +260,7 @@ export function CredenciaisLoteDialog({
                   <RadioGroupItem value="pular" id="modo-pular" />
                   <label
                     htmlFor="modo-pular"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
+                    className={cn("text-body-sm cursor-pointer")}
                   >
                     Pular (manter existente)
                   </label>
@@ -269,7 +269,7 @@ export function CredenciaisLoteDialog({
                   <RadioGroupItem value="sobrescrever" id="modo-sobrescrever" />
                   <label
                     htmlFor="modo-sobrescrever"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
+                    className={cn("text-body-sm cursor-pointer")}
                   >
                     Sobrescrever (atualizar senha)
                   </label>
@@ -366,7 +366,7 @@ function ResultadoView({
       </Alert>
 
       <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-48 border rounded-md p-3")}>
-        <table className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "w-full text-sm")}>
+        <table className={cn("w-full text-body-sm")}>
           <thead>
             <tr className="border-b">
               <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Tribunal</th>

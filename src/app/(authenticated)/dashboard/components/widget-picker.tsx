@@ -85,7 +85,7 @@ export function WidgetPicker({
           <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "font-heading text-base font-semibold")}>
             Personalizar Dashboard
           </SheetTitle>
-          <SheetDescription className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "not-sr-only text-sm text-muted-foreground/60 mt-0.5")}>
+          <SheetDescription className={cn("not-sr-only text-body-sm text-muted-foreground/60 mt-0.5")}>
             Escolha quais widgets exibir
           </SheetDescription>
         </SheetHeader>
@@ -128,7 +128,7 @@ export function WidgetPicker({
                     aria-label={`${isEnabled ? 'Desativar' : 'Ativar'} widget ${widget.title}`}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS; gap-2 → migrar para <Inline gap="tight"> */ "text-sm font-medium leading-tight truncate flex items-center gap-2")}>
+                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS; gap-2 → migrar para <Inline gap="tight"> */ "text-body-sm font-medium leading-tight truncate flex items-center gap-2")}>
                        {/* Opcional: mostrar um ícone bem sutil do módulo se quiser, mas o usuário pediu para não separar */}
                       {widget.title}
                     </p>
@@ -144,7 +144,7 @@ export function WidgetPicker({
           {availableWidgets.length === 0 && (
             <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv.; px-5 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 px-5 text-center")}>
               <LayoutGrid className="size-8 text-muted-foreground/45 mb-3" />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50")}>
+              <p className={cn("text-body-sm text-muted-foreground/50")}>
                 Nenhum widget disponivel para o seu perfil.
               </p>
             </div>

@@ -92,7 +92,7 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
               <Text variant="kpi-value">
                 <AnimatedNumber value={acordo.parcelasPagas} />
               </Text>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 tabular-nums")}>
+              <span className={cn("text-body-sm text-muted-foreground/50 tabular-nums")}>
                 / {acordo.totalParcelas}
               </span>
             </div>

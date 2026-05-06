@@ -97,7 +97,7 @@ export function ComposeMailPanel() {
     <div className="flex h-full flex-col">
       {/* Header */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 shrink-0 items-center justify-between px-4")}>
-        <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Novo E-mail</Heading>
+        <Heading level="card" className={cn("text-body-sm")}>Novo E-mail</Heading>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button

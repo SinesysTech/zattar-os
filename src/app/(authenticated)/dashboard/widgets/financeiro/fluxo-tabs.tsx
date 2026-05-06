@@ -101,7 +101,7 @@ export function WidgetFluxoComTabs() {
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Receita {ultimoLabel}
               </p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums")}>
                 {fmtMoeda(ultimoPeriodo?.receitas ?? 0)}
               </p>
             </div>
@@ -109,7 +109,7 @@ export function WidgetFluxoComTabs() {
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Despesa {ultimoLabel}
               </p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums")}>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums")}>
                 {fmtMoeda(ultimoPeriodo?.despesas ?? 0)}
               </p>
             </div>
@@ -139,7 +139,7 @@ export function WidgetFluxoComTabs() {
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Acumulado total
               </p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-success/80")}>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums text-success/80")}>
                 {fmtMoeda(acumuladoTotal)}
               </p>
             </div>
@@ -147,7 +147,7 @@ export function WidgetFluxoComTabs() {
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
                 Saldo último período
               </p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-success/80")}>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums text-success/80")}>
                 {fmtMoeda(ultimoPeriodo?.saldo ?? (ultimoPeriodo?.receitas ?? 0) - (ultimoPeriodo?.despesas ?? 0))}
               </p>
             </div>

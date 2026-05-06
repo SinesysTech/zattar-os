@@ -62,7 +62,7 @@ export function ProgressoChart({ percentual }: ProgressoChartProps) {
                     <tspan
                       x={viewBox.cx}
                       y={viewBox.cy}
-                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "fill-foreground text-sm font-bold")}
+                      className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "fill-foreground text-body-sm font-bold")}
                     >
                       {percentual}%
                     </tspan>

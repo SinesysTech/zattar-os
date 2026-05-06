@@ -419,7 +419,7 @@ export function FileManager() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Documentos</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>{subtitle}</p>
         </div>
         <NovoPopover
           onCreateFolder={() => setCreateFolderOpen(true)}

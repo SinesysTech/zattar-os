@@ -108,7 +108,7 @@ function InfoRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-[120px_1fr] gap-3 py-1.5 text-sm")}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-1.5 padding direcional sem Inset equiv. */ "grid grid-cols-[120px_1fr] gap-3 py-1.5 text-body-sm")}>
       <dt className="text-[12px] text-muted-foreground/60">{label}</dt>
       <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/90")}>{children}</dd>
     </div>
@@ -127,7 +127,7 @@ function MetaItem({
       <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/55")}>
         {label}
       </span>
-      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm")}>{children}</div>
+      <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm")}>{children}</div>
     </div>
   );
 }
@@ -154,7 +154,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
         <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-0")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className="min-w-0">
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
+              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tabular-nums tracking-tight text-foreground truncate")}>
                 {pericia.numeroProcesso}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -287,7 +287,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
         title="Processo"
       >
         <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5")}>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "block text-sm font-semibold tabular-nums tracking-tight text-foreground")}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "block text-body-sm font-semibold tabular-nums tracking-tight text-foreground")}>
             {pericia.numeroProcesso}
           </span>
           <span className="block text-[11px] text-muted-foreground/60 mt-1">
@@ -301,7 +301,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
           icon={<ListTodo className="size-3.5 text-muted-foreground/50" />}
           title="Observações"
         >
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed")}>
+          <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground/80 whitespace-pre-wrap leading-relaxed")}>
             {pericia.observacoes}
           </p>
         </Section>

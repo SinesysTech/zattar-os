@@ -314,7 +314,7 @@ function ComparacaoCards({
               const percentual = (dados.totalOrcado / maiorValor) * 100;
               return (
                 <div key={dados.id} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
+                  <div className={cn("flex justify-between text-body-sm")}>
                     <span>{dados.nome}</span>
                     <span className="font-mono">{formatarValor(dados.totalOrcado)}</span>
                   </div>
@@ -515,7 +515,7 @@ function CompararOrcamentosContent() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamentos</p>
           <p>{error}</p>
         </div>

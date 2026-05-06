@@ -167,7 +167,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
 
   if (sorted.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-6 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-6 text-center")}>
+      <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-6 text-center")}>
         Nenhuma audiência encontrada para este processo.
       </p>
     );
@@ -183,7 +183,7 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 space-y-1")}>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                   {aud.tipoDescricao || 'Audiência'}
                 </p>
                 <Text variant="caption">
@@ -266,7 +266,7 @@ function ExpedientesTable({
 
   if (sorted.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-6 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-6 text-center")}>
+      <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-6 text-center")}>
         Nenhum expediente encontrado para este processo.
       </p>
     );
@@ -291,7 +291,7 @@ function ExpedientesTable({
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "min-w-0 flex-1 space-y-2")}>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>{tipoLabel}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>{tipoLabel}</p>
                 </div>
 
                 <Text variant="caption" className="flex items-center gap-2 flex-wrap">
@@ -380,7 +380,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
 
   if (sorted.length === 0) {
     return (
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-6 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-6 text-center")}>
+      <p className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-6 text-center")}>
         Nenhuma perícia encontrada para este processo.
       </p>
     );
@@ -396,7 +396,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "min-w-0 space-y-1")}>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground")}>
                   {per.especialidade?.descricao || 'Perícia'}
                 </p>
                 <SituacaoPericiaBadge codigo={per.situacaoCodigo} />
@@ -541,7 +541,7 @@ export function ProcessoDetailsTabs({
   return (
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-background/70 px-3 py-2.5")}>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex flex-wrap items-center gap-2 text-sm text-muted-foreground")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2 text-body-sm text-muted-foreground")}>
           <span className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-1.5 rounded-full border bg-muted/20 px-2.5 py-1 text-caption font-medium text-foreground")}>
             <FileText className="h-3.5 w-3.5" />
             Expedientes {isLoading ? '...' : totalExpedientes}
@@ -565,7 +565,7 @@ export function ProcessoDetailsTabs({
       <CollapsibleContent>
         <Tabs defaultValue="expedientes">
           <TabsList variant="line" className="w-full justify-start">
-            <TabsTrigger value="expedientes" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "gap-1.5 text-sm")}>
+            <TabsTrigger value="expedientes" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
               <FileText className="h-3.5 w-3.5" />
               Expedientes
               {!isLoading && totalExpedientes > 0 && (
@@ -574,7 +574,7 @@ export function ProcessoDetailsTabs({
                 </SemanticBadge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="audiencias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "gap-1.5 text-sm")}>
+            <TabsTrigger value="audiencias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
               <Calendar className="h-3.5 w-3.5" />
               Audiências
               {!isLoading && totalAudiencias > 0 && (
@@ -583,7 +583,7 @@ export function ProcessoDetailsTabs({
                 </SemanticBadge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="pericias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "gap-1.5 text-sm")}>
+            <TabsTrigger value="pericias" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "gap-1.5 text-body-sm")}>
               <Microscope className="h-3.5 w-3.5" />
               Perícias
               {!isLoading && totalPericias > 0 && (

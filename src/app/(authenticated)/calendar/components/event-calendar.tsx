@@ -321,7 +321,7 @@ export function EventCalendar({
                 <ChevronRightIcon size={16} aria-hidden="true" />
               </Button>
             </div>
-            <h2 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; sm:text-lg sem equivalente DS; md:text-xl sem equivalente DS */ "text-sm font-semibold sm:text-lg md:text-xl")}>{viewTitle}</h2>
+            <h2 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; sm:text-lg sem equivalente DS; md:text-xl sem equivalente DS */ "text-body-sm font-semibold sm:text-lg md:text-xl")}>{viewTitle}</h2>
           </div>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <DropdownMenu>

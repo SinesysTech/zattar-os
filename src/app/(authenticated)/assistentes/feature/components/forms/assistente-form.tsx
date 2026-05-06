@@ -75,7 +75,7 @@ export function AssistenteForm({
           disabled={isLoading}
         />
         {errors.nome && (
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.nome?.message as string}</p>
+          <p className={cn("text-body-sm text-destructive")}>{errors.nome?.message as string}</p>
         )}
       </div>
 
@@ -90,7 +90,7 @@ export function AssistenteForm({
           rows={3}
         />
         {errors.descricao && (
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao?.message as string}</p>
+          <p className={cn("text-body-sm text-destructive")}>{errors.descricao?.message as string}</p>
         )}
       </div>
 
@@ -107,7 +107,7 @@ export function AssistenteForm({
           rows={5}
         />
         {errors.iframe_code && (
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.iframe_code?.message as string}</p>
+          <p className={cn("text-body-sm text-destructive")}>{errors.iframe_code?.message as string}</p>
         )}
       </div>
 

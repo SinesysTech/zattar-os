@@ -88,7 +88,7 @@ export function MesView({ currentDate, events, onPrev, onNext, onToday, onEventC
           <div className="size-8 rounded-xl bg-primary/10 flex items-center justify-center">
             <Calendar className="size-4 text-primary" />
           </div>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>{MONTH_NAMES[month]} {year}</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>{MONTH_NAMES[month]} {year}</span>
         </div>
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
           <button onClick={onPrev} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground/50 cursor-pointer")} aria-label="Mês anterior"><ChevronLeft className="size-3.5" /></button>

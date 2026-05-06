@@ -112,7 +112,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                 Iniciado em
               </p>
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums text-foreground/80")}>
+            <p className={cn("text-body-sm tabular-nums text-foreground/80")}>
               {new Date(captura.iniciado_em).toLocaleString('pt-BR')}
             </p>
           </div>
@@ -125,7 +125,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                 Concluído em
               </p>
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums text-foreground/80")}>
+            <p className={cn("text-body-sm tabular-nums text-foreground/80")}>
               {captura.concluido_em
                 ? new Date(captura.concluido_em).toLocaleString('pt-BR')
                 : <span className="text-muted-foreground/65">—</span>}
@@ -140,7 +140,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
                 Duração
               </p>
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm tabular-nums font-display font-semibold text-foreground/80")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm tabular-nums font-display font-semibold text-foreground/80")}>
               {duracao ?? <span className="text-muted-foreground/65 font-normal">—</span>}
             </p>
           </div>
@@ -159,7 +159,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
           ) : (
             <XCircle className="h-4 w-4 text-destructive shrink-0" />
           )}
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
             {isCompleted ? 'Captura concluída com sucesso' : 'Captura finalizada com erros'}
           </p>
           {rawLogs.length > 0 && (

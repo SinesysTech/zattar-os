@@ -164,7 +164,7 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
 
   if (fetchError && !isLoaded) {
     return (
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-pre-wrap")}>{mail.preview || "Não foi possível carregar o conteúdo do e-mail."}</div>
+      <div className={cn("text-body-sm whitespace-pre-wrap")}>{mail.preview || "Não foi possível carregar o conteúdo do e-mail."}</div>
     );
   }
 
@@ -181,7 +181,7 @@ function MailBody({ mail }: { mail: MailMessagePreview }) {
   }
 
   return (
-    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-pre-wrap")}>{textContent}</div>
+    <div className={cn("text-body-sm whitespace-pre-wrap")}>{textContent}</div>
   );
 }
 
@@ -520,7 +520,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
       {mail ? (
         <div className="flex min-h-0 flex-1 flex-col">
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 flex-wrap items-start gap-3 p-4")}>
-            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-sm → migrar para <Text variant="body-sm"> */ "flex min-w-0 flex-1 items-start gap-4 text-sm")}>
+            <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex min-w-0 flex-1 items-start gap-4 text-body-sm")}>
               <Avatar>
                 <AvatarFallback>{participantInitials}</AvatarFallback>
               </Avatar>
@@ -549,7 +549,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <div ref={replyAreaRef} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4")}>
               <form onSubmit={handleReply}>
                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
-                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <div className={cn("text-body-sm text-muted-foreground")}>
                     {replyMode === "reply-all"
                       ? "Responder a todos"
                       : "Responder para"}{" "}
@@ -619,7 +619,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
       ) : (
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-8 → usar <Inset> */ "text-muted-foreground flex flex-1 flex-col items-center justify-center gap-2 p-8")}>
           <MailOpen className="h-10 w-10 opacity-40" />
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Selecione um e-mail para visualizar</p>
+          <p className={cn("text-body-sm")}>Selecione um e-mail para visualizar</p>
         </div>
       )}
     </div>

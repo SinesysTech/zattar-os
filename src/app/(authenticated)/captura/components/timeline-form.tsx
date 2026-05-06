@@ -233,14 +233,14 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
               />
               <Label
                 htmlFor="baixar-documentos"
-                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
+                className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
               >
                 Baixar documentos (PDFs)
               </Label>
             </div>
             {baixarDocumentos && (
               <Collapsible open={filtrosAbertos} onOpenChange={setFiltrosAbertos} className="md:col-span-2">
-                <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium hover:underline")}>
+                <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium hover:underline")}>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${filtrosAbertos ? 'rotate-180' : ''
                       }`}
@@ -257,7 +257,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                     <Label
                       htmlFor="apenas-assinados"
-                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
+                      className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
                     >
                       Apenas documentos assinados
                     </Label>
@@ -272,14 +272,14 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     />
                     <Label
                       htmlFor="apenas-nao-sigilosos"
-                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS */ "text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
+                      className={cn(/* design-system-escape: leading-none sem token DS */ "text-body-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer")}
                     >
                       Apenas documentos não sigilosos
                     </Label>
                   </div>
 
                   <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                    <Label htmlFor="tipos-documento" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                    <Label htmlFor="tipos-documento" className={cn("text-body-sm")}>
                       Tipos de Documento (separados por vírgula)
                     </Label>
                     <Input
@@ -293,7 +293,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
 
                   <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
                     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                      <Label htmlFor="data-inicial" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                      <Label htmlFor="data-inicial" className={cn("text-body-sm")}>
                         Data Inicial
                       </Label>
                       <FormDatePicker
@@ -304,7 +304,7 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                     </div>
 
                     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                      <Label htmlFor="data-final" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                      <Label htmlFor="data-final" className={cn("text-body-sm")}>
                         Data Final
                       </Label>
                       <FormDatePicker

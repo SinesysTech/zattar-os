@@ -68,7 +68,7 @@ export function DesktopStepper({
               {/* Step label - hidden on smaller screens */}
               <span
                 className={cn(
-                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'hidden text-sm transition-colors duration-200 lg:inline',
+                  'hidden text-body-sm transition-colors duration-200 lg:inline',
                   step.status === 'current' && /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'font-bold text-primary',
                   step.status === 'completed' && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-foreground',
                   step.status === 'pending' && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-muted-foreground'

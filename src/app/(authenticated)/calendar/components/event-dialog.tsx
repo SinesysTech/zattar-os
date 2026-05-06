@@ -232,7 +232,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           </DialogDescription>
         </DialogHeader>
         {error && (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "bg-destructive/15 text-destructive rounded-md px-3 py-2 text-sm")}>
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "bg-destructive/15 text-destructive rounded-md px-3 py-2 text-body-sm")}>
             {error}
           </div>
         )}
@@ -418,7 +418,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           <div className="*:not-first:mt-1.5">
             <Label htmlFor="responsavel">Responsável</Label>
             {readOnly ? (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 {responsavelId
                   ? (usuarios.find((u) => u.id === responsavelId)?.nomeExibicao ||
                     usuarios.find((u) => u.id === responsavelId)?.nomeCompleto ||
@@ -447,7 +447,7 @@ export function EventDialog({ event, isOpen, readOnly = false, onClose, onSave, 
           </div>
 
           <fieldset className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-            <legend className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-foreground text-sm leading-none font-medium")}>Cor</legend>
+            <legend className={cn(/* design-system-escape: leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-foreground text-body-sm leading-none font-medium")}>Cor</legend>
             <RadioGroup
               className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex gap-1.5")}
               disabled={readOnly}

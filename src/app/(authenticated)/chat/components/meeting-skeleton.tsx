@@ -51,7 +51,7 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
 
       {/* Loading overlay for additional feedback */}
       <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "px-4 py-2 bg-video-surface/80 rounded-full backdrop-blur-sm border border-video-border text-sm text-video-muted animate-pulse")}>
+        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "px-4 py-2 bg-video-surface/80 rounded-full backdrop-blur-sm border border-video-border text-body-sm text-video-muted animate-pulse")}>
           Preparando interface...
         </div>
       </div>

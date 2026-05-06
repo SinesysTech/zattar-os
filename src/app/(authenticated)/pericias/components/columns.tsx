@@ -106,7 +106,7 @@ function ResponsavelCell({
       <button
         type="button"
         onClick={() => setIsDialogOpen(true)}
-        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center justify-start gap-2 text-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
+        className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; -mx-1 sem equivalente DS */ "flex items-center justify-start gap-2 text-body-sm w-full min-w-0 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded px-1 -mx-1 cursor-pointer")}
         title={nomeExibicao !== '-' ? `Clique para alterar responsável: ${nomeExibicao}` : 'Clique para atribuir responsável'}
       >
         {responsavel || pericia.responsavelId ? (
@@ -219,7 +219,7 @@ export const columns: ColumnDef<Pericia>[] = [
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS; py-2 padding direcional sem Inset equiv. */ "flex flex-col gap-1 items-start py-2")}>
           {/* Data do prazo */}
           <span className={cn(
-            /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium',
+            /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium',
             vencido && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive font-semibold'
           )}>
             {prazo ? formatarDataCurta(prazo) : '-'}

@@ -219,7 +219,7 @@ function GlassRow({ pericia, usuarios, onViewDetail }: GlassRowProps) {
       {/* ── Linha 1: Partes (título) · Perito · Especialidade · Situação ── */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 flex-wrap")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex-1 min-w-0 flex items-baseline gap-3 flex-wrap")}>
-          <h3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-sm font-semibold text-foreground leading-snug wrap-break-word")}>
+          <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-semibold text-foreground leading-snug wrap-break-word")}>
             {parteAutora || 'Autor não informado'}
             <span className={cn(/* design-system-escape: mx-2 margin sem primitiva DS; font-medium → className de <Text>/<Heading> */ "mx-2 text-muted-foreground/50 font-medium")}>×</span>
             {parteRe || 'Réu não informado'}
@@ -331,7 +331,7 @@ export function PericiasGlassList({
         className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 flex flex-col items-center justify-center text-center")}
       >
         <Sparkles className="size-10 text-primary/30 mb-3" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{emptyMessage}</p>
+        <p className={cn("text-body-sm text-muted-foreground")}>{emptyMessage}</p>
       </GlassPanel>
     );
   }

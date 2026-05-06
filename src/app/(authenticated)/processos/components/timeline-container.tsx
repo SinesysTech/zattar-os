@@ -57,7 +57,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
       {/* Header da timeline */}
       <div className="mb-6">
         <Heading level="section">Timeline do Processo</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           {sortedItems.length} {sortedItems.length === 1 ? 'item' : 'itens'} •{' '}
           {sortedItems.filter((i) => i.documento).length} documentos •{' '}
           {sortedItems.filter((i) => !i.documento).length} movimentos
@@ -78,7 +78,7 @@ export function TimelineContainer({ items, isLoading = false }: TimelineContaine
             </div>
           </div>
           <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex-1 pb-4")}>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground italic")}>
+            <p className={cn("text-body-sm text-muted-foreground italic")}>
               Início do processo
             </p>
           </div>

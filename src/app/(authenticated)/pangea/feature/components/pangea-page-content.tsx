@@ -311,7 +311,7 @@ export function PangeaPageContent() {
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "mt-3 flex items-center justify-center gap-3")}>
               <button
                 type="button"
-                className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground underline underline-offset-4")}
+                className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1 text-body-sm text-muted-foreground hover:text-foreground underline underline-offset-4")}
                 aria-controls="pangea-advanced-filters"
                 aria-expanded={advancedOpen}
                 onClick={() => setAdvancedOpen((v) => !v)}
@@ -348,12 +348,12 @@ export function PangeaPageContent() {
           <CollapsibleContent id="pangea-advanced-filters" className="mt-2">
             <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS; space-y-6 → migrar para <Stack gap="loose"> */ "rounded-xl border bg-card p-4 md:p-6 space-y-6")}>
               <div className="flex items-center justify-between">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Ajuste os filtros para refinar a busca</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Ajuste os filtros para refinar a busca</p>
                 <button
                   type="button"
                   onClick={handleReset}
                   disabled={isLoading}
-                  className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 disabled:opacity-50")}
+                  className={cn("text-body-sm text-muted-foreground hover:text-foreground underline underline-offset-4 disabled:opacity-50")}
                 >
                   Limpar filtros
                 </button>
@@ -438,8 +438,8 @@ export function PangeaPageContent() {
                                       checked ? 'opacity-100' : 'opacity-0'
                                     )}
                                   />
-                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm shrink-0")}>{o.codigo}</span>
-                                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-1.5 text-muted-foreground text-sm truncate")}>
+                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm shrink-0")}>{o.codigo}</span>
+                                  <span className={cn("ml-1.5 text-muted-foreground text-body-sm truncate")}>
                                     {o.nome}
                                   </span>
                                 </CommandItem>
@@ -490,8 +490,8 @@ export function PangeaPageContent() {
                                       checked ? 'opacity-100' : 'opacity-0'
                                     )}
                                   />
-                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm shrink-0")}>{tipo}</span>
-                                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "ml-1.5 text-muted-foreground text-sm truncate")}>
+                                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm shrink-0")}>{tipo}</span>
+                                  <span className={cn("ml-1.5 text-muted-foreground text-body-sm truncate")}>
                                     {PANGEA_TIPO_LABELS[tipo]}
                                   </span>
                                 </CommandItem>

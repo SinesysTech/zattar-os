@@ -118,7 +118,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
       <div className="mt-4">
         {error && (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; p-4 → migrar para <Inset variant="card-compact"> */ "text-sm text-destructive p-4 bg-destructive/10 rounded-lg")}>
+          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "text-body-sm text-destructive p-4 bg-destructive/10 rounded-lg")}>
             {error}
           </div>
         )}
@@ -163,7 +163,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-start justify-between gap-4")}>
                           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                             <p className={`font-medium ${colorClass}`}>{label}</p>
-                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                            <p className={cn("text-body-sm text-muted-foreground")}>
                               {formatDistanceToNow(new Date(log.timestamp), {
                                 addSuffix: true,
                                 locale: ptBR,
@@ -172,7 +172,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
                           </div>
                         </div>
 
-                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "mt-3 space-y-2 text-sm text-muted-foreground")}>
+                        <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 space-y-2 text-body-sm text-muted-foreground")}>
                           {log.ipAddress && (
                             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                               <MapPin className="h-3.5 w-3.5" />

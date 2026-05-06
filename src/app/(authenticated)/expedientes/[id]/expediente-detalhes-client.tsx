@@ -463,7 +463,7 @@ function EditorialTabs({
               onClick={() => onChange(tab.id)}
               className={cn(
                 /* design-system-escape: pb-3 padding direcional sem Inset equiv.; pt-1 padding direcional sem Inset equiv. */ 'relative pb-3 pt-1 transition-colors whitespace-nowrap',
-                /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'font-heading text-sm font-semibold tracking-tight',
+                /* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'font-heading text-body-sm font-semibold tracking-tight',
                 isActive
                   ? 'text-foreground'
                   : 'text-muted-foreground/70 hover:text-muted-foreground',
@@ -1053,7 +1053,7 @@ function ResponsavelCard({
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 w-full text-left")}>
             <Avatar className="size-12 ring-2 ring-primary/20">
               <AvatarImage src={usuario.avatarUrl || undefined} alt={usuario.nomeExibicao} />
-              <AvatarFallback className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold bg-primary/10 text-primary")}>
+              <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold bg-primary/10 text-primary")}>
                 {initials}
               </AvatarFallback>
             </Avatar>

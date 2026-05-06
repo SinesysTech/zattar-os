@@ -94,7 +94,7 @@ export function ObrigacoesRecentesCard() {
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Erro ao carregar obrigações: {error}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Erro ao carregar obrigações: {error}</p>
         </CardContent>
       </GlassPanel>
     );
@@ -107,7 +107,7 @@ export function ObrigacoesRecentesCard() {
           <CardTitle>Obrigações Recentes</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma obrigação encontrada.</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Nenhuma obrigação encontrada.</p>
         </CardContent>
       </GlassPanel>
     );

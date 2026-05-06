@@ -47,7 +47,7 @@ export function SystemBoardCard({ event }: SystemBoardCardProps) {
             </AppBadge>
           )}
         </div>
-        <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight line-clamp-2")}>
+        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-medium leading-tight line-clamp-2")}>
           {event.title}
         </CardTitle>
       </CardHeader>

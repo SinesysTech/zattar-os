@@ -61,7 +61,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
     return (
       <Card className="h-full flex flex-col">
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
+          <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
             <Target className="h-4 w-4 text-muted-foreground" />
             Orçamento vs Realizado
           </CardTitle>
@@ -71,7 +71,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
               <Target className="h-5 w-5 text-muted-foreground" />
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum orçamento em execução</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>Nenhum orçamento em execução</p>
           </div>
         </CardContent>
       </Card>
@@ -90,7 +90,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
           <Target className="h-4 w-4 text-muted-foreground" />
           Orçamento vs Realizado
         </CardTitle>
@@ -98,7 +98,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
       <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "flex-1 space-y-4")}>
         {/* Resumo geral */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between text-sm")}>
+          <div className={cn("flex items-center justify-between text-body-sm")}>
             <span className="text-muted-foreground">Execução Geral</span>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <SemanticBadge category="status" value={Math.round(resumo.percentualExecutado)} variantOverride={isOverBudget ? 'destructive' : 'secondary'} className={cn("text-caption")}>

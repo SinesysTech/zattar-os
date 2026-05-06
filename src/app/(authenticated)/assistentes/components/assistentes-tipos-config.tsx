@@ -194,7 +194,7 @@ export function AssistentesTiposConfig({
         <CardContent>
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Assistente</label>
+              <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Assistente</label>
               <Select value={assistenteId} onValueChange={setAssistenteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o assistente" />
@@ -213,7 +213,7 @@ export function AssistentesTiposConfig({
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Tipo de Expediente</label>
+              <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Tipo de Expediente</label>
               <Select value={tipoExpedienteId} onValueChange={setTipoExpedienteId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o tipo" />
@@ -265,7 +265,7 @@ export function AssistentesTiposConfig({
           {relacoes.length === 0 ? (
             <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               <p>Nenhuma configuração encontrada.</p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm mt-2")}>
+              <p className={cn("text-body-sm mt-2")}>
                 Crie uma configuração para habilitar a geração automática de peças.
               </p>
             </div>
@@ -291,7 +291,7 @@ export function AssistentesTiposConfig({
                         </SemanticBadge>
                       )}
                     </div>
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <p className={cn("text-body-sm text-muted-foreground")}>
                       Tipo de Expediente: <strong>{relacao.tipo_expediente_nome}</strong>
                     </p>
                     <Text variant="caption">

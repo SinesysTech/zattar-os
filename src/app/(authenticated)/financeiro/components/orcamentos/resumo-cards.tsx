@@ -122,7 +122,7 @@ export function ResumoCards({
                 <span className={item.corIcone}>{item.icone}</span>
               </div>
               <div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{item.titulo}</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>{item.titulo}</p>
                 <Text variant="kpi-value">{item.valor}</Text>
               </div>
             </div>

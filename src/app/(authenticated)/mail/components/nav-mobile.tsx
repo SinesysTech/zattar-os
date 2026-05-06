@@ -43,7 +43,7 @@ export function NavMobile() {
         </VisuallyHidden>
 
         <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv. */ "flex h-13 items-center justify-center px-4")}>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>E-mail</span>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>E-mail</span>
         </div>
 
         <Separator />

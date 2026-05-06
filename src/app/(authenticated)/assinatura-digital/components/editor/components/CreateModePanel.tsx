@@ -56,7 +56,7 @@ export function CreateModePanelUpload({ onFileUpload }: CreateModePanelUploadPro
             <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base mb-1")}>
               {isDragActive ? 'Solte o arquivo aqui' : 'Faça upload do PDF do template'}
             </Heading>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mb-2")}>
+            <p className={cn("text-body-sm text-muted-foreground mb-2")}>
               Arraste um arquivo PDF ou clique para selecionar
             </p>
             <Text variant="caption">Apenas arquivos PDF, máximo 10MB</Text>
@@ -82,7 +82,7 @@ export function CreateModePanelForm({
           {/* Dropzone with preview */}
           <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-2 border-primary/50 rounded-lg p-6 text-center bg-primary/5")}>
             <Upload className="mx-auto h-10 w-10 text-primary mb-2" />
-            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm mb-1")}>PDF carregado com sucesso!</Heading>
+            <Heading level="card" className={cn("text-body-sm mb-1")}>PDF carregado com sucesso!</Heading>
             <Text variant="caption">
               {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
             </Text>

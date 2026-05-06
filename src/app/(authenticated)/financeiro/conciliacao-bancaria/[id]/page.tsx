@@ -39,7 +39,7 @@ export default function TransacaoDetalhePage() {
   };
 
   if (isLoading || !transacao) {
-    return <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "p-4 text-sm text-muted-foreground")}>Carregando...</div>;
+    return <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 text-body-sm text-muted-foreground")}>Carregando...</div>;
   }
 
   const status = transacao.conciliacao?.status || 'pendente';
@@ -68,31 +68,31 @@ export default function TransacaoDetalhePage() {
 
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
         <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Dados da transação</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Dados da transação</p>
           <Separator />
           <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{transacao.descricao}</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Valor: {transacao.valor}</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Documento: {transacao.documento || '-'}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Valor: {transacao.valor}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento || '-'}</p>
         </Card>
 
         <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "p-4 space-y-2")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Conciliação</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conciliação</p>
           <Separator />
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Status: {status}</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Tipo: {tipoConciliacao}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Status: {status}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>Tipo: {tipoConciliacao}</p>
           {score !== null && score !== undefined && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               Score: {score}
             </p>
           )}
           {transacao.conciliacao?.observacoes && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{transacao.conciliacao.observacoes}</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>{transacao.conciliacao.observacoes}</p>
           )}
           {transacao.lancamentoVinculado && (
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
               <Text variant="caption" className="uppercase">Lançamento vinculado</Text>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{transacao.lancamentoVinculado.descricao}</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{transacao.lancamentoVinculado.descricao}</p>
             </div>
           )}
         </Card>
@@ -101,13 +101,13 @@ export default function TransacaoDetalhePage() {
       {status === 'pendente' && (
         <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
           <div className="flex items-center justify-between">
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Sugestões de conciliação</p>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões de conciliação</p>
           </div>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2")}>
             {sugestoes?.map((s) => (
               <div key={s.lancamentoId} className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-md border p-3 space-y-2")}>
                 <div className="flex items-center justify-between">
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{s.lancamento.descricao}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{s.lancamento.descricao}</p>
                   <Badge>{Math.round(s.score)}%</Badge>
                 </div>
                 <Text variant="caption">

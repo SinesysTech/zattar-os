@@ -184,7 +184,7 @@ export function SalarioFormDialog({
             )}
           />
           {form.formState.errors.usuarioId && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{form.formState.errors.usuarioId.message}</p>
+            <p className={cn("text-body-sm text-destructive")}>{form.formState.errors.usuarioId.message}</p>
           )}
         </div>
 
@@ -205,7 +205,7 @@ export function SalarioFormDialog({
                 desde{' '}
                 {new Date(salarioVigente.dataInicioVigencia).toLocaleDateString('pt-BR')}.
               </p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+              <p className={cn("text-body-sm")}>
                 Para criar um novo salário, você deve primeiro <strong>encerrar a vigência</strong> do salário atual.
               </p>
               <Button
@@ -275,7 +275,7 @@ export function SalarioFormDialog({
             {...form.register('salarioBruto', { valueAsNumber: true })}
           />
           {form.formState.errors.salarioBruto && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+            <p className={cn("text-body-sm text-destructive")}>
               {form.formState.errors.salarioBruto.message}
             </p>
           )}
@@ -285,7 +285,7 @@ export function SalarioFormDialog({
           <Label>Data de Início da Vigência</Label>
           <Input type="date" {...form.register('dataInicioVigencia')} />
           {form.formState.errors.dataInicioVigencia && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+            <p className={cn("text-body-sm text-destructive")}>
               {form.formState.errors.dataInicioVigencia.message}
             </p>
           )}

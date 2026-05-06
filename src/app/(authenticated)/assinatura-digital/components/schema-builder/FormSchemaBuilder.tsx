@@ -486,7 +486,7 @@ export function FormSchemaBuilder({
       return (
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize")}>{label}</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize")}>{label}</span>
         </div>
       );
     }
@@ -499,7 +499,7 @@ export function FormSchemaBuilder({
       return (
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border border-primary bg-card px-3 py-2.5 shadow-lg opacity-90 w-56")}>
           <Icon className="size-4 text-muted-foreground" />
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{field.label}</span>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{field.label}</span>
         </div>
       );
     }
@@ -512,7 +512,7 @@ export function FormSchemaBuilder({
       {/* Header */}
       <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "shrink-0 flex items-center justify-between rounded-lg border bg-card px-4 py-2.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-          <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{formularioNome}</Heading>
+          <Heading level="section" className={cn("text-body-sm")}>{formularioNome}</Heading>
           {isDirty && <Badge variant="outline" className="text-[10px]">Não salvo</Badge>}
         </div>
 
@@ -630,7 +630,7 @@ export function FormSchemaBuilder({
           <div className="h-full overflow-y-auto">
             <div className="max-w-3xl mx-auto">
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "mb-4 p-3 bg-muted/50 border rounded-lg")}>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-foreground")}>
+                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-foreground")}>
                   <Eye className="size-4 text-muted-foreground" />
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Preview do Formulário</span>
                 </div>

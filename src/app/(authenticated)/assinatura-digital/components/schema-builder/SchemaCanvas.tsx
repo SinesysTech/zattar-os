@@ -303,7 +303,7 @@ export default function SchemaCanvas({
 
           <button
             onClick={onSectionAdd}
-            className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "w-full rounded-xl border border-dashed py-3 text-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer")}
+            className={cn(/* design-system-escape: py-3 padding direcional sem Inset equiv. */ "w-full rounded-xl border border-dashed py-3 text-body-sm text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-accent/50 transition-colors cursor-pointer")}
           >
             <Plus className="size-4 inline-block mr-1.5 -mt-0.5" />
             Adicionar Seção

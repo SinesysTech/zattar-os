@@ -54,7 +54,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
           <Heading level="page">Histórico Salarial - {usuarioNome}</Heading>
         </div>
         <button
-          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-primary underline")}
+          className={cn("text-body-sm text-primary underline")}
           type="button"
           onClick={() => refetch()}
         >
@@ -74,7 +74,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>{formatCurrency(salario.salarioBruto)}</CardTitle>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <p className={cn("text-body-sm text-muted-foreground")}>
                     Vigência: {new Date(salario.dataInicioVigencia).toLocaleDateString('pt-BR')} {' '}
                     {salario.dataFimVigencia
                       ? `até ${new Date(salario.dataFimVigencia).toLocaleDateString('pt-BR')}`
@@ -86,11 +86,11 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
                 </Badge>
               </CardHeader>
               <CardContent className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                <p className={cn("text-body-sm text-muted-foreground")}>
                   Cargo: {salario.cargo?.nome ?? 'Não informado'}
                 </p>
                 {salario.observacoes && (
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Observações: {salario.observacoes}</p>
+                  <p className={cn("text-body-sm text-muted-foreground")}>Observações: {salario.observacoes}</p>
                 )}
               </CardContent>
             </Card>

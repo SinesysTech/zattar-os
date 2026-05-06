@@ -191,7 +191,7 @@ export function GlobalTasksView({ tarefas }: GlobalTasksViewProps) {
         ) : null
       }
       footer={
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>
+        <div className={cn("text-muted-foreground text-body-sm")}>
           {filteredCount} {filteredCount === 1 ? "tarefa" : "tarefas"}
         </div>
       }

@@ -46,7 +46,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">A Ruptura e o Acerto de Contas</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Como o trabalho terminou e se as verbas foram pagas
         </p>
       </div>
@@ -92,7 +92,7 @@ export function ModuloRuptura({ data, onChange }: ModuloRupturaProps) {
                 checked={verbas.includes(opt.value)}
                 onCheckedChange={(checked) => toggleVerba(opt.value, checked === true)}
               />
-              <Label htmlFor={`verba-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
+              <Label htmlFor={`verba-${opt.value}`} className={cn("cursor-pointer text-body-sm font-normal")}>
                 {opt.label}
               </Label>
             </div>

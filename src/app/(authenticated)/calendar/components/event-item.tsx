@@ -227,7 +227,7 @@ export function EventItem({
       onTouchStart={onTouchStart}
       {...dndListeners}
       {...dndAttributes}>
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{event.title}</div>
+      <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{event.title}</div>
       <Text variant="caption" className="opacity-70">
         {event.allDay ? (
           <span>Dia inteiro</span>

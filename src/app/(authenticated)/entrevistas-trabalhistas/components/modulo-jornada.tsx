@@ -45,7 +45,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Apropriação do Tempo</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Jornada de trabalho, horas extras e intervalos
         </p>
       </div>
@@ -63,7 +63,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
                   toggleControlePonto(opt.value, checked === true)
                 }
               />
-              <Label htmlFor={`ponto-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
+              <Label htmlFor={`ponto-${opt.value}`} className={cn("cursor-pointer text-body-sm font-normal")}>
                 {opt.label}
               </Label>
             </div>
@@ -147,7 +147,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
                 onChange({ ...data, horas_extras_pagas: checked === true })
               }
             />
-            <Label htmlFor="he-pagas" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
+            <Label htmlFor="he-pagas" className={cn("cursor-pointer text-body-sm font-normal")}>
               Recebia todas as horas extras
             </Label>
           </div>
@@ -159,7 +159,7 @@ export function ModuloJornada({ data, onChange }: ModuloJornadaProps) {
                 onChange({ ...data, banco_horas_compensado: checked === true ? false : undefined })
               }
             />
-            <Label htmlFor="bh-nao-compensado" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
+            <Label htmlFor="bh-nao-compensado" className={cn("cursor-pointer text-body-sm font-normal")}>
               Fazia hora extra de graça ou ia para banco de horas que nunca folgava
             </Label>
           </div>

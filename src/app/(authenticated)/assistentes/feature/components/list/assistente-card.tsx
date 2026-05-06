@@ -55,7 +55,7 @@ export function AssistenteCard({
       >
         <CardHeader className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "px-4 pt-3 pb-2")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pr-8 padding direcional sem Inset equiv. */ "flex items-start justify-between gap-2 pr-8")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-semibold leading-tight line-clamp-2")}>
+            <CardTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-body-sm font-semibold leading-tight line-clamp-2")}>
               {assistente.nome}
             </CardTitle>
           </div>

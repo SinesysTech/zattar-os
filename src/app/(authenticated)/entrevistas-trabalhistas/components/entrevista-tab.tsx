@@ -86,7 +86,7 @@ export function EntrevistaTab({ contratoId, entrevista: initialEntrevista, anexo
         <div className="flex items-center justify-between">
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <SemanticBadge category="status" value={entrevista.status} variantOverride="outline">{STATUS_ENTREVISTA_LABELS[entrevista.status]}</SemanticBadge>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <span className={cn("text-body-sm text-muted-foreground")}>
               Módulo atual: {MODULO_LABELS[entrevista.moduloAtual as ModuloEntrevista] ?? entrevista.moduloAtual}
             </span>
           </div>

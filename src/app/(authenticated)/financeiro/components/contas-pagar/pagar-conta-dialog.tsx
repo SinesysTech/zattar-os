@@ -267,7 +267,7 @@ export function PagarContaDialog({
             <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-lg border bg-muted/50 p-4 space-y-2")}>
               <div className="flex justify-between items-start">
                 <div>
-                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm")}>{conta.descricao}</p>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm")}>{conta.descricao}</p>
                   {conta.fornecedor && (
                     <Text variant="caption">
                       {conta.fornecedor.nomeFantasia || conta.fornecedor.razaoSocial}
@@ -395,7 +395,7 @@ export function PagarContaDialog({
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{comprovanteFile.name}</p>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{comprovanteFile.name}</p>
                       <Text variant="caption">{formatFileSize(comprovanteFile.size)}</Text>
                     </div>
                   </div>
@@ -423,7 +423,7 @@ export function PagarContaDialog({
                     disabled={comprovanteUploading}
                     aria-label="Selecionar comprovante de pagamento"
                   />
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
+                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "flex cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed p-4 text-body-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
                     {comprovanteUploading ? (
                       <>
                         <LoadingSpinner />

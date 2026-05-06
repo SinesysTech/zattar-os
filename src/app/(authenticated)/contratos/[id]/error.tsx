@@ -36,7 +36,7 @@ export default function ContratoDetalhesError({
           </p>
 
           {error.message && (
-            <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-3 rounded-md bg-muted text-sm text-muted-foreground")}>
+            <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 rounded-md bg-muted text-body-sm text-muted-foreground")}>
               {error.message}
             </div>
           )}

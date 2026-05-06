@@ -90,7 +90,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   return (
     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
       <Text variant="caption" className="font-medium">{label}</Text>
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{children}</div>
+      <div className={cn("text-body-sm")}>{children}</div>
     </div>
   );
 }
@@ -108,7 +108,7 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
           href={anexo.arquivoUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-primary hover:underline")}
+          className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-primary hover:underline")}
         >
           <FileText className="h-3.5 w-3.5" />
           {anexo.descricao ?? anexo.tipoAnexo}

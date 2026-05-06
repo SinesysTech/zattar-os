@@ -69,8 +69,8 @@ function ReminderCard({ lembrete }: { lembrete: Lembrete }) {
         </CardTitle>
       </CardHeader>
       <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{dataFormatada}</div>
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{lembrete.texto}</div>
+        <div className={cn("text-muted-foreground text-body-sm")}>{dataFormatada}</div>
+        <div className={cn("text-body-sm")}>{lembrete.texto}</div>
         {lembrete.projetoNome && (
           <Badge variant="outline">{lembrete.projetoNome}</Badge>
         )}

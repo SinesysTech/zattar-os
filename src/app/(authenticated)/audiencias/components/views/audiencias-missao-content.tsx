@@ -143,7 +143,7 @@ export function AudienciasMissaoContent({
         <button onClick={handleNext} className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ "p-1.5 rounded-lg hover:bg-foreground/4 transition-colors text-muted-foreground/70 cursor-pointer")}>
           <ChevronRight className="size-4" />
         </button>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium capitalize ml-1")}>{dateLabel}</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium capitalize ml-1")}>{dateLabel}</span>
       </div>
 
       {/* Hero Card */}

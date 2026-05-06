@@ -477,7 +477,7 @@ export function RepresentanteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
           <input type="hidden" name="sexo" value={formData.sexo} />
         </div>
@@ -502,7 +502,7 @@ export function RepresentanteFormDialog({
             </SelectContent>
           </Select>
         ) : (
-          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+          <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
         )}
         <input type="hidden" name="tipo" value={formData.tipo} />
       </div>
@@ -533,7 +533,7 @@ export function RepresentanteFormDialog({
                 </SelectContent>
               </Select>
             ) : (
-              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
             )}
             {mounted ? (
               <Select
@@ -552,7 +552,7 @@ export function RepresentanteFormDialog({
                 </SelectContent>
               </Select>
             ) : (
-              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+              <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
             )}
           </div>
           <Button
@@ -788,7 +788,7 @@ export function RepresentanteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
         </div>
       </div>
@@ -800,7 +800,7 @@ export function RepresentanteFormDialog({
     <div className="grid gap-(--density-field-gap)">
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
-        <dl className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-2 gap-x-4 gap-y-2 text-sm")}>
+        <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm")}>
           <dt className="text-muted-foreground">Nome:</dt>
           <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{formData.nome || '-'}</dd>
 

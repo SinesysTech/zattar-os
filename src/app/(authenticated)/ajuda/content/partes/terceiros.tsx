@@ -123,7 +123,7 @@ export default function TerceirosDoc() {
         <p className="text-muted-foreground">
           O campo Tipo de Terceiro ajuda a classificar o envolvimento de cada pessoa:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
           <li><strong>Testemunha:</strong> pessoa arrolada para depor no processo.</li>
           <li><strong>Perito:</strong> especialista nomeado pelo juízo para elaborar laudo técnico.</li>
           <li><strong>Assistente Técnico:</strong> especialista indicado por uma das partes para acompanhar a perícia.</li>

@@ -149,7 +149,7 @@ function AudienciaContent({
           {(audiencia.salaAudienciaNome || audiencia.urlAudienciaVirtual) && (
             <div>
               <div className="text-meta-label mb-1">Local</div>
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1.5 text-sm")}>
+              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 text-body-sm")}>
                 {audiencia.modalidade === 'presencial' ? (
                   <Building2 className="size-3.5 text-muted-foreground/70 shrink-0" />
                 ) : (

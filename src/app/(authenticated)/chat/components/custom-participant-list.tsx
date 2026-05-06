@@ -61,7 +61,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
               <div key={p.id} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-3 → usar <Inset> */ "flex items-center gap-3 p-3 hover:bg-video-surface-hover/50 transition-colors rounded-lg group")}>
                 {/* Avatar */}
                 <div className={cn(
-                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-video-text shadow-sm",
+                  /* design-system-escape: font-bold → className de <Text>/<Heading> */ "w-10 h-10 rounded-full flex items-center justify-center text-body-sm font-bold text-video-text shadow-sm",
                   "bg-linear-to-br from-info to-primary",
                   p.audioEnabled && "ring-2 ring-success"
                 )}>
@@ -75,7 +75,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-video-text truncate")}>
+                  <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-video-text truncate")}>
                     {p.name} {p.id === self?.id && "(Você)"}
                   </p>
                   <Text variant="caption" className="text-video-muted">

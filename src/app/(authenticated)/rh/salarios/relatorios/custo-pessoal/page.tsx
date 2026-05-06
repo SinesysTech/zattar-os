@@ -54,7 +54,7 @@ export default function RelatorioCustoPessoalPage() {
         </CardHeader>
         <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4 md:grid-cols-2")}>
           <div>
-            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Ano</label>
+            <label className={cn("text-body-sm text-muted-foreground")}>Ano</label>
             <Select value={ano.toString()} onValueChange={(value) => setAno(Number(value))}>
               <SelectTrigger>
                 <SelectValue />
@@ -69,7 +69,7 @@ export default function RelatorioCustoPessoalPage() {
             </Select>
           </div>
           <div>
-            <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Periodicidade</label>
+            <label className={cn("text-body-sm text-muted-foreground")}>Periodicidade</label>
             <Select
               value={periodicidade}
               onValueChange={(value: 'mensal' | 'trimestral' | 'anual') => setPeriodicidade(value)}

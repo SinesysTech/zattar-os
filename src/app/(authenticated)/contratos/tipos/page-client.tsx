@@ -317,7 +317,7 @@ export function TiposPageClient() {
         <div>
           <Heading level="page">Tipos de Contrato</Heading>
           {!isLoading && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}>
+            <p className={cn("text-body-sm text-muted-foreground mt-0.5")}>
               {ativosCount} ativo{ativosCount !== 1 ? 's' : ''} &middot; {total} total
             </p>
           )}
@@ -337,9 +337,9 @@ export function TiposPageClient() {
             ))}
           </div>
         ) : error ? (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-8 text-center text-sm text-destructive")}>{error}</div>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 text-center text-body-sm text-destructive")}>{error}</div>
         ) : tipos.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-12 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-12 text-center text-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center text-body-sm text-muted-foreground")}>
             Nenhum tipo de contrato cadastrado.
           </div>
         ) : (
@@ -361,9 +361,9 @@ export function TiposPageClient() {
                   role="row"
                   className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{tipo.nome}</span>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{tipo.nome}</span>
                   <Text variant="caption" className="truncate">{tipo.slug}</Text>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{tipo.ordem}</span>
+                  <span className={cn("text-body-sm text-muted-foreground")}>{tipo.ordem}</span>
                   <span>
                     <Badge tone="soft" variant={tipo.ativo ? 'success' : 'neutral'}>
                       {tipo.ativo ? 'Ativo' : 'Inativo'}

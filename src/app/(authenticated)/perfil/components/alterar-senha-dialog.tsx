@@ -131,13 +131,13 @@ export function AlterarSenhaDialog({
 
           <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; py-4 padding direcional sem Inset equiv. */ "space-y-4 py-4")}>
             {error && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                 {error}
               </div>
             )}
 
             {successMessage && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-success/15 p-3 text-sm text-success border border-success/15")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-success/15 p-3 text-body-sm text-success border border-success/15")}>
                 {successMessage}
               </div>
             )}

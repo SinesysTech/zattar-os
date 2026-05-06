@@ -31,11 +31,11 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
         </DialogHeader>
 
         {!credencial ? (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum advogado selecionado.</div>
+          <div className={cn("text-body-sm text-muted-foreground")}>Nenhum advogado selecionado.</div>
         ) : (
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{credencial.advogado_nome}</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{credencial.advogado_nome}</p>
               <Text variant="caption">
                 CPF {credencial.advogado_cpf} • OAB {formatOabs(credencial.advogado_oabs)}
               </Text>

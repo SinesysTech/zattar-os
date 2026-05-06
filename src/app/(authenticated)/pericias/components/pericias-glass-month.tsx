@@ -198,7 +198,7 @@ function DayCell({ day, periciasDia, isCurrentMonth, onSelect }: DayCellProps) {
     >
       <div
         className={cn(
-          /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ 'text-sm font-semibold w-7 h-7 flex items-center justify-center',
+          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
           today
             ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'bg-primary text-primary-foreground rounded-full font-bold'
             : 'text-foreground/85',
@@ -468,7 +468,7 @@ export function PericiasGlassMonth({
                     >
                       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 mb-3")}>
                         <div>
-                          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold capitalize")}>
+                          <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
                           </p>
                           <Text variant="caption" className="text-foreground/40 mt-0.5 capitalize">

@@ -35,7 +35,7 @@ export function ModuloExclusividadePessoalidade({ data, onChange }: ModuloExclus
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Só Você Serve</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Avaliar exclusividade e pessoalidade — indícios fortes de vínculo disfarçado
         </p>
       </div>

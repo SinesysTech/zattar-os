@@ -94,7 +94,7 @@ export function ClienteSelect({
 
   if (error && options.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm text-destructive")}>
+      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm text-destructive")}>
         <span>{error}</span>
         <button
           type="button"

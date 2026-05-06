@@ -586,7 +586,7 @@ export default function FieldMappingEditor({
         <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 text-center")}>
           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary" />
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground")}>Carregando {template.nome}...</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/80")}>Preparando editor de campos.</p>
+          <p className={cn("text-body-sm text-muted-foreground/80")}>Preparando editor de campos.</p>
         </div>
       </div>
     );

@@ -86,7 +86,7 @@ export function ExpedientesUltimaCapturaCard({
         <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70")}>
           ÚLTIMA CAPTURA
         </p>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/60 mt-1")}>Nenhuma captura realizada</p>
+        <p className={cn("text-body-sm text-muted-foreground/60 mt-1")}>Nenhuma captura realizada</p>
       </GlassPanel>
     );
   }

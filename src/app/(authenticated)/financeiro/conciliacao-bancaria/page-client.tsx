@@ -89,7 +89,7 @@ function getColumns(
       accessorKey: 'dataTransacao',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Data" />,
       meta: { align: 'left' as const, headerLabel: 'Data' },
-      cell: ({ row }) => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{formatarData(row.original.dataTransacao)}</span>,
+      cell: ({ row }) => <span className={cn("text-body-sm")}>{formatarData(row.original.dataTransacao)}</span>,
       enableSorting: true,
       size: 100,
     },
@@ -98,7 +98,7 @@ function getColumns(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Descrição" />,
       meta: { align: 'left' as const, headerLabel: 'Descrição' },
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "max-w-md truncate text-sm")} title={row.original.descricao}>
+        <div className={cn("max-w-md truncate text-body-sm")} title={row.original.descricao}>
           {row.original.descricao}
         </div>
       ),
@@ -109,7 +109,7 @@ function getColumns(
       header: ({ column }) => <DataTableColumnHeader column={column} title="Valor" />,
       meta: { align: 'right' as const, headerLabel: 'Valor' },
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}>
+        <div className={cn("font-mono text-body-sm")}>
           {formatarValor(row.original.valor, row.original.tipoTransacao)}
         </div>
       ),
@@ -153,18 +153,18 @@ function getColumns(
       cell: ({ row }) => {
         const lanc = row.original.lancamentoVinculado;
         return lanc ? (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "max-w-xs truncate text-sm")} title={lanc.descricao}>
+          <div className={cn("max-w-xs truncate text-body-sm")} title={lanc.descricao}>
             {lanc.descricao}
           </div>
         ) : (
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>Não conciliado</span>
+          <span className={cn("text-muted-foreground text-body-sm")}>Não conciliado</span>
         );
       },
       size: 200,
     },
     {
       id: 'acoes',
-      header: () => <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>,
+      header: () => <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>,
       meta: { align: 'left' as const },
       enableSorting: false,
       size: 80,
@@ -380,7 +380,7 @@ export default function ConciliacaoBancariaPage() {
           }
         >
           {error && (
-            <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS; p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "mx-6 mb-4 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive")}>
+            <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS; p-3 → usar <Inset> */ "mx-6 mb-4 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-body-sm text-destructive")}>
               {error}
             </div>
           )}

@@ -189,7 +189,7 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground")}>Carregando documento...</p>
+          <p className={cn("mt-4 text-body-sm text-muted-foreground")}>Carregando documento...</p>
         </div>
       </div>
     );

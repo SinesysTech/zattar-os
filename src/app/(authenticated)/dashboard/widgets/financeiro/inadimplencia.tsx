@@ -78,7 +78,7 @@ export function WidgetInadimplencia() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider mb-0.5")}>
               Carteira total
             </p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold font-display tabular-nums text-muted-foreground/70")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold font-display tabular-nums text-muted-foreground/70")}>
               {totalAReceber > 0 ? fmtMoeda(totalAReceber) : '—'}
             </p>
           </div>

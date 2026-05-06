@@ -122,7 +122,7 @@ export default function DashboardDoc() {
           por exemplo, clicar em &quot;Processos com prazo hoje&quot; abre a tela de Processos já filtrada
           pelos registros do dia.
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
           <li>Gráficos de barras e linhas para evolução temporal</li>
           <li>Cards de contagem com indicadores de variação percentual</li>
           <li>Listas resumidas dos registros mais recentes ou urgentes</li>

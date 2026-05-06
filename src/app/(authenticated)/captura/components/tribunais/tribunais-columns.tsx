@@ -38,7 +38,7 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
       accessorKey: 'tribunal_nome',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Tribunal" />,
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{row.original.tribunal_nome}</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{row.original.tribunal_nome}</span>
       ),
       meta: { headerLabel: 'Tribunal' },
     },
@@ -56,7 +56,7 @@ export function criarColunasTribunais({ onEdit }: Params): ColumnDef<TribunalCon
       accessorKey: 'url_base',
       header: ({ column }) => <DataTableColumnHeader column={column} title="URL Base" />,
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground truncate block max-w-xs")} title={row.original.url_base}>
+        <span className={cn("text-body-sm text-muted-foreground truncate block max-w-xs")} title={row.original.url_base}>
           {row.original.url_base}
         </span>
       ),

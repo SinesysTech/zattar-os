@@ -333,7 +333,7 @@ export function ExpedientesCalendar() {
                         )}
                     </div>
                     {!mostrarTodos && currentUserId && (
-                        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
+                        <div className={cn("mt-2 text-body-sm text-muted-foreground")}>
                             Mostrando apenas seus expedientes.{' '}
                             <Button
                                 variant="link"
@@ -345,7 +345,7 @@ export function ExpedientesCalendar() {
                         </div>
                     )}
                     {mostrarTodos && (
-                        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-2 text-sm text-muted-foreground")}>
+                        <div className={cn("mt-2 text-body-sm text-muted-foreground")}>
                             Mostrando todos os expedientes.{' '}
                             <Button
                                 variant="link"

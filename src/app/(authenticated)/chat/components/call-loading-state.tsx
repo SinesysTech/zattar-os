@@ -69,7 +69,7 @@ export function CallLoadingState({
           <Heading level="card">
             {message || defaultMessages[stage]}
           </Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-video-muted")}>
+          <p className={cn("text-body-sm text-video-muted")}>
             Aguarde um momento...
           </p>
         </div>
@@ -82,7 +82,7 @@ export function CallLoadingState({
         {onCancel && (
           <button
             onClick={onCancel}
-            className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-video-muted hover:text-video-text transition-colors underline decoration-dotted")}
+            className={cn("mt-4 text-body-sm text-video-muted hover:text-video-text transition-colors underline decoration-dotted")}
           >
             Cancelar
           </button>

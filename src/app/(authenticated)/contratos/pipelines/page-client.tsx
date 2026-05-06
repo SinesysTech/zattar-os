@@ -246,7 +246,7 @@ function PipelineDialog({ open, onOpenChange, pipeline, segmentos, onSuccess }: 
                   <FormLabel>Segmento</FormLabel>
                   <FormControl>
                     <select
-                      className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50")}
+                      className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-body-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50")}
                       value={field.value}
                       onChange={(e) => field.onChange(Number(e.target.value))}
                     >
@@ -662,7 +662,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                 ))}
               </div>
             ) : estagios.length === 0 ? (
-              <p className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "pt-4 text-center text-sm text-muted-foreground")}>
+              <p className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv. */ "pt-4 text-center text-body-sm text-muted-foreground")}>
                 Nenhum estágio cadastrado.
               </p>
             ) : (
@@ -687,7 +687,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
 
                     <div className="flex-1 min-w-0">
                       <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-                        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{estagio.nome}</span>
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{estagio.nome}</span>
                         {estagio.isDefault && (
                           <Star className="h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
                         )}
@@ -875,7 +875,7 @@ export function PipelinesPageClient() {
         <div>
           <Heading level="page">Pipelines de Contratos</Heading>
           {!isLoading && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-0.5")}>
+            <p className={cn("text-body-sm text-muted-foreground mt-0.5")}>
               {ativosCount} ativo{ativosCount !== 1 ? 's' : ''} &middot; {pipelines.length} total
             </p>
           )}
@@ -895,9 +895,9 @@ export function PipelinesPageClient() {
             ))}
           </div>
         ) : error ? (
-          <div className={cn(/* design-system-escape: p-8 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-8 text-center text-sm text-destructive")}>{error}</div>
+          <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "p-8 text-center text-body-sm text-destructive")}>{error}</div>
         ) : pipelines.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-12 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-12 text-center text-sm text-muted-foreground")}>
+          <div className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center text-body-sm text-muted-foreground")}>
             Nenhum pipeline cadastrado.
           </div>
         ) : (
@@ -920,18 +920,18 @@ export function PipelinesPageClient() {
                   className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_1.2fr_100px_200px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <div className="min-w-0">
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{pipeline.nome}</div>
+                    <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{pipeline.nome}</div>
                     {pipeline.descricao && (
                       <Text variant="caption" className="truncate">
                         {pipeline.descricao}
                       </Text>
                     )}
                   </div>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground truncate")}>
+                  <span className={cn("text-body-sm text-muted-foreground truncate")}>
                     {segmentoNomeMap[pipeline.segmentoId] ?? `Segmento #${pipeline.segmentoId}`}
                   </span>
                   <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <span className={cn("text-body-sm text-muted-foreground")}>
                       {pipeline.estagios?.length ?? 0} estágio(s)
                     </span>
                     {pipeline.estagios && pipeline.estagios.length > 0 && (

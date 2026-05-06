@@ -96,7 +96,7 @@ export function ProximaParcelaCard({
           </Text>
           <Icon className={cn('size-4', accentClass)} />
         </div>
-        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
+        <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-sm")}>
           <Text variant="caption" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground/85")}>
             {format(venc, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </Text>

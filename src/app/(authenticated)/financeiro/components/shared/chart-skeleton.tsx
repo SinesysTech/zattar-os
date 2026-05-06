@@ -30,7 +30,7 @@ export function ChartSkeleton({ title, height = '320px', className }: ChartSkele
     <Card className={className}>
       <CardHeader>
         {title ? (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground")}>{title}</div>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground")}>{title}</div>
         ) : (
           <Skeleton className="h-5 w-48" />
         )}

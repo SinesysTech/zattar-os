@@ -111,7 +111,7 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
         <Heading level="section" as="h3">
           {isDragActive ? 'Solte o arquivo aqui' : 'Arraste o PDF aqui'}
         </Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Ou clique para selecionar do computador. Tamanho máximo{' '}
           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>10 MB</span>.
         </p>
@@ -161,7 +161,7 @@ function ErrorState({ message }: { message?: string }) {
         <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "font-heading text-lg font-semibold text-destructive")}>
           Erro no upload
         </p>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           {message || 'Ocorreu um erro ao processar o arquivo. Tente novamente.'}
         </p>
       </div>
@@ -216,7 +216,7 @@ function FilePreviewCard({
         </div>
 
         <div className="min-w-0 flex-1 text-left">
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium text-foreground")}>{fileName}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium text-foreground")}>{fileName}</p>
           <Text variant="caption" className="tabular-nums mt-0.5">
             {formatFileSize(fileSize)}
           </Text>

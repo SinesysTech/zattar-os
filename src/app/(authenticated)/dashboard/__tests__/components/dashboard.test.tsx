@@ -34,7 +34,7 @@ const DashboardFilters = ({ children, activeFiltersCount }: {
     }
     return (
         <div>
-            <h3 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Filtros</h3>
+            <h3 className={cn("text-body-sm")}>Filtros</h3>
             {children}
         </div>
     );
@@ -236,7 +236,7 @@ describe('Dashboard Responsive Properties', () => {
                             <Card>
                                 <CardContent className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; sm:pt-6 sem equivalente DS */ "pt-4 sm:pt-6")}>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS; sm:space-y-2 sem equivalente DS */ "space-y-1 sm:space-y-2")}>
-                                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground truncate")}>
+                                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground truncate")}>
                                             {title}
                                         </p>
                                         <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; sm:text-3xl sem equivalente DS; font-bold → className de <Text>/<Heading> */ "text-2xl sm:text-3xl font-bold")}>

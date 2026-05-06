@@ -54,7 +54,7 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "mb-2 text-sm font-bold")}>Destaques do Mês</p>
+        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "mb-2 text-body-sm font-bold")}>Destaques do Mês</p>
         {membros.length > 0 ? (
           <div className={cn(/* design-system-escape: -space-x-4 sem equivalente DS */ "flex -space-x-4")}>
             <TooltipProvider>
@@ -84,23 +84,23 @@ export function SuccessMetrics({ membros, resumo }: SuccessMetricsProps) {
             Nenhum membro ativo.
           </Text>
         )}
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "mt-8 mb-2 text-sm font-bold")}>Resumo</p>
+        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "mt-8 mb-2 text-body-sm font-bold")}>Resumo</p>
         <div className={cn(/* design-system-escape: *:py-3 sem equivalente DS */ "divide-y *:py-3")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
+          <div className={cn("flex justify-between text-body-sm")}>
             <span>Projetos Ativos</span>
             <TrendIndicator
               value={resumo.projetosAtivos}
               variacao={resumo.projetosAtivosVariacao}
             />
           </div>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
+          <div className={cn("flex justify-between text-body-sm")}>
             <span>Taxa de Conclusão</span>
             <TrendIndicator
               value={`${resumo.taxaConclusao}%`}
               variacao={resumo.taxaConclusaoVariacao}
             />
           </div>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex justify-between text-sm")}>
+          <div className={cn("flex justify-between text-body-sm")}>
             <span>Horas este Mês</span>
             <TrendIndicator
               value={`${resumo.horasRegistradas}h`}

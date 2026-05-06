@@ -22,7 +22,7 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Consolidacao Final da Entrevista</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Sintetize o relato integral e anexe a entrevista completa (audio e manuscrito, quando houver).
         </p>
       </div>
@@ -65,10 +65,10 @@ export function ModuloConsolidacaoFinal({ data, onChange }: ModuloConsolidacaoFi
 
       {inconsistencias.length > 0 && (
         <div className={cn(/* design-system-escape: space-y-3 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-3 rounded-lg border border-warning/15 bg-warning/5 p-4")}>
-          <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
+          <h4 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold")}>Inconsistencias/lacunas apontadas pela IA</h4>
           {inconsistencias.map((item, index) => (
             <div key={`${item}-${index}`} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{item}</p>
+              <p className={cn("text-body-sm")}>{item}</p>
               <Textarea
                 value={justificativas[item] ?? ''}
                 onChange={(e) =>

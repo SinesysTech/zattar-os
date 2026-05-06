@@ -237,7 +237,7 @@ function PaletteEvent() {
               style={{ background: `var(${e.token})` }}
             />
             <span
-              className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "flex size-9 items-center justify-center rounded-xl font-heading text-sm font-bold text-white")}
+              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "flex size-9 items-center justify-center rounded-xl font-heading text-body-sm font-bold text-white")}
               style={{ background: `var(${e.token})` }}
             >
               {e.code}

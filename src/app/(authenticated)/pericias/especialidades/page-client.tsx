@@ -146,7 +146,7 @@ export function EspecialidadesPageClient() {
           </div>
           <Heading level="page">Especialidades</Heading>
           {!isLoading && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/70 mt-0.5")}>
+            <p className={cn("text-body-sm text-muted-foreground/70 mt-0.5")}>
               {ativas} ativa{ativas !== 1 ? 's' : ''} · {total} no catálogo ·
               sincronizado do PJE
             </p>
@@ -172,7 +172,7 @@ export function EspecialidadesPageClient() {
         </div>
       ) : error ? (
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
+          <p className={cn("text-body-sm text-destructive")}>{error}</p>
           <Button
             variant="outline"
             size="sm"
@@ -184,7 +184,7 @@ export function EspecialidadesPageClient() {
         </GlassPanel>
       ) : filtered.length === 0 ? (
         <GlassPanel depth={1} className={cn(/* design-system-escape: p-12 → usar <Inset> */ "p-12 text-center")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             {search
               ? 'Nenhuma especialidade encontrada para esta busca.'
               : 'Nenhuma especialidade no catálogo.'}
@@ -227,7 +227,7 @@ export function EspecialidadesPageClient() {
                     role="row"
                     className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "grid grid-cols-[1fr_100px_120px_100px] gap-4 items-center px-4 py-2.5 hover:bg-muted/20 transition-colors")}
                   >
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 truncate")}>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 truncate")}>
                       {item.descricao}
                     </span>
                     <Text variant="caption">

@@ -61,7 +61,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
         <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Alertas</span>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Alertas</span>
           </div>
         </CardHeader>
         <CardContent>
@@ -86,7 +86,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
         <CardTitle className="flex items-center justify-between">
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
             <Bell className="h-4 w-4 text-muted-foreground" />
             Alertas
           </div>
@@ -104,7 +104,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-success/10 p-3 mx-auto w-fit")}>
                 <CheckCircle2 className="h-5 w-5 text-success" />
               </div>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum alerta ativo</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>Nenhum alerta ativo</p>
             </div>
           </div>
         ) : (
@@ -117,7 +117,7 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
                 <div
                   key={idx}
                   className={cn(
-                    /* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-sm',
+                    /* design-system-escape: gap-2.5 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ 'flex items-start gap-2.5 rounded-lg border px-3 py-2.5 text-body-sm',
                     config.badgeClass
                   )}
                 >

@@ -560,7 +560,7 @@ export function ExpedienteDialog({
                   <p
                     id="trt-error"
                     role="alert"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.trt[0]}
                   </p>
@@ -598,7 +598,7 @@ export function ExpedienteDialog({
                   <p
                     id="grau-error"
                     role="alert"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.grau[0]}
                   </p>
@@ -631,7 +631,7 @@ export function ExpedienteDialog({
               {loadingProcessos ? (
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                   <LoadingSpinner />
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <span className={cn("text-body-sm text-muted-foreground")}>
                     Carregando processos...
                   </span>
                 </div>
@@ -678,7 +678,7 @@ export function ExpedienteDialog({
                   {getErrors()?.processoId && (
                     <p
                       role="alert"
-                      className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                      className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                     >
                       {getErrors()!.processoId[0]}
                     </p>
@@ -707,7 +707,7 @@ export function ExpedienteDialog({
                 >
                   Parte autora
                 </Text>
-                <dd className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
                   {processoSelecionado.nomeParteAutora || '—'}
                 </dd>
               </div>
@@ -719,7 +719,7 @@ export function ExpedienteDialog({
                 >
                   Parte ré
                 </Text>
-                <dd className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
+                <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>
                   {processoSelecionado.nomeParteRe || '—'}
                 </dd>
               </div>
@@ -746,7 +746,7 @@ export function ExpedienteDialog({
                 {loadingTipos ? (
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <span className={cn("text-body-sm text-muted-foreground")}>
                       Carregando tipos...
                     </span>
                   </div>
@@ -777,7 +777,7 @@ export function ExpedienteDialog({
                 {getErrors()?.tipoExpedienteId && (
                   <p
                     role="alert"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.tipoExpedienteId[0]}
                   </p>
@@ -810,7 +810,7 @@ export function ExpedienteDialog({
                   <p
                     id="descricao-error"
                     role="alert"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.descricao[0]}
                   </p>
@@ -867,7 +867,7 @@ export function ExpedienteDialog({
                   <p
                     id="prazo-error"
                     role="alert"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.dataPrazoLegalParte?.[0] ||
                       getErrors()!.horaPrazo?.[0]}
@@ -886,7 +886,7 @@ export function ExpedienteDialog({
                 {loadingUsuarios ? (
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv. */ "flex items-center gap-2 h-10 px-3 border border-border/40 rounded-md bg-muted/40")}>
                     <LoadingSpinner />
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <span className={cn("text-body-sm text-muted-foreground")}>
                       Carregando usuários...
                     </span>
                   </div>
@@ -906,7 +906,7 @@ export function ExpedienteDialog({
                 {getErrors()?.responsavelId && (
                   <p
                     role="alert"
-                    className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}
+                    className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}
                   >
                     {getErrors()!.responsavelId[0]}
                   </p>

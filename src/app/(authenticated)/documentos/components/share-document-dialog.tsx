@@ -251,7 +251,7 @@ export function ShareDocumentDialog({
                   checked={podeDeletar}
                   onCheckedChange={(checked) => setPodeDeletar(checked === true)}
                 />
-                <Label htmlFor="pode-deletar" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground cursor-pointer")}>
+                <Label htmlFor="pode-deletar" className={cn("text-body-sm text-muted-foreground cursor-pointer")}>
                   Permitir mover para lixeira
                 </Label>
                 <TooltipProvider>
@@ -314,7 +314,7 @@ export function ShareDocumentDialog({
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
                         {selectedUser.nomeExibicao || selectedUser.nomeCompleto}
                       </p>
                       {selectedUser.emailCorporativo && (
@@ -353,7 +353,7 @@ export function ShareDocumentDialog({
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Pessoas com acesso</Label>
               {compartilhamentos.length === 0 ? (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-4 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-4 text-center")}>
+                <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-4 text-center")}>
                   Este documento ainda não foi compartilhado
                 </p>
               ) : (
@@ -371,7 +371,7 @@ export function ShareDocumentDialog({
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+                            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
                               {compartilhamento.usuario.nomeExibicao || compartilhamento.usuario.nomeCompleto}
                             </p>
                             {compartilhamento.usuario.emailCorporativo && (

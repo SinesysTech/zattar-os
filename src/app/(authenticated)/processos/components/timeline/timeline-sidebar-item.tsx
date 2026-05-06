@@ -161,7 +161,7 @@ export function TimelineSidebarItem({
           {/* Linha 2: título do item */}
           <p
             className={cn(
-              /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-sm font-medium leading-tight line-clamp-2',
+              /* design-system-escape: font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ 'text-body-sm font-medium leading-tight line-clamp-2',
               isSelected
                 ? 'text-primary'
                 : 'text-foreground/70 group-hover:text-foreground'

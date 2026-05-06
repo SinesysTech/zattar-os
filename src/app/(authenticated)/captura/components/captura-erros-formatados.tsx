@@ -113,7 +113,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/[0.06] p-4")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 min-w-0 w-full")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-destructive")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>
             {errosParsed.length} erro{errosParsed.length !== 1 ? 's' : ''} na captura
           </p>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-wrap gap-1.5")}>
@@ -144,7 +144,7 @@ export function CapturaErrosFormatados({ erro }: CapturaErrosFormatadosProps) {
         {grupos.map((grupo) => (
           <div key={grupo.tribunal} className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border p-3")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mb-2.5 flex items-center gap-2")}>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>{grupo.tribunal}</p>
               <Badge variant="secondary" className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1.5 py-0 font-normal")}>
                 {grupo.erros.length} erro{grupo.erros.length !== 1 ? 's' : ''}
               </Badge>

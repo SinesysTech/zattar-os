@@ -67,7 +67,7 @@ export function DomainSection({
         <div className="flex-1">
           <Heading level="subsection" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{title}</Heading>
           {description && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{description}</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>{description}</p>
           )}
         </div>
       </div>

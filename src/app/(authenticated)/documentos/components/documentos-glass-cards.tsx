@@ -289,7 +289,7 @@ function CardsEmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
       <Text variant="caption" className="text-muted-foreground/40 mt-1">
         Adicione uma pasta, documento ou faça upload
       </Text>

@@ -93,7 +93,7 @@ export function TemplateTypeSelector({
             {/* Content */}
             <div className={cn(/* design-system-escape: space-y-1 sem token DS; pr-6 padding direcional sem Inset equiv. */ "space-y-1 pr-6")}>
               <Heading level="subsection">{option.title}</Heading>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{option.description}</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>{option.description}</p>
             </div>
           </button>
         );

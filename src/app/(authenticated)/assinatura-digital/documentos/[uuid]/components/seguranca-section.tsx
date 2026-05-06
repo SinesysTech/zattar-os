@@ -41,7 +41,7 @@ function CopyableValue({ value, label }: { value: string; label?: string }) {
         {label && (
           <Text variant="caption">{label}</Text>
         )}
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono break-all")}>{value}</p>
+        <p className={cn("text-body-sm font-mono break-all")}>{value}</p>
       </div>
       <Button
         variant="ghost"
@@ -80,7 +80,7 @@ function InfoRow({
       )}
       <div className="flex-1 min-w-0">
         <Text variant="caption">{label}</Text>
-        <div className={mono ? /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono break-all" : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm"}>
+        <div className={mono ? "text-body-sm font-mono break-all" : "text-body-sm"}>
           {value}
         </div>
       </div>
@@ -104,7 +104,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
 
   if (!hasAnySecurityData) {
     return (
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground italic")}>
+      <p className={cn("text-body-sm text-muted-foreground italic")}>
         Nenhum dado de segurança coletado.
       </p>
     );
@@ -138,7 +138,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
           label="Geolocalização"
           value={
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono")}>
+              <p className={cn("text-body-sm font-mono")}>
                 {signatario.geolocation!.latitude?.toFixed(6)}, {" "}
                 {signatario.geolocation!.longitude?.toFixed(6)}
               </p>
@@ -199,7 +199,7 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
                   <Text variant="caption">
                     Device Fingerprint
                   </Text>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                  <p className={cn("text-body-sm")}>
                     {Object.keys(signatario.dispositivoFingerprint!).length}{" "}
                     campos coletados
                   </p>

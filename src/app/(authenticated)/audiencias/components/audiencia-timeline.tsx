@@ -264,7 +264,7 @@ export function AudienciaTimeline({
           <div className="flex-1 min-w-0">
             {/* Header */}
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2 flex-wrap")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
                 {entry.type === 'manual' && entry.usuario
                   ? entry.usuario.nome
                   : entry.type === 'captura_inicial'
@@ -287,7 +287,7 @@ export function AudienciaTimeline({
             {entry.changes.length > 0 && (
               <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-1.5 space-y-1")}>
                 {entry.changes.map((change, i) => (
-                  <li key={i} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                  <li key={i} className={cn("text-body-sm")}>
                     <span className="text-muted-foreground">{change.campo}:</span>{' '}
                     <span className="text-micro-caption tabular-nums line-through opacity-60">
                       {change.valorAnterior}

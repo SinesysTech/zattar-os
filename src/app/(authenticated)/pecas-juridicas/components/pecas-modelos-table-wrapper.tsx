@@ -107,7 +107,7 @@ function getPecasModelosColumns(
             <div>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
               {modelo.descricao && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-1")}>
+                <p className={cn("text-body-sm text-muted-foreground line-clamp-1")}>
                   {modelo.descricao}
                 </p>
               )}
@@ -151,7 +151,7 @@ function getPecasModelosColumns(
       accessorKey: 'createdAt',
       header: 'Criado em',
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <span className={cn("text-body-sm text-muted-foreground")}>
           {format(new Date(row.original.createdAt), 'dd/MM/yyyy', { locale: ptBR })}
         </span>
       ),

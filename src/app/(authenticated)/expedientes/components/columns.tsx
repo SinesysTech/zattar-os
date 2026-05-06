@@ -219,7 +219,7 @@ export function TipoDescricaoCell({
                   onValueChange={handleSaveTipo}
                   disabled={isLoadingTipo || tiposExpedientes.length === 0}
                 >
-                  <SelectTrigger className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "w-full h-8 text-sm")}>
+                  <SelectTrigger className={cn("w-full h-8 text-body-sm")}>
                     <SelectValue placeholder="Selecione o tipo" />
                   </SelectTrigger>
                   <SelectContent className="max-h-50">
@@ -229,7 +229,7 @@ export function TipoDescricaoCell({
                         <SelectItem key={tipo.id} value={tipo.id.toString()}>{tipo.tipoExpediente}</SelectItem>
                       ))
                     ) : (
-                      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "px-2 py-1.5 text-sm text-muted-foreground")}>
+                      <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "px-2 py-1.5 text-body-sm text-muted-foreground")}>
                         {isLoadingTipos ? 'Carregando...' : 'Nenhum tipo'}
                       </div>
                     )}

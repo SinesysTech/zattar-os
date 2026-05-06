@@ -275,7 +275,7 @@ export const getClientesColumns = (
         return (
           <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-start gap-0.5 max-w-full overflow-hidden")}>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 max-w-full")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium wrap-break-word whitespace-normal")}>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium wrap-break-word whitespace-normal")}>
                 {labelPrimario}
               </span>
               <CopyButton text={labelPrimario} label="Copiar nome" />
@@ -361,7 +361,7 @@ export const getClientesColumns = (
         return (
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-start gap-1 max-w-full overflow-hidden")}>
             <span
-              className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm whitespace-normal wrap-break-word flex-1")}
+              className={cn("text-body-sm whitespace-normal wrap-break-word flex-1")}
               title={enderecoFormatado}
             >
               {enderecoFormatado || '-'}

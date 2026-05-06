@@ -177,19 +177,19 @@ function ResumoGeralCards({
           {resumo.itensAcimaMeta > 0 && (
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="h-4 w-4 text-destructive" />
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{resumo.itensAcimaMeta} acima da meta</span>
+              <span className={cn("text-body-sm")}>{resumo.itensAcimaMeta} acima da meta</span>
             </div>
           )}
           {resumo.itensAbaixoMeta > 0 && (
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <AlertTriangle className="h-4 w-4 text-warning" />
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{resumo.itensAbaixoMeta} abaixo da meta</span>
+              <span className={cn("text-body-sm")}>{resumo.itensAbaixoMeta} abaixo da meta</span>
             </div>
           )}
           {resumo.itensAcimaMeta === 0 && resumo.itensAbaixoMeta === 0 && (
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
               <CheckCircle2 className="h-4 w-4 text-success" />
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Todos dentro da meta</span>
+              <span className={cn("text-body-sm")}>Todos dentro da meta</span>
             </div>
           )}
         </CardContent>
@@ -337,7 +337,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
                   {getTipoLabel(alerta.tipo)}
                 </Badge>
               </div>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{alerta.mensagem}</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>{alerta.mensagem}</p>
               <Text variant="caption" className="flex gap-4 mt-2">
                 <span className={getVariacaoColor(alerta.desvioPercentual)}>
                   Desvio: {formatarPercentual(alerta.desvioPercentual)}
@@ -433,7 +433,7 @@ function ProjecaoTable({ itens }: { itens: ProjecaoItem[] }) {
                 <td className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3")}>
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-center gap-1")}>
                     {getTendenciaIcon(tendencia)}
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{getTendenciaLabel(tendencia)}</span>
+                    <span className={cn("text-body-sm")}>{getTendenciaLabel(tendencia)}</span>
                   </div>
                 </td>
               </tr>
@@ -623,7 +623,7 @@ export default function AnaliseOrcamentariaPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar análise</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>

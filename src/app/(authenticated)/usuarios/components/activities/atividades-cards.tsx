@@ -26,7 +26,7 @@ function StatCard({ title, value, icon, href, color }: StatCardProps) {
   const content = (
     <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4 transition-all hover:shadow-md', href && 'cursor-pointer')}>
       <div className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{title}</p>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{title}</p>
         <IconContainer size="md" className={color}>
           {icon}
         </IconContainer>

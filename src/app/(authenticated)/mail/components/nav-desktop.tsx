@@ -34,7 +34,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
                 <MailIcon className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{acc.nome_conta || acc.email}</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{acc.nome_conta || acc.email}</p>
                 <Text variant="caption" className="truncate">{acc.email}</Text>
               </div>
               {acc.id === selectedAccountId && (
@@ -84,7 +84,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
             </Tooltip>
           ) : (
             <PopoverTrigger asChild>
-              <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-semibold transition-colors hover:bg-muted")}>
+              <button className={cn(/* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ /* design-system-escape: gap-1.5 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "flex items-center gap-1.5 rounded-md px-2 py-1 text-body-sm font-semibold transition-colors hover:bg-muted")}>
                 <span className="truncate">{currentAccount?.nome_conta || currentAccount?.email || "E-mail"}</span>
                 <ChevronDown className="text-muted-foreground h-3.5 w-3.5 shrink-0" />
               </button>

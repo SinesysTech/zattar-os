@@ -92,7 +92,7 @@ export function PlaceholderNodeElement(
     <PlateElement
       {...props}
       className={cn(
-        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-sm',
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-body-sm',
         colorClass,
         !readOnly && 'cursor-pointer',
         selected && focused && 'ring-2 ring-ring'
@@ -164,7 +164,7 @@ export function PlaceholderNodeStatic({
   return (
     <span
       className={cn(
-        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-sm',
+        /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ 'inline-block rounded-md px-1.5 py-0.5 align-baseline font-medium text-body-sm',
         colorClass,
         className
       )}

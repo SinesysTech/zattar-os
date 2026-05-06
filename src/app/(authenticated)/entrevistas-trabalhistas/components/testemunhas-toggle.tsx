@@ -21,7 +21,7 @@ export function TestemunhasToggle({ checked, onCheckedChange }: TestemunhasToggl
           checked={checked}
           onCheckedChange={(v) => onCheckedChange(v === true)}
         />
-        <Label htmlFor="testemunhas" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "cursor-pointer text-sm font-medium")}>
+        <Label htmlFor="testemunhas" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "cursor-pointer text-body-sm font-medium")}>
           Testemunhas foram mapeadas durante a entrevista
         </Label>
       </div>

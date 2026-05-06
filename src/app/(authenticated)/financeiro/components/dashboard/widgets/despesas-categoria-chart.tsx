@@ -72,7 +72,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
           <PieIcon className="h-4 w-4 text-muted-foreground" />
           Despesas por Categoria
         </CardTitle>
@@ -80,7 +80,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
       <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex-1 flex flex-col gap-4")}>
         {data.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Sem dados disponíveis</p>
+            <p className={cn("text-body-sm text-muted-foreground")}>Sem dados disponíveis</p>
           </div>
         ) : (
           <>
@@ -91,7 +91,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
               centerContent={
                 <div className="text-center">
                   <Text variant="caption">Total</Text>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold font-heading")}>{formatarMoeda(total)}</p>
+                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold font-heading")}>{formatarMoeda(total)}</p>
                 </div>
               }
             />
@@ -101,7 +101,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                 return (
                   <div
                     key={item.name}
-                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-sm hover:bg-muted/50 transition-colors")}
+                    className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-body-sm hover:bg-muted/50 transition-colors")}
                   >
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 min-w-0 flex-1")}>
                       <span

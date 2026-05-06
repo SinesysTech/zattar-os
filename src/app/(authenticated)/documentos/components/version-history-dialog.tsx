@@ -111,7 +111,7 @@ export function VersionHistoryDialog({
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
                 <Heading level="card">Sem histórico de versões</Heading>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
+                <p className={cn("text-body-sm text-muted-foreground mt-1")}>
                   As versões serão salvas automaticamente conforme você edita
                 </p>
               </div>
@@ -125,7 +125,7 @@ export function VersionHistoryDialog({
                     {/* Timeline indicator */}
                     <div className="flex flex-col items-center">
                       <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-primary")}>
+                        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-primary")}>
                           v{version.versao}
                         </span>
                       </div>
@@ -141,7 +141,7 @@ export function VersionHistoryDialog({
                           <Heading level="subsection" className="truncate">
                             {version.titulo || 'Sem título'}
                           </Heading>
-                          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-3 mt-1 text-sm text-muted-foreground")}>
+                          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-1 text-body-sm text-muted-foreground")}>
                             <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
                               <Clock className="h-3.5 w-3.5" />
                               {formatRelative(version.created_at)}

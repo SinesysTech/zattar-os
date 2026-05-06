@@ -59,7 +59,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
             {i > 0 && <div className="w-px h-6 bg-border/8 shrink-0 hidden sm:block" />}
             <s.icon className={cn("size-3 opacity-40 shrink-0", s.color)} />
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold tabular-nums")}>{s.value}</span>
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums")}>{s.value}</span>
               <span className="text-[9px] text-muted-foreground/55 hidden sm:inline">{s.label}</span>
             </div>
           </div>

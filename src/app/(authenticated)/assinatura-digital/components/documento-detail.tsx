@@ -40,7 +40,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             <Icon className={`size-5 ${cfg.color}`} />
           </IconContainer>
           <div className="min-w-0">
-            <Heading level="section" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-tight sem token DS */ "text-sm leading-tight")}>
+            <Heading level="section" className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm leading-tight")}>
               {doc.titulo}
             </Heading>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
@@ -83,7 +83,7 @@ export function DocumentDetail({ doc, onClose }: DocumentDetailProps) {
             }
           />
           <div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold")}>
+            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold")}>
               {progress.signed}/{progress.total} assinantes
             </p>
             <p className="text-[10px] text-muted-foreground/60">

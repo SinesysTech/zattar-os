@@ -326,7 +326,7 @@ export function ContaPagarFormDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form ref={formRef} onSubmit={handleSubmit((data) => onSubmit(data as unknown as ContaPagarFormData))} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {Object.keys(errors).length > 0 && (
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
             Corrija os erros no formulário antes de continuar.
           </div>
         )}
@@ -343,7 +343,7 @@ export function ContaPagarFormDialog({
             disabled={isSubmitting}
           />
           {errors.descricao && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.descricao.message}</p>
+            <p className={cn("text-body-sm text-destructive")}>{errors.descricao.message}</p>
           )}
         </div>
 
@@ -366,7 +366,7 @@ export function ContaPagarFormDialog({
               disabled={isSubmitting}
             />
             {errors.valor && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.valor.message}</p>
+              <p className={cn("text-body-sm text-destructive")}>{errors.valor.message}</p>
             )}
           </div>
 
@@ -404,7 +404,7 @@ export function ContaPagarFormDialog({
               </PopoverContent>
             </Popover>
             {errors.dataVencimento && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.dataVencimento.message}</p>
+              <p className={cn("text-body-sm text-destructive")}>{errors.dataVencimento.message}</p>
             )}
           </div>
         </div>
@@ -531,7 +531,7 @@ export function ContaPagarFormDialog({
               </SelectContent>
             </Select>
             {errors.contaContabilId && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.contaContabilId.message}</p>
+              <p className={cn("text-body-sm text-destructive")}>{errors.contaContabilId.message}</p>
             )}
           </div>
 
@@ -577,7 +577,7 @@ export function ContaPagarFormDialog({
               <Label htmlFor="recorrente" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>
                 Conta Recorrente
               </Label>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Gera contas automaticamente em intervalos regulares
               </p>
             </div>
@@ -618,7 +618,7 @@ export function ContaPagarFormDialog({
                 </SelectContent>
               </Select>
               {errors.frequenciaRecorrencia && (
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.frequenciaRecorrencia.message}</p>
+                <p className={cn("text-body-sm text-destructive")}>{errors.frequenciaRecorrencia.message}</p>
               )}
             </div>
           )}
@@ -635,7 +635,7 @@ export function ContaPagarFormDialog({
             rows={3}
           />
           {errors.observacoes && (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.observacoes.message}</p>
+            <p className={cn("text-body-sm text-destructive")}>{errors.observacoes.message}</p>
           )}
         </div>
       </form>

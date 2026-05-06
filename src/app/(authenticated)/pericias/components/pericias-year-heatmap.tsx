@@ -424,7 +424,7 @@ export function PericiasYearHeatmap({
               iconColor="text-warning"
               label="Mês Mais Intenso"
             >
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tracking-tight")}>
+              <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight")}>
                 {MONTH_NAMES[stats.maxMonth]}
               </div>
               <div className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -484,7 +484,7 @@ export function PericiasYearHeatmap({
                 iconColor="text-info"
                 label="Próxima Entrega"
               >
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-sm font-semibold tracking-tight")}>
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body-sm font-semibold tracking-tight")}>
                   {format(parseISO(stats.proxima.prazoEntrega!), "dd 'de' MMM", {
                     locale: ptBR,
                   })}

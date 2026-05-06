@@ -166,10 +166,10 @@ export function ProcessoTagsDialog({
       <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
         {/* Tags selecionadas */}
         <div>
-          <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Etiquetas selecionadas</Label>
+          <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Etiquetas selecionadas</Label>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "mt-2 flex flex-wrap gap-2 min-h-10 p-2 border rounded-md bg-muted/30")}>
             {selectedTagIds.length === 0 ? (
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma etiqueta selecionada</span>
+              <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta selecionada</span>
             ) : (
               selectedTagIds.map((tagId) => {
                 const tag = todasTags.find((t) => t.id === tagId);
@@ -190,7 +190,7 @@ export function ProcessoTagsDialog({
         {/* Lista de tags disponíveis */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <Label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Etiquetas disponíveis</Label>
+            <Label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Etiquetas disponíveis</Label>
             <Button
               type="button"
               variant="ghost"
@@ -287,7 +287,7 @@ export function ProcessoTagsDialog({
           ) : (
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2 → usar <Inset> */ "flex flex-wrap gap-2 max-h-48 overflow-y-auto p-2 border rounded-md")}>
               {todasTags.length === 0 ? (
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhuma etiqueta cadastrada</span>
+                <span className={cn("text-body-sm text-muted-foreground")}>Nenhuma etiqueta cadastrada</span>
               ) : (
                 todasTags.map((tag) => {
                   const isSelected = selectedTagIds.includes(tag.id);
@@ -315,7 +315,7 @@ export function ProcessoTagsDialog({
 
         {/* Erro */}
         {error && (
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{error}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-destructive")}>{error}</p>
         )}
       </div>
         </div>

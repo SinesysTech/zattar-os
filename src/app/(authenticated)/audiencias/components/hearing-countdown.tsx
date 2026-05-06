@@ -80,13 +80,13 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
       <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex items-center gap-0.5 tabular-nums")}>
         {timeLeft.hours > 0 && (
           <>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>
+            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold", urgencyColor)}>{pad(timeLeft.hours)}</span>
             <span className="text-micro-caption text-muted-foreground/60">:</span>
           </>
         )}
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold", urgencyColor)}>{pad(timeLeft.minutes)}</span>
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold", urgencyColor)}>{pad(timeLeft.minutes)}</span>
         <span className="text-micro-caption text-muted-foreground/60">:</span>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold", urgencyColor)}>{pad(timeLeft.seconds)}</span>
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-bold", urgencyColor)}>{pad(timeLeft.seconds)}</span>
       </div>
     </div>
   );

@@ -356,7 +356,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                 ) : credenciais.length === 0 ? (
                   <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
                     <p>Nenhuma credencial cadastrada.</p>
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Clique em &quot;Adicionar&quot; para cadastrar a primeira.</p>
+                    <p className={cn("text-body-sm")}>Clique em &quot;Adicionar&quot; para cadastrar a primeira.</p>
                   </div>
                 ) : (
                   <ScrollArea className={cn(/* design-system-escape: pr-4 padding direcional sem Inset equiv. */ "h-75 pr-4")}>
@@ -429,7 +429,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       <CheckCircle className="h-4 w-4" />
                       <AlertTitle>Operação concluída</AlertTitle>
                       <AlertDescription>
-                        <ul className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside mt-2 text-sm")}>
+                        <ul className={cn("list-disc list-inside mt-2 text-body-sm")}>
                           <li><strong>{loteResultado.criadas}</strong> credencial(is) criada(s)</li>
                           <li><strong>{loteResultado.atualizadas}</strong> credencial(is) atualizada(s)</li>
                           <li><strong>{loteResultado.puladas}</strong> credencial(is) pulada(s)</li>
@@ -441,7 +441,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     </Alert>
 
                     <ScrollArea className={cn(/* design-system-escape: p-3 → usar <Inset> */ "h-50 border rounded-md p-3")}>
-                      <table className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "w-full text-sm")}>
+                      <table className={cn("w-full text-body-sm")}>
                         <thead>
                           <tr className="border-b">
                             <th className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-left py-2")}>Tribunal</th>
@@ -624,7 +624,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                               />
                               <label
                                 htmlFor={`trt-${trt}`}
-                                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}
+                                className={cn("text-body-sm cursor-pointer")}
                                 title={TRIBUNAIS_LABELS[trt]}
                               >
                                 {trt}
@@ -657,7 +657,7 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                               }}
                               disabled={isSaving}
                             />
-                            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{grau.label}</span>
+                            <span className={cn("text-body-sm")}>{grau.label}</span>
                           </label>
                         ))}
                       </div>
@@ -704,13 +704,13 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                       >
                         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                           <RadioGroupItem value="pular" id="modo-pular" />
-                          <label htmlFor="modo-pular" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}>
+                          <label htmlFor="modo-pular" className={cn("text-body-sm cursor-pointer")}>
                             Pular
                           </label>
                         </div>
                         <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
                           <RadioGroupItem value="sobrescrever" id="modo-sobrescrever" />
-                          <label htmlFor="modo-sobrescrever" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm cursor-pointer")}>
+                          <label htmlFor="modo-sobrescrever" className={cn("text-body-sm cursor-pointer")}>
                             Atualizar senha
                           </label>
                         </div>

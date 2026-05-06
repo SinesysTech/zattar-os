@@ -67,7 +67,7 @@ const InputCEP = React.forwardRef<HTMLInputElement, InputCEPProps>(
     return (
       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         {label && (
-          <label className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
+          <label className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70")}>
             {label}
           </label>
         )}
@@ -121,7 +121,7 @@ const InputCEP = React.forwardRef<HTMLInputElement, InputCEPProps>(
           )}
         </div>
         {error && (
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
+          <p className={cn("text-body-sm text-destructive")}>{error}</p>
         )}
       </div>
     );

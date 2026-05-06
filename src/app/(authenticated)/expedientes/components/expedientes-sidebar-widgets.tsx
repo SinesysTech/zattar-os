@@ -63,7 +63,7 @@ export function RiskScoreGauge(props: RiskScoreGaugeProps) {
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Saude</p>
-          <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Score operacional</Heading>
+          <Heading level="widget" className={cn("mt-1 text-body-sm")}>Score operacional</Heading>
         </div>
         <ShieldCheck className="size-4 text-muted-foreground/65" />
       </div>
@@ -126,7 +126,7 @@ export function AgingFunnel({
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Distribuicao</p>
-          <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Funil de prazos</Heading>
+          <Heading level="widget" className={cn("mt-1 text-body-sm")}>Funil de prazos</Heading>
         </div>
         <TrendingDown className="size-4 text-muted-foreground/65" />
       </div>
@@ -211,7 +211,7 @@ export function ActivityHeatmap({ baixasPorDia }: ActivityHeatmapProps) {
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
         <div>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>Atividade</p>
-          <Heading level="widget" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm")}>Baixas 35 dias</Heading>
+          <Heading level="widget" className={cn("mt-1 text-body-sm")}>Baixas 35 dias</Heading>
         </div>
         <Activity className="size-4 text-muted-foreground/65" />
       </div>

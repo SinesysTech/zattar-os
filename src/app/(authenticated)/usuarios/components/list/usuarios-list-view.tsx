@@ -67,7 +67,7 @@ export function UsuariosListView({
               </div>
               <div className="flex flex-col min-w-0">
                 <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>
+                  <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>
                     {usuario.nomeCompleto}
                   </span>
                   {usuario.isSuperAdmin && (
@@ -165,7 +165,7 @@ export function UsuariosListView({
               </span>
             );
           return (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'tabular-nums font-semibold text-sm', !usuario.ativo && 'opacity-50')}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'tabular-nums font-semibold text-body-sm', !usuario.ativo && 'opacity-50')}>
               {stats.processos}
             </span>
           );

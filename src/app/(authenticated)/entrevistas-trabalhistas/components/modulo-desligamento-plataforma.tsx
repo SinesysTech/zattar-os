@@ -40,7 +40,7 @@ export function ModuloDesligamentoPlataforma({ data, onChange }: ModuloDesligame
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">Desligado pelo Algoritmo</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Como foi encerrada a relação com a plataforma
         </p>
       </div>

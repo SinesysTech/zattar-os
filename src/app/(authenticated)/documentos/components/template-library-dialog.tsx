@@ -234,7 +234,7 @@ export function TemplateLibraryDialog({
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <FileText className="h-12 w-12 text-muted-foreground mb-4" />
                     <Heading level="card">Nenhum template encontrado</Heading>
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
+                    <p className={cn("text-body-sm text-muted-foreground mt-1")}>
                       {hasFilters
                         ? 'Tente ajustar os filtros de busca'
                         : 'Crie seu primeiro template para reutilizar'}
@@ -260,7 +260,7 @@ export function TemplateLibraryDialog({
                   <div className="flex flex-col items-center justify-center h-64 text-center">
                     <Star className="h-12 w-12 text-muted-foreground mb-4" />
                     <Heading level="card">Nenhum template popular ainda</Heading>
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
+                    <p className={cn("text-body-sm text-muted-foreground mt-1")}>
                       Templates mais usados aparecerão aqui
                     </p>
                   </div>
@@ -284,7 +284,7 @@ export function TemplateLibraryDialog({
             <div className="absolute inset-0 bg-background/80 flex items-center justify-center rounded-lg">
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
                 <LoadingSpinner className="size-8 text-primary" />
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Criando documento...</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>Criando documento...</p>
               </div>
             </div>
           )}

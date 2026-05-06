@@ -99,7 +99,7 @@ export function PericiaAtribuirResponsavelDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 gap-4")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Responsável</div>
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Responsável</div>
               <Select value={responsavelId || '_none'} onValueChange={setResponsavelId}>
                 <SelectTrigger className="w-full bg-card">
                   <SelectValue placeholder="Selecione..." />
@@ -117,7 +117,7 @@ export function PericiaAtribuirResponsavelDialog({
               </Select>
             </div>
 
-            {error && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</div>}
+            {error && <div className={cn("text-body-sm text-destructive")}>{error}</div>}
           </div>
         </div>
         <div className="px-6 py-4 border-t border-border/20 shrink-0 flex items-center justify-between gap-2">

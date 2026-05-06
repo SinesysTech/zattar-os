@@ -132,12 +132,12 @@ export function DocSteps({ steps }: { steps: StepDef[] }) {
     <ol className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
       {steps.map((s, i) => (
         <li key={i} className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold")}>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-body-sm font-bold")}>
             {i + 1}
           </span>
           <div className={cn(/* design-system-escape: pt-0.5 padding direcional sem Inset equiv. */ "pt-0.5")}>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{s.titulo}</p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{s.descricao}</p>
+            <p className={cn("text-muted-foreground text-body-sm")}>{s.descricao}</p>
           </div>
         </li>
       ))}

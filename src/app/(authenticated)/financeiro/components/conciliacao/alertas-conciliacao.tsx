@@ -114,7 +114,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
                   <span className={card.corIcone}>{card.icon}</span>
                 </div>
                 <div>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{card.title}</p>
+                  <p className={cn("text-body-sm text-muted-foreground")}>{card.title}</p>
                   <Text variant="kpi-value">{valor}</Text>
                 </div>
               </div>

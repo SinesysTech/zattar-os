@@ -192,7 +192,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="dataInicioDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-left text-sm")}>Data de Início</FormLabel>
+                  <FormLabel className={cn("text-left text-body-sm")}>Data de Início</FormLabel>
                   <Popover>
                     <FormControl>
                       <PopoverTrigger asChild>
@@ -232,7 +232,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="horaInicioTime"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-left text-sm")}>Hora de Início</FormLabel>
+                  <FormLabel className={cn("text-left text-body-sm")}>Hora de Início</FormLabel>
                   <FormControl>
                     <Input
                       type="time"
@@ -251,7 +251,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="dataFimDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-left text-sm")}>Data de Fim</FormLabel>
+                  <FormLabel className={cn("text-left text-body-sm")}>Data de Fim</FormLabel>
                   <Popover>
                     <FormControl>
                       <PopoverTrigger asChild>
@@ -291,7 +291,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="horaFimTime"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-left text-sm")}>Hora de Fim</FormLabel>
+                  <FormLabel className={cn("text-left text-body-sm")}>Hora de Fim</FormLabel>
                   <FormControl>
                     <Input
                       type="time"
@@ -313,7 +313,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="tipoAudienciaId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Tipo de Audiência</FormLabel>
+                  <FormLabel className={cn("text-body-sm")}>Tipo de Audiência</FormLabel>
                   <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
                     <FormControl>
                       <SelectTrigger className="h-9">
@@ -338,7 +338,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="modalidade"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Modalidade</FormLabel>
+                  <FormLabel className={cn("text-body-sm")}>Modalidade</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -349,19 +349,19 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
                         <FormControl>
                           <RadioGroupItem value={ModalidadeAudiencia.Virtual} />
                         </FormControl>
-                        <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-normal text-sm")}>Virtual</FormLabel>
+                        <FormLabel className={cn("font-normal text-body-sm")}>Virtual</FormLabel>
                       </FormItem>
                       <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
                         <FormControl>
                           <RadioGroupItem value={ModalidadeAudiencia.Presencial} />
                         </FormControl>
-                        <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-normal text-sm")}>Presencial</FormLabel>
+                        <FormLabel className={cn("font-normal text-body-sm")}>Presencial</FormLabel>
                       </FormItem>
                       <FormItem className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; space-y-0 sem token DS */ "flex items-center space-x-2 space-y-0")}>
                         <FormControl>
                           <RadioGroupItem value={ModalidadeAudiencia.Hibrida} />
                         </FormControl>
-                        <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-normal text-sm")}>Híbrida</FormLabel>
+                        <FormLabel className={cn("font-normal text-body-sm")}>Híbrida</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -379,7 +379,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="urlAudienciaVirtual"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>URL da Audiência Virtual</FormLabel>
+                  <FormLabel className={cn("text-body-sm")}>URL da Audiência Virtual</FormLabel>
                   <FormControl>
                     <Input
                       className="h-9"
@@ -400,7 +400,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
               name="enderecoPresencial"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>CEP do Endereço Presencial</FormLabel>
+                  <FormLabel className={cn("text-body-sm")}>CEP do Endereço Presencial</FormLabel>
                   <FormControl>
                     <Input
                       className="h-9"
@@ -421,7 +421,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             name="responsavelId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Responsável</FormLabel>
+                <FormLabel className={cn("text-body-sm")}>Responsável</FormLabel>
                 <Select onValueChange={value => field.onChange(Number(value))} defaultValue={field.value?.toString()}>
                   <FormControl>
                     <SelectTrigger className="h-9">
@@ -447,7 +447,7 @@ export function AudienciaForm({ initialData, onSuccess, onClose }: AudienciaForm
             name="observacoes"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Observações</FormLabel>
+                <FormLabel className={cn("text-body-sm")}>Observações</FormLabel>
                 <FormControl>
                   <Textarea
                     className="min-h-20 resize-none"

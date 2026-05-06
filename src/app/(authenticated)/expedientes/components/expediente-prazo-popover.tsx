@@ -158,7 +158,7 @@ export function PrazoTriggerContent({
       {label ? (
         <span className={cn(
           'tabular-nums',
-          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ 'text-sm font-medium',
+          size === 'sm' ? /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-[11px] font-medium' : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-body-sm font-medium',
           vencido && /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-destructive font-semibold',
         )}>
           {label}
@@ -166,7 +166,7 @@ export function PrazoTriggerContent({
       ) : (
         <span className={cn(
           'italic text-muted-foreground/70',
-          size === 'sm' ? 'text-[11px]' : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'text-sm',
+          size === 'sm' ? 'text-[11px]' : 'text-body-sm',
         )}>
           Sem prazo
         </span>

@@ -167,7 +167,7 @@ export default function RelatorioInadimplenciaPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar relatório:</p>
           <p>{error.message}</p>
         </div>
@@ -202,7 +202,7 @@ export default function RelatorioInadimplenciaPage() {
                 />
               </PopoverContent>
             </Popover>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>até</span>
+            <span className={cn("text-body-sm text-muted-foreground")}>até</span>
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm">
@@ -232,7 +232,7 @@ export default function RelatorioInadimplenciaPage() {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-4")}>
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Contas Vencidas</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Contas Vencidas</CardTitle>
             <AlertCircle className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -245,7 +245,7 @@ export default function RelatorioInadimplenciaPage() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Valor Total</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Valor Total</CardTitle>
             <DollarSign className="h-4 w-4 text-destructive" />
           </CardHeader>
           <CardContent>
@@ -260,7 +260,7 @@ export default function RelatorioInadimplenciaPage() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Dias Médio de Atraso</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Dias Médio de Atraso</CardTitle>
             <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
@@ -275,7 +275,7 @@ export default function RelatorioInadimplenciaPage() {
 
         <Card>
           <CardHeader className={cn(/* design-system-escape: space-y-0 sem token DS; pb-2 padding direcional sem Inset equiv. */ "flex flex-row items-center justify-between space-y-0 pb-2")}>
-            <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Clientes Inadimplentes</CardTitle>
+            <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Clientes Inadimplentes</CardTitle>
             <Users className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
@@ -367,7 +367,7 @@ export default function RelatorioInadimplenciaPage() {
               <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                 {relatorio.faixasAtraso.map((faixa) => (
                   <div key={faixa.faixa} className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-between text-sm")}>
+                    <div className={cn("flex items-center justify-between text-body-sm")}>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{faixa.faixa}</span>
                       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
                         <span className="text-muted-foreground">

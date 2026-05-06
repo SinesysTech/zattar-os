@@ -245,7 +245,7 @@ export function DocumentViewer({
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
             />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               Selecione um documento na timeline
             </p>
           </div>
@@ -275,7 +275,7 @@ export function DocumentViewer({
               className="h-12 w-12 text-muted-foreground/55"
               aria-hidden="true"
             />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               Documento não disponível para visualização
             </p>
           </div>

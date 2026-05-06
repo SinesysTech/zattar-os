@@ -100,7 +100,7 @@ const FieldsListItem = memo(function FieldsListItem({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{field.nome}</p>
+        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{field.nome}</p>
         <Text variant="caption">
           {getFieldTypeLabel(field.tipo)} • Pág. {field.posicao.pagina}
         </Text>
@@ -180,7 +180,7 @@ export default function FieldsList({
     return (
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 text-center text-muted-foreground")}>
         <AlignLeft className="h-8 w-8 mx-auto mb-2 opacity-50" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Nenhum campo adicionado</p>
+        <p className={cn("text-body-sm")}>Nenhum campo adicionado</p>
         <Text variant="caption" className="mt-1">Clique no canvas para adicionar campos</Text>
       </div>
     );

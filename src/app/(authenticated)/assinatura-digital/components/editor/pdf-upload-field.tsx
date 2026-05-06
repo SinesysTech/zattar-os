@@ -149,12 +149,12 @@ export function PdfUploadField({
             {isUploading ? (
               <>
                 <LoadingSpinner className="size-8 text-muted-foreground" />
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Enviando arquivo...</span>
+                <span className={cn("text-body-sm text-muted-foreground")}>Enviando arquivo...</span>
               </>
             ) : (
               <>
                 <FileUp className="h-8 w-8 text-muted-foreground" />
-                <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Clique para selecionar um PDF</span>
+                <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Clique para selecionar um PDF</span>
                 <Text variant="caption">Máximo 10MB</Text>
               </>
             )}
@@ -166,7 +166,7 @@ export function PdfUploadField({
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <FileText className="h-8 w-8 text-destructive" />
               <div>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{value?.nome}</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{value?.nome}</p>
                 <Text variant="caption">
                   {formatFileSize(value?.tamanho || 0)}
                 </Text>
@@ -188,7 +188,7 @@ export function PdfUploadField({
       )}
 
       {displayError && (
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{displayError}</p>
+        <p className={cn("text-body-sm text-destructive")}>{displayError}</p>
       )}
     </div>
   );

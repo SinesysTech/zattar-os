@@ -229,7 +229,7 @@ export default function ProcessosDoc() {
         <p className="text-muted-foreground">
           A lista de processos pode ser filtrada e ordenada por múltiplos critérios simultaneamente:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
           <li>Tribunal (TJSP, TRT, STJ, STF, TRF, etc.)</li>
           <li>Status do processo (Em Andamento, Arquivado, Encerrado)</li>
           <li>Área do direito (Cível, Trabalhista, Criminal, etc.)</li>

@@ -418,7 +418,7 @@ export default function EventCalendarApp({
             aria-label="Anterior">
             <ChevronLeftIcon size={16} aria-hidden="true" />
           </Button>
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-w-30 text-center text-sm font-medium sm:min-w-40")}>
+          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-w-30 text-center text-body-sm font-medium sm:min-w-40")}>
             {isLoading ? (
               <LoaderCircle className="mx-auto h-4 w-4 animate-spin" />
             ) : (
@@ -516,7 +516,7 @@ function CalendarViewPopover({
                   setOpen(false);
                 }}
                 className={cn(
-                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors",
+                  /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm transition-colors",
                   "hover:bg-accent hover:text-accent-foreground",
                   "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2",
                   isSelected && "bg-accent text-accent-foreground"
@@ -536,7 +536,7 @@ function CalendarViewPopover({
               setOpen(false);
             }}
             className={cn(
-              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm transition-colors",
+              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-body-sm transition-colors",
               "hover:bg-accent hover:text-accent-foreground",
               "focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2"
             )}

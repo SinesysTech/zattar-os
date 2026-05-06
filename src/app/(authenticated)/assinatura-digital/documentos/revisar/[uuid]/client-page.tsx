@@ -259,7 +259,7 @@ function SignerLinkCard({
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 min-w-0")}>
         <div
           className={cn(
-            /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-primary-foreground",
+            /* design-system-escape: font-semibold → className de <Text>/<Heading> */ "flex size-10 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold text-primary-foreground",
             isConcluido ? "bg-success" : color.solid,
           )}
         >
@@ -271,7 +271,7 @@ function SignerLinkCard({
         </div>
 
         <div className="min-w-0">
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{nome}</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")}>{nome}</p>
           <Text variant="caption">
             <span className="capitalize">{tipoLabel.toLowerCase()}</span>
             {isConcluido && " · Assinado"}
@@ -578,7 +578,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 </span>
               )}
             </div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
+            <p className={cn("text-body-sm text-muted-foreground mt-1")}>
               Confira as configurações antes de compartilhar
             </p>
           </div>
@@ -596,7 +596,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
             <span className="inline-flex size-7 items-center justify-center rounded-lg bg-info/10 shrink-0">
               <Camera className="size-3.5 text-info/70" />
             </span>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+            <p className={cn("text-body-sm")}>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Selfie de verificação</span>{" "}
               <span className="text-muted-foreground">
                 habilitada para este documento
@@ -647,7 +647,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
                 <Shield className="size-4 text-success/70" />
               </span>
               <div className="min-w-0">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Conformidade MP 2.200-2/2001</p>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conformidade MP 2.200-2/2001</p>
                 <Text variant="caption" className="mt-1">
                   Cada assinatura coleta hash SHA-256, IP, geolocalização,
                   device fingerprint e aceite de termos. Trilha de auditoria

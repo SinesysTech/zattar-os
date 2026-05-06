@@ -129,10 +129,10 @@ export function ProximaAudienciaPopover({
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <Calendar className={cn('h-4 w-4', getUrgenciaColor())} />
-            <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Próxima Audiência</Heading>
+            <Heading level="subsection" className={cn("text-body-sm")}>Próxima Audiência</Heading>
           </div>
           {clientData && (
-            <div className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "space-y-1 text-sm")}>
+            <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 text-body-sm")}>
               <p className="text-muted-foreground capitalize">{clientData.data}</p>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>às {clientData.hora}</p>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-caption font-medium', getUrgenciaColor())}>

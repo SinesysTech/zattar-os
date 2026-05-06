@@ -188,7 +188,7 @@ function DayCell({
     >
       <div
         className={cn(
-          /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ 'text-sm font-semibold w-7 h-7 flex items-center justify-center',
+          /* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body-sm font-semibold w-7 h-7 flex items-center justify-center',
           today
             ? /* design-system-escape: font-bold → className de <Text>/<Heading> */ 'bg-primary text-primary-foreground rounded-full font-bold'
             : 'text-foreground/85',
@@ -452,7 +452,7 @@ export function ObrigacoesGlassMonth({
                   sideOffset={8}
                 >
                   <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "flex items-center justify-between p-3 border-b border-border/30")}>
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold capitalize")}>
+                    <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold capitalize")}>
                       {format(day, "d 'de' MMMM", { locale: ptBR })}
                     </span>
                     <button

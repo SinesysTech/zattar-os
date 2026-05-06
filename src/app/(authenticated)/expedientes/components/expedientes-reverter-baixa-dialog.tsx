@@ -128,8 +128,8 @@ export function ExpedientesReverterBaixaDialog({
       <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
         {/* Informações do expediente */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-2 rounded-lg border p-4 bg-muted/50")}>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Expediente</div>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; space-y-1 sem token DS */ "text-sm space-y-1")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
             <div>
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Processo:</span> {expediente.numeroProcesso}
             </div>
@@ -162,7 +162,7 @@ export function ExpedientesReverterBaixaDialog({
         {/* Aviso */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-warning bg-warning/10 p-4")}>
           <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+          <div className={cn("text-body-sm")}>
             <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-warning mb-1")}>Atenção</div>
             <div className="text-muted-foreground">
               Ao reverter a baixa, o expediente voltará a aparecer na lista de pendentes.
@@ -174,7 +174,7 @@ export function ExpedientesReverterBaixaDialog({
 
         {/* Confirmação textual — previne reversão acidental */}
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-          <Label htmlFor="reverter-confirmacao" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+          <Label htmlFor="reverter-confirmacao" className={cn("text-body-sm")}>
             Para confirmar, digite{' '}
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{PALAVRA_CONFIRMACAO}</span> abaixo
           </Label>
@@ -198,7 +198,7 @@ export function ExpedientesReverterBaixaDialog({
 
         {/* Mensagem de erro */}
         {generalError && (
-          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-sm text-destructive")}>
+          <div role="alert" className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-destructive bg-destructive/10 p-3 text-body-sm text-destructive")}>
             {generalError}
           </div>
         )}

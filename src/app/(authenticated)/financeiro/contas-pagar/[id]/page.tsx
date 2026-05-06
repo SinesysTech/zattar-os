@@ -112,7 +112,7 @@ function DetalheItem({
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{label}</p>
+        <p className={cn("text-body-sm text-muted-foreground")}>{label}</p>
         <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{value}</div>
       </div>
     </div>
@@ -203,7 +203,7 @@ export default function ContaPagarDetalhesPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar conta:</p>
           <p>{error}</p>
         </div>
@@ -221,7 +221,7 @@ export default function ContaPagarDetalhesPage() {
         </Button>
         <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted p-8 text-center")}>
           <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Conta não encontrada</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             A conta solicitada não existe ou foi removida.
           </p>
         </div>
@@ -276,7 +276,7 @@ export default function ContaPagarDetalhesPage() {
           <AlertTriangle className="h-5 w-5 text-destructive" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>Conta Vencida</p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive/80")}>
+            <p className={cn("text-body-sm text-destructive/80")}>
               Esta conta venceu em {formatarData(contaPagar.dataVencimento)}. Realize o pagamento o
               mais rápido possível.
             </p>
@@ -366,7 +366,7 @@ export default function ContaPagarDetalhesPage() {
                       {contaPagar.fornecedor.nomeFantasia || contaPagar.fornecedor.razaoSocial}
                     </p>
                     {contaPagar.fornecedor.cnpj && (
-                      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                      <p className={cn("text-body-sm text-muted-foreground")}>
                         CNPJ: {contaPagar.fornecedor.cnpj}
                       </p>
                     )}
@@ -374,7 +374,7 @@ export default function ContaPagarDetalhesPage() {
                 }
               />
             ) : (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum fornecedor vinculado</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>Nenhum fornecedor vinculado</p>
             )}
             {contaPagar.contaContabil && (
               <DetalheItem
@@ -417,7 +417,7 @@ export default function ContaPagarDetalhesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "whitespace-pre-wrap text-sm")}>{contaPagar.observacoes}</p>
+              <p className={cn("whitespace-pre-wrap text-body-sm")}>{contaPagar.observacoes}</p>
             </CardContent>
           </Card>
         )}
@@ -453,7 +453,7 @@ export default function ContaPagarDetalhesPage() {
                         <FileIcon className="h-5 w-5 text-muted-foreground" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{anexo.nome}</p>
+                        <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>{anexo.nome}</p>
                         <Text variant="caption">
                           {anexo.tamanho
                             ? `${(anexo.tamanho / 1024).toFixed(1)} KB`

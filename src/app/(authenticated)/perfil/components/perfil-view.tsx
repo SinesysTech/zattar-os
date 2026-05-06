@@ -53,7 +53,7 @@ export function PerfilView() {
         <Card className="w-full max-w-md">
           <CardContent className={cn(/* design-system-escape: pt-6 padding direcional sem Inset equiv. */ "pt-6")}>
             <div className="text-center">
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{error}</p>
+              <p className={cn("text-body-sm text-destructive")}>{error}</p>
               <Button
                 onClick={() => refetch()}
                 variant="outline"
@@ -149,14 +149,14 @@ export function PerfilView() {
           </CardHeader>
           <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             <div>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Nome Completo
               </div>
               <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeCompleto}</div>
             </div>
             {usuario.cpf && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   CPF
                 </div>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarCpf(usuario.cpf)}</div>
@@ -164,7 +164,7 @@ export function PerfilView() {
             )}
             {usuario.rg && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   RG
                 </div>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.rg}</div>
@@ -172,7 +172,7 @@ export function PerfilView() {
             )}
             {usuario.dataNascimento && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
                   <Calendar className="h-4 w-4" />
                   Data de Nascimento
                 </div>
@@ -183,7 +183,7 @@ export function PerfilView() {
             )}
             {usuario.genero && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   Gênero
                 </div>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarGenero(usuario.genero)}</div>
@@ -203,7 +203,7 @@ export function PerfilView() {
           <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
             {usuario.emailCorporativo && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Corporativo
                 </div>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base break-all")}>{usuario.emailCorporativo}</div>
@@ -211,7 +211,7 @@ export function PerfilView() {
             )}
             {usuario.emailPessoal && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Pessoal
                 </div>
                 <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base break-all")}>{usuario.emailPessoal}</div>
@@ -219,7 +219,7 @@ export function PerfilView() {
             )}
             {usuario.telefone && (
               <div>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-1 gap sem token DS */ "text-body-sm font-medium text-muted-foreground mb-1 flex items-center gap-1")}>
                   <Phone className="h-4 w-4" />
                   Telefone
                 </div>
@@ -244,7 +244,7 @@ export function PerfilView() {
             <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               {usuario.oab && (
                 <div>
-                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+                  <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                     OAB
                   </div>
                   <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
@@ -282,13 +282,13 @@ export function PerfilView() {
         <CardContent>
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
             <div>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Data de Criação
               </div>
               <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarData(usuario.createdAt)}</div>
             </div>
             <div>
-              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground mb-1")}>
+              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Última Atualização
               </div>
               <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarData(usuario.updatedAt)}</div>

@@ -112,7 +112,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         {/* Progress bar principal */}
         <div>
           <div className="flex items-center justify-between">
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Consumo total</span>
+            <span className={cn("text-body-sm text-muted-foreground")}>Consumo total</span>
             <span className={`text-sm font-semibold ${getTextColorClass(disk_io_budget_percent)}`}>
               {disk_io_budget_percent.toFixed(1)}%
             </span>
@@ -130,7 +130,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
             <Text variant="caption">IOPS</Text>
             <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
               {disk_iops_consumption.toLocaleString('pt-BR')}
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal text-muted-foreground")}> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
+              <span className={cn("text-body-sm font-normal text-muted-foreground")}> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
             </p>
           </div>
 
@@ -139,7 +139,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
             <Text variant="caption">Throughput</Text>
             <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
               {disk_io_consumption_mbps.toFixed(1)}
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal text-muted-foreground")}> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>
+              <span className={cn("text-body-sm font-normal text-muted-foreground")}> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>
             </p>
           </div>
         </div>

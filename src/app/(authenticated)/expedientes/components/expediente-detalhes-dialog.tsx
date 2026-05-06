@@ -137,7 +137,7 @@ function ExpedienteListItem({
         <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mt-0")}>
           <div className="flex items-center justify-between">
             <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg">; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-lg flex items-center gap-2")}>
-              {exp.classeJudicial && <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm uppercase")}>{exp.classeJudicial}</span>}
+              {exp.classeJudicial && <span className={cn("text-muted-foreground text-body-sm uppercase")}>{exp.classeJudicial}</span>}
               {exp.numeroProcesso}
             </div>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
@@ -150,7 +150,7 @@ function ExpedienteListItem({
             </div>
           </div>
 
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-2 gap-3 text-sm")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 gap-3 text-body-sm")}>
             <div>
               <Text variant="caption">Data de Ciência</Text>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(exp.dataCienciaParte)}</div>
@@ -232,7 +232,7 @@ function ExpedienteSingleDetails({
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-medium text-lg")}>
                   {expediente.numeroProcesso}
                 </div>
-                {expediente.classeJudicial && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{expediente.classeJudicial}</div>}
+                {expediente.classeJudicial && <div className={cn("text-body-sm text-muted-foreground")}>{expediente.classeJudicial}</div>}
               </div>
               <div>
                 <Text variant="caption">Órgão Julgador</Text>
@@ -269,16 +269,16 @@ function ExpedienteSingleDetails({
 
             {expediente.baixadoEm && (
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-success/5 p-3 rounded-md border border-success/15")}>
-                <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm text-success font-semibold mb-1")}>Baixado em</div>
+                <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm text-success font-semibold mb-1")}>Baixado em</div>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.baixadoEm)}</div>
                 {expediente.justificativaBaixa && (
-                  <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm mt-1 text-muted-foreground")}>&ldquo;{expediente.justificativaBaixa}&rdquo;</div>
+                  <div className={cn("text-body-sm mt-1 text-muted-foreground")}>&ldquo;{expediente.justificativaBaixa}&rdquo;</div>
                 )}
               </div>
             )}
 
             {expediente.observacoes && (
-              <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "bg-muted p-3 rounded-md text-sm")}>
+              <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted p-3 rounded-md text-body-sm")}>
                 <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold mb-1")}>Observações</div>
                 <div className="whitespace-pre-wrap">{expediente.observacoes}</div>
               </div>

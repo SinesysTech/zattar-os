@@ -154,7 +154,7 @@ function criarColunasItens(
         const item = row.original;
         return (
           <div className="min-h-10 flex flex-col justify-center">
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+            <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
               {item.contaContabil?.codigo} - {item.contaContabil?.nome}
             </span>
           </div>
@@ -172,7 +172,7 @@ function criarColunasItens(
       cell: ({ row }) => {
         const item = row.original;
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center justify-center text-sm")}>
+          <div className={cn("min-h-10 flex items-center justify-center text-body-sm")}>
             {item.centroCusto?.nome || '-'}
           </div>
         );
@@ -188,7 +188,7 @@ function criarColunasItens(
       size: 200,
       cell: ({ row }) => {
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center justify-start text-sm text-muted-foreground")}>
+          <div className={cn("min-h-10 flex items-center justify-start text-body-sm text-muted-foreground")}>
             {row.getValue('observacoes') || '-'}
           </div>
         );
@@ -205,7 +205,7 @@ function criarColunasItens(
       cell: ({ row }) => {
         const valor = row.getValue('valorPrevisto') as number;
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-sm font-medium")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-body-sm font-medium")}>
             {formatarValor(valor)}
           </div>
         );
@@ -215,7 +215,7 @@ function criarColunasItens(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
         </div>
       ),
       size: 80,
@@ -396,7 +396,7 @@ export default function OrcamentoDetalhesPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-4 text-sm text-destructive")}>
+        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamento</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>

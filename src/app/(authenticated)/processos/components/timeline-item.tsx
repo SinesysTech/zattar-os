@@ -173,12 +173,12 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
               </TooltipProvider>
             )}
           </div>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             {formatarDataHora(item.data)}
           </p>
 
           {/* Informações adicionais */}
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; space-y-1 sem token DS */ "text-sm text-muted-foreground space-y-1")}>
+          <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm text-muted-foreground space-y-1")}>
             {item.nomeResponsavel && (
               <p>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Responsável:</span>{' '}

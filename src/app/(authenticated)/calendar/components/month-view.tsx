@@ -93,7 +93,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
     <div data-slot="month-view" className="contents">
       <div className="border-border/70 grid grid-cols-7 border-b">
         {weekdays.map((day) => (
-          <div key={day} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground/70 py-2 text-center text-sm")}>
+          <div key={day} className={cn(/* design-system-escape: py-2 padding direcional sem Inset equiv. */ "text-muted-foreground/70 py-2 text-center text-body-sm")}>
             {day}
           </div>
         ))}
@@ -132,7 +132,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                       startTime.setHours(DefaultStartHour, 0, 0);
                       onEventCreate(startTime);
                     }}>
-                    <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-sm")}>
+                    <div className={cn("group-data-today:bg-primary group-data-today:text-primary-foreground mt-1 inline-flex size-6 items-center justify-center rounded-full text-body-sm")}>
                       {format(day, "d")}
                     </div>
                     <div
@@ -207,7 +207,7 @@ export function MonthView({ currentDate, events, onEventSelect, onEventCreate }:
                               } as React.CSSProperties
                             }>
                             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                              <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
+                              <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{capitalizeFirst(format(day, "EEE d", { locale: ptBR }))}</div>
                               <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                                 {sortEvents(allEvents).map((event) => {
                                   const eventStart = new Date(event.start);

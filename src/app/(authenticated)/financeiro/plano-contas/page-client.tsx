@@ -77,7 +77,7 @@ function criarColunas(
       size: 120,
       meta: { align: 'left' as const, headerLabel: 'Código' },
       cell: ({ row }) => (
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "flex items-center justify-start font-mono text-sm")}>
+        <div className={cn("flex items-center justify-start font-mono text-body-sm")}>
           {row.getValue('codigo')}
         </div>
       ),
@@ -96,7 +96,7 @@ function criarColunas(
         const conta = row.original;
         return (
           <div className="flex flex-col justify-center">
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{conta.nome}</span>
+            <span className={cn("text-body-sm")}>{conta.nome}</span>
             {conta.contaPai && (
               <Text variant="caption">
                 Pai: {conta.contaPai.codigo} - {conta.contaPai.nome}
@@ -175,7 +175,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-start">
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
         </div>
       ),
       enableSorting: false,

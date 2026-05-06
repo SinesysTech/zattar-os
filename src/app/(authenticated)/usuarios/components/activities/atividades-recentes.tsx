@@ -227,7 +227,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                                 {entidadeLabel}
                               </AppBadge>
                             </div>
-                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{descricao}</p>
+                            <p className={cn("text-body-sm text-muted-foreground")}>{descricao}</p>
                           </div>
                           <Text variant="caption" className="whitespace-nowrap">
                             {formatDistanceToNow(new Date(atividade.createdAt), {

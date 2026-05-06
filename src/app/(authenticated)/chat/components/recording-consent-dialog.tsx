@@ -52,15 +52,15 @@ export function RecordingConsentDialog({
             </p>
             
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted p-3 rounded-md")}>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium mb-1")}>Participantes atuais:</p>
-              <ul className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm list-disc list-inside")}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium mb-1")}>Participantes atuais:</p>
+              <ul className={cn("text-body-sm list-disc list-inside")}>
                 {participantNames.map((name, idx) => (
                   <li key={idx}>{name}</li>
                 ))}
               </ul>
             </div>
 
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+            <p className={cn("text-body-sm")}>
               A gravação será armazenada de forma segura e ficará disponível por{" "}
               <strong>7 dias</strong> no servidor do Dyte. Após esse período, será
               automaticamente excluída.
@@ -74,7 +74,7 @@ export function RecordingConsentDialog({
               />
               <label
                 htmlFor="consent"
-                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-tight sem token DS */ "text-sm leading-tight cursor-pointer")}
+                className={cn(/* design-system-escape: leading-tight sem token DS */ "text-body-sm leading-tight cursor-pointer")}
               >
                 Confirmo que todos os participantes foram informados e consentiram com a
                 gravação desta chamada.

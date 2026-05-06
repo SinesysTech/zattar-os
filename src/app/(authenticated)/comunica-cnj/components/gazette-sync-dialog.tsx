@@ -229,7 +229,7 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
         {section === 'historico' && (
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; pt-1 padding direcional sem Inset equiv. */ "flex flex-col gap-3 pt-1")}>
             {syncLogs.length === 0 ? (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-4 padding direcional sem Inset equiv. */ "text-sm text-muted-foreground py-4 text-center")}>
+              <p className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "text-body-sm text-muted-foreground py-4 text-center")}>
                 Nenhuma sincronização registrada
               </p>
             ) : (

@@ -66,7 +66,7 @@ export function SegmentoSelect({
 
   if (error) {
     return (
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+      <div className={cn("text-body-sm text-destructive")}>
         {error}
         <button
           type="button"

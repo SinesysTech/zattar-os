@@ -30,7 +30,7 @@ export function ModuloVinculo({ data, onChange }: ModuloVinculoProps) {
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">A Máscara do Vínculo</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Investigar a formalização da relação de trabalho
         </p>
       </div>

@@ -484,12 +484,12 @@ export function TerceiroFormDialog({
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold', isPF && 'text-primary')}>
               Pessoa Física
             </p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               CPF, RG, data de nascimento
             </p>
           </div>
           {isPF && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-primary text-sm")}>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-primary text-body-sm")}>
               <Check className="h-4 w-4" />
               Selecionado
             </div>
@@ -516,12 +516,12 @@ export function TerceiroFormDialog({
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'font-semibold', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               CNPJ, razão social, nome fantasia
             </p>
           </div>
           {isPJ && (
-            <div className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-primary text-sm")}>
+            <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-primary text-body-sm")}>
               <Check className="h-4 w-4" />
               Selecionado
             </div>
@@ -551,7 +551,7 @@ export function TerceiroFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
           <input type="hidden" name="tipo_parte" value={formData.tipo_parte} />
         </div>
@@ -577,7 +577,7 @@ export function TerceiroFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
           <input type="hidden" name="polo" value={formData.polo} />
         </div>
@@ -673,7 +673,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
               <input type="hidden" name="genero" value={formData.genero} />
             </div>
@@ -696,7 +696,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
               <input type="hidden" name="estado_civil" value={formData.estado_civil} />
             </div>
@@ -977,7 +977,7 @@ export function TerceiroFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
           </div>
@@ -1038,7 +1038,7 @@ export function TerceiroFormDialog({
 
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
-        <dl className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-2 gap-x-4 gap-y-2 text-sm")}>
+        <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm")}>
           <dt className="text-muted-foreground">Tipo:</dt>
           <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>
 

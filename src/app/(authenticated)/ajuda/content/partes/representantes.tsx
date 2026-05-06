@@ -131,7 +131,7 @@ export default function RepresentantesDoc() {
         <p className="text-muted-foreground">
           Um representante pode atuar em múltiplos papéis dentro do sistema:
         </p>
-        <ul className={cn(/* design-system-escape: space-y-1 sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "list-disc list-inside space-y-1 text-muted-foreground text-sm mt-2")}>
+        <ul className={cn(/* design-system-escape: space-y-1 sem token DS */ "list-disc list-inside space-y-1 text-muted-foreground text-body-sm mt-2")}>
           <li>Como advogado do escritório responsável por um processo.</li>
           <li>Como representante legal de um cliente específico.</li>
           <li>Como advogado correspondente contratado para atos em outra comarca.</li>

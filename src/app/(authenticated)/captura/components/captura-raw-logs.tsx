@@ -104,28 +104,28 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
         <FilePlus className="h-4 w-4 text-success shrink-0" />
         <div>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Inseridos</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.inseridos}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-info/5 border-info/20 p-2.5")}>
         <ArrowRight className="h-4 w-4 text-info shrink-0" />
         <div>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Atualizados</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.atualizados}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-muted/40 p-2.5")}>
         <FileX className="h-4 w-4 text-muted-foreground shrink-0" />
         <div>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Sem Alteração</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.naoAtualizados}</p>
         </div>
       </div>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-2.5 → usar <Inset> */ "flex items-center gap-2.5 rounded-lg border bg-destructive/5 border-destructive/20 p-2.5")}>
         <AlertTriangle className="h-4 w-4 text-destructive shrink-0" />
         <div>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Erros</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{stats.erros}</p>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.erros}</p>
         </div>
       </div>
       {stats.conflitos > 0 && (
@@ -133,7 +133,7 @@ function LogStats({ logs }: { logs: LogEntry[] }) {
           <GitMerge className="h-4 w-4 text-warning shrink-0" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium text-muted-foreground uppercase tracking-wider")}>Conflitos de Concorrência</p>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold tabular-nums")}>{stats.conflitos}</p>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold tabular-nums")}>{stats.conflitos}</p>
           </div>
         </div>
       )}
@@ -209,7 +209,7 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
                 key={i}
                 className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "rounded-md border border-border/60 bg-muted/20 px-3 py-2.5")}
               >
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 mb-1")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 mb-1")}>
                   {log.numero_processo || `Processo PJE ${log.id_pje}`}
                 </p>
 
@@ -243,7 +243,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
     return (
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-8 → usar <Inset> */ "flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-8 text-center")}>
         <ScrollText className="h-8 w-8 text-muted-foreground/65" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum log detalhado disponível para esta captura.</p>
+        <p className={cn("text-body-sm text-muted-foreground")}>Nenhum log detalhado disponível para esta captura.</p>
       </div>
     );
   }
@@ -332,7 +332,7 @@ export function CapturaRawLogs({ rawLogs }: CapturaRawLogsProps) {
                   {rawLog.erro && (
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-3")}>
                       <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
+                      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-body-sm text-foreground leading-relaxed")}>{rawLog.erro}</p>
                     </div>
                   )}
 

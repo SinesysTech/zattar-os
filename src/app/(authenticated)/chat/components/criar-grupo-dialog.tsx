@@ -231,7 +231,7 @@ export function CriarGrupoDialog({ open, onOpenChange, onGrupoCreated }: CriarGr
             )}
 
             {form.formState.errors.membros && (
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{form.formState.errors.membros.message}</p>
+              <p className={cn("text-body-sm text-destructive")}>{form.formState.errors.membros.message}</p>
             )}
           </div>
         </form>

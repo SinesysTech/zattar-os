@@ -281,7 +281,7 @@ export function TemplateCreateDialog({
                         formularios={[]}
                       />
                       {form.formState.errors.conteudo_markdown && (
-                        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>
+                        <p className={cn("text-body-sm text-destructive")}>
                           {form.formState.errors.conteudo_markdown.message as string}
                         </p>
                       )}

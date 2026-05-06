@@ -183,7 +183,7 @@ export function AvaliarUpgradeContent() {
         <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           <ul className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "list-inside list-disc space-y-2")}>
             {recommendation.reasons.map((reason, index) => (
-              <li key={index} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{reason}</li>
+              <li key={index} className={cn("text-body-sm")}>{reason}</li>
             ))}
           </ul>
 
@@ -250,7 +250,7 @@ export function AvaliarUpgradeContent() {
         <CardContent className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
           {recommendation.should_upgrade ? (
             <>
-              <ol className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "list-inside list-decimal space-y-2 text-sm")}>
+              <ol className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "list-inside list-decimal space-y-2 text-body-sm")}>
                 <li>Acessar <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Supabase Dashboard</a> → Settings → Compute</li>
                 <li>Selecionar tier recomendado: <strong className="capitalize">{recommendation.recommended_tier}</strong></li>
                 <li>Agendar upgrade para horário de baixo tráfego (ex: 3h da manhã)</li>
@@ -261,7 +261,7 @@ export function AvaliarUpgradeContent() {
               </ol>
             </>
           ) : (
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+            <p className={cn("text-body-sm text-muted-foreground")}>
               ✅ Sistema operando dentro dos parâmetros esperados. Continuar monitorando métricas semanalmente via dashboard.
             </p>
           )}

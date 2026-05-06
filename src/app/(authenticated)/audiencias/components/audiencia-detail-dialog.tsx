@@ -1018,7 +1018,7 @@ export function AudienciaDetailDialog({
                           value={obsDraft}
                           onChange={(e) => setObsDraft(e.target.value)}
                           rows={3}
-                          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}
+                          className={cn("text-body-sm")}
                           autoFocus
                         />
                         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex justify-end gap-1.5")}>

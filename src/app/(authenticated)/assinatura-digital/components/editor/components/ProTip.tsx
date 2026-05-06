@@ -24,7 +24,7 @@ export function ProTip({ children, className }: ProTipProps) {
       <div className="h-5 w-5 rounded-full bg-chart-2 flex items-center justify-center shrink-0">
         <span className="h-2 w-2 rounded-full bg-white" />
       </div>
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+      <p className={cn("text-body-sm text-muted-foreground")}>
         {children}
       </p>
     </div>

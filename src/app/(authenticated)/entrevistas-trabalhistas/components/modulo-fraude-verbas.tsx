@@ -54,7 +54,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
     <div className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
       <div>
         <Heading level="card">O Que Você Perdeu</Heading>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Calcular os prejuízos trabalhistas decorrentes da pejotização
         </p>
       </div>
@@ -95,7 +95,7 @@ export function ModuloFraudeVerbas({ data, onChange }: ModuloFraudeVerbasProps) 
                   toggleBeneficio(opt.value, checked === true)
                 }
               />
-              <Label htmlFor={`beneficio-${opt.value}`} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "cursor-pointer text-sm font-normal")}>
+              <Label htmlFor={`beneficio-${opt.value}`} className={cn("cursor-pointer text-body-sm font-normal")}>
                 {opt.label}
               </Label>
             </div>

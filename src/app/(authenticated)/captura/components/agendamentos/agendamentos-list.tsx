@@ -178,7 +178,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Advogado ID" />
         ),
-        cell: ({ row }) => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{row.original.advogado_id}</span>,
+        cell: ({ row }) => <span className={cn("text-body-sm")}>{row.original.advogado_id}</span>,
         meta: { headerLabel: 'Advogado ID' },
       },
       {
@@ -186,7 +186,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Horário" />
         ),
-        cell: ({ row }) => <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm tabular-nums")}>{row.original.horario}</span>,
+        cell: ({ row }) => <span className={cn("text-body-sm tabular-nums")}>{row.original.horario}</span>,
         meta: { headerLabel: 'Horário' },
       },
       {
@@ -195,7 +195,7 @@ export function AgendamentosList({ onNewClick }: AgendamentosListProps) {
           <DataTableColumnHeader column={column} title="Próxima execução" />
         ),
         cell: ({ row }) => (
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+          <span className={cn("text-body-sm")}>
             {row.original.proxima_execucao ? new Date(row.original.proxima_execucao).toLocaleString('pt-BR') : '-'}
           </span>
         ),

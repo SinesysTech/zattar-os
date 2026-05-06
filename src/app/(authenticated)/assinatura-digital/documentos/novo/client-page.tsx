@@ -86,7 +86,7 @@ function ContextPanel() {
                 <Icon className="size-4" />
               </span>
               <div className="min-w-0">
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "text-sm font-medium text-foreground leading-snug")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "text-body-sm font-medium text-foreground leading-snug")}>
                   {step.title}
                 </p>
                 <Text variant="caption" className="mt-0.5">

@@ -366,7 +366,7 @@ export default function AgendaApp({ initialEvents }: AgendaAppProps) {
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-end justify-between gap-4")}>
         <div>
           <Heading level="page">Agenda</Heading>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 mt-0.5")}>
+          <p className={cn("text-body-sm text-muted-foreground/50 mt-0.5")}>
             {label} · {eventCount} evento{eventCount !== 1 ? "s" : ""}
           </p>
         </div>

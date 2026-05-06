@@ -86,7 +86,7 @@ export function PrazoMedio() {
               <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/50 uppercase tracking-wider")}>
                 Tempo Resposta
               </p>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold mt-0.5")}>
+              <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold mt-0.5")}>
                 {tempoResposta}d
               </p>
             </div>

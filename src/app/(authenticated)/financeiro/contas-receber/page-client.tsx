@@ -201,7 +201,7 @@ function criarColunas(
         return (
           <div className="min-h-10 flex flex-col justify-center">
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{conta.descricao}</span>
+              <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{conta.descricao}</span>
               {conta.recorrente && (
                 <Repeat className="h-3 w-3 text-muted-foreground" aria-label="Recorrente" />
               )}
@@ -257,7 +257,7 @@ function criarColunas(
       cell: ({ row }) => {
         const valor = row.getValue('valor') as number;
         return (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-sm font-medium text-success")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "min-h-10 flex items-center justify-end font-mono text-body-sm font-medium text-success")}>
             {formatarValor(valor)}
           </div>
         );
@@ -278,7 +278,7 @@ function criarColunas(
         return (
           <div
             className={cn(
-              /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ 'min-h-10 flex items-center justify-center text-sm',
+              'min-h-10 flex items-center justify-center text-body-sm',
               vencida && /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'text-destructive font-medium'
             )}
           >
@@ -317,7 +317,7 @@ function criarColunas(
       id: 'acoes',
       header: () => (
         <div className="flex items-center justify-center">
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Ações</div>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Ações</div>
         </div>
       ),
       enableSorting: false,

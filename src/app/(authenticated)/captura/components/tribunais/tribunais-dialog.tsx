@@ -85,7 +85,7 @@ export function TribunaisDialog({ tribunal, open, onOpenChange, onSuccess }: Pro
         </DialogHeader>
 
         {!tribunal ? (
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum tribunal selecionado.</div>
+          <div className={cn("text-body-sm text-muted-foreground")}>Nenhum tribunal selecionado.</div>
         ) : (
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; py-4 padding direcional sem Inset equiv. */ "grid gap-4 py-4")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>

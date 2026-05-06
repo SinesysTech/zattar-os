@@ -93,7 +93,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-sm font-medium")}>
+        <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; font-medium → className de <Text>/<Heading> */ "flex items-center gap-2 text-body-sm font-medium")}>
           <Scale className="h-4 w-4 text-muted-foreground" />
           Obrigações e Prazos
         </CardTitle>
@@ -105,7 +105,7 @@ export function ObrigacoesWidget({ resumo, isLoading }: ObrigacoesWidgetProps) {
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-full bg-muted p-3 mx-auto w-fit")}>
                 <Scale className="h-5 w-5 text-muted-foreground" />
               </div>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Sem obrigações pendentes</p>
+              <p className={cn("text-body-sm text-muted-foreground")}>Sem obrigações pendentes</p>
             </div>
           </div>
         ) : (

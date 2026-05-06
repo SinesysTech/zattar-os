@@ -240,7 +240,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
         <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mb-2 p-2 bg-muted rounded-md flex items-center justify-between")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 overflow-hidden")}>
             <FileIcon className="h-5 w-5 text-info dark:text-info shrink-0" />
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate max-w-50")}>{uploadedFile.fileName}</span>
+            <span className={cn("text-body-sm truncate max-w-50")}>{uploadedFile.fileName}</span>
           </div>
           <Button variant="ghost" size="icon" aria-label="Fechar" className="h-6 w-6" onClick={handleRemoveFile}>
             <X className="h-4 w-4" />

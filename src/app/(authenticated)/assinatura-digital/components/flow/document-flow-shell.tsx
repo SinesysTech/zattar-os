@@ -60,7 +60,7 @@ function StepPill({
     <div
       aria-current={isCurrent ? "step" : undefined}
       className={cn(
-        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 rounded-full border pl-1.5 pr-3.5 py-1 text-sm font-medium transition-all duration-200",
+        /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pl-1.5 padding direcional sem Inset equiv.; pr-3.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "inline-flex items-center gap-2 rounded-full border pl-1.5 pr-3.5 py-1 text-body-sm font-medium transition-all duration-200",
         isCurrent &&
           "glass-kpi border-border/50 text-foreground shadow-md",
         isDone && "border-transparent text-foreground/75",

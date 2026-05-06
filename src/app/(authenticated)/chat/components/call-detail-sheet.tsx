@@ -144,7 +144,7 @@ export function CallDetailSheet({
             >
               <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
                 <div className="flex justify-between items-center">
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Status</span>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Status</span>
                   <Badge
                     variant={getStatusBadgeVariant(
                       chamada.status as StatusChamada,
@@ -155,8 +155,8 @@ export function CallDetailSheet({
                 </div>
 
                 <div className="flex justify-between items-center">
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Iniciada em</span>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Iniciada em</span>
+                  <span className={cn("text-body-sm text-muted-foreground")}>
                     {format(
                       new Date(chamada.iniciadaEm),
                       "dd/MM/yyyy 'às' HH:mm",
@@ -167,8 +167,8 @@ export function CallDetailSheet({
 
                 {chamada.finalizadaEm && (
                   <div className="flex justify-between items-center">
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Finalizada em</span>
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Finalizada em</span>
+                    <span className={cn("text-body-sm text-muted-foreground")}>
                       {format(
                         new Date(chamada.finalizadaEm),
                         "dd/MM/yyyy 'às' HH:mm",
@@ -179,8 +179,8 @@ export function CallDetailSheet({
                 )}
 
                 <div className="flex justify-between items-center">
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Duração</span>
-                  <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                  <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Duração</span>
+                  <span className={cn("text-body-sm text-muted-foreground")}>
                     {chamada.duracaoSegundos
                       ? formatarDuracao(chamada.duracaoSegundos)
                       : '-'}
@@ -189,7 +189,7 @@ export function CallDetailSheet({
 
                 {chamada.iniciador && (
                   <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex justify-between items-center pt-2 border-t border-border/20")}>
-                    <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Iniciado por</span>
+                    <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Iniciado por</span>
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                       <Avatar size="sm">
                         <AvatarImage src={chamada.iniciador.avatar} />
@@ -197,7 +197,7 @@ export function CallDetailSheet({
                           {chamada.iniciador.nomeCompleto.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
+                      <span className={cn("text-body-sm")}>
                         {chamada.iniciador.nomeExibicao ||
                           chamada.iniciador.nomeCompleto}
                       </span>
@@ -225,7 +225,7 @@ export function CallDetailSheet({
                 </div>
 
                 {dyteDetails ? (
-                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm")}>
+                  <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 text-body-sm")}>
                     <div className="flex justify-between">
                       <span>Status API:</span>
                       <Badge variant="outline">{dyteDetails.status}</Badge>
@@ -261,7 +261,7 @@ export function CallDetailSheet({
                           <AvatarFallback>U</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
-                          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+                          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
                             Usuário #{p.usuarioId}
                           </span>
                           <Text variant="caption">

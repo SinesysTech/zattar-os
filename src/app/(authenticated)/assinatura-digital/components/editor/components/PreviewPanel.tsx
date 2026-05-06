@@ -79,7 +79,7 @@ export default function PreviewPanel({
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>
                     Não foi possível exibir o PDF aqui
                   </p>
-                  <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
+                  <p className={cn("text-body-sm text-muted-foreground mt-1")}>
                     O PDF foi gerado com sucesso, mas não pode ser embutido devido a restrições
                     de segurança (CORS/CSP). Use os botões abaixo para visualizar.
                   </p>

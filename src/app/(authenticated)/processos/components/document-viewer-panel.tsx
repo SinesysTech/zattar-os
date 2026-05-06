@@ -123,7 +123,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4")}>
           <MousePointerClick className="h-8 w-8 text-muted-foreground" />
         </div>
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Selecione um documento na timeline para visualizar
         </p>
       </div>
@@ -138,8 +138,8 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
           <Lock className="h-8 w-8 text-destructive" />
         </div>
         <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{item.titulo}</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{item.titulo}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             Documento sigiloso — visualização restrita
           </p>
         </div>
@@ -155,8 +155,8 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
         <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{item.titulo}</p>
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{item.titulo}</p>
+          <p className={cn("text-body-sm text-muted-foreground")}>
             Documento não foi capturado ou enviado para armazenamento
           </p>
           <Text variant="caption" className="text-muted-foreground/70">
@@ -206,7 +206,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
                 {formatarGrauComOrdinal(item.grauOrigem)}
               </SemanticBadge>
             )}
-            <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate")}>{item.titulo}</Heading>
+            <Heading level="card" className={cn("text-body-sm truncate")}>{item.titulo}</Heading>
             {item.documentoSigiloso && (
               <Lock className="h-3.5 w-3.5 text-destructive shrink-0" />
             )}
@@ -267,7 +267,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
         {error ? (
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full gap-3 p-8")}>
             <FileText className="h-12 w-12 text-destructive" />
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive text-center")}>{error}</p>
+            <p className={cn("text-body-sm text-destructive text-center")}>{error}</p>
           </div>
         ) : (
           presignedUrl && (

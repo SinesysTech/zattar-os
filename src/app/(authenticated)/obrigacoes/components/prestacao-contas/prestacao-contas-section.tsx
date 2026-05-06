@@ -70,7 +70,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
           <CheckCircle2 className="size-4 text-success mt-0.5 shrink-0" />
           <div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Declaração assinada pelo cliente</p>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Declaração assinada pelo cliente</p>
             {status.dataAssinatura && (
               <Text variant="caption">
                 Em {new Date(status.dataAssinatura).toLocaleString('pt-BR')}
@@ -104,7 +104,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
           <Clock className="size-4 text-warning mt-0.5 shrink-0" />
           <div>
-            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Aguardando assinatura do cliente</p>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Aguardando assinatura do cliente</p>
             {status.expiresAt && (
               <Text variant="caption">
                 Link expira em {new Date(status.expiresAt).toLocaleDateString('pt-BR')}
@@ -148,7 +148,7 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
           <Ban className="size-4 text-muted-foreground mt-0.5 shrink-0" />
-          <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Link anterior foi cancelado. Gere um novo se necessário.</p>
+          <p className={cn("text-body-sm")}>Link anterior foi cancelado. Gere um novo se necessário.</p>
         </div>
         <GerarLinkButton parcelaId={parcelaId} onGerado={refresh} />
       </div>

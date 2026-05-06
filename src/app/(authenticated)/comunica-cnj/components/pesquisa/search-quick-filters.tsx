@@ -223,7 +223,7 @@ export function SearchQuickFilters() {
                 id="pesquisa-oab-uf"
                 value={oabUf}
                 onChange={(e) => setOabUf(e.target.value)}
-                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "w-full rounded-md border border-input bg-background px-3 py-1.5 text-sm")}
+                className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "w-full rounded-md border border-input bg-background px-3 py-1.5 text-body-sm")}
               >
                 <option value="">—</option>
                 {UFS.map((uf) => (
@@ -276,7 +276,7 @@ export function SearchQuickFilters() {
                   })
                 }
                 className={cn(
-                  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ 'flex items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
+                  /* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ 'flex items-center justify-between rounded-md px-3 py-2 text-body-sm transition-colors',
                   filtros.meio === opt.value
                     ? 'bg-primary/10 text-primary'
                     : 'text-foreground hover:bg-muted/40',

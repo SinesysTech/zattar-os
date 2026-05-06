@@ -109,7 +109,7 @@ function DetalheItem({
       </div>
       <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5 min-w-0")}>
         <Text variant="caption">{label}</Text>
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{value}</div>
+        <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{value}</div>
       </div>
     </div>
   );

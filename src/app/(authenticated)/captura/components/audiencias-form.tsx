@@ -134,7 +134,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
                 {STATUS_AUDIENCIA_OPTIONS.map((opcao) => (
                   <label
                     key={opcao.value}
-                    className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-3 rounded-md border px-3 py-2 text-sm")}
+                    className={cn(/* design-system-escape: gap-3 gap sem token DS; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "flex items-center gap-3 rounded-md border px-3 py-2 text-body-sm")}
                   >
                     <Checkbox
                       id={`status-${opcao.value}`}
@@ -145,7 +145,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
                   </label>
                 ))}
               </div>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Os status selecionados são executados sequencialmente na mesma sessão.
               </p>
             </div>
@@ -156,7 +156,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
                 value={dataInicio || undefined}
                 onChange={(v) => setDataInicio(v || '')}
               />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Se não informada, será usada a data de hoje
               </p>
             </div>
@@ -168,7 +168,7 @@ export const AudienciasForm = forwardRef<CapturaFormHandle, AudienciasFormProps>
                 value={dataFim || undefined}
                 onChange={(v) => setDataFim(v || '')}
               />
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+              <p className={cn("text-body-sm text-muted-foreground")}>
                 Se não informada, será usada hoje + 365 dias
               </p>
             </div>

@@ -140,7 +140,7 @@ function GlassRow({
         {/* 2. Partes / Processo com TRT+Grau / Órgão julgador */}
         <div className="min-w-0">
           {/* Linha 1: Nome das partes */}
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 truncate")}>
+          <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-foreground/90 truncate")}>
             {parteAutora || parteRe ? (
               <>
                 {parteAutora || '—'}
@@ -329,7 +329,7 @@ function GlassEmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="w-10 h-10 text-muted-foreground/30 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/50")}>
         Nenhuma obrigação encontrada
       </p>
       <Text variant="caption" className="text-muted-foreground/30 mt-1">

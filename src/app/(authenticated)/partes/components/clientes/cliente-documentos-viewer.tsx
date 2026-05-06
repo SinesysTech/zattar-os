@@ -137,7 +137,7 @@ export function ClienteDocumentosViewer({
     return (
       <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
         <FolderOpen className="h-12 w-12 text-muted-foreground/50 mb-2" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
+        <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
       </div>
     );
   }
@@ -146,7 +146,7 @@ export function ClienteDocumentosViewer({
     return (
       <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-8 text-center")}>
         <FolderOpen className="h-12 w-12 text-muted-foreground/50 mb-2" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <p className={cn("text-body-sm text-muted-foreground")}>
           Nenhum documento encontrado para este cliente.
         </p>
       </div>
@@ -156,7 +156,7 @@ export function ClienteDocumentosViewer({
   return (
     <div className={className}>
       <div className="flex items-center justify-between mb-4">
-        <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+        <Heading level="subsection" className={cn("text-body-sm text-muted-foreground")}>
           {documentos.length} documento{documentos.length !== 1 ? 's' : ''}
         </Heading>
       </div>
@@ -176,7 +176,7 @@ export function ClienteDocumentosViewer({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium truncate text-sm")}>{doc.name}</p>
+                    <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate text-body-sm")}>{doc.name}</p>
                     <Text variant="caption" className="flex items-center gap-2 mt-0.5">
                       <span>{formatFileSize(doc.size)}</span>
                       <Dot className="size-3 shrink-0" aria-hidden />

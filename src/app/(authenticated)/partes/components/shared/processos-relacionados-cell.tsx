@@ -47,7 +47,7 @@ export function ProcessosRelacionadosCell({
 }: ProcessosRelacionadosCellProps) {
   if (!processos || processos.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "min-h-10 flex items-center justify-center text-muted-foreground text-sm")}>
+      <div className={cn("min-h-10 flex items-center justify-center text-muted-foreground text-body-sm")}>
         -
       </div>
     );
@@ -155,7 +155,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
                 <User className="h-3 w-3" />
                 <span>Parte contrária</span>
               </Text>
-              <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")} title={parteContraria || undefined}>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium truncate")} title={parteContraria || undefined}>
                 {parteContraria || '-'}
               </p>
             </div>
@@ -167,7 +167,7 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
                   <Scale className="h-3 w-3" />
                   <span>Classe</span>
                 </Text>
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate")} title={processo.classe_judicial}>
+                <p className={cn("text-body-sm truncate")} title={processo.classe_judicial}>
                   {processo.classe_judicial}
                 </p>
               </div>

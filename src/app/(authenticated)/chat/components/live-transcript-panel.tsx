@@ -45,7 +45,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
       <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4")} ref={scrollRef}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
           {transcripts.length === 0 ? (
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; py-8 padding direcional sem Inset equiv. */ "text-center text-video-muted text-sm py-8")}>
+            <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-video-muted text-body-sm py-8")}>
               Aguardando fala...
             </div>
           ) : (
@@ -60,7 +60,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
                   </span>
                 </div>
                 <p className={cn(
-                  /* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm leading-relaxed wrap-break-word",
+                  /* design-system-escape: leading-relaxed sem token DS */ "text-body-sm leading-relaxed wrap-break-word",
                   segment.isFinal ? "text-video-text" : "text-video-muted italic"
                 )}>
                   {segment.text}

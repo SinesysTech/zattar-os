@@ -447,7 +447,7 @@ export function ClienteFormDialog({
             <User className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'font-medium text-sm', isPF && 'text-primary')}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-body-sm', isPF && 'text-primary')}>
               Pessoa Física
             </p>
             <Text variant="caption">
@@ -476,7 +476,7 @@ export function ClienteFormDialog({
             <Building2 className="h-4 w-4" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'font-medium text-sm', isPJ && 'text-primary')}>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-body-sm', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
             <Text variant="caption">
@@ -578,7 +578,7 @@ export function ClienteFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
@@ -600,7 +600,7 @@ export function ClienteFormDialog({
                   </SelectContent>
                 </Select>
               ) : (
-                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+                <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
               )}
             </div>
           </div>
@@ -866,7 +866,7 @@ export function ClienteFormDialog({
               </SelectContent>
             </Select>
           ) : (
-            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm")} />
+            <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-body-sm")} />
           )}
         </div>
       </div>
@@ -897,7 +897,7 @@ export function ClienteFormDialog({
 
         <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
           <Heading level="subsection" className="mb-3">Resumo do cadastro</Heading>
-          <dl className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "space-y-2 text-sm")}>
+          <dl className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 text-body-sm")}>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Tipo</dt>
               <dd className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-right")}>{isPF ? 'Pessoa Física' : 'Pessoa Jurídica'}</dd>

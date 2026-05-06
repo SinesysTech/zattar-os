@@ -232,7 +232,7 @@ function GlassRow({
             <Tags className="w-4 h-4" style={{ color: `var(${token})` }} />
           </div>
           <div className="min-w-0">
-            <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>{segmento.nome}</div>
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{segmento.nome}</div>
             {segmento.descricao && (
               <Text variant="caption" className="mt-0.5 line-clamp-1">
                 {segmento.descricao}
@@ -351,7 +351,7 @@ function GlassCard({
       </div>
 
       <div>
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold line-clamp-1")}>{segmento.nome}</div>
+        <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold line-clamp-1")}>{segmento.nome}</div>
         <div className="text-[10px] text-muted-foreground mt-0.5 font-mono truncate">
           {segmento.slug}
         </div>
@@ -365,7 +365,7 @@ function GlassCard({
 
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between gap-2 pt-2 border-t border-border/40")}>
         <span className="text-[10px] text-muted-foreground">
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "font-display text-sm font-bold tabular-nums text-foreground/80")}>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-sm font-bold tabular-nums text-foreground/80")}>
             {segmento.formularios_count ?? 0}
           </span>
           <span className="ml-1">
@@ -415,7 +415,7 @@ function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <Tags className="w-10 h-10 text-muted-foreground/55 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhum segmento encontrado</p>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>Nenhum segmento encontrado</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">Tente ajustar os filtros ou criar um novo segmento</Text>
     </div>
   );

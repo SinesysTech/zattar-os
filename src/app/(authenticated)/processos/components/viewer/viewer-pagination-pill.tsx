@@ -114,12 +114,12 @@ export function ViewerPaginationPill({
           onBlur={commitPageInput}
           onKeyDown={handlePageInputKeyDown}
           aria-label="Página atual"
-          className={cn(/* design-system-escape: p-0 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "w-8 text-center bg-transparent border-none p-0 text-sm font-mono focus:outline-none focus:ring-0")}
+          className={cn(/* design-system-escape: p-0 → usar <Inset> */ "w-8 text-center bg-transparent border-none p-0 text-body-sm font-mono focus:outline-none focus:ring-0")}
         />
 
         {/* Separador e total de páginas */}
         <Text variant="caption" as="span" className="text-muted-foreground font-mono select-none">/</Text>
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm font-mono select-none ml-1")}>
+        <span className={cn("text-muted-foreground text-body-sm font-mono select-none ml-1")}>
           {totalPages}
         </span>
 

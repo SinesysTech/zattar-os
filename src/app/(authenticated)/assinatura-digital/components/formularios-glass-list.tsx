@@ -121,7 +121,7 @@ function GlassRow({
           </div>
           <div className="min-w-0">
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-              <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate")}>{displayName}</span>
+              <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold truncate")}>{displayName}</span>
               {segmentoNome && (
                 <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-semibold → className de <Text>/<Heading> */ "inline-flex items-center gap-1 bg-primary/10 border border-primary/20 text-primary/80 rounded px-1.5 py-0.5 text-[10px] font-semibold")}>
                   {segmentoNome}
@@ -264,7 +264,7 @@ function GlassCard({
 
       {/* Title */}
       <div>
-        <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold line-clamp-1")}>{displayName}</div>
+        <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold line-clamp-1")}>{displayName}</div>
         {segmentoNome && (
           <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "mt-1 text-[10px] font-semibold uppercase tracking-wider text-primary/70")}>
             {segmentoNome}
@@ -479,7 +479,7 @@ function EmptyState() {
   return (
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <ClipboardList className="w-10 h-10 text-muted-foreground/55 mb-4" />
-      <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhum formulário encontrado</p>
+      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground/70")}>Nenhum formulário encontrado</p>
       <Text variant="caption" className="text-muted-foreground/55 mt-1">Tente ajustar os filtros ou criar um novo formulário</Text>
     </div>
   );

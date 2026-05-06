@@ -70,7 +70,7 @@ export function MailList({ items }: MailListProps) {
     return (
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex h-full flex-col items-center justify-center gap-3 p-8 text-center")}>
         <AlertCircle className="text-destructive h-8 w-8" />
-        <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground text-sm")}>{error}</p>
+        <p className={cn("text-muted-foreground text-body-sm")}>{error}</p>
         <Button
           variant="outline"
           size="sm"
@@ -108,7 +108,7 @@ export function MailList({ items }: MailListProps) {
 
   if (items.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: p-8 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "text-muted-foreground flex h-full items-center justify-center p-8 text-sm")}>
+      <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "text-muted-foreground flex h-full items-center justify-center p-8 text-body-sm")}>
         Nenhum e-mail encontrado
       </div>
     );
@@ -125,7 +125,7 @@ export function MailList({ items }: MailListProps) {
           <div
             key={item.uid}
             className={cn(
-              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "group flex gap-2 rounded-lg border p-3 text-sm transition-colors duration-200",
+              /* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "group flex gap-2 rounded-lg border p-3 text-body-sm transition-colors duration-200",
               selectedMail?.uid === item.uid
                 ? "bg-accent"
                 : "hover:bg-muted/50"

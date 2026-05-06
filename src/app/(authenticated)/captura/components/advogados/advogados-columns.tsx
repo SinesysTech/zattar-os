@@ -43,7 +43,7 @@ export function criarColunasAdvogados({
       size: 280,
       meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{row.original.nome_completo}</span>
+        <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{row.original.nome_completo}</span>
       ),
     },
     {
@@ -53,7 +53,7 @@ export function criarColunasAdvogados({
       size: 160,
       meta: { align: 'left' as const },
       cell: ({ row }) => (
-        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}>{formatarCpf(row.original.cpf)}</span>
+        <span className={cn("font-mono text-body-sm")}>{formatarCpf(row.original.cpf)}</span>
       ),
     },
     {
@@ -71,7 +71,7 @@ export function criarColunasAdvogados({
         
         return (
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm")}>{primaryOab.numero}</span>
+            <span className={cn("font-mono text-body-sm")}>{primaryOab.numero}</span>
             <Badge variant="outline" tone="soft" className={cn("text-caption")}>
               {primaryOab.uf}
             </Badge>

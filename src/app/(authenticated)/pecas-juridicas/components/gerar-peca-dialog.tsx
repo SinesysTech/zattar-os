@@ -270,7 +270,7 @@ export function GerarPecaDialog({
                         <div>
                           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{modelo.titulo}</p>
                           {modelo.descricao && (
-                            <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground line-clamp-1")}>
+                            <p className={cn("text-body-sm text-muted-foreground line-clamp-1")}>
                               {modelo.descricao}
                             </p>
                           )}
@@ -339,7 +339,7 @@ export function GerarPecaDialog({
                       p.resolved ? 'bg-success/5' : 'bg-warning/5'
                     }`}
                   >
-                    <code className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{p.placeholder}</code>
+                    <code className={cn("text-body-sm")}>{p.placeholder}</code>
                     <span className={`text-sm ${p.resolved ? 'text-success' : 'text-warning'}`}>
                       {p.resolved ? p.value : '(não encontrado)'}
                     </span>

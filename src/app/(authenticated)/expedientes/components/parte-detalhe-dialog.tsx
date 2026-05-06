@@ -114,7 +114,7 @@ export function ParteDetalheDialog({
         {icon && <span className="text-muted-foreground mt-0.5">{icon}</span>}
         <div>
           <Text variant="caption">{label}</Text>
-          <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{value}</div>
+          <div className={cn("text-body-sm")}>{value}</div>
         </div>
       </div>
     );
@@ -228,7 +228,7 @@ export function ParteDetalheDialog({
             {!isLoading && error && (
               <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
                 <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{error}</p>
+                <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>
               </div>
             )}
 
@@ -236,7 +236,7 @@ export function ParteDetalheDialog({
             {!isLoading && !error && !parte && (
               <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-6 text-center")}>
                 <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                <p className={cn("text-body-sm text-muted-foreground")}>
                   Parte não encontrada no cadastro
                 </p>
                 <Text variant="caption" className="mt-1">

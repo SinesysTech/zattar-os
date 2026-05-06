@@ -155,7 +155,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                     <AccordionTrigger className="hover:no-underline">
                       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 w-full")}>
                         <TribunalBadge codigo={badgeCode} />
-                        <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{g.orgao}</span>
+                        <span className={cn("text-body-sm text-muted-foreground")}>{g.orgao}</span>
                         <AppBadge variant="neutral" className="ml-auto">
                           {g.total}
                         </AppBadge>
@@ -198,12 +198,12 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                           href={p.link}
                                           target="_blank"
                                           rel="noreferrer"
-                                          className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm underline underline-offset-4")}
+                                          className={cn("text-body-sm underline underline-offset-4")}
                                         >
                                           {p.numero}
                                         </Link>
                                       ) : (
-                                        <span key={p.numero} className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
+                                        <span key={p.numero} className={cn("text-body-sm text-muted-foreground")}>
                                           {p.numero}
                                         </span>
                                       )

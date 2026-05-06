@@ -147,7 +147,7 @@ export function UploadDialog({
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />
-                <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "mt-3 sm:mt-4 text-sm font-medium")}>
+                <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "mt-3 sm:mt-4 text-body-sm font-medium")}>
                   Clique para selecionar um arquivo
                 </p>
                 <Text variant="caption" className="mt-1">
@@ -179,7 +179,7 @@ export function UploadDialog({
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; sm:gap-3 sem equivalente DS */ "flex items-center gap-2 sm:gap-3 flex-1 min-w-0")}>
                     <File className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm">; sm:text-base sem equivalente DS */ "font-medium truncate text-sm sm:text-base")}>{selectedFile.name}</p>
+                      <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; sm:text-base sem equivalente DS */ "font-medium truncate text-body-sm sm:text-base")}>{selectedFile.name}</p>
                       <Text variant="caption">
                         {formatFileSize(selectedFile.size)}
                       </Text>

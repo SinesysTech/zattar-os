@@ -99,7 +99,7 @@ export function FolderTree({ onFolderSelect, selectedFolderId }: FolderTreeProps
           ) : (
             <Folder className="h-4 w-4 shrink-0" />
           )}
-          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "truncate text-sm")}>{pasta.nome}</span>
+          <span className={cn("truncate text-body-sm")}>{pasta.nome}</span>
         </Button>
 
         {/* Subpastas */}

@@ -109,7 +109,7 @@ export function ContasResumoWidget({ contasPagar, contasReceber, isLoading }: Co
   return (
     <Card className="h-full flex flex-col">
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
+        <CardTitle className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>
           Contas a Pagar / Receber
         </CardTitle>
       </CardHeader>

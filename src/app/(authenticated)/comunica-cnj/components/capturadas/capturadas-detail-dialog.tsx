@@ -54,7 +54,7 @@ function Field({
       <Text variant="meta-label" className="text-muted-foreground">
         {label}
       </Text>
-      <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{children}</div>
+      <div className={cn("mt-1 text-body-sm text-foreground")}>{children}</div>
     </div>
   );
 }
@@ -136,7 +136,7 @@ export function CapturadasDetailDialog({
                     <Text variant="meta-label" className="text-muted-foreground">
                       Polo ativo
                     </Text>
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{partesAutor}</p>
+                    <p className={cn("mt-1 text-body-sm text-foreground")}>{partesAutor}</p>
                   </div>
                 )}
                 {partesReu && (
@@ -144,7 +144,7 @@ export function CapturadasDetailDialog({
                     <Text variant="meta-label" className="text-muted-foreground">
                       Polo passivo
                     </Text>
-                    <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-1 text-sm text-foreground")}>{partesReu}</p>
+                    <p className={cn("mt-1 text-body-sm text-foreground")}>{partesReu}</p>
                   </div>
                 )}
               </div>
@@ -154,7 +154,7 @@ export function CapturadasDetailDialog({
           {comunicacao.texto && (
             <Section title="Conteúdo">
               <div
-                className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "prose prose-sm max-w-none text-sm dark:prose-invert")}
+                className={cn("prose prose-sm max-w-none text-body-sm dark:prose-invert")}
                 dangerouslySetInnerHTML={{
                   __html: comunicacao.texto,
                 }}

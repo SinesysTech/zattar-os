@@ -96,7 +96,7 @@ export function SegmentosManagerDialog({
           <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
               {state.error && (
-                <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "rounded-md bg-destructive/15 p-3 text-sm text-destructive")}>
+                <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md bg-destructive/15 p-3 text-body-sm text-destructive")}>
                   {state.error}
                 </div>
               )}
@@ -106,7 +106,7 @@ export function SegmentosManagerDialog({
                   <LoadingSpinner className="size-6 text-muted-foreground" />
                 </div>
               ) : state.segmentos.length === 0 ? (
-                <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv.; text-sm → migrar para <Text variant="body-sm"> */ "py-10 text-center text-sm text-muted-foreground")}>
+                <div className={cn(/* design-system-escape: py-10 padding direcional sem Inset equiv. */ "py-10 text-center text-body-sm text-muted-foreground")}>
                   Nenhum segmento encontrado.
                 </div>
               ) : (
@@ -118,7 +118,7 @@ export function SegmentosManagerDialog({
                     >
                       <div className="min-w-0">
                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                          <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>
+                          <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "truncate text-body-sm font-medium")}>
                             {segmento.nome}
                           </span>
                           <Badge variant={segmento.ativo ? "success" : "secondary"}>

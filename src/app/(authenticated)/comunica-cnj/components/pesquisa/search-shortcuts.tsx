@@ -110,7 +110,7 @@ export function SearchShortcuts({ onAfterApply }: SearchShortcutsProps) {
                   <s.icon className="size-4" aria-hidden />
                 </IconContainer>
                 <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "mt-2 flex flex-col gap-0.5")}>
-                  <Heading level="widget" className={cn(/* design-system-escape: gap-1 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-1 text-sm")}>
+                  <Heading level="widget" className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 text-body-sm")}>
                     {s.label}
                     <ArrowRight className="size-3 opacity-0 transition-opacity group-hover:opacity-60" aria-hidden />
                   </Heading>

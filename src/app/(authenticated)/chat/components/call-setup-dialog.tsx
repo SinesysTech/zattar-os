@@ -246,7 +246,7 @@ export function CallSetupDialog({
         </div>
 
         {(devicesError || testError) && (
-          <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-sm → migrar para <Text variant="body-sm"> */ "p-3 text-sm text-destructive bg-destructive/10 rounded-md")}>
+          <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "p-3 text-body-sm text-destructive bg-destructive/10 rounded-md")}>
             {devicesError || testError}
           </div>
         )}
