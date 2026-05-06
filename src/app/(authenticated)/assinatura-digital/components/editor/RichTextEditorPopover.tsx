@@ -18,6 +18,7 @@ import { Dialog,
 } from '@/components/ui/dialog';
 import { RichTextEditor } from './RichTextEditor';
 import type { ConteudoComposto } from '@/shared/assinatura-digital/types/template.types';
+import { Text } from '@/components/ui/typography';
 
 interface RichTextEditorPopoverProps {
   open: boolean;
@@ -120,9 +121,9 @@ function RichTextEditorPopoverContent(props: RichTextEditorPopoverProps) {
                   ) : (
                     <>O texto cabe no campo ({lineCount} linhas estimadas).</>
                   )}
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-1 text-muted-foreground text-xs")}>
+                  <Text variant="caption" className="ml-1">
                     Margem de erro: ±10-15%.
-                  </span>
+                  </Text>
                 </AlertDescription>
               </Alert>
             </div>

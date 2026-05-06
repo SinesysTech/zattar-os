@@ -12,6 +12,7 @@ import { Layers, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import { SOURCE_CONFIGS, type AgendaSource } from "./mock-data";
+import { Text } from '@/components/ui/typography';
 
 export interface SourceLegendProps {
   /** Contagem de eventos por fonte */
@@ -53,7 +54,7 @@ export function SourceLegend({
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <Layers className="size-3.5 text-muted-foreground/55" />
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Calendários</span>
+        <Text variant="caption" className="font-semibold text-foreground">Calendários</Text>
       </div>
       <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
         {SOURCE_ORDER.map((source) => {

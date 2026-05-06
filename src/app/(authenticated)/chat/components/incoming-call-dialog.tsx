@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { IncomingCallData } from '../hooks/use-call-notifications';
 import { TipoChamada } from '../domain';
 
@@ -189,7 +189,7 @@ export function IncomingCallDialog({
             >
               <PhoneOff className="h-6 w-6" />
             </Button>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Recusar</span>
+            <Text variant="caption">Recusar</Text>
           </div>
 
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col items-center gap-2")}>
@@ -206,7 +206,7 @@ export function IncomingCallDialog({
                 <Phone className="h-6 w-6" />
               )}
             </Button>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Aceitar</span>
+            <Text variant="caption">Aceitar</Text>
           </div>
         </DialogFooter>
       </DialogContent>

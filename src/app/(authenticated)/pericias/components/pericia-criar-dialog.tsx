@@ -58,6 +58,7 @@ import {
 } from '../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import { actionCriarPericia } from '../actions/pericias-actions';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // PRIMITIVA: SearchableCombobox
@@ -421,7 +422,7 @@ export function PericiaCriarDialog({
         {error && (
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "md:col-span-2 flex items-start gap-2 px-3 py-2 rounded-lg bg-destructive/8 border border-destructive/20 text-destructive")}>
             <AlertCircle className="size-4 shrink-0 mt-0.5" />
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{error}</span>
+            <Text variant="caption">{error}</Text>
           </div>
         )}
       </div>

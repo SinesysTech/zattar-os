@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -200,9 +200,9 @@ export default function CreateTemplateForm({
         {/* Info do arquivo (condicional para tipoTemplate === 'pdf') */}
         {tipoTemplate === 'pdf' && pdfFile && (
           <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               <strong>Arquivo:</strong> {pdfFile.name} ({(pdfFile.size / 1024 / 1024).toFixed(2)} MB)
-            </p>
+            </Text>
           </div>
         )}
 

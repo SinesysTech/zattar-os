@@ -26,7 +26,7 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 import {
   ChamadaComParticipantes,
@@ -236,10 +236,10 @@ export function CallDetailSheet({
                     </div>
                   </div>
                 ) : (
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     Clique no botão de atualizar para buscar dados em tempo real
                     da API do Dyte.
-                  </p>
+                  </Text>
                 )}
               </GlassPanel>
             </TabsContent>
@@ -264,26 +264,26 @@ export function CallDetailSheet({
                           <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>
                             Usuário #{p.usuarioId}
                           </span>
-                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                          <Text variant="caption">
                             {p.entrouEm
                               ? `Entrou: ${format(new Date(p.entrouEm), 'HH:mm')}`
                               : 'Não entrou'}
-                          </span>
+                          </Text>
                         </div>
                       </div>
                       <div className="text-right">
                         {p.duracaoSegundos ? (
-                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono")}>
+                          <Text variant="caption" className="font-mono">
                             {formatarDuracao(p.duracaoSegundos)}
-                          </span>
+                          </Text>
                         ) : p.entrouEm && !p.saiuEm ? (
                           <Badge variant="success" className="text-[10px]">
                             Online
                           </Badge>
                         ) : (
-                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                          <Text variant="caption">
                             -
-                          </span>
+                          </Text>
                         )}
                       </div>
                     </GlassPanel>

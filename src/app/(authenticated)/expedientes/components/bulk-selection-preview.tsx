@@ -13,6 +13,7 @@
 import { cn } from '@/lib/utils';
 import type { Expediente } from '../domain';
 import { getExpedientePartyNames } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 interface BulkSelectionPreviewProps {
   expedientes: Expediente[];
@@ -23,11 +24,11 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
 
   return (
     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wide")}>
+      <Text variant="caption" className="font-medium uppercase tracking-wide">
         {expedientes.length === 1
           ? 'Expediente afetado'
           : `${expedientes.length} expedientes afetados`}
-      </p>
+      </Text>
       <ul
         className="max-h-52 overflow-y-auto rounded-lg border bg-muted/30 divide-y divide-border"
         aria-label="Lista de expedientes selecionados"
@@ -42,9 +43,9 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground truncate")}>
                 {expediente.numeroProcesso}
               </span>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate text-right max-w-[50%]")}>
+              <Text variant="caption" className="truncate text-right max-w-[50%]">
                 {partes.autora ?? '—'}
-              </span>
+              </Text>
             </li>
           );
         })}

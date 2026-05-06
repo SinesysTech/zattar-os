@@ -23,6 +23,7 @@ import {
 import type { AssistenteTipoComRelacoes } from '../domain';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface AssistentesTiposConfigProps {
   assistentes: Array<{ id: string; nome: string; tipo: string }>;
   tiposExpedientes: Array<{ id: string; nome: string }>;
@@ -203,7 +204,7 @@ export function AssistentesTiposConfig({
                     <SelectItem key={assistente.id} value={String(assistente.id)}>
                       <span className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                         {assistente.nome}
-                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>({assistente.tipo})</span>
+                        <Text variant="caption">({assistente.tipo})</Text>
                       </span>
                     </SelectItem>
                   ))}
@@ -293,9 +294,9 @@ export function AssistentesTiposConfig({
                     <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                       Tipo de Expediente: <strong>{relacao.tipo_expediente_nome}</strong>
                     </p>
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                    <Text variant="caption">
                       Criado em {new Date(relacao.created_at).toLocaleDateString('pt-BR')}
-                    </p>
+                    </Text>
                   </div>
 
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>

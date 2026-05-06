@@ -56,6 +56,7 @@ import {
   exportTextToPdf,
   exportToDocx
 } from '@/app/(authenticated)/documentos';
+import { Text } from '@/components/ui/typography';
 
 
 // =============================================================================
@@ -236,7 +237,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
                     onClick={() => handleOpenDocument(doc)}
                     className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "text-left hover:underline font-medium flex items-center gap-2")}
                   >
-                    {doc.arquivo && <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-xs px-1.5 py-0.5 rounded bg-muted")}>FILE</span>}
+                    {doc.arquivo && <Text variant="caption" className="px-1.5 py-0.5 rounded bg-muted">FILE</Text>}
                     {titulo}
                   </button>
                 </TableCell>
@@ -246,7 +247,7 @@ export function ContratoDocumentosList({ contratoId }: ContratoDocumentosListPro
                       {TIPO_PECA_LABELS[doc.tipoPeca]}
                     </AppBadge>
                   ) : (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>{tipo}</span>
+                    <Text variant="caption">{tipo}</Text>
                   )}
                 </TableCell>
                 <TableCell>

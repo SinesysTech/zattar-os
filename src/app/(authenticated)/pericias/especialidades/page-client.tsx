@@ -21,7 +21,7 @@ import { toast } from 'sonner';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { AppBadge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
@@ -230,9 +230,9 @@ export function EspecialidadesPageClient() {
                     <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90 truncate")}>
                       {item.descricao}
                     </span>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                    <Text variant="caption">
                       {item.grau === 'primeiro_grau' ? '1º Grau' : '2º Grau'}
-                    </span>
+                    </Text>
                     <span>
                       <AppBadge
                         variant={item.ativo ? 'success' : 'secondary'}

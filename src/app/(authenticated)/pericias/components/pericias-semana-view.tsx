@@ -31,6 +31,7 @@ import {
   SITUACAO_PERICIA_LABELS,
   type Pericia,
 } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -277,7 +278,7 @@ export function PericiasSemanaView({
               {/* Pericias */}
               {dayPericias.length === 0 ? (
                 <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex items-center justify-center py-6")}>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>
+                  <Text variant="caption" className="text-muted-foreground/30">—</Text>
                 </div>
               ) : (
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>

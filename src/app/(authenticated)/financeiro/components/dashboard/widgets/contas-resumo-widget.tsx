@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ProgressBarChart } from '@/components/ui/charts/mini-chart';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Helpers
@@ -63,7 +64,7 @@ function ContaSection({
           <div className={cn(/* design-system-escape: p-1.5 → usar <Inset> */ 'rounded-md p-1.5', colorClass)}>
             <Icon className={cn('h-3.5 w-3.5', iconColorClass)} />
           </div>
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{title}</span>
+          <Text variant="caption" className="font-medium">{title}</Text>
         </div>
         <Button variant="ghost" size="sm" asChild className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "h-6 px-2 text-xs")}>
           <Link href={href}>
@@ -73,9 +74,9 @@ function ContaSection({
       </div>
       <div>
         <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           {quantidade} conta{quantidade !== 1 ? 's' : ''} pendente{quantidade !== 1 ? 's' : ''}
-        </p>
+        </Text>
       </div>
     </div>
   );

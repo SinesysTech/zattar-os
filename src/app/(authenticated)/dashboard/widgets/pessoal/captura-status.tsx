@@ -12,6 +12,7 @@ import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardAdmin } from '../../hooks';
 import type { StatusCaptura } from '../../domain';
+import { Text } from '@/components/ui/typography';
 
 /** Cores do indicador por status */
 const STATUS_DOT_CLASSES: Record<StatusCaptura['status'], string> = {
@@ -56,9 +57,9 @@ export function WidgetCapturaStatus() {
         subtitle="Status de sincronizacao automatica"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }
@@ -71,9 +72,9 @@ export function WidgetCapturaStatus() {
         subtitle="Status de sincronizacao automatica"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Disponivel apenas para administradores.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }
@@ -88,9 +89,9 @@ export function WidgetCapturaStatus() {
         subtitle="Status de sincronizacao automatica"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nenhuma captura configurada.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }
@@ -137,9 +138,9 @@ export function WidgetCapturaStatus() {
               <div className={`size-2.5 rounded-full shrink-0 ${dotClass}`} />
 
               {/* Sigla do tribunal */}
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate min-w-0 flex-1")}>
+              <Text variant="caption" className="font-medium truncate min-w-0 flex-1">
                 {sigla}
-              </span>
+              </Text>
 
               {/* Status label + tempo */}
               <div className="flex flex-col items-end shrink-0">

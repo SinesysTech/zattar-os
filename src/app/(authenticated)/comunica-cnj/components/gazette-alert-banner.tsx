@@ -26,9 +26,9 @@ export function GazetteAlertBanner({ count, descricao, onVerPrazos }: GazetteAle
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; leading-none sem token DS */ "text-xs font-medium leading-none text-destructive")}>
+        <Text variant="caption" className="font-medium leading-none text-destructive">
           {count} prazo{count !== 1 ? 's' : ''} crítico{count !== 1 ? 's' : ''}
-        </p>
+        </Text>
         <Text variant="micro-caption" className={cn(/* design-system-escape: leading-tight sem token DS */ "mt-0.5 leading-tight text-destructive/70")}>
           {descricao}
         </Text>

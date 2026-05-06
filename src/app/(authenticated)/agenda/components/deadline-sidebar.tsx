@@ -10,6 +10,7 @@ import { AlarmClock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
 import type { Deadline } from "./mock-data";
+import { Text } from '@/components/ui/typography';
 
 export interface DeadlineSidebarProps {
   deadlines: Deadline[];
@@ -54,7 +55,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
         <AlarmClock className="size-3.5 text-destructive" />
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Prazos Próximos</span>
+        <Text variant="caption" className="font-semibold text-foreground">Prazos Próximos</Text>
       </div>
       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         {deadlines.map((dl) => {

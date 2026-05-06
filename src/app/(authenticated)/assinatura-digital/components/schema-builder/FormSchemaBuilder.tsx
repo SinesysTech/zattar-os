@@ -21,7 +21,7 @@ import { Eye, Code, Save, X, AlertTriangle, Pencil } from 'lucide-react';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface FormSchemaBuilderProps {
   initialSchema?: DynamicFormSchema;
@@ -634,9 +634,9 @@ export function FormSchemaBuilder({
                   <Eye className="size-4 text-muted-foreground" />
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>Preview do Formulário</span>
                 </div>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+                <Text variant="caption" className="mt-1">
                   Visualização de como o formulário será exibido aos usuários
-                </p>
+                </Text>
               </div>
               <DynamicFormRenderer
                 schema={schema}

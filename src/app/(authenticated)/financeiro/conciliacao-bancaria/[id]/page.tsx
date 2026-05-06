@@ -8,6 +8,7 @@ import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Separator } from '@/components/ui/separator';
 import { useTransacaoDetalhes, useSugestoesConciliacao, conciliarManual, desconciliar } from '@/app/(authenticated)/financeiro';
 import { toast } from 'sonner';
+import { Text } from '@/components/ui/typography';
 
 export default function TransacaoDetalhePage() {
   const params = useParams<{ id: string }>();
@@ -90,7 +91,7 @@ export default function TransacaoDetalhePage() {
           )}
           {transacao.lancamentoVinculado && (
             <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs uppercase text-muted-foreground")}>Lançamento vinculado</p>
+              <Text variant="caption" className="uppercase">Lançamento vinculado</Text>
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{transacao.lancamentoVinculado.descricao}</p>
             </div>
           )}
@@ -109,16 +110,16 @@ export default function TransacaoDetalhePage() {
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{s.lancamento.descricao}</p>
                   <Badge>{Math.round(s.score)}%</Badge>
                 </div>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Valor {s.lancamento.valor} - Data {s.lancamento.dataLancamento}
-                </p>
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex gap-2 text-xs text-muted-foreground flex-wrap")}>
+                </Text>
+                <Text variant="caption" className="flex gap-2 flex-wrap">
                   {s.diferencas?.map((d) => (
                     <Badge key={d} variant="outline">
                       {d}
                     </Badge>
                   ))}
-                </div>
+                </Text>
                 <Button size="sm" onClick={() => handleConciliar(s.lancamentoId)}>
                   Conciliar
                 </Button>

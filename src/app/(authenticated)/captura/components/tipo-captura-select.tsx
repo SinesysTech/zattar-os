@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Database, Archive, Calendar, AlertCircle, FileText, Users, Layers, Microscope } from 'lucide-react';
 import { TipoCaptura } from '@/app/(authenticated)/captura/types';
+import { Text } from '@/components/ui/typography';
 
 interface TipoCapturaSelectProps {
   value: TipoCaptura;
@@ -107,9 +108,9 @@ export function TipoCapturaSelect({
                 <TipoIcon className="h-4 w-4" />
                 <div className="flex flex-col">
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{tipo.label}</span>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     {tipo.description}
-                  </span>
+                  </Text>
                 </div>
               </div>
             </SelectItem>

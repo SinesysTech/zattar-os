@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 import { SearchInput } from '@/components/dashboard/search-input';
 import { ViewToggle } from '@/components/dashboard/view-toggle';
@@ -168,12 +168,12 @@ export function CapturaClient() {
 
           {/* Insight Banner */}
           {kpiData.falhas > 0 && (
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning")}>
+            <Text variant="caption" className="flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-warning">
               <AlertTriangle className="size-4 shrink-0" />
               <span>
                 <strong>{kpiData.falhas}</strong> captura(s) falharam nos últimos 7 dias — verifique os logs para detalhes.
               </span>
-            </div>
+            </Text>
           )}
 
           {/* Filter Bar + Search + View Toggle */}

@@ -12,6 +12,7 @@ import { Scale } from 'lucide-react';
 import { WidgetContainer } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetCasosTribunal() {
   const { data, isLoading } = useDashboard();
@@ -26,9 +27,9 @@ export function WidgetCasosTribunal() {
         subtitle="Top 5 TRTs -- volume atual"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

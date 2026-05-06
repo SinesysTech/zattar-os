@@ -57,9 +57,9 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
           <div key={item.ano} className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid auto-rows-min gap-2")}>
             <Text variant="kpi-value" className="flex items-baseline gap-1">
               {item.totalConcluidos}
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs font-normal")}>
+              <Text variant="caption" className="font-normal">
                 projetos
-              </span>
+              </Text>
             </Text>
             <ChartContainer
               config={{

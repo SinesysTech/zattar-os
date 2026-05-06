@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppBadge as Badge } from "@/components/ui/app-badge";
+import { Text } from '@/components/ui/typography';
 
 interface Template {
   id: number;
@@ -139,7 +140,7 @@ export function TemplateSelect({
                     </Badge>
                   )}
                   {!template.ativo && (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>(Inativo)</span>
+                    <Text variant="caption">(Inativo)</Text>
                   )}
                 </div>
               </SelectItem>

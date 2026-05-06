@@ -22,6 +22,7 @@ import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital';
 import { SegmentoCreateDialog } from "./segmento-create-dialog";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface SegmentosManagerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -125,9 +126,9 @@ export function SegmentosManagerDialog({
                           </Badge>
                         </div>
                         {segmento.descricao ? (
-                          <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "truncate text-xs text-muted-foreground")}>
+                          <Text variant="caption" className="truncate">
                             {segmento.descricao}
-                          </div>
+                          </Text>
                         ) : null}
                       </div>
 

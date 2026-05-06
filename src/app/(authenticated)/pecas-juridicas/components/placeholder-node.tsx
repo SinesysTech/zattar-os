@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ALL_PLACEHOLDERS } from '../placeholders';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -131,10 +132,10 @@ export function PlaceholderNodeElement(
           <TooltipContent side="top" className="max-w-xs">
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{label}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{description}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono text-muted-foreground")}>
+              <Text variant="caption">{description}</Text>
+              <Text variant="caption" className="font-mono">
                 {`{{${element.value}}}`}
-              </p>
+              </Text>
             </div>
           </TooltipContent>
         </Tooltip>

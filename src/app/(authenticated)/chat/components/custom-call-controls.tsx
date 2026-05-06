@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NetworkQualityIndicator } from "./network-quality-indicator";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import type DyteClient from "@dytesdk/web-core";
 
 interface CustomCallControlsProps {
@@ -188,9 +188,9 @@ export function CustomCallControls({
               <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4")}>
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
                   <Heading level="subsection" className={cn(/* design-system-escape: leading-none sem token DS */ "leading-none")}>Efeitos de Vídeo</Heading>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     Escolha um efeito para sua câmera
-                  </p>
+                  </Text>
                 </div>
                 <RadioGroup
                   value={activeEffect}
@@ -200,30 +200,30 @@ export function CustomCallControls({
                   <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('none')}>
                     <RadioGroupItem value="none" id="effect-none" className="border-video-muted text-info" />
                     <Label htmlFor="effect-none" className="cursor-pointer flex-1">Normal</Label>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-12 h-8 rounded bg-video-surface-hover border border-video-muted flex items-center justify-center text-xs")}>
+                    <Text variant="caption" className="w-12 h-8 rounded bg-video-surface-hover border border-video-muted flex items-center justify-center">
                       <span className="text-video-muted">OFF</span>
-                    </div>
+                    </Text>
                   </div>
                   <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors cursor-pointer")} onClick={() => onApplyEffect?.('blur')}>
                     <RadioGroupItem value="blur" id="effect-blur" className="border-video-muted text-info" />
                     <Label htmlFor="effect-blur" className="cursor-pointer flex-1">Desfoque (Blur)</Label>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-12 h-8 rounded bg-linear-to-br from-video-muted to-video-surface-hover border border-video-muted flex items-center justify-center text-xs blur-sm")}>
+                    <Text variant="caption" className="w-12 h-8 rounded bg-linear-to-br from-video-muted to-video-surface-hover border border-video-muted flex items-center justify-center blur-sm">
                       <span className="text-video-text text-[10px]">BLUR</span>
-                    </div>
+                    </Text>
                   </div>
                   <div className={cn(/* design-system-escape: space-x-3 sem token DS; p-2 → usar <Inset> */ "flex items-center space-x-3 p-2 rounded-lg hover:bg-video-surface-hover/50 transition-colors")} onClick={() => onApplyEffect?.('image')}>
                     <RadioGroupItem value="image" id="effect-image" className="border-video-muted text-info" />
                     <Label htmlFor="effect-image" className="flex-1 cursor-pointer">Imagem Virtual</Label>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-video-muted flex items-center justify-center text-xs")}>
+                    <Text variant="caption" className="w-12 h-8 rounded bg-linear-to-br from-info to-primary border border-video-muted flex items-center justify-center">
                       <span className="text-video-text text-[10px]">IMG</span>
-                    </div>
+                    </Text>
                   </div>
                 </RadioGroup>
                 {activeEffect !== 'none' && (
                   <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "pt-2 border-t border-video-border")}>
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                    <Text variant="caption">
                       Efeito ativo: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-video-text font-medium capitalize")}>{activeEffect === 'blur' ? 'Desfoque' : 'Imagem Virtual'}</span>
-                    </p>
+                    </Text>
                   </div>
                 )}
               </div>

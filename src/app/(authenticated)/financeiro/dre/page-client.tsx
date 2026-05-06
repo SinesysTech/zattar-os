@@ -69,6 +69,7 @@ import {
 } from 'recharts';
 import { ClientOnly } from '@/components/shared/client-only';
 import { SafeResponsiveContainer } from '@/hooks/use-chart-ready';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes e Helpers
@@ -261,7 +262,7 @@ function ResumoCards({
             <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
               <div className="flex items-start justify-between">
                 <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{kpi.label}</p>
+                  <Text variant="caption" className="font-medium">{kpi.label}</Text>
                   <p className={`text-xl font-semibold font-mono tracking-tight ${showColor ? getLucroColor(valor) : ''}`}>
                     {formatarValor(valor)}
                   </p>
@@ -272,9 +273,9 @@ function ResumoCards({
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5">
                 {kpi.margemKey && (
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     {kpi.margemLabel}: {formatarPercentual(resumo[kpi.margemKey])}
-                  </span>
+                  </Text>
                 )}
                 {isLucroLiquido && (
                   <Badge
@@ -495,7 +496,7 @@ function CategoriaTab({
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 lg:grid-cols-2")}>
             <CategoriaPieChart categorias={categorias} />
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2")}>Detalhamento</p>
+              <Text variant="caption" className="font-medium uppercase tracking-wider mb-2">Detalhamento</Text>
               {categorias.map((cat: CategoriaDRE, i: number) => (
                 <div key={cat.categoria} className={cn(/* design-system-escape: py-1.5 padding direcional sem Inset equiv.; px-2 padding direcional sem Inset equiv. */ "flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
@@ -507,9 +508,9 @@ function CategoriaTab({
                   </div>
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-right flex items-center gap-2")}>
                     <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "font-mono text-sm tabular-nums")}>{formatarValor(cat.valor)}</span>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums w-14 text-right")}>
+                    <Text variant="caption" className="tabular-nums w-14 text-right">
                       {formatarPercentual(cat.percentualReceita)}
-                    </span>
+                    </Text>
                   </div>
                 </div>
               ))}

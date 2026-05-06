@@ -204,10 +204,10 @@ export function TerceirosTableWrapper() {
                 )}
               </div>
               {isPF && dataNascimento && (
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground text-left")}>
+                <Text variant="caption" className="text-left">
                   {formatarData(dataNascimento)}
                   {idade !== null && ` - ${idade} anos`}
-                </span>
+                </Text>
               )}
             </div>
           );

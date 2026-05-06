@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import { actionBaixarExpediente, type ActionResult } from '../actions';
 import { Expediente, ResultadoDecisao, RESULTADO_DECISAO_LABELS } from '../domain';
 import { useTiposExpedientes } from '@/app/(authenticated)/tipos-expedientes';
+import { Text } from '@/components/ui/typography';
 
 interface ExpedientesBaixarDialogProps {
   open: boolean;
@@ -183,9 +184,9 @@ export function ExpedientesBaixarDialog({
             {protocoloIdError && (
               <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{protocoloIdError}</p>
             )}
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               Informe o ID do protocolo da peça protocolada em resposta ao expediente (pode conter números e letras).
-            </p>
+            </Text>
           </div>
         )}
 
@@ -205,16 +206,16 @@ export function ExpedientesBaixarDialog({
             {justificativaBaixaError && (
               <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{justificativaBaixaError}</p>
             )}
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               Informe o motivo pelo qual o expediente está sendo baixado sem protocolo de peça.
-            </p>
+            </Text>
           </div>
         )}
 
         {/* Informações da Decisão — obrigatório para tipos recursais */}
         {requiresDecisao && (
           <div className={cn(/* design-system-escape: space-y-3 sem token DS; pt-2 padding direcional sem Inset equiv. */ "space-y-3 pt-2 border-t")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; pt-3 padding direcional sem Inset equiv.; p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground")}>
+            <Text variant="caption" className="flex items-start gap-2 pt-3 rounded-md bg-muted/40 p-3">
               <Info className="h-4 w-4 shrink-0 mt-0.5 text-primary" />
               <span>
                 Este campo é obrigatório porque o tipo atual é{' '}
@@ -223,7 +224,7 @@ export function ExpedientesBaixarDialog({
                 </strong>{' '}
                 — recursos exigem registro do resultado da decisão para auditoria.
               </span>
-            </div>
+            </Text>
             <Label>Resultado da Decisão *</Label>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
               <label className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight">; p-3 → usar <Inset> */ "flex items-center space-x-2 cursor-pointer border rounded-md p-3 hover:bg-muted/50 transition-colors")}>

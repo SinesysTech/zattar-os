@@ -51,6 +51,7 @@ import {
   type Pericia,
 } from '../domain';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // HELPERS
@@ -254,9 +255,9 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
           ) : (
             <Clock className="w-3 h-3 text-foreground/40 shrink-0" />
           )}
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground/85 truncate")}>
+          <Text variant="caption" className="font-semibold text-foreground/85 truncate">
             {pericia.especialidade?.descricao || 'Perícia técnica'}
-          </span>
+          </Text>
         </div>
         <span
           className={cn(
@@ -275,9 +276,9 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
             {pericia.grau === 'primeiro_grau' ? '1º grau' : '2º grau'}
           </span>
         )}
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/45 tabular-nums truncate")}>
+        <Text variant="caption" className="text-foreground/45 tabular-nums truncate">
           {pericia.numeroProcesso}
-        </span>
+        </Text>
       </div>
 
       {/* Partes */}
@@ -470,11 +471,11 @@ export function PericiasGlassMonth({
                           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
                           </p>
-                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5 capitalize")}>
+                          <Text variant="caption" className="text-foreground/40 mt-0.5 capitalize">
                             {format(day, 'EEEE', { locale: ptBR })} ·{' '}
                             {dayPericias.length} perícia
                             {dayPericias.length > 1 ? 's' : ''}
-                          </p>
+                          </Text>
                         </div>
                         <button
                           type="button"
@@ -517,28 +518,28 @@ export function PericiasGlassMonth({
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5 flex-wrap")}>
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold")}>{summary.total}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Total no mês</p>
+              <Text variant="caption" className="text-foreground/40 mt-0.5">Total no mês</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-primary")}>
                 {summary.aguardandoLaudo}
               </p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Aguardando</p>
+              <Text variant="caption" className="text-foreground/40 mt-0.5">Aguardando</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-info")}>
                 {summary.laudoJuntado}
               </p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Laudo Juntado</p>
+              <Text variant="caption" className="text-foreground/40 mt-0.5">Laudo Juntado</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-success")}>
                 {summary.finalizadas}
               </p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Finalizadas</p>
+              <Text variant="caption" className="text-foreground/40 mt-0.5">Finalizadas</Text>
             </div>
             {summary.vencidas > 0 && (
               <>
@@ -547,7 +548,7 @@ export function PericiasGlassMonth({
                   <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-destructive")}>
                     {summary.vencidas}
                   </p>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/40 mt-0.5")}>Vencidas</p>
+                  <Text variant="caption" className="text-foreground/40 mt-0.5">Vencidas</Text>
                 </div>
               </>
             )}

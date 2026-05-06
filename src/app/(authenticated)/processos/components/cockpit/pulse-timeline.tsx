@@ -158,9 +158,9 @@ export function PulseTimeline({
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[9px] font-medium uppercase px-1.5 py-0.5 rounded bg-primary/8 text-primary/70 border border-primary/10")}>
                           {fi.tipo === 'audiencia' ? 'Audiência' : fi.tipo === 'expediente' ? 'Prazo' : 'Perícia'}
                         </span>
-                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 font-mono shrink-0")}>
+                        <Text variant="caption" className="text-muted-foreground/70 font-mono shrink-0">
                           {format(new Date(fi.data), 'dd/MM/yy', { locale: ptBR })}
-                        </span>
+                        </Text>
                       </div>
                       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-tight sem token DS */ "text-sm font-medium leading-tight line-clamp-2 text-foreground/75 text-left")}>
                         {fi.titulo}
@@ -198,18 +198,18 @@ export function PulseTimeline({
               <div className="h-8 w-px bg-transparent" />
             </div>
             <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center border-b border-dashed border-border/70 pb-4")}>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium italic text-muted-foreground")}>
+              <Text variant="caption" className="font-medium italic">
                 Início do processo
-              </p>
+              </Text>
             </div>
           </div>
         )}
 
         {filteredItems.length === 0 && futureItems.length === 0 && (
           <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-12 padding direcional sem Inset equiv. */ "px-4 py-12 text-center")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground italic")}>
+            <Text variant="caption" className="italic">
               Nenhum item encontrado com os filtros aplicados.
-            </p>
+            </Text>
           </div>
         )}
       </div>

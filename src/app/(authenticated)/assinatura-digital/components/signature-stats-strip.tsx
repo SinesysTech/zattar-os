@@ -9,6 +9,7 @@ import {
   Sparkline,
 } from "@/app/(authenticated)/dashboard/widgets/primitives";
 import type { DocumentosStats } from '@/shared/assinatura-digital/services/documentos.service';
+import { Text } from '@/components/ui/typography';
 
 interface SignatureStatsStripProps {
   stats: DocumentosStats;
@@ -50,9 +51,9 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
               size={32}
               color="var(--success)"
             />
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading> */ "text-xs font-bold text-success/70")}>
+            <Text variant="caption" className="font-bold text-success/70">
               {stats.taxaConclusao}%
-            </span>
+            </Text>
           </div>
         </div>
 
@@ -77,10 +78,10 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendência 6m
             </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-success/60")}>
+            <Text variant="caption" className="font-semibold text-success/60">
               {trendDelta >= 0 ? "+" : ""}
               {trendDelta} este mês
-            </p>
+            </Text>
           </div>
           <Sparkline
             data={stats.trendMensal}

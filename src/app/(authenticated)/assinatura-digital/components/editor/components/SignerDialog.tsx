@@ -16,6 +16,7 @@ import { Dialog,
   DialogDescription
 } from '@/components/ui/dialog';
 import type { Signatario } from '../types';
+import { Text } from '@/components/ui/typography';
 
 const signerSchema = z.object({
   nome: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
@@ -95,7 +96,7 @@ export default function SignerDialog({
                 aria-invalid={!!errors.nome}
               />
               {errors.nome && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{errors.nome.message}</p>
+                <Text variant="caption" className="text-destructive">{errors.nome.message}</Text>
               )}
             </div>
 
@@ -109,7 +110,7 @@ export default function SignerDialog({
                 aria-invalid={!!errors.email}
               />
               {errors.email && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{errors.email.message}</p>
+                <Text variant="caption" className="text-destructive">{errors.email.message}</Text>
               )}
             </div>
           </form>

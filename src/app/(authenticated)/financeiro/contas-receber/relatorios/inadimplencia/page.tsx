@@ -237,9 +237,9 @@ export default function RelatorioInadimplenciaPage() {
           </CardHeader>
           <CardContent>
             <Text variant="kpi-value">{relatorio?.resumo.totalContas || 0}</Text>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               contas pendentes em atraso
-            </p>
+            </Text>
           </CardContent>
         </Card>
 
@@ -252,9 +252,9 @@ export default function RelatorioInadimplenciaPage() {
             <Text variant="kpi-value" className="text-destructive">
               {formatarValor(relatorio?.resumo.valorTotal || 0)}
             </Text>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               em valores a receber vencidos
-            </p>
+            </Text>
           </CardContent>
         </Card>
 
@@ -267,9 +267,9 @@ export default function RelatorioInadimplenciaPage() {
             <Text variant="kpi-value">
               {Math.round(relatorio?.resumo.diasMediaAtraso || 0)} dias
             </Text>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               média de atraso nas contas
-            </p>
+            </Text>
           </CardContent>
         </Card>
 
@@ -282,9 +282,9 @@ export default function RelatorioInadimplenciaPage() {
             <Text variant="kpi-value">
               {relatorio?.resumo.clientesInadimplentes || 0}
             </Text>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               clientes com contas vencidas
-            </p>
+            </Text>
           </CardContent>
         </Card>
       </div>
@@ -384,9 +384,9 @@ export default function RelatorioInadimplenciaPage() {
                         style={{ width: `${Math.min(faixa.percentualTotal, 100)}%` }}
                       />
                     </div>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground text-right")}>
+                    <Text variant="caption" className="text-right">
                       {faixa.percentualTotal.toFixed(1)}% do total
-                    </div>
+                    </Text>
                   </div>
                 ))}
               </div>
@@ -433,9 +433,9 @@ export default function RelatorioInadimplenciaPage() {
                       <TableCell>
                         <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{conta.descricao}</span>
                         {conta.documento && (
-                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "block text-xs text-muted-foreground")}>
+                          <Text variant="caption" className="block">
                             Doc: {conta.documento}
-                          </span>
+                          </Text>
                         )}
                       </TableCell>
                       <TableCell>

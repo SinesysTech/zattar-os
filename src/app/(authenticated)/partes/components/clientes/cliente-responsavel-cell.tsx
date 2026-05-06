@@ -112,9 +112,9 @@ export function ClienteResponsavelCell({
                                     {getInitials(responsavel.nomeExibicao)}
                                 </AvatarFallback>
                             </Avatar>
-                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "truncate max-w-30 text-xs font-normal text-foreground")}>
+                            <Text variant="caption" className="truncate max-w-30 font-normal text-foreground">
                                 {responsavel.nomeExibicao}
-                            </span>
+                            </Text>
                         </>
                     ) : (
                         <Text variant="caption" as="span" className="font-normal">Não atribuído</Text>
@@ -132,9 +132,9 @@ export function ClienteResponsavelCell({
                                 onSelect={() => handleSelect('null')}
                                 className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "gap-2")}
                             >
-                                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex h-6 w-6 items-center justify-center rounded-full border border-dashed text-xs")}>
+                                <Text variant="caption" className="flex h-6 w-6 items-center justify-center rounded-full border border-dashed">
                                     ?
-                                </div>
+                                </Text>
                                 <span>Sem responsável</span>
                                 {responsavelId === null && <Check className="ml-auto h-4 w-4" />}
                                 {isPending && responsavelId === null && <LoadingSpinner className="ml-auto" />}

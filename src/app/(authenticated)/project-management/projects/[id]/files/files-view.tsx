@@ -8,7 +8,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -173,12 +173,12 @@ export function FilesView({
                       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>
                         {anexo.nomeArquivo}
                       </p>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
+                      <Text variant="caption">
                         {formatFileSize(anexo.tamanhoBytes)}
                         {anexo.usuarioNome && ` · ${anexo.usuarioNome}`}
                         {" · "}
                         {new Date(anexo.createdAt).toLocaleDateString("pt-BR")}
-                      </p>
+                      </Text>
                     </div>
                   </div>
 

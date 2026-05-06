@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { GRAU_TRIBUNAL_LABELS, type Expediente, getExpedientePartyNames } from '../domain';
 import {
   ExpedienteResponsavelPopover,
@@ -394,9 +394,9 @@ export function ExpedientesControlView({
         <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mt-4 text-sm text-muted-foreground/70")}>
           Nenhum expediente encontrado
         </Heading>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1.5 max-w-sm text-xs text-muted-foreground/55")}>
+        <Text variant="caption" className="mt-1.5 max-w-sm text-muted-foreground/55">
           Ajuste os filtros ou a busca para ampliar o recorte operacional.
-        </p>
+        </Text>
       </GlassPanel>
     );
   }

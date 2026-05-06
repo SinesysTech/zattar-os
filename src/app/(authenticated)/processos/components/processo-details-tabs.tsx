@@ -186,16 +186,16 @@ function AudienciasTable({ audiencias }: { audiencias: Audiencia[] }) {
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
                   {aud.tipoDescricao || 'Audiência'}
                 </p>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   {formatarDataHora(aud.dataInicio)}
-                </span>
+                </Text>
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 flex-wrap text-xs text-muted-foreground")}>
+              <Text variant="caption" className="flex items-center gap-2 flex-wrap">
                 {aud.salaAudienciaNome && <span>Sala {aud.salaAudienciaNome}</span>}
                 {aud.modalidade && (
                   <span>{MODALIDADE_AUDIENCIA_LABELS[aud.modalidade]}</span>
                 )}
-              </div>
+              </Text>
             </div>
 
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
@@ -294,7 +294,7 @@ function ExpedientesTable({
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>{tipoLabel}</p>
                 </div>
 
-                <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 flex-wrap text-xs text-muted-foreground")}>
+                <Text variant="caption" className="flex items-center gap-2 flex-wrap">
                   <span>Criado em {formatarData(exp.dataCriacaoExpediente)}</span>
                   {exp.dataCienciaParte && (
                     <span>Ciência em {formatarData(exp.dataCienciaParte)}</span>
@@ -304,7 +304,7 @@ function ExpedientesTable({
                   ) : exp.dataPrazoLegalParte ? (
                     <span>Prazo em {formatarData(exp.dataPrazoLegalParte)}</span>
                   ) : null}
-                </div>
+                </Text>
 
                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 flex-wrap")}>
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
@@ -401,10 +401,10 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
                 </p>
                 <SituacaoPericiaBadge codigo={per.situacaoCodigo} />
               </div>
-              <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 flex-wrap text-xs text-muted-foreground")}>
+              <Text variant="caption" className="flex items-center gap-2 flex-wrap">
                 {per.perito?.nome && <span>Perito: {per.perito.nome}</span>}
                 <span>Prazo: {formatarData(per.prazoEntrega)}</span>
-              </div>
+              </Text>
             </div>
 
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 shrink-0")}>
@@ -413,7 +413,7 @@ function PericiasTable({ pericias }: { pericias: Pericia[] }) {
                   Laudo Juntado
                 </SemanticBadge>
               ) : (
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>Laudo Pendente</span>
+                <Text variant="caption">Laudo Pendente</Text>
               )}
             </div>
           </div>

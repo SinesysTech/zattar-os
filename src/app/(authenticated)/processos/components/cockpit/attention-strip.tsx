@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import type { Audiencia } from '@/app/(authenticated)/audiencias';
 import type { Expediente } from '@/app/(authenticated)/expedientes';
 import type { Pericia } from '@/app/(authenticated)/pericias';
+import { Text } from '@/components/ui/typography';
 
 interface AttentionStripProps {
   audiencias: Audiencia[];
@@ -89,9 +90,9 @@ export function AttentionStrip({
                   {countdown.label}
                 </span>
               </div>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>
+              <Text variant="caption" className="font-medium truncate">
                 {proximaAudiencia.tipoDescricao || 'Audiência'}
-              </p>
+              </Text>
               <p className="text-[10px] text-muted-foreground/70 mt-0.5">
                 {format(new Date(proximaAudiencia.dataInicio), "dd/MM 'às' HH:mm", { locale: ptBR })}
               </p>

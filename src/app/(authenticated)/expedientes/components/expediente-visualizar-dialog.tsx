@@ -485,9 +485,9 @@ export function ExpedienteVisualizarDialog({
                 <span className="text-right">
                   {partes.autora || '-'}
                   {(displayExpediente.qtdeParteAutora ?? 0) > 1 && (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground block")}>
+                    <Text variant="caption" className="block">
                       {displayExpediente.qtdeParteAutora} parte(s)
-                    </span>
+                    </Text>
                   )}
                 </span>
               </InfoRow>
@@ -495,9 +495,9 @@ export function ExpedienteVisualizarDialog({
                 <span className="text-right">
                   {partes.re || '-'}
                   {displayExpediente.qtdeParteRe && displayExpediente.qtdeParteRe > 1 && (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground block")}>
+                    <Text variant="caption" className="block">
                       {displayExpediente.qtdeParteRe} parte(s)
-                    </span>
+                    </Text>
                   )}
                 </span>
               </InfoRow>

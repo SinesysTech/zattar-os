@@ -454,11 +454,11 @@ export default function ContaPagarDetalhesPage() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{anexo.nome}</p>
-                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                        <Text variant="caption">
                           {anexo.tamanho
                             ? `${(anexo.tamanho / 1024).toFixed(1)} KB`
                             : 'Tamanho desconhecido'}
-                        </p>
+                        </Text>
                       </div>
                       <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
                     </a>

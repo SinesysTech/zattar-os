@@ -12,7 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 
 import { ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { ENTITY_FIELD_CATEGORIES, type EntityFieldDefinition } from './entity-fields-mapping';
 
 interface FieldDefinition {
@@ -56,7 +56,7 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
             )}
           >
             <Icon className="size-3.5 text-muted-foreground shrink-0" />
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs flex-1 min-w-0 wrap-break-word leading-tight")}>{field.label}</span>
+            <Text variant="caption" className="flex-1 min-w-0 wrap-break-word">{field.label}</Text>
             {field.badge && (
               <Badge variant="secondary" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "text-[10px] px-1 py-0 shrink-0")}>
                 {field.badge}
@@ -65,7 +65,7 @@ function DraggableFieldItem({ field }: DraggableFieldItemProps) {
           </div>
         </TooltipTrigger>
         <TooltipContent side="right">
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>{field.description}</p>
+          <Text variant="caption">{field.description}</Text>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -133,7 +133,7 @@ export default function FieldPalette() {
           {filteredCategories.length === 0 ? (
             <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center py-8 text-muted-foreground")}>
               <Search className="size-6 mx-auto mb-2 opacity-50" />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>Nenhum campo encontrado</p>
+              <Text variant="caption">Nenhum campo encontrado</Text>
             </div>
           ) : (
             filteredCategories.map(category => {

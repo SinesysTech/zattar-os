@@ -20,6 +20,7 @@ import type { EditorField, Signatario, SignatureFieldType } from '../types';
 import SignerCard from './SignerCard';
 import SignerDialog from './SignerDialog';
 import { SectionHeader } from './SectionHeader';
+import { Text } from '@/components/ui/typography';
 
 interface FloatingSidebarProps {
   signers: Signatario[];
@@ -98,7 +99,7 @@ function FieldPaletteCard({
       >
         <Icon className="size-4" />
       </span>
-      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground")}>{label}</span>
+      <Text variant="caption" className="font-medium text-foreground">{label}</Text>
     </div>
   );
 }
@@ -176,7 +177,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                   <Camera className="size-3.5 text-info/70" />
                 </span>
                 <div className="min-w-0">
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>Selfie de verificação</p>
+                  <Text variant="caption" className="font-medium">Selfie de verificação</Text>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
                     Exigir foto do assinante
                   </p>
@@ -214,9 +215,9 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
                   <Settings className="size-4 text-muted-foreground" />
                 </span>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground")}>
+                <Text variant="caption" className="font-medium text-foreground">
                   Nenhum assinante
-                </p>
+                </Text>
                 <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[11px] text-muted-foreground max-w-45 leading-relaxed")}>
                   Adicione as pessoas que precisam assinar este documento.
                 </p>

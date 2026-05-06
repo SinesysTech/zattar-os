@@ -7,6 +7,7 @@ import { Radar, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import type { ResumoUltimaCaptura } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,18 +41,18 @@ export function ExpedientesCapturaBanner({
           Expedientes da Captura #{capturaId}
         </p>
         {resumo ? (
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mt-0.5")}>
+          <Text variant="caption" className="text-muted-foreground/70 mt-0.5">
             {resumo.total} expediente{resumo.total !== 1 ? 's' : ''}
             {' · '}
             <span className="text-success/80">{resumo.totalCriados} novo{resumo.totalCriados !== 1 ? 's' : ''}</span>
             {' · '}
             <span className="text-info/80">{resumo.totalAtualizados} atualizado{resumo.totalAtualizados !== 1 ? 's' : ''}</span>
             {dataFormatada && ` · Concluída ${dataFormatada}`}
-          </p>
+          </Text>
         ) : (
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60 mt-0.5")}>
+          <Text variant="caption" className="text-muted-foreground/60 mt-0.5">
             Mostrando expedientes vinculados a esta captura
-          </p>
+          </Text>
         )}
         <Link
           href={`/app/captura/historico/${capturaId}`}

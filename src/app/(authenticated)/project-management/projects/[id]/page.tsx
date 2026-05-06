@@ -17,7 +17,7 @@ import {
   Settings,
   Users,
 } from "lucide-react";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import * as projectService from "../../lib/services/project.service";
 import * as taskService from "../../lib/services/task.service";
 import * as teamService from "../../lib/services/team.service";
@@ -110,9 +110,9 @@ export default async function ProjectDetailPage({ params }: Props) {
               <link.icon className="mr-1 size-4" />
               {link.label}
               {link.count != null && (
-                <span className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "bg-muted text-muted-foreground ml-1 rounded-full px-1.5 py-0.5 text-xs")}>
+                <Text variant="caption" className="bg-muted ml-1 rounded-full px-1.5 py-0.5">
                   {link.count}
-                </span>
+                </Text>
               )}
             </Link>
           </Button>

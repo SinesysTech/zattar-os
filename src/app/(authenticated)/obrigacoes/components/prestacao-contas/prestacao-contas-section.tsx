@@ -58,9 +58,9 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   if (!status) {
     return (
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; py-2 padding direcional sem Inset equiv. */ "text-xs text-destructive py-2")}>
+      <Text variant="caption" className="text-destructive py-2">
         Não foi possível carregar o status.
-      </p>
+      </Text>
     );
   }
 
@@ -72,9 +72,9 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
           <div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Declaração assinada pelo cliente</p>
             {status.dataAssinatura && (
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Em {new Date(status.dataAssinatura).toLocaleString('pt-BR')}
-              </p>
+              </Text>
             )}
           </div>
         </div>
@@ -106,9 +106,9 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
           <div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Aguardando assinatura do cliente</p>
             {status.expiresAt && (
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Link expira em {new Date(status.expiresAt).toLocaleDateString('pt-BR')}
-              </p>
+              </Text>
             )}
           </div>
         </div>
@@ -157,9 +157,9 @@ export function PrestacaoContasSection({ parcelaId }: Props) {
 
   return (
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+      <Text variant="caption">
         Gere um link público para o cliente assinar digitalmente a declaração e informar os dados bancários.
-      </p>
+      </Text>
       <GerarLinkButton parcelaId={parcelaId} onGerado={refresh} />
     </div>
   );

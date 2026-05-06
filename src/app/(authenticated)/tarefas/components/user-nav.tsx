@@ -11,6 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Text } from '@/components/ui/typography';
 
 export function UserNav() {
   return (
@@ -27,7 +28,7 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex flex-col space-y-1")}>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-none sem token DS; font-medium → className de <Text>/<Heading> */ "text-sm leading-none font-medium")}>shadcn</p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-none sem token DS */ "text-muted-foreground text-xs leading-none")}>m@example.com</p>
+            <Text variant="caption" className="leading-none">m@example.com</Text>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

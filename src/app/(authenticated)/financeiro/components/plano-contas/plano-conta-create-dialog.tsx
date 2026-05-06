@@ -39,6 +39,7 @@ import {
 import { actionCriarConta } from '../../actions/plano-contas';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 const createPlanoContaSchema = z.object({
   codigo: z
     .string()
@@ -167,9 +168,9 @@ export function PlanoContaCreateDialog({
               {errors.codigo && (
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-destructive")}>{errors.codigo.message}</p>
               )}
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Código hierárquico da conta. Use pontos para separar os níveis.
-              </p>
+              </Text>
             </div>
 
             {/* Nome */}
@@ -286,11 +287,11 @@ export function PlanoContaCreateDialog({
             </div>
 
             {nivel && (
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 {nivel === 'sintetica'
                   ? 'Contas sintéticas agrupam outras contas e não aceitam lançamentos diretos.'
                   : 'Contas analíticas recebem lançamentos financeiros diretos.'}
-              </p>
+              </Text>
             )}
 
             {/* Conta Pai */}
@@ -301,9 +302,9 @@ export function PlanoContaCreateDialog({
                 onChange={(value) => setValue('contaPaiId', value)}
                 disabled={isSubmitting}
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Deixe vazio para contas de primeiro nível.
-              </p>
+              </Text>
             </div>
 
             {/* Grid para Ordem e Status */}
@@ -320,9 +321,9 @@ export function PlanoContaCreateDialog({
                   placeholder="Ex: 1"
                   disabled={isSubmitting}
                 />
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Menor número aparece primeiro.
-                </p>
+                </Text>
               </div>
 
               {/* Status Ativo */}

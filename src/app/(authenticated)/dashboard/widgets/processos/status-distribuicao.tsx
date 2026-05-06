@@ -18,6 +18,7 @@ import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 import { ToneDot } from '@/components/ui/tone-dot';
+import { Text } from '@/components/ui/typography';
 
 interface StatusSegment {
   value: number;
@@ -39,9 +40,9 @@ export function WidgetStatusDistribuicao() {
         subtitle="Total de processos ativos"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

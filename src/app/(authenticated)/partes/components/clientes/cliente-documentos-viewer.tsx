@@ -14,7 +14,7 @@ import { ptBR } from 'date-fns/locale';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   Dialog,
   DialogContent,
@@ -177,7 +177,7 @@ export function ClienteDocumentosViewer({
 
                   <div className="flex-1 min-w-0">
                     <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium truncate text-sm")}>{doc.name}</p>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground mt-0.5")}>
+                    <Text variant="caption" className="flex items-center gap-2 mt-0.5">
                       <span>{formatFileSize(doc.size)}</span>
                       <Dot className="size-3 shrink-0" aria-hidden />
                       <span>
@@ -188,7 +188,7 @@ export function ClienteDocumentosViewer({
                           })
                           : ''}
                       </span>
-                    </div>
+                    </Text>
                   </div>
 
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity")}>

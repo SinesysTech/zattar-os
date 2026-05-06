@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { getRoleBannerGradient } from '../shared/role-banner';
 import { getAvatarUrl } from '../../utils';
 import type { Usuario } from '../../domain';
+import { Text } from '@/components/ui/typography';
 
 interface DepartmentGroupHeaderProps {
   cargoNome: string;
@@ -61,9 +62,9 @@ export function DepartmentGroupHeader({
           </span>
 
           {/* Member count */}
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 shrink-0")}>
+          <Text variant="caption" className="text-muted-foreground/40 shrink-0">
             {members.length} {members.length === 1 ? 'membro' : 'membros'}
-          </span>
+          </Text>
 
           {/* Spacer */}
           <div className="flex-1" />

@@ -15,6 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ChevronDown, Info } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 
 /**
  * Componente de formulário para captura de timeline de processo
@@ -219,9 +220,9 @@ export const TimelineForm = forwardRef<CapturaFormHandle, TimelineFormProps>(
                 onChange={(e) => setProcessoId(e.target.value)}
                 disabled={isLoading}
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Apenas números (ID do processo no PJE)
-              </p>
+              </Text>
             </div>
             <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>
               <Checkbox

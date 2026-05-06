@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronsUpDown, Check, User, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatCpfCnpj } from '@/shared/assinatura-digital/utils';
+import { Text } from '@/components/ui/typography';
 
 interface ClienteOption {
   id: number | string;
@@ -123,9 +124,9 @@ export function ClienteSelect({
                 <User className="h-4 w-4 shrink-0 opacity-50" />
                 <span className="truncate">{selectedOption.label}</span>
                 {(selectedOption.cpf || selectedOption.cnpj) && (
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     ({formatDocument(selectedOption.cpf, selectedOption.cnpj)})
-                  </span>
+                  </Text>
                 )}
               </>
             ) : (
@@ -176,9 +177,9 @@ export function ClienteSelect({
                   <div className="flex flex-col min-w-0 flex-1">
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{opt.label}</span>
                     {(opt.cpf || opt.cnpj) && (
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      <Text variant="caption">
                         {formatDocument(opt.cpf, opt.cnpj)}
-                      </span>
+                      </Text>
                     )}
                   </div>
                 </CommandItem>

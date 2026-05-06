@@ -55,7 +55,7 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 type Props = {
@@ -373,9 +373,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                               {GRAU_LABELS[credencial.grau] || credencial.grau}
                             </Badge>
                             {credencial.usuario && (
-                              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                              <Text variant="caption">
                                 Login: {credencial.usuario}
-                              </span>
+                              </Text>
                             )}
                           </div>
                           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
@@ -526,9 +526,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                       <Label htmlFor="usuario">
                         Usuario (Login PJE)
-                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground ml-2")}>
+                        <Text variant="caption" className="ml-2">
                           Deixe em branco para usar o CPF
-                        </span>
+                        </Text>
                       </Label>
                       <Input
                         id="usuario"
@@ -541,9 +541,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "grid gap-2")}>
                       <Label htmlFor="senha">
                         Senha
-                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground ml-2")}>
+                        <Text variant="caption" className="ml-2">
                           Deixe em branco para manter a atual
-                        </span>
+                        </Text>
                       </Label>
                       <div className="relative">
                         <Input
@@ -633,9 +633,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                           ))}
                         </div>
                       </ScrollArea>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      <Text variant="caption">
                         {loteFormData.tribunais.length} tribunal(is) selecionado(s)
-                      </p>
+                      </Text>
                     </div>
 
                     {/* Seleção de Graus */}
@@ -688,9 +688,9 @@ export function CredenciaisAdvogadoDialog({ open, onOpenChangeAction, advogado, 
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      <Text variant="caption">
                         O login (usuário) será o CPF do advogado para todas as credenciais.
-                      </p>
+                      </Text>
                     </div>
 
                     {/* Modo duplicata */}

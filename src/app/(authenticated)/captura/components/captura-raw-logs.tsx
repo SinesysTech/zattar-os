@@ -32,6 +32,7 @@ import {
   formatarEntidade,
   formatarCampoAlterado,
 } from '../utils/format-captura';
+import { Text } from '@/components/ui/typography';
 
 function calcularEstatisticas(logs: LogEntry[]) {
   return {
@@ -161,10 +162,10 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
                 className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; p-2.5 → usar <Inset> */ "flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/6 p-2.5")}
               >
                 <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "min-w-0 text-xs")}>
+                <Text variant="caption" className="min-w-0">
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{formatarEntidade(log.entidade)}</span>
                   <span className="text-muted-foreground ml-1.5">— {log.erro}</span>
-                </div>
+                </Text>
               </div>
             ))}
           </div>
@@ -183,9 +184,9 @@ function LogEntries({ logs }: { logs: LogEntry[] }) {
                 className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-2.5 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-md bg-success/4 border border-success/15 px-2.5 py-1.5")}
               >
                 <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/80")}>
+                <Text variant="caption" className="text-foreground/80">
                   {log.numero_processo || `Processo PJE ${log.id_pje}`}
-                </span>
+                </Text>
               </div>
             ))}
             {inseridos.length > 30 && (

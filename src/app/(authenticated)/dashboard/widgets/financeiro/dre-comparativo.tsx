@@ -10,6 +10,7 @@ import { TrendingUp } from 'lucide-react';
 import { WidgetContainer, Stat, Sparkline, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetDREComparativo() {
   const { data, isLoading } = useDashboard();
@@ -19,7 +20,7 @@ export function WidgetDREComparativo() {
   if (!data) {
     return (
       <WidgetContainer title="DRE Comparativo" icon={TrendingUp} subtitle="Sem dados">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Dados indisponíveis.</Text>
       </WidgetContainer>
     );
   }
@@ -29,7 +30,7 @@ export function WidgetDREComparativo() {
   if (!dre) {
     return (
       <WidgetContainer title="DRE Comparativo" icon={TrendingUp} subtitle="12 meses">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhum dado de DRE disponível.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Nenhum dado de DRE disponível.</Text>
       </WidgetContainer>
     );
   }

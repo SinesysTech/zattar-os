@@ -69,6 +69,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes e Helpers
@@ -237,9 +238,9 @@ function criarColunas(
           <div className="flex flex-col justify-center">
             <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{orcamento.nome}</span>
             {orcamento.descricao && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-1")}>
+              <Text variant="caption" className="line-clamp-1">
                 {orcamento.descricao}
-              </span>
+              </Text>
             )}
           </div>
         );

@@ -49,6 +49,7 @@ import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import { toast } from 'sonner';
 import { GRAU_LABELS } from '@/lib/design-system';
 import type { Credencial } from '@/app/(authenticated)/captura/types';
+import { Text } from '@/components/ui/typography';
 
 export default function CredenciaisPage() {
   const searchParams = useSearchParams();
@@ -419,9 +420,9 @@ export default function CredenciaisPage() {
           <>
             <GlassPanel depth={1} className="overflow-hidden relative">
               <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center px-4 py-2.5 border-b border-foreground/5")}>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
+                <Text variant="caption" className="text-muted-foreground/60">
                   {credenciaisFiltradas.length} credenciais
-                </span>
+                </Text>
               </div>
               <DataTable
                 data={credenciaisFiltradas}
@@ -489,9 +490,9 @@ export default function CredenciaisPage() {
                     </div>
                     <div className="min-w-0">
                       <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>{credencial.tribunal}</div>
-                      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>
+                      <Text variant="caption" className="text-muted-foreground/55">
                         {GRAU_LABELS[credencial.grau] ?? credencial.grau}
-                      </div>
+                      </Text>
                     </div>
                     {/* Status dot */}
                     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "ml-auto flex items-center gap-1.5")}>
@@ -506,15 +507,15 @@ export default function CredenciaisPage() {
 
                   {/* Advogado info */}
                   <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/60")}>
+                    <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/60">
                       <Users className="size-3 shrink-0" />
                       <span className="truncate">{credencial.advogado_nome}</span>
-                    </div>
+                    </Text>
                     {credencial.usuario && (
-                      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/60")}>
+                      <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/60">
                         <KeyRound className="size-3 shrink-0" />
                         <span className="font-mono text-[11px]">{credencial.usuario}</span>
-                      </div>
+                      </Text>
                     )}
                   </div>
 

@@ -20,6 +20,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { TemplateComUsuario } from '@/app/(authenticated)/documentos/domain';
+import { Text } from '@/components/ui/typography';
 
 interface TemplateCardProps {
   template: TemplateComUsuario;
@@ -115,13 +116,13 @@ export function TemplateCard({
         </div>
 
         {/* Stats */}
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between text-xs text-muted-foreground border-t pt-2")}>
+        <Text variant="caption" className="flex items-center justify-between border-t pt-2">
           <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Clock className="h-3 w-3" />
             {formatDate(template.updated_at)}
           </span>
           <span>{template.uso_count} uso{template.uso_count !== 1 ? 's' : ''}</span>
-        </div>
+        </Text>
 
         {/* Action button */}
         <Button onClick={() => onUseTemplate(template)} className="w-full">

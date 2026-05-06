@@ -260,10 +260,10 @@ export function ShareDocumentDialog({
                       <Shield className="h-4 w-4 text-muted-foreground cursor-help" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "max-w-xs text-xs")}>
+                      <Text variant="caption" className="max-w-xs">
                         Quando ativado, o usuário poderá mover este documento para a lixeira.
                         Apenas o proprietário pode excluir permanentemente.
-                      </p>
+                      </Text>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -293,9 +293,9 @@ export function ShareDocumentDialog({
                             {usuario.nomeExibicao || usuario.nomeCompleto}
                           </Text>
                           {usuario.emailCorporativo && (
-                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate")}>
+                            <Text variant="caption" className="truncate">
                               {usuario.emailCorporativo}
-                            </p>
+                            </Text>
                           )}
                         </div>
                       </button>
@@ -318,9 +318,9 @@ export function ShareDocumentDialog({
                         {selectedUser.nomeExibicao || selectedUser.nomeCompleto}
                       </p>
                       {selectedUser.emailCorporativo && (
-                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                        <Text variant="caption">
                           {selectedUser.emailCorporativo}
-                        </p>
+                        </Text>
                       )}
                     </div>
                   </div>
@@ -375,10 +375,10 @@ export function ShareDocumentDialog({
                               {compartilhamento.usuario.nomeExibicao || compartilhamento.usuario.nomeCompleto}
                             </p>
                             {compartilhamento.usuario.emailCorporativo && (
-                              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs text-muted-foreground flex items-center gap-1")}>
+                              <Text variant="caption" className="flex items-center gap-1">
                                 <Mail className="h-3 w-3" />
                                 {compartilhamento.usuario.emailCorporativo}
-                              </p>
+                              </Text>
                             )}
                           </div>
                         </div>
@@ -420,11 +420,11 @@ export function ShareDocumentDialog({
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                                <Text variant="caption">
                                   {compartilhamento.pode_deletar
                                     ? 'Pode mover para lixeira (clique para revogar)'
                                     : 'Não pode mover para lixeira (clique para permitir)'}
-                                </p>
+                                </Text>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>

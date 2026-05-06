@@ -25,6 +25,7 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 import type { ProcessoRelacionado } from '../../types';
 import { CopyButton } from './copy-button';
 import { formatarData } from '../../utils/format';
+import { Text } from '@/components/ui/typography';
 
 interface ProcessosRelacionadosCellProps {
   processos: ProcessoRelacionado[];
@@ -75,9 +76,9 @@ export function ProcessosRelacionadosCell({
           </PopoverTrigger>
           <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-80 p-2")} align="start">
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-h-60 overflow-y-auto")}>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground mb-2")}>
+              <Text variant="caption" className="font-medium mb-2">
                 Todos os processos ({processos.length})
-              </p>
+              </Text>
               {processos.map((processo) => (
                 <ProcessoItem key={processo.processo_id} processo={processo} />
               ))}
@@ -150,10 +151,10 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
 
             {/* Parte Contrária */}
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground")}>
+              <Text variant="caption" className="flex items-center gap-1.5">
                 <User className="h-3 w-3" />
                 <span>Parte contrária</span>
-              </div>
+              </Text>
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")} title={parteContraria || undefined}>
                 {parteContraria || '-'}
               </p>
@@ -162,10 +163,10 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
             {/* Classe Judicial */}
             {processo.classe_judicial && (
               <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs text-muted-foreground")}>
+                <Text variant="caption" className="flex items-center gap-1.5">
                   <Scale className="h-3 w-3" />
                   <span>Classe</span>
-                </div>
+                </Text>
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm truncate")} title={processo.classe_judicial}>
                   {processo.classe_judicial}
                 </p>
@@ -174,11 +175,11 @@ function ProcessoItem({ processo }: { processo: ProcessoRelacionado }) {
 
             {/* Próxima Audiência */}
             {processo.data_proxima_audiencia && (
-              <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; pt-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 pt-1 border-t text-xs")}>
+              <Text variant="caption" className="flex items-center gap-1.5 pt-1 border-t">
                 <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-muted-foreground">Próxima audiência:</span>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(processo.data_proxima_audiencia)}</span>
-              </div>
+              </Text>
             )}
           </div>
         </HoverCardContent>

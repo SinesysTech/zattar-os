@@ -34,6 +34,7 @@ import type {
 import { UFS_BRASIL } from '@/app/(authenticated)/advogados';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 type Props = {
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
@@ -192,9 +193,9 @@ export function AdvogadoDialog({
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className="flex items-center justify-between">
                 <Label>OABs *</Label>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Adicione as inscrições na OAB por estado
-                </span>
+                </Text>
               </div>
 
               {formData.oabs.map((oab, index) => (

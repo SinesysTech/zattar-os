@@ -71,9 +71,9 @@ export function DocumentAnnotationOverlay({
 
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "border-b px-3 py-2.5 space-y-2")}>
         <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2 padding direcional sem Inset equiv. */ "rounded-xl border bg-muted/25 px-3 py-2")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "truncate text-xs font-medium text-foreground")}>
+          <Text variant="caption" className="truncate font-medium text-foreground">
             {itemTitle || 'Nenhum evento selecionado'}
-          </p>
+          </Text>
           {itemDate && <p className="mt-0.5 text-[11px] text-muted-foreground">{itemDate}</p>}
         </div>
 

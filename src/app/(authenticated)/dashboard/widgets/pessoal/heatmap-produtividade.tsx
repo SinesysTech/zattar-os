@@ -15,6 +15,7 @@ import {
 } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 /** Dias da semana abreviados em PT-BR */
 const DIA_LABELS: Record<number, string> = {
@@ -59,9 +60,9 @@ export function WidgetHeatmapProdutividade() {
         subtitle="Tarefas concluidas por dia -- ultimas 5 semanas"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }
@@ -74,9 +75,9 @@ export function WidgetHeatmapProdutividade() {
         subtitle="Tarefas concluidas por dia -- ultimas 5 semanas"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Disponivel apenas para usuarios individuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

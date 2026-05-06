@@ -46,6 +46,7 @@ import {
 import { GlassPanel } from '@/components/shared/glass-panel';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface UsuarioEditDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -280,9 +281,9 @@ export function UsuarioEditDialog({
             </div>
             <div className="flex-1">
               <small className="text-sm font-medium leading-none">Foto de Perfil</small>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Clique na imagem para alterar o avatar do usuário
-              </p>
+              </Text>
             </div>
           </div>
 

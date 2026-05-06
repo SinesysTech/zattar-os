@@ -4,6 +4,7 @@ import { Bell, AlertTriangle, AlertCircle, Info, CheckCircle2 } from 'lucide-rea
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Types
@@ -126,9 +127,9 @@ export function AlertasWidget({ alertas, isLoading }: AlertasWidgetProps) {
               );
             })}
             {alertas.length > 5 && (
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; pt-1 padding direcional sem Inset equiv. */ "text-xs text-center text-muted-foreground pt-1")}>
+              <Text variant="caption" className="text-center pt-1">
                 +{alertas.length - 5} alerta{alertas.length - 5 !== 1 ? 's' : ''} adiciona{alertas.length - 5 !== 1 ? 'is' : 'l'}
-              </p>
+              </Text>
             )}
           </div>
         )}

@@ -31,6 +31,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Types
@@ -107,7 +108,7 @@ function DetalheItem({
         <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "space-y-0.5 min-w-0")}>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</p>
+        <Text variant="caption">{label}</Text>
         <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{value}</div>
       </div>
     </div>

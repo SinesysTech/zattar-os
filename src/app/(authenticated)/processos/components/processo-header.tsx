@@ -259,7 +259,7 @@ export function ProcessoHeader({
         </div>
 
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 shrink-0")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "hidden sm:flex items-center gap-2 text-xs text-muted-foreground")}>
+          <Text variant="caption" className="hidden sm:flex items-center gap-2">
             {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
             {instancias && instancias.length > 1 && (
               <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2 py-1")}>
@@ -270,7 +270,7 @@ export function ProcessoHeader({
             {duplicatasRemovidas !== undefined && duplicatasRemovidas > 0 && (
               <span>{duplicatasRemovidas} duplicatas removidas</span>
             )}
-          </div>
+          </Text>
 
           {onAtualizarTimeline && (
             <TooltipProvider>
@@ -295,10 +295,10 @@ export function ProcessoHeader({
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 flex-wrap text-sm sm:hidden")}>
         {dataProximaAudiencia && <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />}
         {instancias && instancias.length > 1 && (
-          <span className={cn(/* design-system-escape: gap-1 gap sem token DS; px-2.5 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2.5 py-1 text-xs text-muted-foreground")}>
+          <Text variant="caption" className="inline-flex items-center gap-1 rounded-full border bg-muted/20 px-2.5 py-1">
             <Layers className="h-3 w-3" />
             {instancias.length} instâncias
-          </span>
+          </Text>
         )}
       </div>
 
@@ -309,9 +309,9 @@ export function ProcessoHeader({
               <SemanticBadge category="grau" value={inst.grau} className="text-[10px]">
                 {formatarGrauComOrdinal(inst.grau)}
               </SemanticBadge>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 {inst.totalMovimentosProprios ?? inst.totalItensOriginal} mov.
-              </span>
+              </Text>
             </div>
           ))}
         </div>

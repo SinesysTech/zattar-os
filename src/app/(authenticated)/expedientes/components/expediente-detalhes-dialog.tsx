@@ -19,6 +19,7 @@ import { Dialog,
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AuditLogTimeline } from '@/components/common/audit-log-timeline';
 import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
+import { Text } from '@/components/ui/typography';
 
 interface ExpedienteDetalhesDialogProps {
   expediente: Expediente | null;
@@ -151,27 +152,27 @@ function ExpedienteListItem({
 
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-sm → migrar para <Text variant="body-sm"> */ "grid grid-cols-2 gap-3 text-sm")}>
             <div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Data de Ciência</div>
+              <Text variant="caption">Data de Ciência</Text>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(exp.dataCienciaParte)}</div>
             </div>
 
             <div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Prazo Legal</div>
+              <Text variant="caption">Prazo Legal</Text>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(exp.dataPrazoLegalParte)}</div>
             </div>
 
             <div className="col-span-2">
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Órgão Julgador</div>
+              <Text variant="caption">Órgão Julgador</Text>
               <div>{exp.descricaoOrgaoJulgador || '-'}</div>
             </div>
 
             <div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Parte Autora</div>
+              <Text variant="caption">Parte Autora</Text>
               <div className="truncate" title={exp.nomeParteAutora || ''}>{exp.nomeParteAutora || '-'}</div>
             </div>
 
             <div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Parte Ré</div>
+              <Text variant="caption">Parte Ré</Text>
               <div className="truncate" title={exp.nomeParteRe || ''}>{exp.nomeParteRe || '-'}</div>
             </div>
           </div>
@@ -212,7 +213,7 @@ function ExpedienteSingleDetails({
         <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4 mt-0")}>
           <div className="flex items-center justify-between">
             <div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs uppercase text-muted-foreground font-bold tracking-wider mb-1")}>Status</div>
+              <Text variant="caption" className="uppercase font-bold tracking-wider mb-1">Status</Text>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                 <SemanticBadge category="expediente_status" value={getStatusTexto(expediente.baixadoEm)}>
                   {getStatusTexto(expediente.baixadoEm)}
@@ -227,25 +228,25 @@ function ExpedienteSingleDetails({
           <div className={cn(/* design-system-escape: pt-4 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "border-t pt-4 space-y-4")}>
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
               <div>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Número do Processo</div>
+                <Text variant="caption">Número do Processo</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-medium text-lg")}>
                   {expediente.numeroProcesso}
                 </div>
                 {expediente.classeJudicial && <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{expediente.classeJudicial}</div>}
               </div>
               <div>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Órgão Julgador</div>
+                <Text variant="caption">Órgão Julgador</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.descricaoOrgaoJulgador || '-'}</div>
               </div>
             </div>
 
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 p-3 rounded-md border")}>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mb-1")}>Data de Ciência</div>
+                <Text variant="caption" className="mb-1">Data de Ciência</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.dataCienciaParte)}</div>
               </div>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "bg-muted/10 p-3 rounded-md border")}>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mb-1")}>Prazo Legal</div>
+                <Text variant="caption" className="mb-1">Prazo Legal</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{formatarData(expediente.dataPrazoLegalParte)}</div>
                 <PrazoEditor
                   exp={expediente}
@@ -257,11 +258,11 @@ function ExpedienteSingleDetails({
 
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
               <div>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Parte Autora</div>
+                <Text variant="caption">Parte Autora</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.nomeParteAutora || '-'}</div>
               </div>
               <div>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Parte Ré</div>
+                <Text variant="caption">Parte Ré</Text>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{expediente.nomeParteRe || '-'}</div>
               </div>
             </div>

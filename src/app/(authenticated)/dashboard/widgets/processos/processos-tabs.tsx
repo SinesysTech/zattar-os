@@ -18,6 +18,7 @@ import {
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
+import { Text } from '@/components/ui/typography';
 
 const TAB_OPTIONS = [
   { id: 'status', label: 'Status' },
@@ -44,9 +45,9 @@ export function WidgetProcessosComTabs() {
         subtitle="Visualizacao interativa por agrupamento"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

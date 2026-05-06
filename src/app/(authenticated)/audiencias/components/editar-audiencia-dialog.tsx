@@ -505,11 +505,11 @@ export function EditarAudienciaDialog({ open, onOpenChange, onSuccess, audiencia
 
         {isCapturada && (
           <div className={cn(/* design-system-escape: px-3.5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "rounded-lg border border-info/25 bg-info/8 px-3.5 py-3 text-info")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs leading-relaxed")}>
+            <Text variant="caption">
               <strong>Origem PJE:</strong> processo, datas, tipo e sala vêm do tribunal
               e continuam sincronizados. Modalidade, link, endereço e presença híbrida
               podem ser editados (edições manuais prevalecem sobre sincronizações futuras).
-            </p>
+            </Text>
           </div>
         )}
 

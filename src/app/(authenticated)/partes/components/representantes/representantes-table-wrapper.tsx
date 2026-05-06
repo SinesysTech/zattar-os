@@ -108,7 +108,7 @@ function OabSituacaoBadge({
   };
 
   return (
-    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium rounded-full overflow-hidden shrink-0")}>
+    <Text variant="caption" className="inline-flex items-center font-medium rounded-full overflow-hidden shrink-0">
       {/* Lado esquerdo: OAB (azul/info) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5")}>
         {numeroFormatado} OAB-{uf}
@@ -119,7 +119,7 @@ function OabSituacaoBadge({
           {situacaoLabel}
         </span>
       )}
-    </div>
+    </Text>
   );
 }
 
@@ -273,7 +273,7 @@ export function RepresentantesTableWrapper() {
               {/* Linha 3: CPF */}
               {cpf && (
                 <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{cpf}</span>
+                  <Text variant="caption">{cpf}</Text>
                   {cpfRaw && <CopyButton text={cpfRaw} label="Copiar CPF" />}
                 </div>
               )}

@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { RealtimeChat } from '@/components/realtime/realtime-chat';
 
 
@@ -96,9 +96,9 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
           <MessageSquare className="h-4 w-4" />
           Chat do Documento
         </Heading>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+        <Text variant="caption" className="mt-1">
           Conversa em tempo real
-        </p>
+        </Text>
       </div>
 
       {/* Chat usando componente oficial do Supabase UI */}

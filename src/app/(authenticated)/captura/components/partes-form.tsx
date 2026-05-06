@@ -9,6 +9,7 @@ import type { CapturaPartesParams, Credencial, CapturaFormHandle } from '@/app/(
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Text } from '@/components/ui/typography';
 
 const parseListaProcessos = (value: string): string[] => {
   if (!value) return [];
@@ -162,17 +163,17 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
             {credSelecionadasDetalhes.length > 0 && (
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 md:col-span-2")}>
                 <Label>Escopo da captura</Label>
-                <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption">; space-y-1 sem token DS */ "rounded-md border border-dashed border-border/60 p-3 text-xs text-muted-foreground space-y-1")}>
+                <Text variant="caption" className="rounded-md border border-dashed border-border/60 p-3 space-y-1">
                   <p>
                     Tribunais (TRTs) incluídos: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{trtsDerivados.join(', ') || '-'}</span>
                   </p>
                   <p>
                     Graus considerados: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>{grausDerivados.join(', ') || '-'}</span>
                   </p>
-                </div>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                </Text>
+                <Text variant="caption">
                   Os filtros acima são derivados automaticamente das credenciais selecionadas.
-                </p>
+                </Text>
               </div>
             )}
 
@@ -184,9 +185,9 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
                 value={numeroProcesso}
                 onChange={(event) => setNumeroProcesso(event.target.value)}
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Utilize este campo para capturar as partes de um processo específico.
-              </p>
+              </Text>
             </div>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -198,13 +199,13 @@ export const PartesForm = forwardRef<CapturaFormHandle, PartesFormProps>(
                 value={numerosProcessoTexto}
                 onChange={(event) => setNumerosProcessoTexto(event.target.value)}
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Aceita múltiplos números de processos. Espaços e duplicados são ignorados automaticamente.
-              </p>
+              </Text>
               {totalProcessosManuais > 0 && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Processos especificados manualmente: <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{totalProcessosManuais}</span>
-                </p>
+                </Text>
               )}
             </div>
           </div>

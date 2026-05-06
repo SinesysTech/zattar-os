@@ -16,6 +16,7 @@ import {
 } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetTendenciaNovos() {
   const { data, isLoading } = useDashboard();
@@ -30,9 +31,9 @@ export function WidgetTendenciaNovos() {
         subtitle="Tendencia -- ultimos 8 meses"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

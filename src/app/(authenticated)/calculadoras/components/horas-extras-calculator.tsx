@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import { useState } from "react";
 import { Calculator, Gavel } from "lucide-react";
+import { Text } from '@/components/ui/typography';
 
 export function HorasExtrasCalculator() {
   const [salarioBase, setSalarioBase] = useState<number>(5000);
@@ -25,9 +26,9 @@ export function HorasExtrasCalculator() {
       
       {/* Header */}
       <div className="mb-12">
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-label text-xs uppercase tracking-[0.2em] text-primary mb-2 block")}>
+        <Text variant="caption" className="font-label uppercase tracking-[0.2em] text-primary mb-2 block">
           Labor Law Suite
-        </span>
+        </Text>
         <h1 className={cn(/* design-system-escape: tracking-tighter sem token DS */ "font-headline font-extrabold text-5xl md:text-6xl tracking-tighter text-on-surface mb-6 max-w-3xl")}>
           Calculadora de <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">Horas Extras</span>
         </h1>
@@ -42,7 +43,7 @@ export function HorasExtrasCalculator() {
           <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "bg-surface-container-high/60 backdrop-blur-xl rounded-2xl p-8 border border-foreground/5 shadow-lg")}>
             <div className={cn(/* design-system-escape: gap-8 gap sem token DS */ "grid grid-cols-1 md:grid-cols-2 gap-8")}>
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-widest sem token DS; font-bold → className de <Text>/<Heading> */ "text-xs uppercase tracking-widest text-on-surface-variant font-bold")}>Salário Bruto (R$)</label>
+                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Salário Bruto (R$)</Text>
                 <input 
                   type="number" 
                   value={salarioBase}
@@ -52,7 +53,7 @@ export function HorasExtrasCalculator() {
               </div>
 
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-widest sem token DS; font-bold → className de <Text>/<Heading> */ "text-xs uppercase tracking-widest text-on-surface-variant font-bold")}>Jornada Mensal</label>
+                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Jornada Mensal</Text>
                 <input 
                   type="number" 
                   value={horasMensais}
@@ -62,7 +63,7 @@ export function HorasExtrasCalculator() {
               </div>
 
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-widest sem token DS; font-bold → className de <Text>/<Heading> */ "text-xs uppercase tracking-widest text-on-surface-variant font-bold")}>Qtd. Horas Extras</label>
+                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Qtd. Horas Extras</Text>
                 <input 
                   type="number" 
                   value={horasExtras}
@@ -72,7 +73,7 @@ export function HorasExtrasCalculator() {
               </div>
 
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <label className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-widest sem token DS; font-bold → className de <Text>/<Heading> */ "text-xs uppercase tracking-widest text-on-surface-variant font-bold")}>Adicional</label>
+                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Adicional</Text>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
                   <button 
                     onClick={() => setPercentual(50)}
@@ -113,7 +114,7 @@ export function HorasExtrasCalculator() {
         <div className="lg:col-span-5">
           <div className="bg-surface-container-lowest/40 backdrop-blur-[20px] border border-foreground/10 rounded-2xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
             <div className={cn(/* design-system-escape: p-8 → usar <Inset>; pb-4 padding direcional sem Inset equiv. */ "p-8 pb-4")}>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-widest sem token DS; font-bold → className de <Text>/<Heading> */ "text-xs uppercase tracking-widest text-primary font-bold")}>Resultado da Análise</span>
+              <Text variant="caption" className="uppercase tracking-widest text-primary font-bold">Resultado da Análise</Text>
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "mt-4 flex items-baseline gap-2")}>
                 <span className="text-5xl font-black font-headline text-on-surface">R$ {totalBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                 <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-on-surface-variant text-sm font-medium")}>TOTAL LÍQUIDO</span>

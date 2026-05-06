@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 const GRAU_LABELS: Record<string, string> = {
   '1': '1º Grau',
@@ -64,7 +65,7 @@ export function CapturaEscopoBadge({
   }, [credencialIds, credenciaisMap]);
 
   if (tribunais.length === 0) {
-    return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>—</span>;
+    return <Text variant="caption" className="text-muted-foreground/55">—</Text>;
   }
 
   const tribunaisLabel = resumirTribunais(tribunais);

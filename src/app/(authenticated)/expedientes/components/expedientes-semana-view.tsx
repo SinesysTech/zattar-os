@@ -39,6 +39,7 @@ import {
   TipoTriggerContent,
 } from './expediente-tipo-popover';
 import { ExpedienteTextEditor } from './expediente-text-editor';
+import { Text } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 
@@ -254,7 +255,7 @@ export function ExpedientesSemanaView({
               {/* Expedientes */}
               {dayExps.length === 0 ? (
                 <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex-1 flex items-center justify-center py-6")}>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>—</span>
+                  <Text variant="caption" className="text-muted-foreground/55">—</Text>
                 </div>
               ) : (
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>

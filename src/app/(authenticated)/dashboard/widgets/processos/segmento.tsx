@@ -17,6 +17,7 @@ import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
 import { tokenForTone, type SemanticTone } from '@/lib/design-system';
 import { ToneDot } from '@/components/ui/tone-dot';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetSegmento() {
   const { data, isLoading } = useDashboard();
@@ -31,9 +32,9 @@ export function WidgetSegmento() {
         subtitle="Distribuicao por area juridica"
         depth={1}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

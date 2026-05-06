@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { actionListarClientesSugestoes } from "@/app/(authenticated)/partes/server-actions";
+import { Text } from '@/components/ui/typography';
 
 interface Option {
   id: number | string;
@@ -72,7 +73,7 @@ export function ClienteAutocomplete({ value, onChange }: Props) {
                   <div className="flex flex-col">
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{opt.label}</span>
                     {(opt.cpf || opt.cnpj) && (
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{opt.cpf || opt.cnpj}</span>
+                      <Text variant="caption">{opt.cpf || opt.cnpj}</Text>
                     )}
                   </div>
                 </CommandItem>

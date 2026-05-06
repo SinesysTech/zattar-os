@@ -22,6 +22,7 @@ import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
 import { PericiaDetalhesDialog } from './pericia-detalhes-dialog';
 import { PericiaAtribuirResponsavelDialog } from './pericia-atribuir-responsavel-dialog';
 import { PericiaObservacoesDialog } from './pericia-observacoes-dialog';
+import { Text } from '@/components/ui/typography';
 
 export interface PericiasTableMeta {
   usuarios: UsuarioOption[];
@@ -62,7 +63,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium shrink-0")}>
+    <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
@@ -74,7 +75,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
       )}>
         {grauLabel}
       </span>
-    </div>
+    </Text>
   );
 }
 

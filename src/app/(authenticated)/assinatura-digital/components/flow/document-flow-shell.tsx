@@ -17,6 +17,7 @@ import { ArrowLeft, Check, Upload, Settings, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Text } from '@/components/ui/typography';
 
 // ─── Step Definitions ──────────────────────────────────────────────────
 
@@ -134,9 +135,9 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
           Etapa {currentStep + 1} de {FLOW_STEPS.length}
         </span>
         {stepLabel && (
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>
+          <Text variant="caption" className="font-semibold text-foreground">
             {stepLabel}
-          </span>
+          </Text>
         )}
       </div>
       <Progress

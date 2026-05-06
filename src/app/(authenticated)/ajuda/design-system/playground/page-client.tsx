@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { 
   Sun, Moon, Check, X, AlertCircle, Star, Play, Settings} from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -286,7 +286,7 @@ export default function PlaygroundPage() {
                       placeholder="Campo com erro" 
                       aria-invalid
                     />
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>Este campo é obrigatório</p>
+                    <Text variant="caption" className="text-destructive">Este campo é obrigatório</Text>
                   </div>
                 </div>
 

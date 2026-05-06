@@ -21,7 +21,7 @@ import {
 import { DataTableColumnHeader } from '@/components/shared/data-shell/data-table-column-header';
 import { cn } from '@/lib/utils';
 import { ParteBadge } from '@/components/ui/parte-badge';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 import { Input } from '@/components/ui/input';
 import type { Audiencia, EnderecoPresencial, GrauTribunal } from '../domain';
@@ -71,9 +71,9 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
             <FileText className="h-5 w-5 text-success" />
             <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Ata de Audiência</Heading>
           </div>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <Text variant="caption">
             A ata desta audiência está disponível para visualização.
-          </p>
+          </Text>
           {audiencia.urlAtaAudiencia ? (
             <Button variant="outline" size="sm" className="w-full" asChild>
               <a
@@ -86,9 +86,9 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
               </a>
             </Button>
           ) : (
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground italic")}>
+            <Text variant="caption" className="italic">
               Ata registrada (ID: {audiencia.ataAudienciaId})
-            </p>
+            </Text>
           )}
         </div>
       </PopoverContent>
@@ -112,7 +112,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium shrink-0")}>
+    <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info dark:text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
@@ -124,7 +124,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
       )}>
         {grauLabel}
       </span>
-    </div>
+    </Text>
   );
 }
 
@@ -398,9 +398,9 @@ function ModalidadeCell({
               </Heading>
               {audiencia.enderecoPresencial ? (
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground flex-1")}>
+                  <Text variant="caption" className="flex-1">
                     {formatEndereco(audiencia.enderecoPresencial)}
-                  </p>
+                  </Text>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button

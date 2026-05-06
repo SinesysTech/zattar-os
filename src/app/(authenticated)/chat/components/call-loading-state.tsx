@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Progress } from "@/components/ui/progress";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from "@/lib/utils";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -76,7 +76,7 @@ export function CallLoadingState({
 
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "w-full space-y-2")}>
           <Progress value={progress} className="h-2" />
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-right text-video-muted")}>{Math.round(progress)}%</p>
+          <Text variant="caption" className="text-right text-video-muted">{Math.round(progress)}%</Text>
         </div>
 
         {onCancel && (

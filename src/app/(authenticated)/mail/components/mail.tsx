@@ -180,9 +180,9 @@ export function Mail({
                     onCheckedChange={handleSelectAll}
                     aria-label="Selecionar todos"
                   />
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
+                  <Text variant="caption">
                     {selectedUids.size} selecionado{selectedUids.size > 1 ? "s" : ""}
-                  </span>
+                  </Text>
 
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "ml-auto flex items-center gap-1")}>
                     <Tooltip>

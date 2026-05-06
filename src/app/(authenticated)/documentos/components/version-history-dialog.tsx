@@ -29,7 +29,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { toast } from 'sonner';
 import { formatDistanceToNow, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -153,9 +153,9 @@ export function VersionHistoryDialog({
                               </span>
                             )}
                           </div>
-                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+                          <Text variant="caption" className="mt-1">
                             {formatDate(version.created_at)}
-                          </p>
+                          </Text>
                         </div>
 
                         {/* Actions */}

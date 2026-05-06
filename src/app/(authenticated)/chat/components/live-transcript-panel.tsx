@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { X, MessageSquareText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import { TranscriptSegment } from "../hooks/use-transcription";
 
 interface LiveTranscriptPanelProps {
@@ -52,9 +52,9 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
             transcripts.map((segment) => (
               <div key={segment.id} className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-bold → className de <Text>/<Heading> */ "text-xs font-bold text-info truncate max-w-37.5")}>
+                  <Text variant="caption" className="font-bold text-info truncate max-w-37.5">
                     {segment.participantName}
-                  </span>
+                  </Text>
                   <span className="text-[10px] text-video-muted">
                     {new Date(segment.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                   </span>

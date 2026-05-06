@@ -32,6 +32,7 @@ import { actionObterDetalhesComplementaresProcesso } from '../../actions';
 import type { Audiencia } from '@/app/(authenticated)/audiencias';
 import type { Expediente } from '@/app/(authenticated)/expedientes';
 import type { Pericia } from '@/app/(authenticated)/pericias';
+import { Text } from '@/components/ui/typography';
 
 interface AllDetailsSheetProps {
   open: boolean;
@@ -152,7 +153,7 @@ export function AllDetailsSheet({
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 max-h-[60vh] overflow-y-auto pr-1")}>
                   {expedientes.map((exp) => (
                     <GlassPanel key={exp.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>Expediente</p>
+                      <Text variant="caption" className="font-medium">Expediente</Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                         {exp.dataCriacaoExpediente
                           ? new Date(exp.dataCriacaoExpediente).toLocaleDateString('pt-BR')
@@ -175,9 +176,9 @@ export function AllDetailsSheet({
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 max-h-[60vh] overflow-y-auto pr-1")}>
                   {audiencias.map((aud) => (
                     <GlassPanel key={aud.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+                      <Text variant="caption" className="font-medium">
                         {aud.tipoDescricao || 'Audiência'}
-                      </p>
+                      </Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                         {new Date(aud.dataInicio).toLocaleDateString('pt-BR')}
                         {aud.salaAudienciaNome && ` · Sala ${aud.salaAudienciaNome}`}
@@ -197,9 +198,9 @@ export function AllDetailsSheet({
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; pr-1 padding direcional sem Inset equiv. */ "space-y-2 max-h-[60vh] overflow-y-auto pr-1")}>
                   {pericias.map((per) => (
                     <GlassPanel key={per.id} depth={1} className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "px-3 py-2.5")}>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>
+                      <Text variant="caption" className="font-medium">
                         {per.especialidade?.descricao || 'Perícia'}
-                      </p>
+                      </Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                         {per.perito?.nome && `Perito: ${per.perito.nome} · `}
                         Prazo:{' '}

@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import { Download, AlertCircle } from "lucide-react";
 
 interface RecordingPlayerProps {
@@ -54,9 +54,9 @@ export function RecordingPlayer({ recordingUrl, chamadaId, titulo }: RecordingPl
         </div>
       )}
 
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+      <Text variant="caption">
         Esta gravação ficará disponível por 7 dias a partir da data da chamada.
-      </p>
+      </Text>
     </div>
   );
 }

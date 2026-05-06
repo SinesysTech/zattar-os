@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { TIPO_RISCO_OPTIONS } from '../domain';
 import type { RespostasSaudeAmbiente, TipoRisco } from '../domain';
 import { OperadorAlert } from './operador-alert';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface ModuloSaudeAmbienteProps {
   data: RespostasSaudeAmbiente;
@@ -39,9 +39,9 @@ export function ModuloSaudeAmbiente({ data, onChange }: ModuloSaudeAmbienteProps
       <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
         <Label>
           No dia a dia, lidava com situações perigosas ou prejudiciais à saúde?
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-1 text-xs text-muted-foreground")}>
+          <Text variant="caption" className="ml-1">
             (Ex: Produtos químicos, câmara fria, eletricidade, moto, hospital)
-          </span>
+          </Text>
         </Label>
         <RadioGroup
           value={data.exposicao_riscos === undefined ? '' : data.exposicao_riscos ? 'sim' : 'nao'}

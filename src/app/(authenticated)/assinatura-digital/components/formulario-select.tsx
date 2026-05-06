@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AssinaturaDigitalFormulario } from '@/shared/assinatura-digital/types/types';
+import { Text } from '@/components/ui/typography';
 
 export interface FormularioSelectProps {
   value: number | null;
@@ -117,12 +118,12 @@ export function FormularioSelect({
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span>{formulario.nome}</span>
                   {formulario.descricao && (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate max-w-50")}>
+                    <Text variant="caption" className="truncate max-w-50">
                       {formulario.descricao}
-                    </span>
+                    </Text>
                   )}
                   {!formulario.ativo && (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>(Inativo)</span>
+                    <Text variant="caption">(Inativo)</Text>
                   )}
                 </div>
               </SelectItem>

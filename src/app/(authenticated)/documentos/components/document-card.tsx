@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import type { DocumentoComUsuario } from '@/app/(authenticated)/documentos/domain';
 
 interface DocumentCardProps {
@@ -45,9 +45,9 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
             </div>
             <div className="flex-1 min-w-0">
               <Heading level="card" className="truncate">{documento.titulo}</Heading>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+              <Text variant="caption" className="mt-1">
                 {documento.descricao || 'Sem descrição'}
-              </p>
+              </Text>
             </div>
           </div>
 

@@ -18,6 +18,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface UpgradeRecommendation {
   should_upgrade: boolean;
   recommended_tier: 'small' | 'medium' | 'large' | null;
@@ -139,7 +140,7 @@ export function AvaliarUpgradeContent() {
           </CardHeader>
           <CardContent>
             <div className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "text-3xl font-bold")}>{cacheHitRate.toFixed(2)}%</div>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>Esperado: &gt;99%</p>
+            <Text variant="caption" className="mt-1">Esperado: &gt;99%</Text>
           </CardContent>
         </Card>
 
@@ -150,7 +151,7 @@ export function AvaliarUpgradeContent() {
           </CardHeader>
           <CardContent>
             <div className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "text-3xl font-bold")}>{diskIOBudget.toFixed(0)}%</div>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>Crítico: &gt;90%</p>
+            <Text variant="caption" className="mt-1">Crítico: &gt;90%</Text>
           </CardContent>
         </Card>
 
@@ -161,7 +162,7 @@ export function AvaliarUpgradeContent() {
           </CardHeader>
           <CardContent>
             <div className={cn(/* design-system-escape: text-3xl → migrar para <Heading level="display-*">; font-bold → className de <Text>/<Heading> */ "text-3xl font-bold capitalize")}>{computeTier}</div>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>RAM: {COMPUTE_TIERS.find(t => t.name.toLowerCase() === computeTier.toLowerCase())?.ram_gb ?? "?"}GB</p>
+            <Text variant="caption" className="mt-1">RAM: {COMPUTE_TIERS.find(t => t.name.toLowerCase() === computeTier.toLowerCase())?.ram_gb ?? "?"}GB</Text>
           </CardContent>
         </Card>
       </div>

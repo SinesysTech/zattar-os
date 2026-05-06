@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
 import type { AnaliseOrcamentariaUI } from '@/app/(authenticated)/financeiro/actions/types';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Helpers
@@ -106,10 +107,10 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
             </div>
           </div>
           <Progress value={percentualExec} className="h-2.5" />
-          <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex justify-between text-xs text-muted-foreground")}>
+          <Text variant="caption" className="flex justify-between">
             <span>Realizado: {formatarMoeda(resumo.totalRealizado)}</span>
             <span>Previsto: {formatarMoeda(resumo.totalPrevisto)}</span>
-          </div>
+          </Text>
         </div>
 
         {/* Status badges */}
@@ -131,7 +132,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
         {/* Top itens com maior desvio */}
         {topItens.length > 0 && (
           <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "space-y-2.5")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Maiores Desvios</p>
+            <Text variant="caption" className="font-medium">Maiores Desvios</Text>
             {topItens.map((item) => {
               const percentExec = item.valorPrevisto > 0
                 ? Math.min((item.valorRealizado / item.valorPrevisto) * 100, 150)
@@ -143,7 +144,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
 
               return (
                 <div key={item.id} className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                  <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "flex items-center justify-between text-xs")}>
+                  <Text variant="caption" className="flex items-center justify-between">
                     <span className="truncate max-w-[60%] text-muted-foreground">{descricao}</span>
                     <span className={cn(
                       /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium tabular-nums',
@@ -151,7 +152,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
                     )}>
                       {Math.round(percentExec)}%
                     </span>
-                  </div>
+                  </Text>
                   <Progress
                     value={Math.min(percentExec, 100)}
                     className={cn('h-1.5', isOver && '[&>div]:bg-destructive')}

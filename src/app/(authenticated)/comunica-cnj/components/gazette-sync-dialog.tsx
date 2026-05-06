@@ -216,9 +216,9 @@ export function GazetteSyncDialog({ trigger }: GazetteSyncDialogProps) {
             {/* Results grid */}
             {result && !isSyncing && (
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-col gap-2")}>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs text-muted-foreground font-medium")}>
+                <Text variant="caption" className="font-medium">
                   Resultado da sincronização
-                </p>
+                </Text>
                 <SyncResultGrid result={result} />
               </div>
             )}

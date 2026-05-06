@@ -22,6 +22,7 @@ import { Dialog,
 } from '@/components/ui/dialog';
 import PdfPreviewDynamic from "@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic";
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 const PdfPreview = PdfPreviewDynamic;
 
 interface ReplacePdfDialogProps {
@@ -223,9 +224,9 @@ export default function ReplacePdfDialog({
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium mb-1")}>
                   {isDragActive ? 'Solte o arquivo aqui' : 'Arraste um PDF ou clique para selecionar'}
                 </p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Apenas arquivos PDF, máximo 10MB
-                </p>
+                </Text>
               </div>
             ) : (
               <>
@@ -246,11 +247,11 @@ export default function ReplacePdfDialog({
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{uploadedFile.file.name}</p>
-                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                        <Text variant="caption">
                           {(uploadedFile.file.size / 1024 / 1024).toFixed(2)} MB
-                        </p>
+                        </Text>
                         {!uploadedFile.isValid && uploadedFile.error && (
-                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive mt-0.5")}>{uploadedFile.error}</p>
+                          <Text variant="caption" className="text-destructive mt-0.5">{uploadedFile.error}</Text>
                         )}
                       </div>
                     </div>

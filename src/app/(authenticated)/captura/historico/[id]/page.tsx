@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { CapturaResult, type CapturaResultData, CapturaErrosFormatados, CapturaRawLogs } from '@/app/(authenticated)/captura';
 import { buscarCapturaLog, buscarLogsBrutoPorCapturaId } from '@/app/(authenticated)/captura/server';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CapturaStatusSemanticBadge } from '@/components/ui/semantic-badge';
@@ -163,9 +163,9 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             {isCompleted ? 'Captura concluída com sucesso' : 'Captura finalizada com erros'}
           </p>
           {rawLogs.length > 0 && (
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-auto text-xs text-muted-foreground")}>
+            <Text variant="caption" className="ml-auto">
               {rawLogs.length} registro{rawLogs.length !== 1 ? 's' : ''} de log
-            </span>
+            </Text>
           )}
         </div>
       )}

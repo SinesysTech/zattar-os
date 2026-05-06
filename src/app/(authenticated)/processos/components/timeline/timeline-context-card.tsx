@@ -37,9 +37,9 @@ export function TimelineContextCard({
   return (
     <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4 border-b flex flex-col justify-center bg-card sticky top-0 z-10")}>
       {/* Número do processo em fonte mono */}
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "font-mono text-xs text-muted-foreground mb-1 tracking-wider truncate")}>
+      <Text variant="caption" className="font-mono mb-1 tracking-wider truncate">
         Nº {numeroProcesso}
-      </p>
+      </Text>
 
       {/* Partes do processo */}
       <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>

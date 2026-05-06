@@ -72,6 +72,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes e Helpers
@@ -206,15 +207,15 @@ function criarColunas(
               )}
             </div>
             {conta.cliente && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 {conta.cliente.nomeFantasia || conta.cliente.razaoSocial}
-              </span>
+              </Text>
             )}
             {conta.contrato && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; gap-1 gap sem token DS */ "text-xs flex items-center gap-1")}>
+              <Text variant="caption" className="flex items-center gap-1">
                 <FileText className="h-3 w-3" />
                 {conta.contrato.numero}
-              </span>
+              </Text>
             )}
           </div>
         );

@@ -26,7 +26,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -692,7 +692,7 @@ function EstagiosSheet({ open, onOpenChange, pipeline, onPipelineUpdate }: Estag
                           <Star className="h-3.5 w-3.5 shrink-0 fill-warning text-warning" />
                         )}
                       </div>
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono text-muted-foreground")}>{estagio.slug}</span>
+                      <Text variant="caption" className="font-mono">{estagio.slug}</Text>
                     </div>
 
                     <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 shrink-0")}>
@@ -922,9 +922,9 @@ export function PipelinesPageClient() {
                   <div className="min-w-0">
                     <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{pipeline.nome}</div>
                     {pipeline.descricao && (
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate")}>
+                      <Text variant="caption" className="truncate">
                         {pipeline.descricao}
-                      </p>
+                      </Text>
                     )}
                   </div>
                   <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground truncate")}>

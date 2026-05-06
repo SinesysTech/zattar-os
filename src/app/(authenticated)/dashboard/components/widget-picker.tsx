@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Text } from '@/components/ui/typography';
 
 // ─── Tipo local (espelhado do registry) ─────────────────────────────────────
 
@@ -91,12 +92,12 @@ export function WidgetPicker({
 
         {/* Resumo + reset */}
         <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center justify-between px-5 py-3 border-b border-border/10")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>
+          <Text variant="caption" className="text-muted-foreground/60">
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{activeCount}</span>
             {' '}de{' '}
             <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground")}>{totalCount}</span>
             {' '}widgets ativos
-          </p>
+          </Text>
           <Button
             variant="ghost"
             size="sm"

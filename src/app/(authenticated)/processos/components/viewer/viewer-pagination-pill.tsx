@@ -155,9 +155,9 @@ export function ViewerPaginationPill({
         </button>
 
         {/* Indicador de zoom */}
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono text-muted-foreground select-none min-w-8 text-center tabular-nums")}>
+        <Text variant="caption" className="font-mono select-none min-w-8 text-center tabular-nums">
           {zoomLevel}%
-        </span>
+        </Text>
 
         {/* Botão zoom in */}
         <button

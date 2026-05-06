@@ -40,6 +40,7 @@ import { useAuditLogs } from '@/lib/domain/audit/hooks/use-audit-logs';
 
 import type { Pericia } from '../domain';
 import { SITUACAO_PERICIA_LABELS } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -210,9 +211,9 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
               <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "font-semibold text-foreground/70 mb-1 text-[11px] uppercase tracking-wider")}>
                 Observações
               </div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "whitespace-pre-wrap text-foreground/80 text-xs leading-relaxed")}>
+              <Text variant="caption" className="whitespace-pre-wrap text-foreground/80">
                 {pericia.observacoes}
-              </div>
+              </Text>
             </GlassPanel>
           )}
         </TabsContent>

@@ -19,7 +19,7 @@ import { GRAU_LABELS } from '@/lib/design-system';
 import { ProcessosAlterarResponsavelDialog } from '../processos-alterar-responsavel-dialog';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { cn } from '@/lib/utils';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { useState } from 'react';
 
 interface InstanciaInfo {
@@ -93,9 +93,9 @@ export function CaseIdentityBar({
       <GlassPanel
         className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "rounded-none border-0 border-b border-border/20 px-4 py-1.5 flex-row items-center gap-3 shrink-0")}
       >
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "font-mono text-xs text-muted-foreground")}>{numeroProcesso}</span>
+        <Text variant="caption" className="font-mono">{numeroProcesso}</Text>
         <span className="w-px h-4 bg-border/10" />
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 truncate")}>{tituloPartes}</span>
+        <Text variant="caption" className="text-muted-foreground/75 truncate">{tituloPartes}</Text>
       </GlassPanel>
     );
   }

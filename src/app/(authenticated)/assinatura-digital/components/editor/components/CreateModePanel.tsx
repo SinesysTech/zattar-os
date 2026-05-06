@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import CreateTemplateForm from '../CreateTemplateForm';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface CreateModePanelUploadProps {
   onFileUpload: (file: File) => void;
@@ -59,7 +59,7 @@ export function CreateModePanelUpload({ onFileUpload }: CreateModePanelUploadPro
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mb-2")}>
               Arraste um arquivo PDF ou clique para selecionar
             </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Apenas arquivos PDF, máximo 10MB</p>
+            <Text variant="caption">Apenas arquivos PDF, máximo 10MB</Text>
           </div>
         </div>
       </div>
@@ -83,9 +83,9 @@ export function CreateModePanelForm({
           <div className={cn(/* design-system-escape: p-6 → migrar para <Inset variant="dialog"> */ "border-2 border-primary/50 rounded-lg p-6 text-center bg-primary/5")}>
             <Upload className="mx-auto h-10 w-10 text-primary mb-2" />
             <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm mb-1")}>PDF carregado com sucesso!</Heading>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
-            </p>
+            </Text>
           </div>
 
           {/* Formulário inline */}

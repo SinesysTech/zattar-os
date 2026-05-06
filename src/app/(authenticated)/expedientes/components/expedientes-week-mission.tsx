@@ -209,15 +209,15 @@ function MissionItem({
           )}
 
           {/* Cabeçalho: Número do processo (sem font-mono) */}
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/75")}>
+          <Text variant="caption" className="text-foreground/75">
             Nº {expediente.numeroProcesso}
-          </p>
+          </Text>
 
           {/* Cabeçalho: Órgão jurisdicional */}
           {(expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador) && (
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               {expediente.descricaoOrgaoJulgador || expediente.siglaOrgaoJulgador}
-            </p>
+            </Text>
           )}
 
           {/* Corpo: Resumo (descrição IA) — só renderiza se houver */}

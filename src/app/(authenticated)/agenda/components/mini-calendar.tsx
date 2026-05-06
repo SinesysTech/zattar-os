@@ -17,6 +17,7 @@ import { useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
+import { Text } from '@/components/ui/typography';
 
 // ─── Props ────────���───────────────────────────────────────────────────
 
@@ -104,9 +105,9 @@ export function MiniCalendar({
     <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>
+        <Text variant="caption" className="font-semibold text-foreground">
           {MONTH_NAMES[month]} {year}
-        </span>
+        </Text>
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1")}>
           <button
             onClick={onPrevMonth}

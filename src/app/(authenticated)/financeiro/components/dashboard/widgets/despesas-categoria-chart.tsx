@@ -5,6 +5,7 @@ import { PieChart as PieIcon } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MiniDonutChart, CHART_PALETTE } from '@/components/ui/charts/mini-chart';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Helpers
@@ -89,7 +90,7 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
               thickness={18}
               centerContent={
                 <div className="text-center">
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Total</p>
+                  <Text variant="caption">Total</Text>
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold font-heading")}>{formatarMoeda(total)}</p>
                 </div>
               }
@@ -110,9 +111,9 @@ export function DespesasCategoriaChart({ data, isLoading }: DespesasCategoriaCha
                       <span className="truncate text-muted-foreground">{item.name}</span>
                     </div>
                     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 shrink-0")}>
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums")}>
+                      <Text variant="caption" className="tabular-nums">
                         {formatarPercentual(percentual)}
-                      </span>
+                      </Text>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium tabular-nums")}>{formatarMoeda(item.value)}</span>
                     </div>
                   </div>

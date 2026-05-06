@@ -6,6 +6,7 @@
 
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 interface MobileProgressProps {
   /** Etapa atual (0-indexed) */
@@ -38,13 +39,13 @@ export function MobileProgress({
     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ 'flex flex-col gap-1.5 animate-fade-in animate-duration-300', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>
+        <Text variant="caption" className="font-medium">
           Etapa {currentStep + 1} de {totalSteps}
-        </span>
+        </Text>
         {currentStepLabel && (
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-primary")}>
+          <Text variant="caption" className="font-semibold text-primary">
             {currentStepLabel}
-          </span>
+          </Text>
         )}
       </div>
 

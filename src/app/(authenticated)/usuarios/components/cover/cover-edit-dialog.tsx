@@ -193,9 +193,9 @@ export function CoverEditDialog({
 
           {/* Botões de ação */}
           <div className="flex justify-between items-center">
-            <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               Formatos: JPEG, PNG, WebP • Máx: 10MB
-            </div>
+            </Text>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex gap-2")}>
               {!displayUrl && (
                 <Button

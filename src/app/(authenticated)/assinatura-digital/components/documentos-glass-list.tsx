@@ -26,6 +26,7 @@ import type {
   DocStatus,
 } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
 import { getSignerProgress, timeAgo } from '@/app/(authenticated)/assinatura-digital/components/documento-card';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -357,9 +358,9 @@ function EmptyState() {
       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>
         Nenhum documento encontrado
       </p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mt-1")}>
+      <Text variant="caption" className="text-muted-foreground/70 mt-1">
         Tente ajustar os filtros ou a busca
-      </p>
+      </Text>
     </div>
   );
 }

@@ -53,6 +53,7 @@ import {
   useOrcamentos,
 } from '@/app/(authenticated)/financeiro';
 import { toast } from 'sonner';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes e Helpers
@@ -214,9 +215,9 @@ function ComparacaoCards({
             </CardTitle>
           </CardHeader>
           <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               {dadosComparacao.find((d) => d.totalOrcado === maiorValor)?.nome}
-            </p>
+            </Text>
           </CardContent>
         </Card>
 
@@ -228,9 +229,9 @@ function ComparacaoCards({
             </CardTitle>
           </CardHeader>
           <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               {dadosComparacao.find((d) => d.totalOrcado === menorValor)?.nome}
-            </p>
+            </Text>
           </CardContent>
         </Card>
 
@@ -242,9 +243,9 @@ function ComparacaoCards({
             </CardTitle>
           </CardHeader>
           <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               Entre {orcamentos.length} orçamentos
-            </p>
+            </Text>
           </CardContent>
         </Card>
       </div>

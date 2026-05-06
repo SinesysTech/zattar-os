@@ -8,6 +8,7 @@ import { ptBR } from "date-fns/locale/pt-BR";
 
 import { getBorderRadiusClasses, getEventColorClasses, type CalendarEvent } from "./";
 import { cn } from "@/lib/utils";
+import { Text } from '@/components/ui/typography';
 
 // Using date-fns format with custom formatting:
 // 'h' - hours (1-12)
@@ -227,7 +228,7 @@ export function EventItem({
       {...dndListeners}
       {...dndAttributes}>
       <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{event.title}</div>
-      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs opacity-70")}>
+      <Text variant="caption" className="opacity-70">
         {event.allDay ? (
           <span>Dia inteiro</span>
         ) : (
@@ -242,8 +243,8 @@ export function EventItem({
             <span>{event.location}</span>
           </>
         )}
-      </div>
-      {event.description && <div className={cn(/* design-system-escape: my-1 margin sem primitiva DS; text-xs → migrar para <Text variant="caption"> */ "my-1 text-xs opacity-90")}>{event.description}</div>}
+      </Text>
+      {event.description && <Text variant="caption" className="my-1 opacity-90">{event.description}</Text>}
     </button>
   );
 }

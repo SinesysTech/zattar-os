@@ -12,6 +12,7 @@ import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { tokenForTone } from '@/lib/design-system';
 import { ToneDot } from '@/components/ui/tone-dot';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetDespesasCategoria() {
   const { data, isLoading } = useDashboard();
@@ -21,7 +22,7 @@ export function WidgetDespesasCategoria() {
   if (!data) {
     return (
       <WidgetContainer title="Despesas por Categoria" icon={PieChart} subtitle="Sem dados">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Dados indisponíveis.</Text>
       </WidgetContainer>
     );
   }
@@ -31,7 +32,7 @@ export function WidgetDespesasCategoria() {
   if (!categorias || categorias.length === 0) {
     return (
       <WidgetContainer title="Despesas por Categoria" icon={PieChart} subtitle="Distribuição">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhuma despesa categorizada.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Nenhuma despesa categorizada.</Text>
       </WidgetContainer>
     );
   }

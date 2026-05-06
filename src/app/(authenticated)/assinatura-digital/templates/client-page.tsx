@@ -257,12 +257,12 @@ export function TemplatesClient() {
       </div>
 
       {error && (
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "rounded-2xl border border-destructive/20 bg-destructive/4 px-4 py-3 text-xs text-destructive/80")}>
+        <Text variant="caption" className="rounded-2xl border border-destructive/20 bg-destructive/4 px-4 py-3 text-destructive/80">
           {error}
           <Button variant="outline" size="sm" onClick={refetch} className="ml-3">
             Tentar novamente
           </Button>
-        </div>
+        </Text>
       )}
 
       {/* Lista Glass */}

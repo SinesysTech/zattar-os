@@ -25,7 +25,7 @@ import {
 import type { SignatarioVerificacaoData } from '@/shared/assinatura-digital/types/types';
 import { actionGetPresignedPdfUrl } from '@/shared/assinatura-digital/actions/documentos-actions';
 import { SegurancaSection } from "./seguranca-section";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 interface AssinanteCardProps {
@@ -103,7 +103,7 @@ function ImagePreview({
         ) : (
           <Icon className="h-8 w-8 text-muted-foreground" />
         )}
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{label}</span>
+        <Text variant="caption" className="font-medium">{label}</Text>
       </button>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>

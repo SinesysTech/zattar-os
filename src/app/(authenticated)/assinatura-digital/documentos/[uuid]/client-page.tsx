@@ -41,7 +41,7 @@ import { usePresignedPdfUrl } from '@/shared/assinatura-digital/hooks/use-presig
 import { actionGetPresignedPdfUrl } from '@/shared/assinatura-digital/actions/documentos-actions';
 import PdfPreviewDynamic from '@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic';
 import { AssinanteCard } from "./components/assinante-card";
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 // =============================================================================
 // HASH DISPLAY COMPONENT
@@ -58,8 +58,8 @@ function HashDisplay({ label, hash }: { label: string; hash: string | null | und
   return (
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2 group")}>
       <div className="min-w-0 flex-1">
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</span>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs font-mono break-all text-foreground/80")}>{hash}</p>
+        <Text variant="caption">{label}</Text>
+        <Text variant="caption" className="font-mono break-all text-foreground/80">{hash}</Text>
       </div>
       <Button
         variant="ghost"
@@ -331,9 +331,9 @@ export function DocumentoVerificacaoClient({
                       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground")}>
                         Visualização indisponível
                       </p>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      <Text variant="caption">
                         O arquivo continua disponível para download no menu acima.
-                      </p>
+                      </Text>
                     </div>
                   </div>
                 </div>
@@ -424,10 +424,10 @@ export function DocumentoVerificacaoClient({
                           />
                         </>
                       )}
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs leading-relaxed text-muted-foreground")}>
+                      <Text variant="caption">
                         Os hashes confirmam que o arquivo não foi alterado após a assinatura.
                         Se qualquer byte mudar, a verificação deixa de bater.
-                      </p>
+                      </Text>
                     </div>
                   </section>
                 </>

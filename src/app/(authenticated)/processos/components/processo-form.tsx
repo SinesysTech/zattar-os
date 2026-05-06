@@ -25,7 +25,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { actionCriarProcessoManual, actionAtualizarProcesso } from '../actions';
 import type { ActionResult } from '../actions/types';
 import type { Processo, GrauProcesso, OrigemAcervo } from '../domain';
@@ -192,7 +192,7 @@ export function ProcessoForm({
                 className={cn(getFieldError('numeroProcesso') && 'border-destructive')}
               />
               {getFieldError('numeroProcesso') && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{getFieldError('numeroProcesso')}</p>
+                <Text variant="caption" className="text-destructive">{getFieldError('numeroProcesso')}</Text>
               )}
             </div>
 
@@ -234,7 +234,7 @@ export function ProcessoForm({
               </Select>
               <input type="hidden" name="trt" value={formData.trt} />
               {getFieldError('trt') && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{getFieldError('trt')}</p>
+                <Text variant="caption" className="text-destructive">{getFieldError('trt')}</Text>
               )}
             </div>
 
@@ -255,7 +255,7 @@ export function ProcessoForm({
               </Select>
               <input type="hidden" name="grau" value={formData.grau} />
               {getFieldError('grau') && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{getFieldError('grau')}</p>
+                <Text variant="caption" className="text-destructive">{getFieldError('grau')}</Text>
               )}
             </div>
           </div>

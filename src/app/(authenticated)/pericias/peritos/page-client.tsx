@@ -17,7 +17,7 @@ import Link from 'next/link';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { Button } from '@/components/ui/button';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { IconContainer } from '@/components/ui/icon-container';
@@ -93,7 +93,7 @@ export function PeritosPageClient() {
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-foreground/90")}>
             Peritos são cadastrados como Terceiros
           </p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70 mt-0.5")}>
+          <Text variant="caption" className="text-muted-foreground/70 mt-0.5">
             Esta página mostra a vista consolidada. Para criar, editar ou
             desativar peritos, acesse{' '}
             <Link
@@ -103,7 +103,7 @@ export function PeritosPageClient() {
               Partes / Terceiros
             </Link>
             .
-          </p>
+          </Text>
         </div>
       </GlassPanel>
 

@@ -233,12 +233,12 @@ export default function AdvogadosPage() {
 
         {/* Insight: advogados sem credenciais */}
         {!isLoading && advogados.length > 0 && (
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-4 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-xs text-warning")}>
+          <Text variant="caption" className="flex items-center gap-2 rounded-xl border border-warning/15 bg-warning/5 px-4 py-2.5 text-warning">
             <AlertTriangle className="size-4 shrink-0" />
             <span>
               Alguns advogados podem não ter credenciais cadastradas — verifique na aba Credenciais.
             </span>
-          </div>
+          </Text>
         )}
 
         {/* Loading skeleton */}
@@ -270,9 +270,9 @@ export default function AdvogadosPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold truncate font-heading")}>{advogado.nome_completo}</div>
-                      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55")}>
+                      <Text variant="caption" className="text-muted-foreground/55">
                         {advogado.oabs.map((o: { numero: string; uf: string }) => `OAB/${o.uf} ${o.numero}`).join(', ') || 'Sem OAB'}
-                      </div>
+                      </Text>
                     </div>
                     {temCredenciais ? (
                       <span className={cn(/* design-system-escape: gap-1 gap sem token DS; font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "inline-flex items-center gap-1 text-[10px] font-medium text-success bg-success/8 border border-success/15 px-1.5 py-0.5 rounded-md shrink-0")}>
@@ -290,15 +290,15 @@ export default function AdvogadosPage() {
                   <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* CPF */}
-                  <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs text-muted-foreground/75 mb-1.5")}>
+                  <Text variant="caption" className="flex items-center gap-2 text-muted-foreground/75 mb-1.5">
                     <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wide sem token DS */ "font-medium text-muted-foreground/65 uppercase tracking-wide text-[10px]")}>CPF</span>
                     <span className="truncate">{advogado.cpf}</span>
-                  </div>
+                  </Text>
 
                   <div className={cn(/* design-system-escape: my-2 margin sem primitiva DS */ "border-t border-border/10 my-2")} />
 
                   {/* Credenciais count */}
-                  <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-1.5 text-xs")}>
+                  <Text variant="caption" className="flex items-center gap-1.5">
                     <Lock className="size-3.5 text-muted-foreground/65 shrink-0" />
                     {temCredenciais ? (
                       <span className="text-muted-foreground/70">
@@ -311,9 +311,9 @@ export default function AdvogadosPage() {
                         )}
                       </span>
                     ) : (
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-destructive/70 text-xs")}>Nenhuma credencial cadastrada</span>
+                      <Text variant="caption" className="text-destructive/70">Nenhuma credencial cadastrada</Text>
                     )}
-                  </div>
+                  </Text>
 
                   <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "border-t border-border/10 mt-3 pt-3")} />
 

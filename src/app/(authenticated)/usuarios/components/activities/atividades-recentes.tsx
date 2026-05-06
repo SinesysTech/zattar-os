@@ -229,12 +229,12 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
                             </div>
                             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{descricao}</p>
                           </div>
-                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground whitespace-nowrap")}>
+                          <Text variant="caption" className="whitespace-nowrap">
                             {formatDistanceToNow(new Date(atividade.createdAt), {
                               addSuffix: true,
                               locale: ptBR,
                             })}
-                          </p>
+                          </Text>
                         </div>
                       </div>
                     </div>

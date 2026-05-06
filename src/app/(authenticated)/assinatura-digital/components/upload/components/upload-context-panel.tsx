@@ -4,6 +4,7 @@ import { Upload, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { UploadContextPanelProps } from '../types';
+import { Text } from '@/components/ui/typography';
 
 /**
  * UploadContextPanel - Painel informativo lateral com instruções de upload
@@ -85,10 +86,10 @@ export function UploadContextPanel({
       </div>
 
       {/* Informação de segurança */}
-      <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "relative flex items-center gap-2 text-xs text-muted-foreground")}>
+      <Text variant="caption" className="relative flex items-center gap-2">
         <Shield className="size-4" />
         <span>Seus arquivos são criptografados e seguros</span>
-      </div>
+      </Text>
     </div >
   );
 }

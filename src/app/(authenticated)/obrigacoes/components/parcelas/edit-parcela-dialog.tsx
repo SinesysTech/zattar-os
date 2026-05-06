@@ -157,7 +157,7 @@ export function EditParcelaDialog({
               disabled={isSaving}
               placeholder="0,00"
             />
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Atual: {formatCurrency(parcela.honorariosSucumbenciais)}</p>
+            <Text variant="caption">Atual: {formatCurrency(parcela.honorariosSucumbenciais)}</Text>
           </div>
 
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>

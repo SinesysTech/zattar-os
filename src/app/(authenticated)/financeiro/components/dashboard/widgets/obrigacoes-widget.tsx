@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import type { ResumoObrigacoesFinanceiro } from '@/app/(authenticated)/financeiro/actions/types';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Helpers
@@ -49,11 +50,11 @@ function ObrigacaoItem({
         <Icon className="h-4 w-4" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</p>
+        <Text variant="caption">{label}</Text>
         <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           {quantidade} parcela{quantidade !== 1 ? 's' : ''}
-        </p>
+        </Text>
       </div>
     </div>
   );

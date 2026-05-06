@@ -47,6 +47,7 @@ import { CallDetailSheet } from './call-detail-sheet';
 import { Eye, FileText, Sparkles, Play } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RecordingPlayer } from './recording-player';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -184,7 +185,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         return (
           <div className="flex flex-col">
             <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{format(date, 'dd/MM/yyyy', { locale: ptBR })}</span>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{format(date, 'HH:mm', { locale: ptBR })}</span>
+            <Text variant="caption">{format(date, 'HH:mm', { locale: ptBR })}</Text>
           </div>
         );
       },
@@ -236,7 +237,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         return (
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{count}</span>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>participantes</span>
+            <Text variant="caption">participantes</Text>
           </div>
         );
       },
@@ -271,7 +272,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const gravacaoUrl = row.original.gravacaoUrl;
 
         if (!gravacaoUrl) {
-          return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>-</span>;
+          return <Text variant="caption">-</Text>;
         }
 
         return (
@@ -299,7 +300,7 @@ export function CallHistoryList({ initialData, initialPagination }: CallHistoryL
         const hasTranscript = !!row.original.transcricao;
         const hasSummary = !!row.original.resumo;
 
-        if (!hasTranscript && !hasSummary) return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>-</span>;
+        if (!hasTranscript && !hasSummary) return <Text variant="caption">-</Text>;
 
         return (
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>

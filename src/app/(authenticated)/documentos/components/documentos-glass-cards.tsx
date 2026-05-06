@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { getAvatarUrl } from '@/app/(authenticated)/usuarios';
 import type { ItemDocumento } from '../domain';
 import { normalizeCriador, type CriadorRaw } from '../lib/criador';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -289,9 +290,9 @@ function CardsEmptyState() {
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <FileSearch className="size-10 text-muted-foreground/30 mb-4" />
       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>Pasta vazia</p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-1")}>
+      <Text variant="caption" className="text-muted-foreground/40 mt-1">
         Adicione uma pasta, documento ou faça upload
-      </p>
+      </Text>
     </div>
   );
 }

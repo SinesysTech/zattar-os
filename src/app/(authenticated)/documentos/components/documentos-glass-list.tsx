@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { getAvatarUrl } from '@/app/(authenticated)/usuarios';
 import type { ItemDocumento } from '../domain';
 import { normalizeCriador, type CriadorRaw } from '../lib/criador';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -342,11 +343,11 @@ function GlassEmptyState({ hasSearch }: { hasSearch: boolean }) {
       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>
         {hasSearch ? 'Nenhum item encontrado' : 'Pasta vazia'}
       </p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/40 mt-1")}>
+      <Text variant="caption" className="text-muted-foreground/40 mt-1">
         {hasSearch
           ? 'Ajuste os filtros ou o termo de busca'
           : 'Adicione uma pasta, documento ou faça upload'}
-      </p>
+      </Text>
     </div>
   );
 }

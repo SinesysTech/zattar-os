@@ -48,6 +48,7 @@ import {
   useProjecaoOrcamentaria,
 } from '@/app/(authenticated)/financeiro';
 import { toast } from 'sonner';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes e Helpers
@@ -148,9 +149,9 @@ function ResumoGeralCards({
         </CardHeader>
         <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
           <Progress value={resumo.percentualExecutado} className="h-2" />
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+          <Text variant="caption" className="mt-1">
             {resumo.percentualExecutado.toFixed(1)}% executado
-          </p>
+          </Text>
         </CardContent>
       </Card>
 
@@ -162,9 +163,9 @@ function ResumoGeralCards({
           </CardTitle>
         </CardHeader>
         <CardContent className={cn(/* design-system-escape: pt-0 padding direcional sem Inset equiv. */ "pt-0")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <Text variant="caption">
             {variacaoPercentual > 0 ? 'Acima do previsto' : 'Abaixo do previsto'}
-          </p>
+          </Text>
         </CardContent>
       </Card>
 
@@ -245,9 +246,9 @@ function AnaliseItensTable({ itens }: { itens: AnaliseOrcamentariaItem[] }) {
                       {getContaLabel(item.contaContabil)}
                     </span>
                     {centroCustoLabel && (
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      <Text variant="caption">
                         {centroCustoLabel}
-                      </span>
+                      </Text>
                     )}
                   </div>
                 </td>
@@ -337,11 +338,11 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
                 </Badge>
               </div>
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{alerta.mensagem}</p>
-              <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; text-xs → migrar para <Text variant="caption"> */ "flex gap-4 mt-2 text-xs text-muted-foreground")}>
+              <Text variant="caption" className="flex gap-4 mt-2">
                 <span className={getVariacaoColor(alerta.desvioPercentual)}>
                   Desvio: {formatarPercentual(alerta.desvioPercentual)}
                 </span>
-              </div>
+              </Text>
             </div>
           </CardContent>
         </Card>

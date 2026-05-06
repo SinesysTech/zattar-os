@@ -31,6 +31,7 @@ import {
 import { actionCriarCredenciaisEmLote } from "../actions/credenciais-actions";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface CredenciaisLoteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -199,9 +200,9 @@ export function CredenciaisLoteDialog({
                   ))}
                 </div>
               </ScrollArea>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 {tribunais.length} tribunal(is) selecionado(s)
-              </p>
+              </Text>
             </div>
 
             {/* Graus */}
@@ -240,10 +241,10 @@ export function CredenciaisLoteDialog({
                 placeholder="Senha única para todas as credenciais"
                 disabled={isSaving}
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Esta senha será usada para todas as credenciais criadas. O login
                 (usuário) será o CPF do advogado.
-              </p>
+              </Text>
             </div>
 
             {/* Modo duplicata */}

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { BarChart3 } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface HeatmapDay {
   date: string; // YYYY-MM-DD
@@ -147,9 +147,9 @@ export function ActivityHeatmap({ data, weeks = 26 }: ActivityHeatmapProps) {
 
       {/* Empty state */}
       {data.length === 0 ? (
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; py-6 padding direcional sem Inset equiv. */ "text-xs text-muted-foreground/40 text-center py-6")}>
+        <Text variant="caption" className="text-muted-foreground/40 text-center py-6">
           Sem atividade registrada nos últimos 6 meses.
-        </p>
+        </Text>
       ) : (
         <>
           {/* SVG heatmap */}

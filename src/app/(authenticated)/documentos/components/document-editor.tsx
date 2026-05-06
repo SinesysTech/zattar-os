@@ -29,7 +29,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { toast } from 'sonner';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
@@ -261,11 +261,11 @@ export function DocumentEditor({ documentoId }: DocumentEditorProps) {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+                  <Text variant="caption">
                     {isConnected
                       ? 'Colaboração em tempo real ativa'
                       : 'Conectando...'}
-                  </p>
+                  </Text>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

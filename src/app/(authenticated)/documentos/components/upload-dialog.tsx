@@ -150,9 +150,9 @@ export function UploadDialog({
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "mt-3 sm:mt-4 text-sm font-medium")}>
                   Clique para selecionar um arquivo
                 </p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs text-muted-foreground")}>
+                <Text variant="caption" className="mt-1">
                   Máximo 50MB • Imagens, PDFs, documentos
-                </p>
+                </Text>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -180,9 +180,9 @@ export function UploadDialog({
                     <File className="h-6 w-6 sm:h-8 sm:w-8 text-primary shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm">; sm:text-base sem equivalente DS */ "font-medium truncate text-sm sm:text-base")}>{selectedFile.name}</p>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "text-xs sm:text-sm text-muted-foreground")}>
+                      <Text variant="caption">
                         {formatFileSize(selectedFile.size)}
-                      </p>
+                      </Text>
                     </div>
                   </div>
                   <Button
@@ -198,10 +198,10 @@ export function UploadDialog({
 
                 {uploading && (
                   <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-3 sm:mt-4 space-y-2")}>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:text-sm sem equivalente DS */ "flex items-center justify-between text-xs sm:text-sm")}>
+                    <Text variant="caption" className="flex items-center justify-between">
                       <Text variant="caption" as="span" className="text-muted-foreground">Enviando...</Text>
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{progress}%</span>
-                    </div>
+                    </Text>
                     <Progress value={progress} className="h-2" />
                   </div>
                 )}

@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -221,9 +221,9 @@ export default function ConfigurarEmailPage() {
               value={nomeConta}
               onChange={(e) => setNomeConta(e.target.value)}
             />
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
+            <Text variant="caption">
               Nome exibido na sidebar para identificar esta caixa de entrada.
-            </p>
+            </Text>
           </div>
 
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>

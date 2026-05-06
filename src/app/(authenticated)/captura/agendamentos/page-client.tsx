@@ -44,6 +44,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 
 import type { Agendamento } from '@/app/(authenticated)/captura';
 import { useAdvogadosMap } from '../hooks/use-advogados-map';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // HELPERS
@@ -221,9 +222,9 @@ export default function AgendamentosPage() {
         {/* Toolbar */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col sm:flex-row items-start sm:items-center gap-3")}>
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75")}>
+            <Text variant="caption" className="text-muted-foreground/75">
               {filteredAgendamentos.length} agendamento{filteredAgendamentos.length !== 1 ? 's' : ''}
-            </span>
+            </Text>
             {agendamentos.filter((a) => a.ativo).length > 0 && (
               <>
                 <div className="w-px h-4 bg-border/10" />
@@ -305,30 +306,30 @@ export default function AgendamentosPage() {
 
                   {/* Frequência */}
                   <div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>
+                    <Text variant="caption" className="text-muted-foreground/70">
                       {formatarPeriodicidade(agendamento)}
-                    </span>
+                    </Text>
                   </div>
 
                   {/* Próxima Execução */}
                   <div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums")}>
+                    <Text variant="caption" className="tabular-nums">
                       {formatarDataHora(agendamento.proxima_execucao)}
-                    </span>
+                    </Text>
                   </div>
 
                   {/* Última Execução */}
                   <div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 tabular-nums")}>
+                    <Text variant="caption" className="text-muted-foreground/75 tabular-nums">
                       {formatarDataHora(agendamento.ultima_execucao)}
-                    </span>
+                    </Text>
                   </div>
 
                   {/* Advogado */}
                   <div>
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 truncate block")}>
+                    <Text variant="caption" className="text-muted-foreground/75 truncate block">
                       {advNome ?? `ID ${agendamento.advogado_id}`}
-                    </span>
+                    </Text>
                   </div>
 
                   {/* Actions */}

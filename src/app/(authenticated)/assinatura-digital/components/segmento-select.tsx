@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AssinaturaDigitalSegmento } from '@/shared/assinatura-digital/types/types';
+import { Text } from '@/components/ui/typography';
 
 export interface SegmentoSelectProps {
   value: number | null;
@@ -100,7 +101,7 @@ export function SegmentoSelect({
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                   <span>{segmento.nome}</span>
                   {!segmento.ativo && (
-                    <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>(Inativo)</span>
+                    <Text variant="caption">(Inativo)</Text>
                   )}
                 </div>
               </SelectItem>

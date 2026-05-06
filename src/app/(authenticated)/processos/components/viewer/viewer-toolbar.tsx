@@ -67,7 +67,7 @@ export function ViewerToolbar({
       {/* Título do documento atual */}
       {title && (
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "pointer-events-auto flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "truncate text-xs font-medium text-foreground")}>{title}</p>
+          <Text variant="caption" className="truncate font-medium text-foreground">{title}</Text>
           {date && (
             <>
               <span className="text-muted-foreground/50 shrink-0" aria-hidden="true">&middot;</span>

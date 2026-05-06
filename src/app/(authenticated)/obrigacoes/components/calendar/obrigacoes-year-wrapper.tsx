@@ -30,6 +30,7 @@ import { actionListarObrigacoesPorPeriodo } from '../../actions';
 
 import type { ObrigacoesFilterBarFilters } from '../shared/obrigacoes-filter-bar';
 import { ObrigacoesYearHeatmap } from '../shared/obrigacoes-year-heatmap';
+import { Text } from '@/components/ui/typography';
 
 interface ObrigacoesYearWrapperProps {
   busca?: string;
@@ -144,11 +145,11 @@ export function ObrigacoesYearWrapper({
                 >
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                     <div className="flex-1 min-w-0">
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>
+                      <Text variant="caption" className="font-medium truncate">
                         Parcela {item.parcela.numeroParcela} ·{' '}
                         {item.acordo.processo?.numero_processo ||
                           `Acordo #${item.acordo.id}`}
-                      </p>
+                      </Text>
                       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mt-1")}>
                         <SemanticBadge
                           category="obrigacao_tipo"
@@ -162,9 +163,9 @@ export function ObrigacoesYearWrapper({
                         </span>
                       </div>
                     </div>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "shrink-0 text-xs font-medium tabular-nums")}>
+                    <Text variant="caption" className="shrink-0 font-medium tabular-nums">
                       {CURRENCY.format(item.parcela.valorBrutoCreditoPrincipal)}
-                    </div>
+                    </Text>
                   </div>
                 </GlassPanel>
               ))}

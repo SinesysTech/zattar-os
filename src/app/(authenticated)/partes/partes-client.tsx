@@ -288,7 +288,7 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       {data.nomeSocial && (
         <div className={cn(/* design-system-escape: p-2.5 → usar <Inset> */ "mb-4 p-2.5 rounded-lg bg-foreground/2.5 border border-border/10")}>
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/55 uppercase tracking-wider mb-0.5")}>Nome fantasia / Social</p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>{data.nomeSocial}</p>
+          <Text variant="caption" className="text-muted-foreground/70">{data.nomeSocial}</Text>
         </div>
       )}
 
@@ -658,10 +658,10 @@ export function PartesClient({ initialStats }: PartesClientProps) {
 
       {/* ── Error State ─────────────────────────────────────────── */}
       {error && (
-        <div className={cn(/* design-system-escape: px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption">; gap-2 → migrar para <Inline gap="tight"> */ "rounded-lg border border-destructive/20 bg-destructive/4 px-4 py-3 text-xs text-destructive/80 flex items-center gap-2")}>
+        <Text variant="caption" className="rounded-lg border border-destructive/20 bg-destructive/4 px-4 py-3 text-destructive/80 flex items-center gap-2">
           <AlertCircle className="size-3.5 shrink-0" />
           {error}
-        </div>
+        </Text>
       )}
 
       {/* ── Content: Cards + Optional Detail ────────────────────── */}
@@ -707,9 +707,9 @@ export function PartesClient({ initialStats }: PartesClientProps) {
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>
                 Nenhuma parte encontrada
               </p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>
+              <Text variant="caption" className="text-muted-foreground/55 mt-1">
                 {search ? 'Tente ajustar a busca' : 'Tente ajustar os filtros'}
-              </p>
+              </Text>
             </div>
           )}
         </div>
@@ -725,9 +725,9 @@ export function PartesClient({ initialStats }: PartesClientProps) {
       {/* ── Paginação ──────────────────────────────────────────── */}
       {totalPages > 1 && (
         <div className={cn(/* design-system-escape: pt-2 padding direcional sem Inset equiv. */ "flex items-center justify-between pt-2")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>
+          <Text variant="caption" className="text-muted-foreground/70">
             {((pagina - 1) * PAGE_SIZE) + 1}–{Math.min(pagina * PAGE_SIZE, total)} de {total.toLocaleString('pt-BR')}
-          </p>
+          </Text>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <button
               onClick={() => setPagina((p) => Math.max(1, p - 1))}
@@ -736,9 +736,9 @@ export function PartesClient({ initialStats }: PartesClientProps) {
             >
               <ChevronLeft className="size-4 text-muted-foreground/60" />
             </button>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv. */ "text-xs font-medium tabular-nums px-2")}>
+            <Text variant="caption" className="font-medium tabular-nums px-2">
               {pagina} / {totalPages}
-            </span>
+            </Text>
             <button
               onClick={() => setPagina((p) => Math.min(totalPages, p + 1))}
               disabled={pagina >= totalPages}

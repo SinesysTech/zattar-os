@@ -272,10 +272,10 @@ function SignerLinkCard({
 
         <div className="min-w-0">
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{nome}</p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <Text variant="caption">
             <span className="capitalize">{tipoLabel.toLowerCase()}</span>
             {isConcluido && " · Assinado"}
-          </p>
+          </Text>
         </div>
       </div>
 
@@ -381,9 +381,9 @@ function PdfPreviewSection({
           <ChevronLeft className="size-3.5" />
           Anterior
         </Button>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium tabular-nums")}>
+        <Text variant="caption" className="font-medium tabular-nums">
           Página {currentPage} de {numPages}
-        </span>
+        </Text>
         <Button
           variant="ghost"
           size="sm"
@@ -626,9 +626,9 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               }
             />
 
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               Compartilhe o link com cada assinante. Cada link é único e seguro.
-            </p>
+            </Text>
 
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               {documento.assinantes.map((assinante, idx) => (
@@ -648,11 +648,11 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
               </span>
               <div className="min-w-0">
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Conformidade MP 2.200-2/2001</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs text-muted-foreground leading-relaxed mt-1")}>
+                <Text variant="caption" className="mt-1">
                   Cada assinatura coleta hash SHA-256, IP, geolocalização,
                   device fingerprint e aceite de termos. Trilha de auditoria
                   completa após finalização.
-                </p>
+                </Text>
               </div>
             </GlassPanel>
           </section>

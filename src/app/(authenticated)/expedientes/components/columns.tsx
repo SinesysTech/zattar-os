@@ -53,6 +53,7 @@ import { toast } from 'sonner';
 // =============================================================================
 
 import type { Usuario } from '@/app/(authenticated)/usuarios';
+import { Text } from '@/components/ui/typography';
 
 interface TipoExpediente {
   id: number;
@@ -82,7 +83,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "inline-flex items-center text-xs font-medium shrink-0")}>
+    <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
@@ -94,7 +95,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
       )}>
         {grauLabel}
       </span>
-    </div>
+    </Text>
   );
 }
 
@@ -212,7 +213,7 @@ export function TipoDescricaoCell({
             </PopoverTrigger>
             <PopoverContent className={cn(/* design-system-escape: p-2 → usar <Inset> */ "w-64 p-2")} align="start" onInteractOutside={(e) => e.preventDefault()}>
               <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Tipo de Expediente</p>
+                <Text variant="caption" className="font-medium">Tipo de Expediente</Text>
                 <Select
                   value={expediente.tipoExpedienteId?.toString() || 'null'}
                   onValueChange={handleSaveTipo}
@@ -322,7 +323,7 @@ function PrazoBadge({ dataInicio, dataFim, baixado }: {
 
   // Se não tem nenhuma data, mostra placeholder
   if (!dataInicio && !dataFim) {
-    return <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>-</span>;
+    return <Text variant="caption">-</Text>;
   }
 
   const opacityClass = baixado ? 'opacity-50' : '';
@@ -352,9 +353,9 @@ export function PrazoCell({ expediente }: { expediente: Expediente }) {
         baixado={baixado}
       />
       {baixado && (
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           (Baixado)
-        </span>
+        </Text>
       )}
     </div>
   );

@@ -31,9 +31,9 @@ export function criarColunasCredenciais({ onViewAdvogado, onEdit, onToggleStatus
       cell: ({ row }) => (
         <div className="min-w-0">
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{row.original.advogado_nome}</p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "truncate text-xs text-muted-foreground")}>
+          <Text variant="caption" className="truncate">
             OAB {formatOabs(row.original.advogado_oabs)} • CPF {row.original.advogado_cpf}
-          </p>
+          </Text>
         </div>
       ),
       meta: { headerLabel: 'Advogado' },

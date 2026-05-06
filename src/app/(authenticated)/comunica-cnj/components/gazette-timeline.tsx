@@ -63,9 +63,9 @@ export function GazetteTimeline({ items }: GazetteTimelineProps) {
             </div>
 
             {/* Text */}
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "line-clamp-2 text-xs leading-relaxed text-muted-foreground")}>
+            <Text variant="caption" className="line-clamp-2">
               {item.text}
-            </p>
+            </Text>
 
             {/* Subtext (deadline warning) */}
             {item.subtext && (

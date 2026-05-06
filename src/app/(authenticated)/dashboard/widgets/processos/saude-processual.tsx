@@ -16,6 +16,7 @@ import {
 } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 interface ProcessoStats {
   total: number;
@@ -54,9 +55,9 @@ export function WidgetSaudeProcessual() {
         subtitle="Score composto — ativos e resolução"
         depth={2}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Não foi possível carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

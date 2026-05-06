@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { ComboboxOption } from "@/components/ui/combobox";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import {
   type MembroProjeto,
   type Projeto,
@@ -156,9 +156,9 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
                             {membro.usuarioNome ?? "Usuário"}
                           </p>
                           {membro.usuarioEmail && (
-                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs")}>
+                            <Text variant="caption">
                               {membro.usuarioEmail}
-                            </p>
+                            </Text>
                           )}
                         </div>
                       </div>

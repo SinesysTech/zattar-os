@@ -131,7 +131,7 @@ function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
             <Circle className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/65" />
           )}
           <div className={cn(!c.match && 'opacity-50')}>
-            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>{c.campo}</span>
+            <Text variant="caption" className="font-medium">{c.campo}</Text>
             <Text variant="micro-caption" className="ml-1.5">
               {c.detalhe}
             </Text>
@@ -518,17 +518,17 @@ export function GazetteOrphanResolver() {
             {current.partesAutor.length > 0 && (
               <div>
                 <Text variant="micro-caption">Autor: </Text>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>
+                <Text variant="caption" className="text-foreground">
                   {highlightSegments(current.partesAutor.join(', '), matchHighlights)}
-                </span>
+                </Text>
               </div>
             )}
             {current.partesReu.length > 0 && (
               <div>
                 <Text variant="micro-caption">Réu: </Text>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>
+                <Text variant="caption" className="text-foreground">
                   {highlightSegments(current.partesReu.join(', '), matchHighlights)}
-                </span>
+                </Text>
               </div>
             )}
           </div>
@@ -539,9 +539,9 @@ export function GazetteOrphanResolver() {
               <Text variant="overline" className="text-muted-foreground/70">
                 Órgão
               </Text>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>
+              <Text variant="caption" className="text-foreground">
                 {highlightSegments(current.nomeOrgao, matchHighlights)}
-              </p>
+              </Text>
             </div>
           )}
 
@@ -552,9 +552,9 @@ export function GazetteOrphanResolver() {
                 Trecho
               </Text>
               <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg border border-border/40 bg-muted/20 p-3")}>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "line-clamp-6 text-xs leading-relaxed text-foreground/80")}>
+                <Text variant="caption" className="line-clamp-6 text-foreground/80">
                   {highlightSegments(current.texto.slice(0, 600), matchHighlights)}
-                </p>
+                </Text>
               </div>
             </div>
           )}
@@ -600,27 +600,27 @@ export function GazetteOrphanResolver() {
                 </div>
                 <div>
                   <Text variant="micro-caption">Processo</Text>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs tabular-nums text-foreground")}>
+                  <Text variant="caption" className="tabular-nums text-foreground">
                     {match.processoNumero}
-                  </p>
+                  </Text>
                 </div>
                 <div>
                   <Text variant="micro-caption">Partes</Text>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{match.partes}</p>
+                  <Text variant="caption" className="text-foreground">{match.partes}</Text>
                 </div>
                 <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex gap-4")}>
                   <div>
                     <Text variant="micro-caption">Vara</Text>
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{match.vara}</p>
+                    <Text variant="caption" className="text-foreground">{match.vara}</Text>
                   </div>
                   <div>
                     <Text variant="micro-caption">Status</Text>
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{match.status}</p>
+                    <Text variant="caption" className="text-foreground">{match.status}</Text>
                   </div>
                 </div>
                 <div>
                   <Text variant="micro-caption">Criado em</Text>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground")}>{formatDate(match.criadoEm)}</p>
+                  <Text variant="caption" className="text-foreground">{formatDate(match.criadoEm)}</Text>
                 </div>
               </div>
 

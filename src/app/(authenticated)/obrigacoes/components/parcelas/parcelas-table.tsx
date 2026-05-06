@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { formatCurrency, formatDate } from '../../utils';
 import type { Parcela } from '../../types';
 import { actionMarcarParcelaRecebida } from '../../actions/parcelas';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -160,9 +161,9 @@ export function ParcelasTable({
 
               {/* Vencimento + forma pagamento */}
               <div className="min-w-25">
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs tabular-nums")}>
+                <Text variant="caption" className="tabular-nums">
                   {formatDate(parcela.dataVencimento)}
-                </div>
+                </Text>
                 {parcela.formaPagamento && (
                   <div className="text-[10px] text-muted-foreground/50 capitalize mt-0.5 truncate">
                     {parcela.formaPagamento.replace(/_/g, ' ')}

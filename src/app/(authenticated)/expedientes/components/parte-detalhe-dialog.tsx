@@ -31,6 +31,7 @@ import { Dialog,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
+import { Text } from '@/components/ui/typography';
 
 interface ParteDetalheDialogProps {
   open: boolean;
@@ -112,7 +113,7 @@ export function ParteDetalheDialog({
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2")}>
         {icon && <span className="text-muted-foreground mt-0.5">{icon}</span>}
         <div>
-          <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</div>
+          <Text variant="caption">{label}</Text>
           <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{value}</div>
         </div>
       </div>
@@ -134,14 +135,14 @@ export function ParteDetalheDialog({
           {tipoPessoaIcon}
           <div className="flex-1 min-w-0">
             <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium truncate")}>{p.nome}</div>
-            <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               {formatarTipoPessoa(p.tipo_pessoa)}
               {p.tipo_entidade === 'cliente' && (
                 <AppBadge variant="success" className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv.; py-0 padding direcional sem Inset equiv. */ "ml-2 text-[10px] px-1 py-0")}>
                   Cliente
                 </AppBadge>
               )}
-            </div>
+            </Text>
           </div>
         </div>
 
@@ -238,9 +239,9 @@ export function ParteDetalheDialog({
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
                   Parte não encontrada no cadastro
                 </p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+                <Text variant="caption" className="mt-1">
                   Nome exibido: {nomeExibido}
-                </p>
+                </Text>
               </div>
             )}
 
@@ -252,9 +253,9 @@ export function ParteDetalheDialog({
                 {/* Outras partes do mesmo polo */}
                 {outrasPartes.length > 0 && (
                   <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t")}>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mb-2")}>
+                    <Text variant="caption" className="mb-2">
                       Outras partes ({outrasPartes.length})
-                    </div>
+                    </Text>
                     {outrasPartes.map((p) => (
                       <ParteInfo key={p.id} p={p} />
                     ))}

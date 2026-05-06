@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import type { EditorField } from '../types';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface FieldsListProps {
   fields: EditorField[];
@@ -101,9 +101,9 @@ const FieldsListItem = memo(function FieldsListItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{field.nome}</p>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           {getFieldTypeLabel(field.tipo)} • Pág. {field.posicao.pagina}
-        </p>
+        </Text>
       </div>
 
       {/* Actions */}
@@ -181,7 +181,7 @@ export default function FieldsList({
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 text-center text-muted-foreground")}>
         <AlignLeft className="h-8 w-8 mx-auto mb-2 opacity-50" />
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>Nenhum campo adicionado</p>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs mt-1")}>Clique no canvas para adicionar campos</p>
+        <Text variant="caption" className="mt-1">Clique no canvas para adicionar campos</Text>
       </div>
     );
   }
@@ -212,9 +212,9 @@ export default function FieldsList({
 
         {/* Summary */}
         <div className={cn(/* design-system-escape: pt-3 padding direcional sem Inset equiv. */ "pt-3 border-t text-center")}>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <Text variant="caption">
             {fields.length} campo{fields.length !== 1 ? 's' : ''} no total
-          </p>
+          </Text>
         </div>
       </div>
     </ScrollArea>

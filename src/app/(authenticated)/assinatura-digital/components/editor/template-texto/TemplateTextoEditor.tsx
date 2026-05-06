@@ -25,7 +25,7 @@ import { ExitBreakKit } from '@/components/editor/plate/exit-break-kit';
 
 import { TEMPLATE_VARIABLES, CATEGORY_LABELS } from './types';
 import type { VariableCategory } from './types';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface TemplateTextoEditorProps {
   value?: Descendant[];
@@ -132,16 +132,16 @@ export function TemplateTextoEditor({
       {/* Variable insertion helper */}
       <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 rounded-lg border bg-muted/30 p-4")}>
         <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "mb-2 text-sm")}>Inserir Variáveis</Heading>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mb-3 text-xs text-muted-foreground")}>
+        <Text variant="caption" className="mb-3">
           Digite <kbd className={cn(/* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "rounded bg-muted px-1.5 py-0.5 font-mono text-xs")}>@</kbd> no editor para inserir variáveis dinâmicas.
-        </p>
+        </Text>
 
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
           {Array.from(variablesByCategory.entries()).map(([category, variables]) => (
             <div key={category}>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>
+              <Text variant="caption" className="font-medium">
                 {CATEGORY_LABELS[category]}:
-              </span>
+              </Text>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "ml-2 flex flex-wrap gap-1")}>
                 {variables.slice(0, 3).map((v) => (
                   <span
@@ -152,9 +152,9 @@ export function TemplateTextoEditor({
                   </span>
                 ))}
                 {variables.length > 3 && (
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     +{variables.length - 3} mais
-                  </span>
+                  </Text>
                 )}
               </div>
             </div>

@@ -18,7 +18,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { actionGerarUrlDownload } from '@/app/(authenticated)/documentos';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
 type TimelineItemWithGrau = TimelineItemEnriquecido & {
@@ -159,9 +159,9 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
             Documento não foi capturado ou enviado para armazenamento
           </p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/70")}>
+          <Text variant="caption" className="text-muted-foreground/70">
             Atualize a timeline para tentar capturar este documento novamente.
-          </p>
+          </Text>
         </div>
         {onRecapture && (
           <Button
@@ -245,7 +245,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
             </TooltipProvider>
           </div>
         </div>
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; space-x-2 → migrar para <Inline gap="tight"> */ "text-xs text-muted-foreground space-x-2")}>
+        <Text variant="caption" className="space-x-2">
           <span>{formatarDataHora(item.data)}</span>
           {(item.nomeSignatario || item.nomeResponsavel) && (
             <>
@@ -253,7 +253,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
               <span>{item.nomeSignatario || item.nomeResponsavel}</span>
             </>
           )}
-        </div>
+        </Text>
       </div>
 
       {/* Área do PDF */}

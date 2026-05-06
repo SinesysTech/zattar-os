@@ -89,7 +89,7 @@ function BoolDisplay({ value }: { value: boolean | undefined }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>{label}</p>
+      <Text variant="caption" className="font-medium">{label}</Text>
       <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{children}</div>
     </div>
   );
@@ -101,7 +101,7 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
 
   return (
     <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "mt-4 space-y-2")}>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Anexos</p>
+      <Text variant="caption" className="font-medium">Anexos</Text>
       {filtrados.map((anexo) => (
         <a
           key={anexo.id}

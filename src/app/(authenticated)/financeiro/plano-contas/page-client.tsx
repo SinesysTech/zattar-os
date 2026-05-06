@@ -44,6 +44,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import { Text } from '@/components/ui/typography';
 
 // Variantes do Badge para tipos de conta
 type BadgeVariant = 'default' | 'secondary' | 'outline' | 'info' | 'success' | 'warning' | 'destructive' | 'neutral' | 'accent';
@@ -97,9 +98,9 @@ function criarColunas(
           <div className="flex flex-col justify-center">
             <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>{conta.nome}</span>
             {conta.contaPai && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Pai: {conta.contaPai.codigo} - {conta.contaPai.nome}
-              </span>
+              </Text>
             )}
           </div>
         );

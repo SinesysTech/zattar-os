@@ -13,6 +13,7 @@ import {
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import type { Credencial } from '@/app/(authenticated)/captura/types';
 import { formatOabs } from '@/app/(authenticated)/advogados';
+import { Text } from '@/components/ui/typography';
 
 type Props = {
   credencial: Credencial | null;
@@ -35,9 +36,9 @@ export function AdvogadoViewDialog({ credencial, open, onOpenChange }: Props) {
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div>
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{credencial.advogado_nome}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 CPF {credencial.advogado_cpf} • OAB {formatOabs(credencial.advogado_oabs)}
-              </p>
+              </Text>
             </div>
 
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap gap-2")}>

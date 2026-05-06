@@ -20,6 +20,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import type { SignatarioVerificacaoData } from '@/shared/assinatura-digital/types/types';
+import { Text } from '@/components/ui/typography';
 
 interface SegurancaSectionProps {
   signatario: SignatarioVerificacaoData;
@@ -38,7 +39,7 @@ function CopyableValue({ value, label }: { value: string; label?: string }) {
     <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start gap-2 group")}>
       <div className="flex-1 min-w-0">
         {label && (
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</span>
+          <Text variant="caption">{label}</Text>
         )}
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono break-all")}>{value}</p>
       </div>
@@ -78,7 +79,7 @@ function InfoRow({
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{label}</span>
+        <Text variant="caption">{label}</Text>
         <div className={mono ? /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-mono break-all" : /* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm"}>
           {value}
         </div>
@@ -142,17 +143,17 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
                 {signatario.geolocation!.longitude?.toFixed(6)}
               </p>
               {signatario.geolocation!.accuracy != null && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Precisão: ~{Math.round(signatario.geolocation!.accuracy)}m
-                </p>
+                </Text>
               )}
               {signatario.geolocation!.timestamp && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Capturado em:{" "}
                   {new Date(
                     signatario.geolocation!.timestamp
                   ).toLocaleString("pt-BR")}
-                </p>
+                </Text>
               )}
             </div>
           }
@@ -170,12 +171,12 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
                 {signatario.termosAceiteVersao}
               </Badge>
               {signatario.termosAceiteData && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Aceito em:{" "}
                   {new Date(signatario.termosAceiteData).toLocaleString(
                     "pt-BR"
                   )}
-                </p>
+                </Text>
               )}
             </div>
           }
@@ -195,9 +196,9 @@ export function SegurancaSection({ signatario }: SegurancaSectionProps) {
                   <Fingerprint className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     Device Fingerprint
-                  </span>
+                  </Text>
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
                     {Object.keys(signatario.dispositivoFingerprint!).length}{" "}
                     campos coletados

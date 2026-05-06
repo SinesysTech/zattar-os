@@ -17,6 +17,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { actionUploadArquivoGenerico } from '../actions/arquivos-actions';
 import type { Arquivo } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 interface FileUploadDialogUnifiedProps {
     open: boolean;
@@ -168,9 +169,9 @@ export function FileUploadDialogUnified({
                             </Label>
                             <p className={cn(/* design-system-escape: pl-1 padding direcional sem Inset equiv. */ "pl-1 text-muted-foreground")}>ou arraste e solte</p>
                         </div>
-                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-2 text-xs text-muted-foreground")}>
+                        <Text variant="caption" className="mt-2">
                             PDF, DOC, XLS, imagens e mais (até 50MB)
-                        </p>
+                        </Text>
                     </div>
                 </div>
 

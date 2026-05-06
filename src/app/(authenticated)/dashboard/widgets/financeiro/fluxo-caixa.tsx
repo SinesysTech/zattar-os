@@ -11,6 +11,7 @@ import { WidgetContainer, MiniBar, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { fmtMes } from '../shared/fmt-mes';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetFluxoCaixa() {
   const { data, isLoading } = useDashboard();
@@ -20,7 +21,7 @@ export function WidgetFluxoCaixa() {
   if (!data) {
     return (
       <WidgetContainer title="Fluxo de Caixa" icon={TrendingUp} subtitle="Sem dados">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Dados indisponíveis.</Text>
       </WidgetContainer>
     );
   }
@@ -30,7 +31,7 @@ export function WidgetFluxoCaixa() {
   if (!fluxo || fluxo.length === 0) {
     return (
       <WidgetContainer title="Fluxo de Caixa" icon={TrendingUp} subtitle="Mensal">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhum dado de fluxo disponível.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Nenhum dado de fluxo disponível.</Text>
       </WidgetContainer>
     );
   }

@@ -38,7 +38,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 
 import type { Task, TarefaDisplayItem } from "../domain";
 import { useTarefaStore } from "../store";
@@ -325,21 +325,21 @@ export function TaskDetailSheet() {
                                 {/* Status & Details Grid */}
                                 <div className={cn(/* design-system-escape: gap-6 → migrar para <Inline gap="loose"> */ "grid grid-cols-2 gap-6 sm:grid-cols-3")}>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wider")}>Status</span>
+                                        <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-                                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wider")}>Prioridade</span>
+                                        <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1 col-span-2 sm:col-span-1")}>
-                                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wider")}>Prazo</span>
+                                        <Text variant="caption" className="font-medium uppercase tracking-wider">Prazo</Text>
                                         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-sm → migrar para <Text variant="body-sm"> */ "flex items-center gap-2 text-sm")}>
                                             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                                             <span>{tarefa.dueDate ? format(new Date(tarefa.dueDate), "dd/MM/yyyy", { locale: ptBR }) : "Sem prazo"}</span>
@@ -351,7 +351,7 @@ export function TaskDetailSheet() {
                                     <>
                                         <Separator className={cn(/* design-system-escape: my-6 margin sem primitiva DS */ "my-6")} />
                                         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-medium text-muted-foreground uppercase tracking-wider")}>Descrição</span>
+                                            <Text variant="caption" className="font-medium uppercase tracking-wider">Descrição</Text>
                                             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; leading-relaxed sem token DS */ "text-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
                                                 {tarefa.description}
                                             </p>
@@ -369,9 +369,9 @@ export function TaskDetailSheet() {
                                             <Heading level="card" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Subtarefas</Heading>
                                         </div>
                                         {tarefa.subTasks && tarefa.subTasks.length > 0 && (
-                                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                                            <Text variant="caption">
                                                 {tarefa.subTasks.filter(st => st.completed).length} de {tarefa.subTasks.length}
-                                            </span>
+                                            </Text>
                                         )}
                                     </div>
 
@@ -455,7 +455,7 @@ export function TaskDetailSheet() {
                                                         <Paperclip className="h-4 w-4 text-primary" />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{file.name}</p>
+                                                        <Text variant="caption" className="font-medium truncate">{file.name}</Text>
                                                         <p className="text-[10px] text-muted-foreground">
                                                             {file.size ? `${(file.size / 1024).toFixed(1)} KB` : "Arquivo"}
                                                         </p>
@@ -472,7 +472,7 @@ export function TaskDetailSheet() {
                                             </div>
                                         ))}
                                         {!tarefa.files?.length && (
-                                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground col-span-2 italic")}>Nenhum anexo.</p>
+                                            <Text variant="caption" className="col-span-2 italic">Nenhum anexo.</Text>
                                         )}
                                     </div>
                                 </div>
@@ -509,7 +509,7 @@ export function TaskDetailSheet() {
                                                     </div>
                                                     <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 space-y-1")}>
                                                         <div className="flex items-center justify-between">
-                                                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold")}>Você</span>
+                                                            <Text variant="caption" className="font-semibold">Você</Text>
                                                             <span className="text-[10px] text-muted-foreground">
                                                                 {format(new Date(comment.createdAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                                             </span>

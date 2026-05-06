@@ -73,7 +73,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
               </AvatarFallback>
             </Avatar>
             <Heading level="card" as="h4" className="mb-2">{user.nomeCompleto}</Heading>
-            <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs")}>
+            <Text variant="caption">
               Último acesso:{' '}
               {user.onlineStatus === 'online' ? (
                 <span className={getOnlineStatusColor('online')}>Online</span>
@@ -84,7 +84,7 @@ export function UserDetailSheet({ user }: { user?: UsuarioChat }) {
                     : 'Offline'}
                 </span>
               )}
-            </div>
+            </Text>
           </div>
 
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2 divide-y divide-border/20")}>

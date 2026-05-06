@@ -107,13 +107,13 @@ export function ChartProjectEfficiency({
                   config && "color" in config ? config.color : undefined;
                 return (
                   <SelectItem key={item.status} value={item.status}>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-2 text-xs")}>
+                    <Text variant="caption" className="flex items-center gap-2">
                       <span
                         className="flex h-3 w-3 shrink-0 rounded-sm"
                         style={{ backgroundColor: color }}
                       />
                       {STATUS_PROJETO_LABELS[item.status]}
-                    </div>
+                    </Text>
                   </SelectItem>
                 );
               })}

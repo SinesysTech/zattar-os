@@ -8,7 +8,7 @@
 import { useDyteSelector } from "@dytesdk/react-web-core";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from "@/lib/utils";
 import { Mic, MicOff, Users, Video, VideoOff } from "lucide-react";
 import { memo, useMemo } from "react";
@@ -78,9 +78,9 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-video-text truncate")}>
                     {p.name} {p.id === self?.id && "(Você)"}
                   </p>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-video-muted")}>
+                  <Text variant="caption" className="text-video-muted">
                     {p.id === self?.id ? "Conectado" : "Na chamada"}
-                  </p>
+                  </Text>
                 </div>
 
                 {/* Status Icons */}

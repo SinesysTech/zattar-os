@@ -9,6 +9,7 @@ import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauProcesso } from '@/app/(authenticated)/partes';
 import { Input } from '@/components/ui/input';
 import { TimelineSidebarItem } from './timeline-sidebar-item';
+import { Text } from '@/components/ui/typography';
 
 type TimelineItemWithGrau = TimelineItemEnriquecido & {
   grauOrigem?: GrauProcesso;
@@ -81,11 +82,11 @@ export function TimelineSidebar({
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none p-3 border-b space-y-2")}>
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           {items.length} {items.length === 1 ? 'item' : 'itens'} · {totalDocs}{' '}
           {totalDocs === 1 ? 'documento' : 'documentos'} · {totalMovs}{' '}
           {totalMovs === 1 ? 'movimento' : 'movimentos'}
-        </div>
+        </Text>
         <div className="relative">
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
@@ -100,9 +101,9 @@ export function TimelineSidebar({
       {/* Lista scrollável */}
       <div className="flex-1 overflow-y-auto min-h-0">
         {grouped.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; text-xs → migrar para <Text variant="caption"> */ "p-4 text-center text-xs text-muted-foreground")}>
+          <Text variant="caption" className="p-4 text-center">
             Nenhum item encontrado
-          </div>
+          </Text>
         ) : (
           grouped.map((group) => (
             <div key={group.label}>

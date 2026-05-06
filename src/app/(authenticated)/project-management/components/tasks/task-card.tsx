@@ -93,11 +93,11 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
                 )}
 
                 {(tarefa.subtarefasCount ?? 0) > 0 && (
-                  <span className={cn(/* design-system-escape: gap-1 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground inline-flex items-center gap-1 text-xs")}>
+                  <Text variant="caption" className="inline-flex items-center gap-1">
                     <ListTree className="size-3" />
                     {tarefa.subtarefasConcluidas ?? 0}/
                     {tarefa.subtarefasCount}
-                  </span>
+                  </Text>
                 )}
               </div>
 
@@ -112,9 +112,9 @@ export function TaskCard({ tarefa, isDragOverlay }: TaskCardProps) {
                       {generateAvatarFallback(tarefa.responsavelNome)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground text-xs truncate")}>
+                  <Text variant="caption" className="truncate">
                     {tarefa.responsavelNome}
-                  </span>
+                  </Text>
                 </div>
               )}
             </div>

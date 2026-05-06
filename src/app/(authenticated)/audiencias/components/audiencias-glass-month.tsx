@@ -192,9 +192,9 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5 min-w-0")}>
           <Clock className="w-3 h-3 text-foreground/60 shrink-0" />
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground/85 truncate")}>
+          <Text variant="caption" className="font-semibold text-foreground/85 truncate">
             {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
-          </span>
+          </Text>
         </div>
         <span className={cn(
           /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ 'text-micro-caption font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border shrink-0',
@@ -211,9 +211,9 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
             {GRAU_TRIBUNAL_LABELS[audiencia.grau]}
           </span>
         )}
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/65 tabular-nums truncate")}>
+        <Text variant="caption" className="text-foreground/65 tabular-nums truncate">
           {audiencia.numeroProcesso}
-        </span>
+        </Text>
       </div>
 
       {/* Meta: modalidade + órgão */}
@@ -379,9 +379,9 @@ export function AudienciasGlassMonth({
                             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold capitalize")}>
                               {format(day, "d 'de' MMMM", { locale: ptBR })}
                             </p>
-                            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5 capitalize")}>
+                            <Text variant="caption" className="text-foreground/60 mt-0.5 capitalize">
                               {format(day, 'EEEE', { locale: ptBR })} · {auds.length} audiência{auds.length > 1 ? 's' : ''}
-                            </p>
+                            </Text>
                           </div>
                           <button
                             type="button"
@@ -423,22 +423,22 @@ export function AudienciasGlassMonth({
             <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold")}>{summary.total}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Total no mês</p>
+                <Text variant="caption" className="text-foreground/60 mt-0.5">Total no mês</Text>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-success")}>{summary.marcadas}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Marcadas</p>
+                <Text variant="caption" className="text-foreground/60 mt-0.5">Marcadas</Text>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-info")}>{summary.finalizadas}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Finalizadas</p>
+                <Text variant="caption" className="text-foreground/60 mt-0.5">Finalizadas</Text>
               </div>
               <div className="w-px h-8 bg-border/50" />
               <div className="text-center">
                 <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-destructive")}>{summary.canceladas}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Canceladas</p>
+                <Text variant="caption" className="text-foreground/60 mt-0.5">Canceladas</Text>
               </div>
             </div>
           </div>

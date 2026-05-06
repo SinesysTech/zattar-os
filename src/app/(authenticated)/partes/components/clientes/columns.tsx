@@ -282,9 +282,9 @@ export const getClientesColumns = (
             </div>
             {labelSecundario && (
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1 max-w-full")}>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground wrap-break-word whitespace-normal")}>
+                <Text variant="caption" className="wrap-break-word whitespace-normal">
                   {labelSecundario}
-                </span>
+                </Text>
                 <CopyButton text={labelSecundario} label="Copiar nome fantasia" />
               </div>
             )}
@@ -297,10 +297,10 @@ export const getClientesColumns = (
               )}
             </div>
             {isPF && dataNascimento && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground text-left")}>
+              <Text variant="caption" className="text-left">
                 {formatarData(dataNascimento)}
                 {idade !== null && ` - ${idade} anos`}
-              </span>
+              </Text>
             )}
           </div>
         );

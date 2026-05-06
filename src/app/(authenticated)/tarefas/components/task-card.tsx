@@ -27,6 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
 import type { TarefaDisplayItem } from "../domain";
+import { Text } from '@/components/ui/typography';
 
 const PRIORITY_COLORS: Record<string, string> = {
   high: "border-l-destructive",
@@ -104,9 +105,9 @@ export function TaskCard({ tarefa, onClick, disabled }: TaskCardProps) {
       <CardContent className={cn(/* design-system-escape: p-3 → usar <Inset>; pt-0 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "p-3 pt-0 space-y-2")}>
         {/* Description */}
         {tarefa.description && (
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-2")}>
+          <Text variant="caption" className="line-clamp-2">
             {tarefa.description}
-          </p>
+          </Text>
         )}
 
         {/* Assignees */}

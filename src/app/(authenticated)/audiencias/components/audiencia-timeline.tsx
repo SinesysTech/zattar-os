@@ -271,9 +271,9 @@ export function AudienciaTimeline({
                     ? 'Sistema'
                     : entry.descricao ?? 'Sistema'}
               </span>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 {formatTimestamp(entry.timestamp)}
-              </span>
+              </Text>
             </div>
 
             {/* Description (for captura_inicial or system entries without changes) */}

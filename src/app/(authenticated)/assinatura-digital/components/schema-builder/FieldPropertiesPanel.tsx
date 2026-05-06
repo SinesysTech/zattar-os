@@ -20,7 +20,7 @@ import { FormFieldType, fieldRequiresOptions } from '@/shared/assinatura-digital
 import { ChevronDown, Trash2, Plus, Info, Save, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 const fieldPropertiesSchema = z.object({
   id: z.string().min(1, 'ID é obrigatório'),
@@ -270,7 +270,7 @@ export default function FieldPropertiesPanel({
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
         <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight">; px-6 padding direcional sem Inset equiv. */ "text-center space-y-2 px-6")}>
           <Info className="size-8 text-muted-foreground/60 mx-auto" />
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Nenhum campo selecionado</p>
+          <Text variant="caption" className="font-medium">Nenhum campo selecionado</Text>
           <p className="text-[11px] text-muted-foreground/70">
             Selecione um campo no canvas para editar suas propriedades
           </p>
@@ -289,7 +289,7 @@ export default function FieldPropertiesPanel({
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pt-3 padding direcional sem Inset equiv.; pb-2 padding direcional sem Inset equiv. */ "shrink-0 px-3 pt-3 pb-2 border-b")}>
         <Heading level="card" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; tracking-wider sem token DS */ "text-xs uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs text-foreground mt-0.5 truncate font-medium")}>{field.label}</p>
+        <Text variant="caption" className="text-foreground mt-0.5 truncate font-medium">{field.label}</Text>
       </div>
 
       <Form {...form}>
@@ -302,7 +302,7 @@ export default function FieldPropertiesPanel({
               onOpenChange={() => toggleSection('basico')}
             >
               <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold flex-1 text-left")}>Básico</span>
+                <Text variant="caption" className="font-semibold flex-1 text-left">Básico</Text>
                 <ChevronDown
                   className={cn(
                     "size-3.5 transition-transform text-muted-foreground",
@@ -508,7 +508,7 @@ export default function FieldPropertiesPanel({
               onOpenChange={() => toggleSection('validacao')}
             >
               <CollapsibleTrigger className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-1 padding direcional sem Inset equiv.; py-1.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold flex-1 text-left")}>Validação</span>
+                <Text variant="caption" className="font-semibold flex-1 text-left">Validação</Text>
                 <ChevronDown
                   className={cn(
                     "size-3.5 transition-transform text-muted-foreground",
@@ -966,9 +966,9 @@ export default function FieldPropertiesPanel({
                           </div>
                         ))}
                         {Object.keys(autoFillMappings).length === 0 && (
-                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                          <Text variant="caption">
                             Adicione mapeamentos para preencher campos automaticamente quando a entidade for encontrada
-                          </p>
+                          </Text>
                         )}
                       </div>
                     </div>

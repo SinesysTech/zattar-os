@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { Text } from '@/components/ui/typography';
 
 interface DataTableFacetedFilterProps<TData, TValue> {
   column?: Column<TData, TValue>;
@@ -101,9 +102,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                     {option.icon && <option.icon className="text-muted-foreground size-4" />}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground ml-auto flex size-4 items-center justify-center font-mono text-xs")}>
+                      <Text variant="caption" className="ml-auto flex size-4 items-center justify-center font-mono">
                         {facets.get(option.value)}
-                      </span>
+                      </Text>
                     )}
                   </CommandItem>
                 );

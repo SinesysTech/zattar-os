@@ -241,9 +241,9 @@ function ExpedientesDayDialog({
                   <IconContainer size="sm" className="bg-primary/15">
                     <FileText className="size-3.5 text-primary" />
                   </IconContainer>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium tabular-nums truncate")}>
+                  <Text variant="caption" className="font-medium tabular-nums truncate">
                     {exp.numeroProcesso}
-                  </span>
+                  </Text>
                 </div>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
                   <SemanticBadge category="tribunal" value={exp.trt} toneOverride="soft">

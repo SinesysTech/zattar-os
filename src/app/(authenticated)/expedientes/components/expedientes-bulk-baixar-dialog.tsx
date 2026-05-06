@@ -18,6 +18,7 @@ import type { Expediente } from '../domain';
 import { BulkSelectionPreview } from './bulk-selection-preview';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface ExpedientesBulkBaixarDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -129,9 +130,9 @@ export function ExpedientesBulkBaixarDialog({
                 disabled={isPending}
                 required
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Esta justificativa será aplicada a todos os {expedienteIds.length} expediente(s) selecionado(s).
-              </p>
+              </Text>
               {generalError && (
                 <p role="alert" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-destructive")}>{generalError}</p>
               )}

@@ -41,6 +41,7 @@ import { useAdvogadosMap } from '../hooks/use-advogados-map';
 import { useCredenciaisMap } from '../hooks/use-credenciais-map';
 import { CapturaEscopoBadge } from './captura-escopo-badge';
 import { actionDeletarCapturaLog } from '../actions';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -219,7 +220,7 @@ function GlassRow({
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
         {/* Data + hora (ancoragem temporal) */}
         <div className={cn(/* design-system-escape: leading-tight sem token DS */ "flex flex-col leading-tight")}>
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/80 tabular-nums")}>{data}</span>
+          <Text variant="caption" className="font-medium text-foreground/80 tabular-nums">{data}</Text>
           <span className="text-[11px] text-muted-foreground/75 tabular-nums">{hora}</span>
         </div>
 
@@ -250,9 +251,9 @@ function GlassRow({
 
         {/* Duração */}
         <div className="text-right">
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75 tabular-nums")}>
+          <Text variant="caption" className="text-muted-foreground/75 tabular-nums">
             {calcularDuracao(captura)}
-          </span>
+          </Text>
         </div>
 
         {/* Actions */}
@@ -332,9 +333,9 @@ function PaginationBar({
 
   return (
     <div className={cn(/* design-system-escape: px-1 padding direcional sem Inset equiv. */ "flex items-center justify-between mt-4 px-1")}>
-      <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/75")}>
+      <Text variant="caption" className="text-muted-foreground/75">
         {paginacao.total > 0 ? `${inicio}–${fim} de ${paginacao.total}` : '0 resultados'}
-      </span>
+      </Text>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
         <button
           type="button"

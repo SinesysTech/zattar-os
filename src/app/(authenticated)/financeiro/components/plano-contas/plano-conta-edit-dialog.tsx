@@ -37,6 +37,7 @@ import {
 import { actionAtualizarConta } from '../../actions/plano-contas';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 const editPlanoContaSchema = z.object({
   nome: z
     .string()
@@ -145,9 +146,9 @@ export function PlanoContaEditDialog({
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               <Label>Código</Label>
               <Input value={conta.codigo} disabled className="bg-muted" />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 O código não pode ser alterado.
-              </p>
+              </Text>
             </div>
 
             {/* Nível (somente leitura) */}
@@ -158,9 +159,9 @@ export function PlanoContaEditDialog({
                 disabled
                 className="bg-muted"
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 O nível não pode ser alterado após a criação.
-              </p>
+              </Text>
             </div>
 
             {/* Nome */}
@@ -259,9 +260,9 @@ export function PlanoContaEditDialog({
                 excluirId={conta.id}
                 disabled={isSubmitting}
               />
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 Deixe vazio para contas de primeiro nível.
-              </p>
+              </Text>
             </div>
 
             {/* Grid para Ordem e Status */}
@@ -278,9 +279,9 @@ export function PlanoContaEditDialog({
                   placeholder="Ex: 1"
                   disabled={isSubmitting}
                 />
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Menor número aparece primeiro.
-                </p>
+                </Text>
               </div>
 
               {/* Status Ativo */}

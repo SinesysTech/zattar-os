@@ -218,7 +218,7 @@ export function AgendaEventDetail({
               <div className="mb-5">
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
                   <FileText className="size-3.5 text-muted-foreground/40" />
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/40 uppercase tracking-wider")}>Processo Vinculado</span>
+                  <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Processo Vinculado</Text>
                 </div>
                 <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/15 bg-muted/4 p-4")}>
                   <div className="flex items-center justify-between">
@@ -264,7 +264,7 @@ export function AgendaEventDetail({
               <div className="mb-5">
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
                   <ShieldCheck className="size-3.5 text-muted-foreground/40" />
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/40 uppercase tracking-wider")}>Checklist de Preparo</span>
+                  <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Checklist de Preparo</Text>
                   <span className={cn(
                     /* design-system-escape: font-semibold → className de <Text>/<Heading>; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold px-2 py-0.5 rounded-full",
                     prepPct >= 80 ? "bg-success/15 text-success" : prepPct >= 40 ? "bg-warning/15 text-warning" : "bg-destructive/15 text-destructive",
@@ -300,7 +300,7 @@ export function AgendaEventDetail({
               <div>
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}>
                   <MessageSquare className="size-3.5 text-muted-foreground/40" />
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/40 uppercase tracking-wider")}>Observações</span>
+                  <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Observações</Text>
                 </div>
                 <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/15 bg-muted/4 p-4")}>
                   <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>

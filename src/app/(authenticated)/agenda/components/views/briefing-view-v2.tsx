@@ -32,6 +32,7 @@ import { GlassPanel } from "@/components/shared/glass-panel";
 import { PrepProgress } from "../prep-progress";
 import type { AgendaEvent } from "../../lib/adapters";
 import type { AlertItem, PrepItem } from "../mock-data";
+import { Text } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -173,7 +174,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
             <div className="size-9 rounded-xl bg-primary/10 flex items-center justify-center"><Sparkles className="size-4 text-primary" /></div>
             <div>
               <div className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-foreground")}>Bom dia, {userName}</div>
-              <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50")}>{dateStr}</div>
+              <Text variant="caption" className="text-muted-foreground/50">{dateStr}</Text>
             </div>
           </div>
           <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>
@@ -188,7 +189,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           <>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-6 mb-3")}>
               <Sun className="size-4 text-warning" />
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider")}>Manhã</span>
+              <Text variant="caption" className="font-semibold text-muted-foreground/50 uppercase tracking-wider">Manhã</Text>
               <div className="flex-1 h-px bg-border/8" />
             </div>
             {morning.map((evt) => <BriefingEventCard key={evt.id} event={evt} onClick={() => onEventClick?.(evt)} />)}
@@ -200,7 +201,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           <>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mt-6 mb-3")}>
               <Sunset className="size-4 text-warning/70" />
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-xs font-semibold text-muted-foreground/50 uppercase tracking-wider")}>Tarde</span>
+              <Text variant="caption" className="font-semibold text-muted-foreground/50 uppercase tracking-wider">Tarde</Text>
               <div className="flex-1 h-px bg-border/8" />
             </div>
             {afternoon.map((evt) => <BriefingEventCard key={evt.id} event={evt} onClick={() => onEventClick?.(evt)} />)}
@@ -212,13 +213,13 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
       <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "w-64 shrink-0 space-y-4 hidden lg:flex lg:flex-col")}>
         {prepItems.length > 0 && (
           <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><ShieldCheck className="size-3.5 text-primary" /><span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Radar de Preparo</span></div>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><ShieldCheck className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Radar de Preparo</Text></div>
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
           </GlassPanel>
         )}
         {alerts.length > 0 && (
           <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><Bell className="size-3.5 text-warning" /><span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Alertas</span></div>
+            <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><Bell className="size-3.5 text-warning" /><Text variant="caption" className="font-semibold text-foreground">Alertas</Text></div>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
               {alerts.map((alert) => {
                 const Icon = alert.severity === "critical" ? AlertCircle : alert.severity === "warning" ? TriangleAlert : Clock;
@@ -237,7 +238,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           </GlassPanel>
         )}
         <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
-          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><Zap className="size-3.5 text-primary" /><span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground")}>Ações Rápidas</span></div>
+          <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 mb-3")}><Zap className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Ações Rápidas</Text></div>
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {[
               { icon: ExternalLink, label: "Abrir PJe" },

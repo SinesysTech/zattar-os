@@ -23,7 +23,7 @@ import {
   SelectValue,
   } from '@/components/ui/select';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import {
   User,
@@ -450,9 +450,9 @@ export function ClienteFormDialog({
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'font-medium text-sm', isPF && 'text-primary')}>
               Pessoa Física
             </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               CPF, RG, data de nascimento
-            </p>
+            </Text>
           </div>
           {isPF && (
             <Check className="h-4 w-4 text-primary shrink-0" />
@@ -479,9 +479,9 @@ export function ClienteFormDialog({
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ 'font-medium text-sm', isPJ && 'text-primary')}>
               Pessoa Jurídica
             </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+            <Text variant="caption">
               CNPJ, razão social, nome fantasia
-            </p>
+            </Text>
           </div>
           {isPJ && (
             <Check className="h-4 w-4 text-primary shrink-0" />

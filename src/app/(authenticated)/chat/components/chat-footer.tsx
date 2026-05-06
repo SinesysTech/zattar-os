@@ -16,6 +16,7 @@ import { actionUploadFile, actionDeleteFile } from "../actions/file-actions";
 import { ChatMessageData } from "../domain";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface ChatFooterProps {
   salaId: number;
   onEnviarMensagem: (conteudo: string, tipo?: string, data?: ChatMessageData | null) => Promise<void>;
@@ -261,7 +262,7 @@ export function ChatFooter({ salaId, onEnviarMensagem, onTyping, typingIndicator
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive dark:bg-destructive"></span>
                 </div>
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-mono text-destructive dark:text-destructive font-medium")}>{formatDuration(recordingDuration)}</span>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive dark:text-destructive animate-pulse hidden sm:inline-block")}>Gravando áudio...</span>
+                <Text variant="caption" className="text-destructive dark:text-destructive animate-pulse hidden sm:inline-block">Gravando áudio...</Text>
               </div>
 
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>

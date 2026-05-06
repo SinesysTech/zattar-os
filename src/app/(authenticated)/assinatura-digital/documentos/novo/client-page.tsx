@@ -21,6 +21,7 @@ import {
 import { DocumentFlowShell } from '@/app/(authenticated)/assinatura-digital/components/flow';
 import { DocumentUploadDropzone } from '@/app/(authenticated)/assinatura-digital/components/upload';
 import { GlassPanel } from "@/components/shared/glass-panel";
+import { Text } from '@/components/ui/typography';
 
 // ─── Dados dos passos ──────────────────────────────────────────────────
 
@@ -65,9 +66,9 @@ function ContextPanel() {
       <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-base font-bold mt-1 leading-tight text-foreground")}>
         Envie, configure e compartilhe em 3 passos simples
       </p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs text-muted-foreground mt-1.5 leading-relaxed")}>
+      <Text variant="caption" className="mt-1.5">
         Três passos com validade jurídica plena (MP 2.200-2/2001).
-      </p>
+      </Text>
 
       <div
         className={cn(/* design-system-escape: my-4 margin sem primitiva DS */ "h-px my-4 bg-linear-to-r from-transparent via-border/50 to-transparent")}
@@ -88,9 +89,9 @@ function ContextPanel() {
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading>; leading-snug sem token DS */ "text-sm font-medium text-foreground leading-snug")}>
                   {step.title}
                 </p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-relaxed sem token DS */ "text-xs text-muted-foreground leading-relaxed mt-0.5")}>
+                <Text variant="caption" className="mt-0.5">
                   {step.description}
-                </p>
+                </Text>
               </div>
             </div>
           );

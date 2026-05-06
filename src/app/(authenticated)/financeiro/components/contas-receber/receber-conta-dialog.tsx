@@ -49,6 +49,7 @@ import {
 } from '@/lib/constants/comprovante-validation';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface ReceberContaDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -270,14 +271,14 @@ export function ReceberContaDialog({
                 <div>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-sm → migrar para <Text variant="body-sm"> */ "font-medium text-sm")}>{conta.descricao}</p>
                   {conta.cliente && (
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                    <Text variant="caption">
                       {conta.cliente.nomeFantasia || conta.cliente.razaoSocial}
-                    </p>
+                    </Text>
                   )}
                   {conta.contrato && (
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                    <Text variant="caption">
                       Contrato: {conta.contrato.numero}
-                    </p>
+                    </Text>
                   )}
                 </div>
                 <div className="text-right">
@@ -340,7 +341,7 @@ export function ReceberContaDialog({
                         <Building2 className="h-4 w-4 text-muted-foreground" />
                         {cb.nome}
                         {cb.banco && (
-                          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>({cb.banco})</span>
+                          <Text variant="caption">({cb.banco})</Text>
                         )}
                       </div>
                     </SelectItem>
@@ -402,7 +403,7 @@ export function ReceberContaDialog({
                     <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                     <div className="overflow-hidden">
                       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{comprovanteFile.name}</p>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{formatFileSize(comprovanteFile.size)}</p>
+                      <Text variant="caption">{formatFileSize(comprovanteFile.size)}</Text>
                     </div>
                   </div>
                   <Button
@@ -447,7 +448,7 @@ export function ReceberContaDialog({
               )}
 
               {comprovanteError && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-destructive")}>{comprovanteError}</p>
+                <Text variant="caption" className="text-destructive">{comprovanteError}</Text>
               )}
 
               <p id="comprovante-help" className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>

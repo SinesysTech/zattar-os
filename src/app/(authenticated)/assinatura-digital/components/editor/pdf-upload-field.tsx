@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { formatFileSize } from '@/shared/assinatura-digital/utils';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 /**
  * Resultado do upload de PDF
  */
@@ -154,7 +155,7 @@ export function PdfUploadField({
               <>
                 <FileUp className="h-8 w-8 text-muted-foreground" />
                 <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Clique para selecionar um PDF</span>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Máximo 10MB</span>
+                <Text variant="caption">Máximo 10MB</Text>
               </>
             )}
           </label>
@@ -166,9 +167,9 @@ export function PdfUploadField({
               <FileText className="h-8 w-8 text-destructive" />
               <div>
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{value?.nome}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   {formatFileSize(value?.tamanho || 0)}
-                </p>
+                </Text>
               </div>
             </div>
             <Button

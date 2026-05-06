@@ -34,7 +34,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   type CalendarView,
   type EventSource,
@@ -598,7 +598,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "py-16 flex flex-col items-center text-center")}>
             <Calendar className="size-8 text-muted-foreground/45 mb-3" />
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/60")}>Nenhum evento encontrado</p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50")}>nos próximos 30 dias</p>
+            <Text variant="caption" className="text-muted-foreground/50">nos próximos 30 dias</Text>
           </div>
         )}
         {days.map(({ date, events: dayEvents }) => {
@@ -1061,54 +1061,54 @@ function EventDetailDialog({ event, onClose }: { event: MockCalendarEvent | null
         {/* Fields */}
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {/* Date/Time */}
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
+          <Text variant="caption" className="flex items-center gap-3">
             <Calendar className="size-3.5 text-muted-foreground/55" />
             <div>
               <p className="text-foreground/70">{fmtDateFull(event.start)}</p>
               <p className="text-muted-foreground/60 tabular-nums">
                 {event.allDay ? "Dia inteiro" : `${fmtTime(event.start)} – ${fmtTime(event.end)}`}
               </p>
-            </div>
+            </Text>
           </div>
 
           {/* Location */}
           {event.location && (
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
+            <Text variant="caption" className="flex items-center gap-3">
               <MapPin className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.location}</p>
-            </div>
+            </Text>
           )}
 
           {/* Description */}
           {event.description && (
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-start gap-3 text-xs")}>
+            <Text variant="caption" className="flex items-start gap-3">
               <FileText className="size-3.5 text-muted-foreground/55 mt-0.5" />
               <p className="text-foreground/70">{event.description}</p>
-            </div>
+            </Text>
           )}
 
           {/* Responsável */}
           {event.responsavel && (
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
+            <Text variant="caption" className="flex items-center gap-3">
               <Users className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.responsavel}</p>
-            </div>
+            </Text>
           )}
 
           {/* Modalidade */}
           {event.modalidade && (
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
+            <Text variant="caption" className="flex items-center gap-3">
               {event.modalidade === "virtual" ? <Video className="size-3.5 text-muted-foreground/55" /> : <Building2 className="size-3.5 text-muted-foreground/55" />}
               <p className="text-foreground/70 capitalize">{event.modalidade}</p>
-            </div>
+            </Text>
           )}
 
           {/* TRT */}
           {event.trt && (
-            <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs")}>
+            <Text variant="caption" className="flex items-center gap-3">
               <Gavel className="size-3.5 text-muted-foreground/55" />
               <p className="text-foreground/70">{event.trt}</p>
-            </div>
+            </Text>
           )}
 
           {/* Color indicator */}

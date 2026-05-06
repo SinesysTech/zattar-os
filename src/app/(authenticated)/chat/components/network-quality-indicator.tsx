@@ -1,6 +1,7 @@
 import { Wifi, WifiOff, WifiHigh, WifiLow } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { Text } from '@/components/ui/typography';
 
 interface NetworkQualityIndicatorProps {
   quality: 'excellent' | 'good' | 'poor' | 'unknown';
@@ -84,8 +85,8 @@ export function NetworkQualityIndicator({
         <TooltipContent side="top">
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>{config.label}</p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{config.description}</p>
-            {score >= 0 && <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs opacity-70")}>Score: {score}/5</p>}
+            <Text variant="caption">{config.description}</Text>
+            {score >= 0 && <Text variant="caption" className="opacity-70">Score: {score}/5</Text>}
           </div>
         </TooltipContent>
       </Tooltip>

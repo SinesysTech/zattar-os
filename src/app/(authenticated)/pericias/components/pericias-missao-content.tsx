@@ -32,7 +32,7 @@ import { ptBR } from 'date-fns/locale';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -286,9 +286,9 @@ function PericiaMissionCard({
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Processo
               </span>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground/90 tabular-nums truncate")}>
+              <Text variant="caption" className="font-medium text-foreground/90 tabular-nums truncate">
                 {pericia.numeroProcesso}
-              </span>
+              </Text>
             </div>
           </div>
 

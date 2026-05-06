@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { PermissionToggle } from './permission-toggle';
 import { RolePresetSelect } from './role-preset-select';
 import { Shield, Save, RotateCcw, Info, AlertCircle} from 'lucide-react';
@@ -225,9 +225,9 @@ export function PermissoesMatriz({
                         return (
                           <div key={item.recurso} className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
                             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
-                              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>
+                              <Text variant="caption" className="font-medium">
                                 {formatarNomeRecurso(item.recurso)}
-                              </span>
+                              </Text>
                               <span
                                 className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium ${resourceBadgeClass}`}
                               >

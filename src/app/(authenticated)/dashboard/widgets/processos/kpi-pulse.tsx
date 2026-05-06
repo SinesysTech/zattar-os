@@ -20,6 +20,7 @@ import {
 } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario, isDashboardAdmin } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetKpiPulse() {
   const { data, isLoading } = useDashboard();
@@ -34,9 +35,9 @@ export function WidgetKpiPulse() {
         subtitle="Resumo operacional"
         depth={2}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Nao foi possivel carregar os dados processuais.
-        </p>
+        </Text>
       </WidgetContainer>
     );
   }

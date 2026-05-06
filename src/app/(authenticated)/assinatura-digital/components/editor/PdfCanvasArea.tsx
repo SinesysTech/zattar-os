@@ -31,6 +31,7 @@ import { PosicaoCampo, TemplateCampo } from '@/shared/assinatura-digital/types/t
 
 type TipoCampo = TemplateCampo["tipo"];
 import PdfPreviewDynamic from "@/shared/assinatura-digital/components/pdf/PdfPreviewDynamic";
+import { Text } from '@/components/ui/typography';
 const PdfPreview = PdfPreviewDynamic;
 
 interface EditorField extends Omit<TemplateCampo, "posicao"> {
@@ -343,9 +344,9 @@ export default function PdfCanvasArea({
                 {fieldsOnPage.map((field, index) => renderField(field, pageNumber, index))}
 
                 {/* Indicador de página */}
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "absolute bottom-2 right-2 text-xs text-muted-foreground bg-white/80 px-2 py-0.5 rounded")}>
+                <Text variant="caption" className="absolute bottom-2 right-2 bg-white/80 px-2 py-0.5 rounded">
                   {pageNumber}/{totalPages}
-                </div>
+                </Text>
               </div>
             );
           })}
@@ -421,7 +422,7 @@ export default function PdfCanvasArea({
                       />
                       <span className="truncate">{s.nome}</span>
                       {activeField.signatario_id === s.id && (
-                        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "ml-auto text-xs text-muted-foreground")}>atual</span>
+                        <Text variant="caption" className="ml-auto">atual</Text>
                       )}
                     </ContextMenuItem>
                   ))}

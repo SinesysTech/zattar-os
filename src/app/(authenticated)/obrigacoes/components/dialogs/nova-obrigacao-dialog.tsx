@@ -153,9 +153,9 @@ export function NovaObrigacaoDialog({ open, onOpenChange, onSuccess, dadosInicia
                 />
               )}
               {debouncedBusca.length >= 3 && !isLoading && processos.length === 0 && (
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                <Text variant="caption">
                   Nenhum processo encontrado. Tente ajustar o tribunal, grau ou termo de busca.
-                </p>
+                </Text>
               )}
             </div>
           </div>

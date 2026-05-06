@@ -64,6 +64,7 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import type { ColumnDef, Table as TanstackTable } from '@tanstack/react-table';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Constantes e Helpers
@@ -199,9 +200,9 @@ function criarColunas(
               )}
             </div>
             {conta.entidade && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+              <Text variant="caption">
                 {conta.entidade.nome}
-              </span>
+              </Text>
             )}
           </div>
         );

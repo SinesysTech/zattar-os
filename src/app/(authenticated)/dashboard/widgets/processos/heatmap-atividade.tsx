@@ -23,6 +23,7 @@ import {
 } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks/use-dashboard';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetHeatmapAtividade() {
   const { data, isLoading, error } = useDashboard();
@@ -107,11 +108,11 @@ export function WidgetHeatmapAtividade() {
           </div>
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex items-center gap-4")}>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold tabular-nums")}>{mediaFmt}</span>
+              <Text variant="caption" className="font-semibold tabular-nums">{mediaFmt}</Text>
               <span className="text-[8px] text-muted-foreground/50">média/dia</span>
             </div>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold tabular-nums")}>{fmtNum(pico)}</span>
+              <Text variant="caption" className="font-semibold tabular-nums">{fmtNum(pico)}</Text>
               <span className="text-[8px] text-muted-foreground/50">pico</span>
             </div>
           </div>

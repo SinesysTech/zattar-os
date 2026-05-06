@@ -35,6 +35,7 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 import type { AcordoComParcelas, Parcela } from '../../domain';
 import { TIPO_LABELS } from '../../domain';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -286,7 +287,7 @@ export function ObrigacoesSemanaView({
               {/* Parcelas */}
               {dayItems.length === 0 ? (
                 <div className={cn(/* design-system-escape: py-6 padding direcional sem Inset equiv. */ "flex items-center justify-center py-6")}>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30")}>—</span>
+                  <Text variant="caption" className="text-muted-foreground/30">—</Text>
                 </div>
               ) : (
                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
@@ -346,9 +347,9 @@ function WeekDayCard({
     >
       {/* Row 1: Valor + urgency */}
       <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center justify-between gap-1")}>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs tabular-nums font-semibold text-foreground/90")}>
+        <Text variant="caption" className="tabular-nums font-semibold text-foreground/90">
           {CURRENCY.format(parcela.valorBrutoCreditoPrincipal)}
-        </span>
+        </Text>
         <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
           {!finalizada && urgency !== 'ok' && (
             <span className={cn('size-2 rounded-full', URGENCY_DOT[urgency])} />

@@ -479,9 +479,9 @@ function EmptyState() {
     <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 opacity-60")}>
       <Gavel className="w-10 h-10 text-muted-foreground/55 mb-4" />
       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhuma audiência encontrada</p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1")}>
+      <Text variant="caption" className="text-muted-foreground/55 mt-1">
         Tente ajustar os filtros ou criar uma nova audiência
-      </p>
+      </Text>
     </div>
   );
 }

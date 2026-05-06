@@ -35,6 +35,7 @@ import {
 } from '../domain';
 import { URGENCY_BORDER, URGENCY_DOT, getExpedienteDiasRestantes } from './urgency-helpers';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // HELPERS
@@ -183,18 +184,18 @@ function ExpedienteItem({ expediente }: { expediente: Expediente }) {
     >
       {/* Linha principal: tempo + tipo */}
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground/85 truncate")}>
+        <Text variant="caption" className="font-semibold text-foreground/85 truncate">
           {tipoExpediente}
-        </span>
+        </Text>
         <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/50 bg-muted/20 text-foreground/60 shrink-0")}>
           {diasLabel}
         </span>
       </div>
 
       {/* Processo */}
-      <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1.5 text-xs text-foreground/65 tabular-nums truncate")}>
+      <Text variant="caption" className="mt-1.5 text-foreground/65 tabular-nums truncate">
         {expediente.numeroProcesso}
-      </div>
+      </Text>
 
       {/* Partes */}
       <div className="mt-1 text-[11px] text-foreground/65 truncate">
@@ -355,9 +356,9 @@ export function ExpedientesMonthWrapper({
                           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-bold → className de <Text>/<Heading> */ "text-sm font-bold capitalize")}>
                             {format(day, "d 'de' MMMM", { locale: ptBR })}
                           </p>
-                          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5 capitalize")}>
+                          <Text variant="caption" className="text-foreground/60 mt-0.5 capitalize">
                             {format(day, 'EEEE', { locale: ptBR })} · {exps.length} expediente{exps.length > 1 ? 's' : ''}
-                          </p>
+                          </Text>
                         </div>
                         <button
                           type="button"
@@ -399,22 +400,22 @@ export function ExpedientesMonthWrapper({
           <div className={cn(/* design-system-escape: gap-5 gap sem token DS */ "flex items-center gap-5")}>
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold")}>{summary.total}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Pendentes</p>
+              <Text variant="caption" className="text-foreground/60 mt-0.5">Pendentes</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-destructive")}>{summary.vencidos}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Vencidos</p>
+              <Text variant="caption" className="text-foreground/60 mt-0.5">Vencidos</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-warning")}>{summary.hoje}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Hoje</p>
+              <Text variant="caption" className="text-foreground/60 mt-0.5">Hoje</Text>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold text-info")}>{summary.proximos}</p>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-foreground/60 mt-0.5")}>Próximos 3d</p>
+              <Text variant="caption" className="text-foreground/60 mt-0.5">Próximos 3d</Text>
             </div>
           </div>
         </div>

@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useEntrevista } from '../hooks/use-entrevista';
+import { Text } from '@/components/ui/typography';
 
 interface AnexoUploadZoneProps {
   entrevistaId: number;
@@ -68,9 +69,9 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
         <Paperclip className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div>
           <h4 className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold")}>Anexos de apoio da etapa</h4>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <Text variant="caption">
             Envie audios, documentos, imagens ou videos relacionados a esta pergunta.
-          </p>
+          </Text>
         </div>
       </div>
 
@@ -114,16 +115,16 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
       </div>
 
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+        <Text variant="caption">
           Limite de 25MB por arquivo.
-        </p>
+        </Text>
         <Button type="button" onClick={handleUpload} disabled={isLoading}>
           <Upload className="mr-2 h-4 w-4" />
           {isLoading ? 'Enviando...' : 'Enviar anexo'}
         </Button>
       </div>
 
-      {mensagem && <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>{mensagem}</p>}
+      {mensagem && <Text variant="caption">{mensagem}</Text>}
     </GlassPanel>
   );
 }

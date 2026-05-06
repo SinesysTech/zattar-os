@@ -67,7 +67,7 @@ export function TimelineSidebar({
       {/* Header com contagem e atalho CMD+K */}
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex-none border-b px-3 py-2.5")}>
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs text-muted-foreground")}>
+          <Text variant="caption" className="flex items-center gap-3">
             <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
               <FileText className="h-3 w-3" />
               {totalDocumentos} {totalDocumentos === 1 ? 'doc' : 'docs'}
@@ -76,7 +76,7 @@ export function TimelineSidebar({
               <GitCommitHorizontal className="h-3 w-3" />
               {totalMovimentos} {totalMovimentos === 1 ? 'mov' : 'movs'}
             </span>
-          </div>
+          </Text>
           <kbd className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
             <span className="text-[9px]">&#x2318;</span>K
           </kbd>
@@ -115,9 +115,9 @@ export function TimelineSidebar({
                 <div className="h-8 w-px bg-transparent" aria-hidden="true" />
               </div>
               <div className={cn(/* design-system-escape: pb-4 padding direcional sem Inset equiv. */ "flex items-center border-b border-dashed border-border/70 pb-4")}>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium italic text-muted-foreground")}>
+                <Text variant="caption" className="font-medium italic">
                   Início do processo
-                </p>
+                </Text>
               </div>
             </div>
           </>

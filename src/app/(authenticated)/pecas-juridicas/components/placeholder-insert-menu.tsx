@@ -29,6 +29,7 @@ import {
   type PlaceholderDefinition,
   type PlaceholderCategory,
 } from '../placeholders';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES
@@ -152,9 +153,9 @@ export function PlaceholderInsertMenu({
                                 {`{{${placeholder.key}}}`}
                               </AppBadge>
                             </div>
-                            <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground line-clamp-1")}>
+                            <Text variant="caption" className="line-clamp-1">
                               {placeholder.description}
-                            </span>
+                            </Text>
                           </CommandItem>
                         ))}
                       </CommandGroup>

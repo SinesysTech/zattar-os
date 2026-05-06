@@ -21,7 +21,7 @@ import {
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Button } from '@/components/ui/button';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   Form,
   FormControl,
@@ -362,7 +362,7 @@ export function TiposCobrancaPageClient() {
                   className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "grid grid-cols-[1.5fr_1fr_80px_100px_120px] gap-4 items-center px-4 py-3 hover:bg-muted/30 transition-colors")}
                 >
                   <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium truncate")}>{tipo.nome}</span>
-                  <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground truncate")}>{tipo.slug}</span>
+                  <Text variant="caption" className="truncate">{tipo.slug}</Text>
                   <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{tipo.ordem}</span>
                   <span>
                     <Badge tone="soft" variant={tipo.ativo ? 'success' : 'neutral'}>

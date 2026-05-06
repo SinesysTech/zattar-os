@@ -7,6 +7,7 @@ import type { TimelineItemEnriquecido } from '@/types/contracts/pje-trt';
 import type { GrauProcesso } from '@/app/(authenticated)/partes';
 import { SemanticBadge } from '@/components/ui/semantic-badge';
 import { cn } from '@/lib/utils';
+import { Text } from '@/components/ui/typography';
 
 type TimelineItemWithGrau = TimelineItemEnriquecido & {
   grauOrigem?: GrauProcesso;
@@ -81,9 +82,9 @@ export function TimelineSidebarItem({
       {/* Conteúdo */}
       <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "flex-1 min-w-0 space-y-0.5")}>
         <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
-          <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground shrink-0")}>
+          <Text variant="caption" className="shrink-0">
             {formatarHora(item.data)}
-          </span>
+          </Text>
           {item.grauOrigem && (
             <SemanticBadge
               category="grau"
@@ -100,7 +101,7 @@ export function TimelineSidebarItem({
             <Lock className="h-3 w-3 text-muted-foreground shrink-0" />
           )}
         </div>
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs leading-tight truncate")}>{item.titulo}</p>
+        <Text variant="caption" className="truncate">{item.titulo}</Text>
       </div>
     </button>
   );

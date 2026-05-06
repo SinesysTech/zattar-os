@@ -11,6 +11,7 @@ import { WidgetContainer, fmtMoeda } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard } from '../../hooks';
 import { tokenForTone } from '@/lib/design-system';
+import { Text } from '@/components/ui/typography';
 
 export function WidgetContasPagar() {
   const { data, isLoading } = useDashboard();
@@ -20,7 +21,7 @@ export function WidgetContasPagar() {
   if (!data) {
     return (
       <WidgetContainer title="Contas a Pagar" icon={ArrowDownLeft} subtitle="Sem dados">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Dados indisponíveis.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Dados indisponíveis.</Text>
       </WidgetContainer>
     );
   }
@@ -37,7 +38,7 @@ export function WidgetContasPagar() {
         subtitle="Aging"
         action={<span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[11px] font-semibold text-destructive/70")}>{fmtMoeda(total)}</span>}
       >
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/60")}>Nenhum dado de aging disponível.</p>
+        <Text variant="caption" className="text-muted-foreground/60">Nenhum dado de aging disponível.</Text>
       </WidgetContainer>
     );
   }

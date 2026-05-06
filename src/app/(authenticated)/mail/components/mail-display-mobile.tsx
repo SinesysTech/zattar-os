@@ -27,6 +27,7 @@ import { useMailDisplay } from "../hooks/use-mail-display";
 import { MailEditor } from "./mail-editor";
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface MailDisplayProps {
   mail: MailMessagePreview | null;
 }
@@ -282,15 +283,15 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                   </Avatar>
                   <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "min-w-0 grid flex-1 gap-1")}>
                     <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "whitespace-normal wrap-break-word font-semibold")}>{participantName}</div>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs whitespace-normal wrap-break-word")}>{mail.subject}</div>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs whitespace-normal wrap-break-word")}>
+                    <Text variant="caption" className="whitespace-normal wrap-break-word">{mail.subject}</Text>
+                    <Text variant="caption" className="whitespace-normal wrap-break-word">
                       <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium")}>{participantLabel}:</span> {participantLine}
-                    </div>
+                    </Text>
                   </div>
                 </div>
-                <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; sm:pl-4 sem equivalente DS */ "text-muted-foreground text-xs whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right")}>
+                <Text variant="caption" className="whitespace-normal wrap-break-word sm:ml-auto sm:pl-4 sm:text-right">
                   {format(new Date(mail.date), "PPpp", { locale: ptBR })}
-                </div>
+                </Text>
               </div>
 
               <Separator />

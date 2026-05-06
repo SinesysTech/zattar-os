@@ -24,6 +24,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Text } from '@/components/ui/typography';
 
 type EditorMode = 'select' | 'add_text' | 'add_image' | 'add_rich_text';
 
@@ -291,9 +292,9 @@ export default function ToolbarButtonsMobile({
           </Tooltip>
         </TooltipProvider>
 
-        <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "flex items-center px-2 text-xs text-muted-foreground whitespace-nowrap")}>
+        <Text variant="caption" className="flex items-center px-2 whitespace-nowrap">
           {currentPage}/{totalPages}
-        </div>
+        </Text>
 
         <TooltipProvider>
           <Tooltip>

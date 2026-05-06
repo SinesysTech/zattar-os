@@ -15,7 +15,7 @@ import { ProcessosFilterBar, type ProcessosFilters } from './components/processo
 import { actionListarProcessos } from './actions';
 import type { ProcessoUnificado, ListarProcessosParams } from './domain';
 import type { ProcessoStats } from './types/estatisticas';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface Usuario {
   id: number;
@@ -247,7 +247,7 @@ export function ProcessosClient({
         {processos.length === 0 && !isPending && (
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "flex flex-col items-center justify-center py-16 text-center")}>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/70")}>Nenhum processo encontrado</p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/65 mt-1")}>Tente ajustar os filtros ou a busca</p>
+            <Text variant="caption" className="text-muted-foreground/65 mt-1">Tente ajustar os filtros ou a busca</Text>
           </div>
         )}
       </div>

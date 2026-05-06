@@ -114,9 +114,9 @@ export function ComunicacaoDetalhesDialog({
                 </DetailRow>
               )}
               <DetailRow label="Hash" span={2}>
-                <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "break-all text-xs tabular-nums text-muted-foreground")}>
+                <Text variant="caption" className="break-all tabular-nums">
                   {comunicacao.hash}
-                </span>
+                </Text>
               </DetailRow>
             </div>
           </div>

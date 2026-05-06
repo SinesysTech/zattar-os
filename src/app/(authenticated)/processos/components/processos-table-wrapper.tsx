@@ -56,6 +56,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import type { ColumnDef, Row, RowSelectionState, Table as TanstackTable } from '@tanstack/react-table';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TIPOS
@@ -191,7 +192,7 @@ function ProcessoNumeroCell({ row }: { row: Row<ProcessoUnificado> }) {
         )}
       </div>
       <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-center gap-1.5")}>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground max-w-full truncate")}>{orgaoJulgador}</span>
+        <Text variant="caption" className="max-w-full truncate">{orgaoJulgador}</Text>
         <ProximaAudienciaPopover dataAudiencia={dataProximaAudiencia} />
       </div>
       <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col gap-0.5")}>

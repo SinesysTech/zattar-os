@@ -19,6 +19,7 @@ import {
     actionBuscarLancamentosManuais,
     actionObterSugestoes 
 } from '../../actions/conciliacao';
+import { Text } from '@/components/ui/typography';
 
 interface Props {
   open: boolean;
@@ -153,7 +154,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
         {transacao && (
           <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-2")}>
             <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1 sem token DS */ "rounded-md border p-3 space-y-1")}>
-              <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs uppercase text-muted-foreground")}>Transação importada</p>
+              <Text variant="caption" className="uppercase">Transação importada</Text>
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{transacao.descricao}</p>
               <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
               <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
@@ -185,22 +186,22 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                     <div className="flex items-center justify-between">
                       <div>
                         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{sugestao.lancamento.descricao}</p>
-                        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                        <Text variant="caption">
                           Data {sugestao.lancamento.dataLancamento} - {formatarValor(sugestao.lancamento.valor)}
-                        </p>
+                        </Text>
                       </div>
                       <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-right space-y-1")}>
                         <Badge>{Math.round(sugestao.score)}%</Badge>
                         <Progress value={Math.min(100, sugestao.score)} className="w-28" />
                       </div>
                     </div>
-                    <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-xs → migrar para <Text variant="caption"> */ "flex flex-wrap gap-2 text-xs text-muted-foreground")}>
+                    <Text variant="caption" className="flex flex-wrap gap-2">
                       {sugestao.diferencas?.map((d: string) => (
                         <Badge key={d} variant="outline">
                           {d}
                         </Badge>
                       ))}
-                    </div>
+                    </Text>
                     <div className="flex justify-end">
                       <Button size="sm" onClick={() => handleConciliar(sugestao)}>
                         Conciliar com este
@@ -237,7 +238,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
             <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-2 → migrar para <Stack gap="tight"> */ "rounded-md border p-3 space-y-2")}>
               <div className="flex items-center justify-between">
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>Resultados da busca</p>
-                {buscando && <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Buscando...</p>}
+                {buscando && <Text variant="caption">Buscando...</Text>}
               </div>
               {resultadosBusca.length === 0 && !buscando && (
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Nenhum lançamento encontrado.</p>
@@ -247,9 +248,9 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
                   <div key={lancamento.id} className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex items-center justify-between rounded-md border p-2")}>
                     <div>
                       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{lancamento.descricao}</p>
-                      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                      <Text variant="caption">
                         {lancamento.dataLancamento} - {formatarValor(lancamento.valor)}
-                      </p>
+                      </Text>
                     </div>
                     <Button size="sm" onClick={() => handleConciliarBusca(lancamento.id)}>
                       Conciliar

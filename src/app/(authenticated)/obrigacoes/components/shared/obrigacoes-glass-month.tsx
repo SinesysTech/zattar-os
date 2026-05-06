@@ -38,6 +38,7 @@ import { SemanticBadge } from '@/components/ui/semantic-badge';
 
 import type { AcordoComParcelas, Parcela } from '../../domain';
 import { TIPO_LABELS } from '../../domain';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES & URGENCY
@@ -259,9 +260,9 @@ function ParcelaItem({
     >
       {/* Valor + prazo */}
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-        <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "text-xs font-semibold text-foreground/85 tabular-nums")}>
+        <Text variant="caption" className="font-semibold text-foreground/85 tabular-nums">
           {CURRENCY.format(parcela.valorBrutoCreditoPrincipal)}
-        </span>
+        </Text>
         <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/30 bg-muted/20 text-foreground/60 shrink-0")}>
           {diasLabel}
         </span>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Loader2, AlertTriangle } from "lucide-react";
 import type { MetricasDiskIO, DiskIOStatus } from "@/app/(authenticated)/admin";
+import { Text } from '@/components/ui/typography';
 
 interface DiskIOCardProps {
   diskIO: MetricasDiskIO | null;
@@ -84,7 +85,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
               <Icon className={`size-4 ${isLoading ? "animate-spin" : ""}`} />
               {title}
             </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "mt-1 text-xs")}>{description}</p>
+            <Text variant="caption" className="mt-1">{description}</Text>
           </div>
         </CardContent>
       </Card>
@@ -126,7 +127,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         {/* IOPS */}
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>IOPS</p>
+            <Text variant="caption">IOPS</Text>
             <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
               {disk_iops_consumption.toLocaleString('pt-BR')}
               <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal text-muted-foreground")}> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
@@ -135,7 +136,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
 
           {/* Throughput */}
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Throughput</p>
+            <Text variant="caption">Throughput</Text>
             <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
               {disk_io_consumption_mbps.toFixed(1)}
               <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm font-normal text-muted-foreground")}> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>

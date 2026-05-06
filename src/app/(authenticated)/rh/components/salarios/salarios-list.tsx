@@ -60,6 +60,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import type { ColumnDef } from '@tanstack/react-table';
 import type { SalarioComDetalhes } from '../../domain';
+import { Text } from '@/components/ui/typography';
 
 
 // ============================================================================
@@ -121,9 +122,9 @@ function criarColunas(
               {salario.usuario?.nomeExibicao || `Usuário ${salario.usuarioId}`}
             </span>
             {salario.cargo && (
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; leading-tight sem token DS */ "text-xs leading-tight text-muted-foreground")}>
+              <Text variant="caption">
                 {salario.cargo.nome}
-              </span>
+              </Text>
             )}
           </div>
         );

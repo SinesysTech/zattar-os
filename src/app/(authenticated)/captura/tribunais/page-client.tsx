@@ -16,6 +16,7 @@ import { TribunaisDialog } from '../components/tribunais/tribunais-dialog';
 import { AdvogadosFilter } from '../components/advogados/advogados-filter';
 import type { TribunalConfigDb as TribunalConfig } from '@/app/(authenticated)/captura';
 import { useCredenciaisMap } from '../hooks/use-credenciais-map';
+import { Text } from '@/components/ui/typography';
 
 const TIPO_ACESSO_LABELS: Record<string, string> = {
   primeiro_grau: '1º Grau',
@@ -177,9 +178,9 @@ export default function TribunaisPage() {
                     <div className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "text-lg font-bold text-primary font-heading leading-none")}>
                       {tribunal.tribunal_codigo}
                     </div>
-                    <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/55 mt-1 truncate")}>
+                    <Text variant="caption" className="text-muted-foreground/55 mt-1 truncate">
                       {tribunal.tribunal_nome}
-                    </div>
+                    </Text>
                   </div>
                   <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-medium px-1.5 py-0.5 rounded-[5px] border border-border/15 bg-muted/20 text-muted-foreground shrink-0")}>
                     {TIPO_ACESSO_LABELS[tribunal.tipo_acesso] ?? tribunal.tipo_acesso}

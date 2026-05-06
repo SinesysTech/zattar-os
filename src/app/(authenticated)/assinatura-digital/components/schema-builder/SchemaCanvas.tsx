@@ -11,7 +11,7 @@ import type { DynamicFormSchema, FormSectionSchema, FormFieldSchema } from '@/sh
 import { FormFieldType } from '@/shared/assinatura-digital/types/domain';
 import { Edit, Trash2, Copy, GripVertical, Plus, AlertCircle, CheckCircle, Info, Type, Hash, Calendar, List, FileText, Phone, MapPin, CreditCard, Building, Mail, CheckSquare, Search, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface SchemaCanvasProps {
   schema: DynamicFormSchema;
@@ -88,7 +88,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       {React.createElement(getFieldIcon(field.type), { className: "size-3.5 text-muted-foreground shrink-0" })}
 
       <div className="flex-1 min-w-0">
-        <div className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{field.label}</div>
+        <Text variant="caption" className="font-medium truncate">{field.label}</Text>
         {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex gap-1 mt-1 flex-wrap")}>
             {field.validation?.required && (
@@ -273,7 +273,7 @@ export default function SchemaCanvas({
         <div className={cn(/* design-system-escape: py-12 padding direcional sem Inset equiv.; gap-3 gap sem token DS */ "flex flex-col items-center justify-center rounded-xl border border-dashed py-12 gap-3")}>
           <AlertCircle className="size-8 text-muted-foreground/60" />
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-center space-y-1")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-muted-foreground")}>Nenhuma seção criada</p>
+            <Text variant="caption" className="font-medium">Nenhuma seção criada</Text>
             <p className="text-[11px] text-muted-foreground/70">
               Clique abaixo para começar a construir o formulário
             </p>

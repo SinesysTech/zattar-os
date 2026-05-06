@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { cn } from "@/lib/utils";
 import { Users } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Text } from '@/components/ui/typography';
 
 interface CustomVideoGridProps {
   layout: 'grid' | 'spotlight' | 'sidebar';
@@ -104,9 +105,9 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
             className="rounded-lg overflow-hidden bg-video-surface shadow-lg relative aspect-video"
           >
             <DyteParticipantTile participant={participant} meeting={meeting} className="w-full h-full" />
-            <div className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-1 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-xs text-video-text backdrop-blur-sm")}>
+            <Text variant="caption" className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-video-text backdrop-blur-sm">
               {participant.name}
-            </div>
+            </Text>
           </motion.div>
         ))}
       </AnimatePresence>

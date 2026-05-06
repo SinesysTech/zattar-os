@@ -10,6 +10,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { cn } from "@/lib/utils";
 import { useMailStore } from "../hooks/use-mail";
 import { buildFolderLinks } from "../utils/constants";
+import { Text } from '@/components/ui/typography';
 
 interface NavDesktopProps {
   isCollapsed: boolean;
@@ -34,7 +35,7 @@ export function NavDesktop({ isCollapsed }: NavDesktopProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium")}>{acc.nome_conta || acc.email}</p>
-                <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-muted-foreground truncate text-xs")}>{acc.email}</p>
+                <Text variant="caption" className="truncate">{acc.email}</Text>
               </div>
               {acc.id === selectedAccountId && (
                 <Check className="text-primary h-4 w-4 shrink-0" />

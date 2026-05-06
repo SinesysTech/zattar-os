@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { CheckCircle2, XCircle, Clock, Database, Users, FileText, Layers } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 
 export interface CapturaResultData {
   total?: number;
@@ -84,7 +85,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div>
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-semibold → className de <Text>/<Heading> */ "text-sm font-semibold text-destructive")}>Erro na Captura</p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>{error || 'Erro desconhecido'}</p>
+          <Text variant="caption" className="mt-1">{error || 'Erro desconhecido'}</Text>
         </div>
       </div>
     );
@@ -123,14 +124,14 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
             {isAsync ? 'Captura iniciada em segundo plano' : 'Captura concluída com sucesso'}
           </p>
           {isAsync && (
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-1")}>
+            <Text variant="caption" className="mt-1">
               {data?.message || 'Os dados estão sendo processados. Consulte o histórico para acompanhar o progresso.'}
-            </p>
+            </Text>
           )}
           {isAsync && captureId && (
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground mt-0.5")}>
+            <Text variant="caption" className="mt-0.5">
               ID da captura: <span className="font-mono">#{captureId}</span>
-            </p>
+            </Text>
           )}
         </div>
       </div>
@@ -257,7 +258,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
       {hasPeriodo && (
         <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv. */ "flex items-center gap-2 rounded-lg border bg-muted/30 px-3 py-2.5")}>
           <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+          <Text variant="caption">
             Período: {new Date(data!.dataInicio!).toLocaleDateString('pt-BR')} até{' '}
             {new Date(data!.dataFim!).toLocaleDateString('pt-BR')}
             {data?.filtroPrazo && (
@@ -265,7 +266,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
                 ({data.filtroPrazo === 'no_prazo' ? 'No Prazo' : 'Sem Prazo'})
               </span>
             )}
-          </p>
+          </Text>
         </div>
       )}
 

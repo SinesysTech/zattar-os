@@ -45,6 +45,7 @@ import type { Template } from '@/shared/assinatura-digital/types/template.types'
 import { validateMarkdownForForm } from './editor-helpers';
 
 import { LoadingSpinner } from "@/components/ui/loading-state"
+import { Text } from '@/components/ui/typography';
 interface TemplateInfoPopoverProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -486,9 +487,9 @@ export default function TemplateInfoPopover({
               >
                 <div className="min-w-0 flex-1">
                   <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 flex-wrap")}>
-                    <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium text-foreground truncate")}>
+                    <Text variant="caption" className="font-medium text-foreground truncate">
                       {f.nome}
-                    </p>
+                    </Text>
                     <Badge
                       variant={f.ativo ? 'default' : 'secondary'}
                       className="text-[10px] shrink-0"

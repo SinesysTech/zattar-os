@@ -6,6 +6,7 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { ProgressRing } from "@/app/(authenticated)/dashboard/widgets/primitives";
 import type { DocumentoCardData } from '@/shared/assinatura-digital/adapters/documento-card-adapter';
 import { STATUS_CONFIG, getSignerProgress, timeAgo } from "./documento-card";
+import { Text } from '@/components/ui/typography';
 
 interface DocumentListRowProps {
   doc: DocumentoCardData;
@@ -35,7 +36,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
       </IconContainer>
 
       <div className="flex-1 min-w-0">
-        <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium truncate")}>{doc.titulo}</p>
+        <Text variant="caption" className="font-medium truncate">{doc.titulo}</Text>
         <p className="text-[10px] text-muted-foreground/55">
           {doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}
         </p>

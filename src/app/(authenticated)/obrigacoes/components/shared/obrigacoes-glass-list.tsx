@@ -17,6 +17,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { AcordoComParcelas } from '../../domain';
 import { STATUS_LABELS, TIPO_LABELS, DIRECAO_LABELS } from '../../domain';
 import { GRAU_TRIBUNAL_LABELS } from '@/app/(authenticated)/expedientes';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // TYPES & HELPERS
@@ -331,9 +332,9 @@ function GlassEmptyState() {
       <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium text-muted-foreground/50")}>
         Nenhuma obrigação encontrada
       </p>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/30 mt-1")}>
+      <Text variant="caption" className="text-muted-foreground/30 mt-1">
         Tente ajustar os filtros ou criar uma nova obrigação
-      </p>
+      </Text>
     </div>
   );
 }

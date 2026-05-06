@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { GlassPanel } from '@/components/shared/glass-panel';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle, EmptyDescription } from '@/components/ui/empty';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LogIn, LogOut, RefreshCw, Clock, Monitor, MapPin } from 'lucide-react';
@@ -112,9 +112,9 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
         <Clock className="size-4" />
         Histórico de Acesso
       </Heading>
-      <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground/50 mt-1")}>
+      <Text variant="caption" className="text-muted-foreground/50 mt-1">
         Sessões de login registradas pelo sistema
-      </p>
+      </Text>
 
       <div className="mt-4">
         {error && (

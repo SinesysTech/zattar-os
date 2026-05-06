@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, RotateCcw } from 'lucide-react';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 export default function ErrorBoundary({
     error,
@@ -31,14 +31,14 @@ export default function ErrorBoundary({
                 </p>
 
                 {error.digest && (
-                    <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "mt-4 rounded-md bg-muted p-3 font-mono text-xs text-left overflow-auto max-h-32")}>
+                    <Text variant="caption" className="mt-4 rounded-md bg-muted p-3 font-mono text-left overflow-auto max-h-32">
                         <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-foreground mb-1")}>Código do erro (Digest):</p>
                         <p className="text-muted-foreground select-all">{error.digest}</p>
-                    </div>
+                    </Text>
                 )}
 
                 {process.env.NODE_ENV === 'development' && (
-                    <div className={cn(/* design-system-escape: p-3 → usar <Inset>; text-xs → migrar para <Text variant="caption"> */ "mt-4 rounded-md bg-destructive/10 p-3 text-left overflow-auto max-h-48 text-xs")}>
+                    <Text variant="caption" className="mt-4 rounded-md bg-destructive/10 p-3 text-left overflow-auto max-h-48">
                         <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-destructive mb-1")}>Detalhes (Dev):</p>
                         <p className="whitespace-pre-wrap text-destructive/80 font-mono">{error.message}</p>
                         {error.stack && (
@@ -47,7 +47,7 @@ export default function ErrorBoundary({
                                 <pre className={cn(/* design-system-escape: p-2 → usar <Inset> */ "mt-1 whitespace-pre p-2 overflow-auto text-[10px]")}>{error.stack}</pre>
                             </details>
                         )}
-                    </div>
+                    </Text>
                 )}
             </div>
 

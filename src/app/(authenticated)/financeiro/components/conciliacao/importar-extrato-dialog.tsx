@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Progress } from '@/components/ui/progress';
 import { useContasBancarias } from '../../hooks/use-contas-bancarias';
 import { actionImportarExtrato } from '../../actions/conciliacao';
+import { Text } from '@/components/ui/typography';
 
 interface Props {
   open: boolean;
@@ -138,9 +139,9 @@ export function ImportarExtratoDialog({ open, onOpenChange, onSuccess }: Props) 
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
                 <div className="text-left">
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "text-sm font-medium")}>{file.name}</p>
-                  <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>
+                  <Text variant="caption">
                     {(file.size / 1024).toFixed(1)} KB
-                  </p>
+                  </Text>
                 </div>
                 <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); handleRemoveFile(); }}>
                   Remover

@@ -16,7 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
-import { Heading } from "@/components/ui/typography";
+import { Heading, Text } from '@/components/ui/typography';
 import {
   KANBAN_COLUMNS,
   STATUS_TAREFA_LABELS,
@@ -60,9 +60,9 @@ function KanbanColumn({
         <Heading level="subsection" className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm")}>
           {STATUS_TAREFA_LABELS[status]}
         </Heading>
-        <span className={cn(/* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; text-xs → migrar para <Text variant="caption"> */ "bg-muted text-muted-foreground rounded-full px-2 py-0.5 text-xs")}>
+        <Text variant="caption" className="bg-muted rounded-full px-2 py-0.5">
           {tarefas.length}
-        </span>
+        </Text>
       </div>
 
       <SortableContext

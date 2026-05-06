@@ -50,14 +50,14 @@ export function TimelineFilterChips({
   return (
     <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; py-2.5 padding direcional sem Inset equiv.; space-y-2 → migrar para <Stack gap="tight"> */ "flex-none border-b px-3 py-2.5 space-y-2")}>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; text-xs → migrar para <Text variant="caption"> */ "flex items-center gap-3 text-xs text-muted-foreground")}>
+        <Text variant="caption" className="flex items-center gap-3">
           <span className={cn(/* design-system-escape: gap-1 gap sem token DS */ "inline-flex items-center gap-1")}>
             <FileText className="size-3" />
             {counts.docs} {counts.docs === 1 ? 'doc' : 'docs'}
           </span>
           <Text variant="caption" as="span" className="text-muted-foreground/55">·</Text>
           <span>{counts.movs} {counts.movs === 1 ? 'mov' : 'movs'}</span>
-        </div>
+        </Text>
         <kbd className={cn(/* design-system-escape: gap-0.5 gap sem token DS; px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; font-medium → className de <Text>/<Heading> */ "flex items-center gap-0.5 rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground")}>
           <span className="text-[9px]">&#x2318;</span>K
         </kbd>

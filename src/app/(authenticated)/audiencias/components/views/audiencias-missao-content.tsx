@@ -332,13 +332,13 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
 
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
           <div className={cn(/* design-system-escape: space-y-0.5 sem token DS */ "mt-1 space-y-0.5")}>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "truncate text-xs font-semibold text-foreground")}>
+            <Text variant="caption" className="truncate font-semibold text-foreground">
               {audiencia.poloAtivoNome || '—'}
-            </p>
-            <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-semibold → className de <Text>/<Heading> */ "truncate text-xs font-semibold text-foreground")}>
+            </Text>
+            <Text variant="caption" className="truncate font-semibold text-foreground">
               <span className="mr-1 text-[9px] font-normal text-muted-foreground/70">vs</span>
               {audiencia.poloPassivoNome || '—'}
-            </p>
+            </Text>
           </div>
         )}
 

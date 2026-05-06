@@ -3,7 +3,7 @@
 import { CloudUpload, X, CheckCircle2, AlertCircle, Upload, FileText, Lock, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { getFileTypeIcon, getFileTypeBgColor } from './file-type-indicators';
 import type { UploadedFile } from '../types';
@@ -217,9 +217,9 @@ function FilePreviewCard({
 
         <div className="min-w-0 flex-1 text-left">
           <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm">; font-medium → className de <Text>/<Heading> */ "truncate text-sm font-medium text-foreground")}>{fileName}</p>
-          <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground tabular-nums mt-0.5")}>
+          <Text variant="caption" className="tabular-nums mt-0.5">
             {formatFileSize(fileSize)}
-          </p>
+          </Text>
 
           {isUploading && (
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "mt-3 space-y-1")}>
@@ -233,7 +233,7 @@ function FilePreviewCard({
           {isCompleted && (
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mt-2 flex items-center gap-1.5 text-success")}>
               <CheckCircle2 className="size-4" strokeWidth={2.5} />
-              <span className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption">; font-medium → className de <Text>/<Heading> */ "text-xs font-medium")}>Upload concluído</span>
+              <Text variant="caption" className="font-medium">Upload concluído</Text>
             </div>
           )}
         </div>
