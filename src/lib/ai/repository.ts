@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { gerarEmbedding } from './embedding';
 import type { Embedding, SearchParams, SearchResult, EntityType } from './domain';
 
 export async function saveEmbeddings(
@@ -20,9 +21,8 @@ export async function saveEmbeddings(
 
 export async function searchEmbeddings(params: SearchParams): Promise<SearchResult[]> {
   const supabase = await createClient();
-  const { generateEmbedding } = await import('./services/embedding.service');
 
-  const queryVector = await generateEmbedding(params.query);
+  const queryVector = await gerarEmbedding(params.query);
 
   const { data, error } = await supabase.rpc('match_embeddings', {
     query_embedding: queryVector,

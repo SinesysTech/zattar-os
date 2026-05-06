@@ -4,6 +4,7 @@ import { BuscarConhecimentoInputSchema, type BuscarConhecimentoInput, type Knowl
 import { buscarSemantico } from '../repository';
 import { gerarEmbedding } from '@/lib/ai/embedding';
 import { getCurrentUser } from '@/lib/auth/server';
+import { getDefaultReranker } from '@/lib/conhecimento';
 
 export async function buscarConhecimento(input: BuscarConhecimentoInput): Promise<KnowledgeChunk[]> {
   const parsed = BuscarConhecimentoInputSchema.parse(input);
@@ -12,11 +13,20 @@ export async function buscarConhecimento(input: BuscarConhecimentoInput): Promis
 
   const embedding = await gerarEmbedding(parsed.query);
 
-  return buscarSemantico({
+  const candidatos = await buscarSemantico({
     query: parsed.query,
     embedding,
     threshold: parsed.threshold,
-    limit: parsed.limit,
+    limit: parsed.limit * 5, // overfetch para rerank
     baseIds: parsed.base_ids,
   });
+
+  const reranker = getDefaultReranker();
+  const reranked = await reranker.rerank({
+    query: parsed.query,
+    documents: candidatos,
+    topN: parsed.limit,
+  });
+
+  return reranked.map((r) => r.chunk);
 }

@@ -1,45 +1,10 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import * as repository from '../../repository';
 import { createClient } from '@/lib/supabase/server';
-import { generateEmbedding } from '../../services/embedding.service';
+import { gerarEmbedding } from '../../embedding';
 
 jest.mock('@/lib/supabase/server');
-jest.mock('../../services/embedding.service');
-
-// The source uses dynamic import() for embedding.service, which doesn't work
-// with Jest's static mocking in CJS mode. We need to mock the module resolution
-// so the dynamic import resolves to the statically mocked version.
-jest.mock('../../repository', () => {
-  const actual = jest.requireActual('../../repository') as Record<string, unknown>;
-  return {
-    ...actual,
-    // Override searchEmbeddings to avoid the dynamic import issue
-    searchEmbeddings: async (params: { query: string; match_threshold?: number; match_count?: number; filter_entity_type?: string; filter_parent_id?: number; filter_metadata?: Record<string, unknown> }) => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { createClient } = require('@/lib/supabase/server');
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { generateEmbedding } = require('../../services/embedding.service');
-
-      const supabase = await createClient();
-      const queryVector = await generateEmbedding(params.query);
-
-      const { data, error } = await supabase.rpc('match_embeddings', {
-        query_embedding: queryVector,
-        match_threshold: params.match_threshold ?? 0.7,
-        match_count: params.match_count ?? 5,
-        filter_entity_type: params.filter_entity_type ?? null,
-        filter_parent_id: params.filter_parent_id ?? null,
-        filter_metadata: params.filter_metadata ?? null,
-      });
-
-      if (error) {
-        throw new Error(`Erro na busca semântica: ${error.message}`);
-      }
-
-      return (data ?? []);
-    },
-  };
-});
+jest.mock('../../embedding');
 
 describe('AI Repository', () => {
   let mockSupabaseClient: {
@@ -185,7 +150,7 @@ describe('AI Repository', () => {
         },
       ];
 
-      (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
+      (gerarEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
 
       mockSupabaseClient.rpc.mockResolvedValue({
         data: mockResults,
@@ -196,7 +161,7 @@ describe('AI Repository', () => {
       const result = await repository.searchEmbeddings(mockParams);
 
       // Assert
-      expect(generateEmbedding).toHaveBeenCalledWith('busca semântica');
+      expect(gerarEmbedding).toHaveBeenCalledWith('busca semântica');
       expect(mockSupabaseClient.rpc).toHaveBeenCalledWith('match_embeddings', {
         query_embedding: mockEmbedding,
         match_threshold: 0.7,
@@ -218,7 +183,7 @@ describe('AI Repository', () => {
 
       const mockEmbedding = [0.5, 0.6, 0.7];
 
-      (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
+      (gerarEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
 
       mockSupabaseClient.rpc.mockResolvedValue({
         data: [],
@@ -229,8 +194,8 @@ describe('AI Repository', () => {
       await repository.searchEmbeddings(mockParams);
 
       // Assert
-      expect(generateEmbedding).toHaveBeenCalledWith('texto da query');
-      expect(generateEmbedding).toHaveBeenCalledTimes(1);
+      expect(gerarEmbedding).toHaveBeenCalledWith('texto da query');
+      expect(gerarEmbedding).toHaveBeenCalledTimes(1);
     });
 
     it('deve aplicar filtros de entity_type', async () => {
@@ -244,7 +209,7 @@ describe('AI Repository', () => {
 
       const mockEmbedding = [0.1, 0.2];
 
-      (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
+      (gerarEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
 
       mockSupabaseClient.rpc.mockResolvedValue({
         data: [],
@@ -276,7 +241,7 @@ describe('AI Repository', () => {
 
       const mockEmbedding = [0.1, 0.2];
 
-      (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
+      (gerarEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
 
       mockSupabaseClient.rpc.mockResolvedValue({
         data: [],
@@ -308,7 +273,7 @@ describe('AI Repository', () => {
 
       const mockEmbedding = [0.1, 0.2];
 
-      (generateEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
+      (gerarEmbedding as jest.Mock).mockResolvedValue(mockEmbedding);
 
       mockSupabaseClient.rpc.mockResolvedValue({
         data: [],
@@ -337,7 +302,7 @@ describe('AI Repository', () => {
         match_count: 5,
       };
 
-      (generateEmbedding as jest.Mock).mockResolvedValue([0.1, 0.2]);
+      (gerarEmbedding as jest.Mock).mockResolvedValue([0.1, 0.2]);
 
       mockSupabaseClient.rpc.mockResolvedValue({
         data: [],

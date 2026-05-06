@@ -8,23 +8,32 @@ jest.mock('@/lib/ai/embedding', () => ({
   gerarEmbedding: jest.fn(async () => Array(1536).fill(0.1)),
 }));
 
+const mockChunk = {
+  chunk_id: 1,
+  conteudo: 'Trecho de exemplo',
+  similarity: 0.85,
+  document_id: 10,
+  document_nome: 'Súmula 331',
+  base_id: 1,
+  base_nome: 'Jurisprudência TST',
+  posicao: 0,
+};
+
 jest.mock('../../repository', () => ({
-  buscarSemantico: jest.fn(async () => [
-    {
-      chunk_id: 1,
-      conteudo: 'Trecho de exemplo',
-      similarity: 0.85,
-      document_id: 10,
-      document_nome: 'Súmula 331',
-      base_id: 1,
-      base_nome: 'Jurisprudência TST',
-      posicao: 0,
-    },
-  ]),
+  buscarSemantico: jest.fn(async () => [mockChunk]),
 }));
 
 jest.mock('@/lib/auth/server', () => ({
   getCurrentUser: jest.fn(async () => ({ id: 99, roles: [] })),
+}));
+
+jest.mock('@/lib/conhecimento', () => ({
+  getDefaultReranker: jest.fn(() => ({
+    name: 'noop-mock',
+    rerank: jest.fn(async ({ documents }: { documents: typeof mockChunk[] }) =>
+      documents.map((chunk) => ({ chunk, rerankScore: 1 })),
+    ),
+  })),
 }));
 
 describe('buscarConhecimento action', () => {

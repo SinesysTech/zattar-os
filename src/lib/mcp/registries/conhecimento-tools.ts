@@ -3,6 +3,7 @@ import { registerMcpTool } from '../server';
 import { errorResult } from '../types';
 import { createServiceClient } from '@/lib/supabase/service-client';
 import { gerarEmbedding } from '@/lib/ai/embedding';
+import { getDefaultReranker } from '@/lib/conhecimento';
 
 /**
  * Registra ferramentas MCP do módulo Conhecimento (loja vetorial).
@@ -74,11 +75,20 @@ export async function registerConhecimentoTools(): Promise<void> {
           query_text: query,
           query_embedding: embedding as unknown as string,
           filter_base_ids: base_ids ?? null,
-          match_count: limit,
+          match_count: limit * 5, // overfetch para rerank
           match_threshold: threshold,
         });
         if (error) throw error;
-        const resultados = data ?? [];
+        const candidatos = data ?? [];
+
+        const reranker = getDefaultReranker();
+        const reranked = await reranker.rerank({
+          query,
+          documents: candidatos,
+          topN: limit,
+        });
+        const resultados = reranked.map((r) => r.chunk);
+
         return {
           content: [
             {
