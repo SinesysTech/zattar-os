@@ -3,6 +3,7 @@
 import { CloudUpload, X, CheckCircle2, AlertCircle, Upload, FileText, Lock, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Heading } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { getFileTypeIcon, getFileTypeBgColor } from './file-type-indicators';
 import type { UploadedFile } from '../types';
@@ -107,9 +108,9 @@ function EmptyState({ isDragActive }: { isDragActive: boolean }) {
       </div>
 
       <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-w-sm")}>
-        <h3 className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-xl font-bold leading-tight")}>
+        <Heading level="section" as="h3">
           {isDragActive ? 'Solte o arquivo aqui' : 'Arraste o PDF aqui'}
-        </h3>
+        </Heading>
         <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>
           Ou clique para selecionar do computador. Tamanho máximo{' '}
           <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-foreground")}>10 MB</span>.

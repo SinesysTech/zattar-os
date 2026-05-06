@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Heading } from '@/components/ui/typography';
 import { Lightbulb, type LucideIcon } from 'lucide-react';
 import {
   Table,
@@ -30,11 +31,11 @@ export function DocSection({
   const anchor = id ?? title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
   return (
     <section id={anchor} className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ 'space-y-4', className)}>
-      <h2 className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-xl font-semibold tracking-tight font-heading scroll-mt-20")}>
+      <Heading level="section" className="scroll-mt-20">
         <a href={`#${anchor}`} className="hover:underline underline-offset-4">
           {title}
         </a>
-      </h2>
+      </Heading>
       {children}
     </section>
   );

@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Heading } from '@/components/ui/typography';
 import { 
   Sun, Moon, Check, X, AlertCircle, Star, Play, Settings} from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -48,7 +49,7 @@ export default function PlaygroundPage() {
           <div className={cn(/* design-system-escape: px-6 padding direcional sem Inset equiv.; py-4 padding direcional sem Inset equiv. */ "container mx-auto px-6 py-4")}>
             <div className="flex items-center justify-between">
               <div>
-                <h1 className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>Design System Playground</h1>
+                <Heading level="page">Design System Playground</Heading>
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground mt-1")}>
                   Teste e explore os componentes do ZattarOS
                 </p>
