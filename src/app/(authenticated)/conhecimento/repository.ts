@@ -132,13 +132,15 @@ export async function resetarDocumentoParaReindexar(documentId: number): Promise
 }
 
 export async function buscarSemantico(args: {
+  query: string;
   embedding: number[];
   threshold: number;
   limit: number;
   baseIds?: number[];
 }): Promise<KnowledgeChunk[]> {
   const supabase = createDbClient();
-  const { data, error } = await supabase.rpc('match_knowledge', {
+  const { data, error } = await supabase.rpc('match_knowledge_hybrid', {
+    query_text: args.query,
     query_embedding: args.embedding as unknown as string,
     match_threshold: args.threshold,
     match_count: args.limit,

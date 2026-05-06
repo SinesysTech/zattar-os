@@ -47,7 +47,7 @@ describe('buscarConhecimento action', () => {
   it('aceita filtro por base_ids', async () => {
     await buscarConhecimento({ query: 'teste válido aqui', base_ids: [1, 2] });
     expect(buscarSemantico as jest.Mock).toHaveBeenCalledWith(
-      expect.objectContaining({ baseIds: [1, 2] })
+      expect.objectContaining({ query: 'teste válido aqui', baseIds: [1, 2] })
     );
   });
 });

@@ -4647,6 +4647,7 @@ export type Database = {
           created_at: string
           document_id: number
           embedding: string | null
+          fts: unknown
           id: number
           metadata: Json | null
           posicao: number
@@ -4658,6 +4659,7 @@ export type Database = {
           created_at?: string
           document_id: number
           embedding?: string | null
+          fts?: unknown
           id?: never
           metadata?: Json | null
           posicao: number
@@ -4669,6 +4671,7 @@ export type Database = {
           created_at?: string
           document_id?: number
           embedding?: string | null
+          fts?: unknown
           id?: never
           metadata?: Json | null
           posicao?: number
@@ -9267,6 +9270,29 @@ export type Database = {
           document_nome: string
           metadata: Json
           posicao: number
+          similarity: number
+        }[]
+      }
+      match_knowledge_hybrid: {
+        Args: {
+          filter_base_ids?: number[]
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+          query_text: string
+          rrf_k?: number
+        }
+        Returns: {
+          base_id: number
+          base_nome: string
+          chunk_id: number
+          conteudo: string
+          document_id: number
+          document_nome: string
+          keyword_rank: number
+          metadata: Json
+          posicao: number
+          semantic_rank: number
           similarity: number
         }[]
       }

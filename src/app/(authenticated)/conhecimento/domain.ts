@@ -86,6 +86,6 @@ export const BuscarConhecimentoInputSchema = z.object({
   query: z.string().min(3).max(2000),
   base_ids: z.array(z.number().int().positive()).optional(),
   limit: z.number().int().min(1).max(20).default(8),
-  threshold: z.number().min(0).max(1).default(0.7),
+  threshold: z.number().min(0).max(1).default(0.0),
 });
 export type BuscarConhecimentoInput = z.infer<typeof BuscarConhecimentoInputSchema>;

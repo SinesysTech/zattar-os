@@ -57,8 +57,8 @@ export async function registerConhecimentoTools(): Promise<void> {
         .describe('IDs das bases para filtrar; vazio = busca em todas'),
       limit: z.number().int().min(1).max(20).default(8)
         .describe('Quantidade máxima de chunks a retornar'),
-      threshold: z.number().min(0).max(1).default(0.7)
-        .describe('Similaridade mínima de cosseno (0-1)'),
+      threshold: z.number().min(0).max(1).default(0.0)
+        .describe('Similaridade mínima do componente vetorial (0-1); com RRF o padrão é 0.0'),
     }),
     handler: async (args) => {
       try {
@@ -70,7 +70,8 @@ export async function registerConhecimentoTools(): Promise<void> {
         };
         const embedding = await gerarEmbedding(query);
         const supabase = createServiceClient();
-        const { data, error } = await supabase.rpc('match_knowledge', {
+        const { data, error } = await supabase.rpc('match_knowledge_hybrid', {
+          query_text: query,
           query_embedding: embedding as unknown as string,
           filter_base_ids: base_ids ?? null,
           match_count: limit,
@@ -82,7 +83,7 @@ export async function registerConhecimentoTools(): Promise<void> {
           content: [
             {
               type: 'text',
-              text: `${resultados.length} resultados encontrados acima do threshold ${threshold}.`,
+              text: `${resultados.length} resultados encontrados.`,
             },
           ],
           structuredContent: { resultados },

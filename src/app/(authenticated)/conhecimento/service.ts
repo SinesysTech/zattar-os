@@ -1,4 +1,4 @@
-import { extrairTexto, type FormatoArquivo } from '@/lib/conhecimento';
+import { extrairTexto, normalizarTextoExtraido, type FormatoArquivo } from '@/lib/conhecimento';
 import * as repository from './repository';
 import { createDbClient } from '@/lib/supabase';
 
@@ -40,8 +40,9 @@ export interface ProcessarUploadArgs {
  * Retorna o documento criado em status='pending'.
  */
 export async function processarUpload(args: ProcessarUploadArgs) {
-  // 1. Extrair texto antes de qualquer escrita (falha rápido se formato corrompido)
-  const textoExtraido = await extrairTexto(args.buffer, args.arquivoTipo);
+  // 1. Extrair e normalizar texto antes de qualquer escrita (falha rápido se formato corrompido)
+  const textoBruto = await extrairTexto(args.buffer, args.arquivoTipo);
+  const textoExtraido = normalizarTextoExtraido(textoBruto);
 
   // 2. Inserir documento (precisa do ID antes de subir arquivo, para path)
   const documentoTemp = await repository.inserirDocumento({

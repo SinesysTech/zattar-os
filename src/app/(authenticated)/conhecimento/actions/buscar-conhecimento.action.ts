@@ -13,6 +13,7 @@ export async function buscarConhecimento(input: BuscarConhecimentoInput): Promis
   const embedding = await gerarEmbedding(parsed.query);
 
   return buscarSemantico({
+    query: parsed.query,
     embedding,
     threshold: parsed.threshold,
     limit: parsed.limit,

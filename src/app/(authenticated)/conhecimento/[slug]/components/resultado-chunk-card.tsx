@@ -6,28 +6,7 @@ import { CountBadge } from '@/components/ui/semantic-badge';
 import { gerarUrlAssinada } from '../../actions/gerar-signed-url.action';
 import { toast } from 'sonner';
 import type { KnowledgeChunk } from '../../domain';
-
-/**
- * Normaliza texto extraído de PDF para apresentação:
- * - Remove marcadores de página tipo "-- 492 of 579 --"
- * - Junta hifenizações de quebra de linha ("empre-\ngados" → "empregados")
- * - Colapsa espaços múltiplos em um só
- * - Converte quebras de linha simples em espaço (junta linhas dentro de parágrafo)
- * - Mantém parágrafos (\n\n)
- *
- * O texto armazenado em DB e usado na busca vetorial NÃO é alterado —
- * apenas a renderização. Preserva fidelidade pra futuro reindex.
- */
-function normalizeChunkText(text: string): string {
-  return text
-    .replace(/--\s*\d+\s+of\s+\d+\s*--/gi, '')
-    .replace(/(\w)-\n(\w)/g, '$1$2')
-    .replace(/[ \t]+/g, ' ')
-    .replace(/(?<!\n)\n(?!\n)/g, ' ')
-    .replace(/ *\n\n */g, '\n\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
+import { normalizarTextoExtraido } from '@/lib/conhecimento';
 
 export function ResultadoChunkCard({ chunk }: { chunk: KnowledgeChunk }) {
   async function abrir() {
@@ -39,7 +18,7 @@ export function ResultadoChunkCard({ chunk }: { chunk: KnowledgeChunk }) {
     }
   }
 
-  const textoNormalizado = normalizeChunkText(chunk.conteudo);
+  const textoNormalizado = normalizarTextoExtraido(chunk.conteudo);
 
   return (
     <article className="rounded-2xl border bg-card p-5 space-y-3">

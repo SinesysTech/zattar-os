@@ -47,7 +47,7 @@ describe('domain schemas', () => {
   it('BuscarConhecimentoInputSchema aplica defaults', () => {
     const result = BuscarConhecimentoInputSchema.parse({ query: 'teste' });
     expect(result.limit).toBe(8);
-    expect(result.threshold).toBe(0.7);
+    expect(result.threshold).toBe(0.0);
   });
 
   it('StatusDocumento aceita apenas valores conhecidos', () => {
