@@ -89,7 +89,7 @@ function AlertaCard({
       )}
       onClick={onClick}
     >
-      <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <CardContent className={cn("inset-card-compact")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
           <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ 'rounded-full p-2', styles.bg)}>
             <Icon className={cn('h-5 w-5', styles.icon)} />
@@ -124,7 +124,7 @@ export function AlertasVencimento({
       <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 inline-default mb-4")}>
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="animate-pulse">
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <div className="h-9 w-9 rounded-full bg-muted" />
                 <div className={cn("flex-1 stack-tight")}>

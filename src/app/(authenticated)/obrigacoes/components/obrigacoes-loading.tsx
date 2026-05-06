@@ -35,7 +35,7 @@ function TableSkeleton({ rows = 8 }: { rows?: number }) {
 
 function MonthCalendarSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/30 bg-card/30 p-4")}>
+    <div className={cn("rounded-xl border border-border/30 bg-card/30 inset-card-compact")}>
       {/* Weekday headers */}
       <div className={cn("grid grid-cols-7 inline-tight mb-3")}>
         {Array.from({ length: 7 }).map((_, i) => (
@@ -58,7 +58,7 @@ function YearGridSkeleton() {
       {Array.from({ length: 12 }).map((_, i) => (
         <div
           key={i}
-          className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "rounded-xl border border-border/30 bg-card/30 p-4 space-y-3")}
+          className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-xl border border-border/30 bg-card/30 inset-card-compact space-y-3")}
         >
           <Skeleton className="h-4 w-24" />
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "grid grid-cols-7 gap-1.5")}>
@@ -89,7 +89,7 @@ export function ObrigacoesLoading({ view = 'lista' }: { view?: ObrigacoesView })
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "rounded-xl border border-border/30 bg-card/40 p-4 space-y-3")}
+            className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-xl border border-border/30 bg-card/40 inset-card-compact space-y-3")}
           >
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-8 w-16" />

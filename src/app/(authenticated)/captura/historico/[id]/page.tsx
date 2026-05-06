@@ -86,7 +86,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
       </div>
 
       {/* KPI Strip */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <GlassPanel depth={1} className={cn("inset-card-compact")}>
         <div className={cn("grid grid-cols-2 inline-default sm:grid-cols-4")}>
           {/* Status */}
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex flex-col gap-1.5")}>
@@ -220,7 +220,7 @@ export default async function CapturaDetalhesPage({ params }: PageProps) {
             </div>
             <DetailSectionCard className={cn(/* design-system-escape: p-0 → usar <Inset> */ "p-0 overflow-hidden")}>
               {captura.resultado ? (
-                <pre className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; leading-relaxed sem token DS */ "p-4 overflow-auto max-h-125 text-caption font-mono leading-relaxed")}>
+                <pre className={cn(/* design-system-escape: leading-relaxed sem token DS */ "inset-card-compact overflow-auto max-h-125 text-caption font-mono leading-relaxed")}>
                   {JSON.stringify(captura.resultado, null, 2)}
                 </pre>
               ) : (

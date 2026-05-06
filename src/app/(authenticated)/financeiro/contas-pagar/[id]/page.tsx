@@ -203,7 +203,7 @@ export default function ContaPagarDetalhesPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
+        <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar conta:</p>
           <p>{error}</p>
         </div>
@@ -272,7 +272,7 @@ export default function ContaPagarDetalhesPage() {
 
       {/* Alert Vencida */}
       {isVencida && (
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 p-4")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/10 inset-card-compact")}>
           <AlertTriangle className="h-5 w-5 text-destructive" />
           <div>
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-destructive")}>Conta Vencida</p>

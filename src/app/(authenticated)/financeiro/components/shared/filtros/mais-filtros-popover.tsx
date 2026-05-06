@@ -110,7 +110,7 @@ export function MaisFiltrosPopover({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+      <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
         <div className={cn("stack-default")}>
           <div className="flex items-center justify-between">
             <Heading level="subsection">Filtros Avançados</Heading>

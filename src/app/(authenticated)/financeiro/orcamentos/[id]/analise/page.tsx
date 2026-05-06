@@ -113,7 +113,7 @@ function ResumoGeralCards({
       <div className={cn("grid inline-default md:grid-cols-4")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <Skeleton className="h-20" />
             </CardContent>
           </Card>
@@ -321,7 +321,7 @@ function AlertasDesvioList({ alertas }: { alertas: AlertaDesvio[] }) {
     <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
       {alertas.map((alerta, index) => (
         <Card key={index}>
-          <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start inline-default p-4")}>
+          <CardContent className={cn("flex items-start inline-default inset-card-compact")}>
             <AlertTriangle
               className={`h-5 w-5 mt-0.5 ${alerta.tipo === 'critico'
                 ? 'text-destructive'
@@ -623,7 +623,7 @@ export default function AnaliseOrcamentariaPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
+        <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar análise</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>

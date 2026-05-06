@@ -59,7 +59,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
 
   if (isSidebar || (isSpotlight && participants.length > 0)) {
     return (
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex h-full inline-default p-4", className)}>
+      <div className={cn("flex h-full inline-default inset-card-compact", className)}>
         {/* Main Stage */}
         <div className="flex-1 rounded-lg overflow-hidden bg-video-surface/50 relative">
           {spotlightParticipant ? (
@@ -89,7 +89,7 @@ export const CustomVideoGrid = memo(function CustomVideoGrid({
   // Default Grid Layout
   return (
     <div className={cn(
-      /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "grid inline-default p-4 h-full content-center",
+      "grid inline-default inset-card-compact h-full content-center",
       getGridClass(participants.length),
       className
     )}>

@@ -176,7 +176,7 @@ function Separator() {
 
 function MetaGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "grid grid-cols-3 gap-3 rounded-xl border border-border/30 bg-muted/20 p-4")}>
+    <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3 rounded-xl border border-border/30 bg-muted/20 inset-card-compact")}>
       {children}
     </div>
   );

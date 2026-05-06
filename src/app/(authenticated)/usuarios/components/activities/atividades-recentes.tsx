@@ -175,7 +175,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
       </CardHeader>
       <CardContent>
         {error && (
-          <Text variant="caption" as="div" className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "text-destructive p-4 bg-destructive/10 rounded-lg")}>
+          <Text variant="caption" as="div" className={cn("text-destructive inset-card-compact bg-destructive/10 rounded-lg")}>
             {error}
           </Text>
         )}
@@ -218,7 +218,7 @@ export function AtividadesRecentes({ usuarioId }: AtividadesRecentesProps) {
 
                     {/* Conteúdo */}
                     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
-                      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4")}>
+                      <div className={cn("rounded-lg border bg-card inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
                           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                             <div className={cn("flex items-center inline-tight")}>

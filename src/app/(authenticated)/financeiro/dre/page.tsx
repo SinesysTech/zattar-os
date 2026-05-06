@@ -35,7 +35,7 @@ function DRELoading() {
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i} className="border-l-4 border-l-muted">
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <Skeleton className="h-16" />
             </CardContent>
           </Card>

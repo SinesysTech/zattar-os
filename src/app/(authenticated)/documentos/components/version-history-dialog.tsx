@@ -120,7 +120,7 @@ export function VersionHistoryDialog({
                 {versions.map((version, index) => (
                   <div
                     key={version.id}
-                    className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start inline-default p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors")}
+                    className={cn("flex items-start inline-default inset-card-compact rounded-lg border bg-card hover:bg-accent/50 transition-colors")}
                   >
                     {/* Timeline indicator */}
                     <div className="flex flex-col items-center">

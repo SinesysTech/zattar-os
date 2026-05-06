@@ -133,7 +133,7 @@ export function PeritosPageClient() {
             <GlassPanel
               key={p.id}
               depth={2}
-              className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-3 gap sem token DS */ "p-4 flex items-center gap-3")}
+              className={cn(/* design-system-escape: gap-3 gap sem token DS */ "inset-card-compact flex items-center gap-3")}
             >
               <div className="size-9 rounded-full bg-muted/40 border border-border/30 flex items-center justify-center shrink-0">
                 <User className="size-4 text-muted-foreground/60" />

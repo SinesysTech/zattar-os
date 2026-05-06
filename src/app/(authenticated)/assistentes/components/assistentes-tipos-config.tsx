@@ -274,7 +274,7 @@ export function AssistentesTiposConfig({
               {relacoes.map((relacao) => (
                 <div
                   key={relacao.id}
-                  className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between p-4 border rounded-lg")}
+                  className={cn("flex items-center justify-between inset-card-compact border rounded-lg")}
                 >
                   <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "flex-1 space-y-1")}>
                     <div className={cn("flex items-center inline-tight")}>

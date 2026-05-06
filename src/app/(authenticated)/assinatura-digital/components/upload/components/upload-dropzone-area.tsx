@@ -199,7 +199,7 @@ function FilePreviewCard({
   return (
     <div
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full max-w-md rounded-2xl border p-4 shadow-sm backdrop-blur-md',
+        'w-full max-w-md rounded-2xl border inset-card-compact shadow-sm backdrop-blur-md',
         'glass-kpi border-border/40 bg-card/70 transition-all duration-200',
         isCompleted && 'border-success/30',
       )}

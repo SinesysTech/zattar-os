@@ -20,7 +20,7 @@ export function MeetingSkeleton({ className }: MeetingSkeletonProps) {
       </div>
 
       {/* Main Grid */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 grid grid-cols-1 md:grid-cols-2 inline-default")}>
+      <div className={cn("flex-1 inset-card-compact grid grid-cols-1 md:grid-cols-2 inline-default")}>
         {/* Mock Participant 1 (Self) */}
         <div className="relative bg-video-surface rounded-lg overflow-hidden border border-video-border">
           <div className="absolute inset-0 flex items-center justify-center">

@@ -28,7 +28,7 @@ export function TimelineLoading({
     return (
       <div className={cn("stack-default")}>
         <div className={cn("grid inline-default lg:grid-cols-[minmax(280px,0.36fr)_minmax(0,1fr)]")}>
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "rounded-2xl border bg-muted/20 p-4 space-y-3")}>
+          <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-2xl border bg-muted/20 inset-card-compact space-y-3")}>
             <Skeleton className="h-5 w-28" />
             <div className={cn("stack-tight")}>
               {[...Array(5)].map((_, index) => (
@@ -127,7 +127,7 @@ export function TimelineLoading({
                 <Skeleton className="w-10 h-10 rounded-full" />
                 <div className="w-0.5 h-20 bg-border" />
               </div>
-              <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "flex-1 p-4 space-y-3")}>
+              <Card className={cn(/* design-system-escape: space-y-3 sem token DS */ "flex-1 inset-card-compact space-y-3")}>
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/2" />
                 <Skeleton className="h-4 w-2/3" />

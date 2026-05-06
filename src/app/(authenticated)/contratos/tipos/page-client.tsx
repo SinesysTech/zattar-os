@@ -331,7 +331,7 @@ export function TiposPageClient() {
       {/* Lista Glass */}
       <GlassPanel depth={1} className="overflow-hidden">
         {isLoading ? (
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
+          <div className={cn("inset-card-compact stack-tight")}>
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-xl" />
             ))}

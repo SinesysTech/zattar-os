@@ -310,13 +310,13 @@ export function CargosManagementDialog({
               </div>
 
               {!isCreating && !editingId ? (
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4")}>
+                <div className={cn("rounded-lg border bg-card inset-card-compact")}>
                   <p className="text-sm text-muted-foreground">
                     Selecione um cargo para editar ou clique em <strong>Novo cargo</strong>.
                   </p>
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-card p-4 stack-default")}>
+                <div className={cn("rounded-lg border bg-card inset-card-compact stack-default")}>
                   <div className={cn("grid inline-tight")}>
                     <Label htmlFor="nome">
                       Nome <span className="text-destructive">*</span>

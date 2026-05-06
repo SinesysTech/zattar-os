@@ -51,7 +51,7 @@ export function CommandHeader({ summary, weekPulse }: CommandHeaderProps) {
   ];
 
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
+    <GlassPanel depth={2} className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
       {/* Stats row */}
       <div className={cn(/* design-system-escape: sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center inline-default sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
         {stats.map((s, i) => (

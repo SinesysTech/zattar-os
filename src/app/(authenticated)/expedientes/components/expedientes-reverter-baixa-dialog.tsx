@@ -127,7 +127,7 @@ export function ExpedientesReverterBaixaDialog({
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 py-4 [scrollbar-width:thin]">
       <form id="reverter-baixa-form" key={formKey} action={formAction} className={cn("stack-loose")}>
         {/* Informações do expediente */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-tight rounded-lg border p-4 bg-muted/50")}>
+        <div className={cn("stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
           <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
             <div>
@@ -160,7 +160,7 @@ export function ExpedientesReverterBaixaDialog({
         </div>
 
         {/* Aviso */}
-        <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-warning bg-warning/10 p-4")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 rounded-lg border border-warning bg-warning/10 inset-card-compact")}>
           <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
           <div className={cn("text-body-sm")}>
             <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-warning mb-1")}>Atenção</div>

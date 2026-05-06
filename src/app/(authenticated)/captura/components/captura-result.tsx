@@ -81,7 +81,7 @@ export function CapturaResult({ success, error, data, captureId }: CapturaResult
 
   if (!success) {
     return (
-      <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/6 p-4")}>
+      <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/6 inset-card-compact")}>
         <XCircle className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
         <div>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-destructive")}>Erro na Captura</p>

@@ -93,7 +93,7 @@ export interface PartesClientProps {
 
 function CardSkeleton() {
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 animate-pulse")}>
+    <GlassPanel className={cn("inset-card-compact animate-pulse")}>
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3")}>
         <div className="size-10 rounded-xl bg-muted-foreground/10 shrink-0" />
         <div className={cn("flex-1 stack-tight")}>

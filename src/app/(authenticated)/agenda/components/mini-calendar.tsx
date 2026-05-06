@@ -102,7 +102,7 @@ export function MiniCalendar({
   const weeks = useMemo(() => buildMonthGrid(year, month), [year, month]);
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
+    <GlassPanel className={cn("inset-card-compact", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <Text variant="caption" className="font-semibold text-foreground">

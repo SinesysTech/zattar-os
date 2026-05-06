@@ -346,7 +346,7 @@ export function ObrigacoesGlassMonth({
   }, [popoverDay, dayMap]);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS */ "p-4 sm:p-6 flex flex-col")}>
+    <GlassPanel depth={1} className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "inset-card-compact sm:p-6 flex flex-col")}>
       {/* Month Navigator */}
       <div className="flex items-center justify-between mb-6">
         <div className={cn("flex items-center inline-tight flex-1")}>

@@ -287,7 +287,7 @@ function SidebarContent(props: FloatingSidebarProps) {
       </div>
 
       {/* ── Footer CTA ─────────────────────────────── */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 border-t border-border/30 p-4 bg-background/50 backdrop-blur-md")}>
+      <div className={cn("shrink-0 border-t border-border/30 inset-card-compact bg-background/50 backdrop-blur-md")}>
         <Button
           className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "w-full h-11 text-body-sm font-semibold shadow-sm inline-tight")}
           onClick={onReviewAndSend}

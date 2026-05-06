@@ -24,7 +24,7 @@ export default function DocumentosPage() {
 
 function FileManagerSkeleton() {
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 stack-default p-4")}>
+    <div className={cn("flex-1 stack-default inset-card-compact")}>
       <div className={cn("flex flex-wrap items-center justify-between inline-tight")}>
         <Skeleton className="h-10 w-full max-w-sm" />
         <div className={cn("flex items-center inline-tight")}>

@@ -37,7 +37,7 @@ export function DocumentCard({ documento, onClick }: DocumentCardProps) {
       className="group cursor-pointer transition-all hover:shadow-md"
       onClick={onClick}
     >
-      <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <CardContent className={cn("inset-card-compact")}>
         <div className="flex items-start justify-between">
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 flex-1 min-w-0")}>
             <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "rounded-lg bg-primary/10 p-2")}>

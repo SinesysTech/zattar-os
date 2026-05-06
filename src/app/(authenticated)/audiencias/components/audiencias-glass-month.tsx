@@ -276,7 +276,7 @@ export function AudienciasGlassMonth({
 
   return (
     <>
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS */ "flex h-full flex-col overflow-y-auto p-4 sm:p-6")}>
+      <div className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "flex h-full flex-col overflow-y-auto inset-card-compact sm:p-6")}>
         <GlassPanel depth={1} className={cn("inset-dialog flex-1 min-w-0 flex flex-col")}>
           {/* Month Navigator */}
           <div className="flex items-center justify-between mb-6">
@@ -369,7 +369,7 @@ export function AudienciasGlassMonth({
                         </div>
                       </PopoverTrigger>
                       <PopoverContent
-                        className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg")}
+                        className={cn("w-80 inset-card-compact bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg")}
                         side="bottom"
                         align="start"
                         sideOffset={6}

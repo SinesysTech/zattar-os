@@ -209,7 +209,7 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
                 .map((item) => (
                   <div
                     key={item.id}
-                    className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center justify-between rounded-lg border bg-card p-4 hover:bg-accent/50 transition-colors")}
+                    className={cn("flex items-center justify-between rounded-lg border bg-card inset-card-compact hover:bg-accent/50 transition-colors")}
                   >
                     <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
                       <div className={cn("flex items-center inline-tight")}>

@@ -519,7 +519,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
       {mail ? (
         <div className="flex min-h-0 flex-1 flex-col">
-          <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 flex-wrap items-start gap-3 p-4")}>
+          <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex shrink-0 flex-wrap items-start gap-3 inset-card-compact")}>
             <div className={cn("flex min-w-0 flex-1 items-start inline-default text-body-sm")}>
               <Avatar>
                 <AvatarFallback>{participantInitials}</AvatarFallback>
@@ -539,14 +539,14 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
           <Separator />
 
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "min-h-0 flex-1 overflow-auto p-4")}>
+          <div className={cn("min-h-0 flex-1 overflow-auto inset-card-compact")}>
             <MailBody mail={mail} />
           </div>
 
           <Separator />
 
           {replyMode ? (
-            <div ref={replyAreaRef} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4")}>
+            <div ref={replyAreaRef} className={cn("shrink-0 inset-card-compact")}>
               <form onSubmit={handleReply}>
                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
                   <div className={cn("text-body-sm text-muted-foreground")}>
@@ -586,7 +586,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
               </form>
             </div>
           ) : (
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4")}>
+            <div className={cn("shrink-0 inset-card-compact")}>
               <div className={cn("flex items-center inline-tight")}>
                 <Button
                   variant="outline"

@@ -595,7 +595,7 @@ export function FormSchemaBuilder({
 
               {/* Canvas */}
               <ScrollArea className="h-full">
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+                <div className={cn("inset-card-compact")}>
                   <SchemaCanvas
                     schema={schema}
                     selectedFieldId={selectedFieldId}

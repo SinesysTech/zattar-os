@@ -115,7 +115,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
       {/* Red accent bar */}
       <div className="h-px bg-linear-to-r from-transparent via-destructive/25 to-transparent" />
 
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <div className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <AlertTriangle className="size-3 text-destructive/50" />
           <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/75")}>

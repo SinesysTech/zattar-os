@@ -42,7 +42,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
         </Button>
       </div>
 
-      <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4")} ref={scrollRef}>
+      <ScrollArea className={cn("flex-1 inset-card-compact")} ref={scrollRef}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3")}>
           {transcripts.length === 0 ? (
             <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv. */ "text-center text-video-muted text-body-sm py-8")}>

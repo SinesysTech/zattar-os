@@ -50,7 +50,7 @@ export function AssistenteNativoView({ appId, appType, metadata }: AssistenteNat
 
     case 'workflow':
       return (
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "h-full overflow-auto p-4")}>
+        <div className={cn("h-full overflow-auto inset-card-compact")}>
           <WorkflowRunner appId={appId} defaultInputs={submittedInputs} className="max-w-3xl mx-auto" />
         </div>
       );

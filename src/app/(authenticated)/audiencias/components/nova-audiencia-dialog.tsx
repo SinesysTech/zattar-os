@@ -68,7 +68,7 @@ function SectionHeader({
 
 function SectionCard({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'rounded-[14px] bg-muted/40 border border-border/30 p-4', className)}>
+    <div className={cn('rounded-[14px] bg-muted/40 border border-border/30 inset-card-compact', className)}>
       {children}
     </div>
   );

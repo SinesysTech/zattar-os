@@ -9,7 +9,7 @@ export function DocumentEditorSkeleton() {
   return (
     <div className="flex h-full flex-col">
       {/* Header skeleton */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+      <div className={cn("border-b inset-card-compact")}>
         <div className={cn("flex items-center justify-between inline-default")}>
           <div className={cn("flex items-center inline-tight flex-1")}>
             <Skeleton className="h-10 w-10" />

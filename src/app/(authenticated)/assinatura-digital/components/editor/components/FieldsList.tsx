@@ -178,7 +178,7 @@ export default function FieldsList({
 
   if (fields.length === 0) {
     return (
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 text-center text-muted-foreground")}>
+      <div className={cn("inset-card-compact text-center text-muted-foreground")}>
         <AlignLeft className="h-8 w-8 mx-auto mb-2 opacity-50" />
         <p className={cn("text-body-sm")}>Nenhum campo adicionado</p>
         <Text variant="caption" className="mt-1">Clique no canvas para adicionar campos</Text>

@@ -181,7 +181,7 @@ function CapturaCard({
     >
     <GlassPanel
       depth={2}
-      className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 h-full")}
+      className={cn("inset-card-compact h-full")}
     >
       {/* Header: Icon + Tipo */}
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3 min-w-0")}>

@@ -125,7 +125,7 @@ export function ExpedientesBaixarDialog({
         <input type="hidden" name="expedienteId" value={expediente.id} />
 
         {/* Informações do expediente */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-tight rounded-lg border p-4 bg-muted/50")}>
+        <div className={cn("stack-tight rounded-lg border inset-card-compact bg-muted/50")}>
           <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Expediente</div>
           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "text-body-sm space-y-1")}>
             <div>

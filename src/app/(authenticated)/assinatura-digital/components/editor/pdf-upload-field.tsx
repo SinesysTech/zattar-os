@@ -161,7 +161,7 @@ export function PdfUploadField({
           </label>
         </div>
       ) : (
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border rounded-lg p-4 bg-muted/50")}>
+        <div className={cn("border rounded-lg inset-card-compact bg-muted/50")}>
           <div className="flex items-center justify-between">
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
               <FileText className="h-8 w-8 text-destructive" />

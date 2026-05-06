@@ -260,7 +260,7 @@ export function SegmentosDialog({ open, onOpenChange }: SegmentosDialogProps) {
           <div className={cn("flex-1 overflow-y-auto stack-default")}>
             {/* Formulário de Criação/Edição */}
             {(isCreating || editingId) && (
-              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border rounded-lg p-4 stack-default")}>
+              <div className={cn("border rounded-lg inset-card-compact stack-default")}>
                 <div className="flex items-center justify-between">
                   <small className="text-sm font-medium leading-none">
                     {editingId ? 'Editar Segmento' : 'Novo Segmento'}

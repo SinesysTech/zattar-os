@@ -73,7 +73,7 @@ export function ChatLayout({ salas, currentUserId, currentUserName, initialSelec
               fallback={
                 <div className="flex-1 flex flex-col">
                   <Skeleton className="h-16 w-full" />
-                  <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 stack-default")}>
+                  <div className={cn("flex-1 inset-card-compact stack-default")}>
                     <Skeleton className="h-20 w-full" />
                     <Skeleton className="h-20 w-full" />
                     <Skeleton className="h-20 w-full" />

@@ -140,7 +140,7 @@ function PericiaListItem({ pericia }: { pericia: Pericia }) {
   const { logs, isLoading: loadingLogs } = useAuditLogs('pericias', pericia.id);
 
   return (
-    <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 mb-3")}>
+    <GlassPanel depth={1} className={cn("inset-card-compact mb-3")}>
       <Tabs defaultValue="detalhes" className="w-full">
         <TabsList className={cn(/* design-system-escape: p-1 → usar <Inset> */ "grid w-full grid-cols-2 mb-4 bg-muted/40 p-1")}>
           <TabsTrigger value="detalhes" className="rounded-md">
@@ -244,7 +244,7 @@ function PericiaSingleDetails({ pericia }: { pericia: Pericia }) {
   return (
     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "stack-loose pb-6")}>
       {/* Meta Grid */}
-      <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/20")}>
+      <GlassPanel depth={1} className={cn("inset-card-compact bg-muted/20")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-3 gap-3")}>
           <MetaItem label="Prazo">
             <CalendarIcon className="size-3.5 text-muted-foreground/50" />

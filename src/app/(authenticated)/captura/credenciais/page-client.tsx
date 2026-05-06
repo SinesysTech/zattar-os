@@ -482,7 +482,7 @@ export default function CredenciaisPage() {
               </div>
             ) : (
               credenciaisFiltradas.map((credencial) => (
-                <GlassPanel key={credencial.id} depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-px")}>
+                <GlassPanel key={credencial.id} depth={2} className={cn("inset-card-compact transition-all duration-300 ease-out hover:shadow-md hover:-translate-y-px")}>
                   {/* Tribunal + Grau header */}
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 mb-3")}>
                     <div className="w-9 h-9 rounded-[0.625rem] bg-primary/8 flex items-center justify-center shrink-0">

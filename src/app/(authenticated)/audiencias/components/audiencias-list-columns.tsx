@@ -65,7 +65,7 @@ function AtaAudienciaButton({ audiencia }: { audiencia: AudienciaComResponsavel 
         </TooltipTrigger>
         <TooltipContent>Ata de Audiência</TooltipContent>
       </Tooltip>
-      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-72 p-4")} align="start">
+      <PopoverContent className={cn("w-72 inset-card-compact")} align="start">
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <div className={cn("flex items-center inline-tight")}>
             <FileText className="h-5 w-5 text-success" />
@@ -197,7 +197,7 @@ function ObservacoesCell({
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+      <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           <div className={cn("flex items-center inline-tight")}>
             <MessageSquareText className="h-4 w-4 text-primary" />
@@ -332,7 +332,7 @@ function ModalidadeCell({
           <AudienciaModalidadeBadge modalidade={audiencia.modalidade} />
         </button>
       </PopoverTrigger>
-      <PopoverContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4")} align="start">
+      <PopoverContent className={cn("w-80 inset-card-compact")} align="start">
         <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
           {/* Seção Virtual */}
           {isVirtual && (

@@ -245,7 +245,7 @@ export function GerarPecaDialog({
             {/* Lista de modelos */}
             <ScrollArea className="h-75 border rounded-md">
               {loadingModelos ? (
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
+                <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3")}>
                   {[1, 2, 3].map((i) => (
                     <Skeleton key={i} className="h-16 w-full" />
                   ))}
@@ -331,7 +331,7 @@ export function GerarPecaDialog({
 
             {/* Lista de placeholders */}
             <ScrollArea className="h-62.5 border rounded-md">
-              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
+              <div className={cn("inset-card-compact stack-tight")}>
                 {preview.placeholders.map((p, i) => (
                   <div
                     key={i}
@@ -366,7 +366,7 @@ export function GerarPecaDialog({
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>Peça gerada com sucesso!</p>
             </div>
 
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "bg-muted p-4 rounded-lg stack-tight")}>
+            <div className={cn("bg-muted inset-card-compact rounded-lg stack-tight")}>
               <p>
                 <strong>Título:</strong> {result.titulo}
               </p>

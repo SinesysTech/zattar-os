@@ -220,7 +220,7 @@ export function AgendaEventDetail({
                   <FileText className="size-3.5 text-muted-foreground/40" />
                   <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Processo Vinculado</Text>
                 </div>
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/15 bg-muted/4 p-4")}>
+                <div className={cn("rounded-xl border border-border/15 bg-muted/4 inset-card-compact")}>
                   <div className="flex items-center justify-between">
                     <div>
                       <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-[12px] font-mono font-semibold text-foreground")}>{event.processo}</div>
@@ -302,7 +302,7 @@ export function AgendaEventDetail({
                   <MessageSquare className="size-3.5 text-muted-foreground/40" />
                   <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Observações</Text>
                 </div>
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/15 bg-muted/4 p-4")}>
+                <div className={cn("rounded-xl border border-border/15 bg-muted/4 inset-card-compact")}>
                   <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "text-[13px] text-muted-foreground/60 leading-relaxed")}>
                     {event.descricao}
                   </p>

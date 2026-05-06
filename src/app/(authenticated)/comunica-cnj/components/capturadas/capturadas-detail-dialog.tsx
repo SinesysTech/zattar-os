@@ -33,7 +33,7 @@ function Section({
   return (
     <div className={cn("stack-tight")}>
       <Heading level="widget">{title}</Heading>
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-xl border border-border/40 bg-card/60 p-4")}>
+      <div className={cn("rounded-xl border border-border/40 bg-card/60 inset-card-compact")}>
         {children}
       </div>
     </div>

@@ -207,7 +207,7 @@ function GlassRow({
       onClick={onView}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onView(); } }}
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full text-left rounded-2xl border p-4 cursor-pointer glass-widget bg-transparent',
+        'w-full text-left rounded-2xl border inset-card-compact cursor-pointer glass-widget bg-transparent',
         'transition-all duration-200 ease-out',
         'hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         captura.status === 'failed'
@@ -290,7 +290,7 @@ function ListSkeleton() {
   return (
     <div className={cn("flex flex-col inline-tight")}>
       {Array.from({ length: 5 }, (_, i) => (
-        <GlassPanel key={i} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <GlassPanel key={i} depth={1} className={cn("inset-card-compact")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[90px_1fr_200px_120px_80px_56px] gap-3 items-center")}>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
               <Skeleton className="h-3 w-10" />

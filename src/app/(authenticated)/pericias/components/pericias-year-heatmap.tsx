@@ -282,7 +282,7 @@ function StatCard({
   children,
 }: StatCardProps) {
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "p-4 px-5")}>
+    <GlassPanel depth={2} className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />

@@ -55,7 +55,7 @@ export function TemplateTypeSelector({
             onClick={() => !disabled && onChange(option.type)}
             disabled={disabled}
             className={cn(
-              /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'relative flex flex-col items-start gap-3 rounded-lg border-2 p-4 text-left transition-all',
+              /* design-system-escape: gap-3 gap sem token DS */ 'relative flex flex-col items-start gap-3 rounded-lg border-2 inset-card-compact text-left transition-all',
               'hover:border-primary/50 hover:bg-accent/50',
               'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
               isSelected

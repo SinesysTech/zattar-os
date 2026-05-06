@@ -222,7 +222,7 @@ function PericiaMissionCard({
           isCritical && 'border-destructive/20',
         )}
       >
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; gap-3 gap sem token DS */ "p-4 flex flex-col gap-3")}>
+        <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "inset-card-compact flex flex-col gap-3")}>
           {/* ── 1. Header: identidade (overline + heading) + Prazo ── */}
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5 min-w-0")}>

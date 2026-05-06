@@ -64,7 +64,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
     }
 
     return (
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "flex-1 p-4 md:p-6 h-full flex flex-col")}>
+      <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "flex-1 inset-card-compact md:p-6 h-full flex flex-col")}>
         <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-3 border-b px-4 py-3 shrink-0")}>
             <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">
@@ -84,7 +84,7 @@ export default async function AssistenteDetalhesPage({ params }: { params: Promi
 
   // Renderização iframe (comportamento original)
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "flex-1 p-4 md:p-6 h-full flex flex-col")}>
+    <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "flex-1 inset-card-compact md:p-6 h-full flex flex-col")}>
       <div className="border rounded-md flex-1 overflow-hidden bg-background min-h-0 flex flex-col">
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS; px-4 padding direcional sem Inset equiv.; py-3 padding direcional sem Inset equiv. */ "flex items-center gap-3 border-b px-4 py-3 shrink-0")}>
           <Button asChild variant="ghost" size="icon" aria-label="Voltar" className="h-7 w-7 shrink-0">

@@ -276,7 +276,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
           {mail && (
             <div className="flex flex-1 flex-col overflow-hidden">
-              <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-wrap items-start gap-3 p-4")}>
+              <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap items-start gap-3 inset-card-compact")}>
                 <div className={cn("flex min-w-0 flex-1 items-start inline-default text-body-sm")}>
                   <Avatar>
                     <AvatarFallback>{participantInitials}</AvatarFallback>
@@ -296,14 +296,14 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
 
               <Separator />
 
-              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 overflow-auto p-4")}>
+              <div className={cn("flex-1 overflow-auto inset-card-compact")}>
                 <MailBodyMobile mail={mail} />
               </div>
 
               <Separator className="mt-auto" />
 
               {replyMode ? (
-                <div ref={replyAreaRef} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+                <div ref={replyAreaRef} className={cn("inset-card-compact")}>
                   <form onSubmit={handleReply}>
                     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3")}>
                       <div className={cn("text-body-sm text-muted-foreground")}>
@@ -343,7 +343,7 @@ export function MailDisplayMobile({ mail }: MailDisplayProps) {
                   </form>
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+                <div className={cn("inset-card-compact")}>
                   <div className={cn("flex items-center inline-tight")}>
                     <Button
                       variant="outline"

@@ -143,7 +143,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        'group w-full text-left rounded-2xl border border-border/60 bg-card inset-card-compact cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',

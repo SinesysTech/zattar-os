@@ -410,7 +410,7 @@ export function AudienciaDetailDialog({
 
   const heroNode =
     audiencia && !isLoading && !error ? (
-      <div className={cn(/* design-system-escape: mx-5 margin sem primitiva DS; p-4 → migrar para <Inset variant="card-compact"> */ "mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 p-4")}>
+      <div className={cn(/* design-system-escape: mx-5 margin sem primitiva DS */ "mx-5 mt-3 rounded-xl border border-primary/15 bg-primary/5 inset-card-compact")}>
         {dataInicio && (
           <Text variant="caption" as="p" className="mb-3.5 capitalize text-muted-foreground">
             {format(dataInicio, 'EEE, dd MMM yyyy', { locale: ptBR })}

@@ -254,7 +254,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
+    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <IconContainer size="md" className={iconBg}>
           <Icon className={cn('w-3.5 h-3.5', iconColor)} />
@@ -293,7 +293,7 @@ export function ObrigacoesYearHeatmap({
 
   return (
     <TooltipProvider delayDuration={100}>
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-6 sem equivalente DS */ "flex h-full flex-col overflow-y-auto p-4 sm:p-6")}>
+      <div className={cn(/* design-system-escape: sm:p-6 sem equivalente DS */ "flex h-full flex-col overflow-y-auto inset-card-compact sm:p-6")}>
         {/* Year Navigator */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between mb-6 flex-wrap gap-3")}>
           <div className={cn("flex items-center inline-tight")}>

@@ -448,7 +448,7 @@ export function EntrevistaResumo({
 
       {/* Notas do operador */}
       {entrevista.notasOperador && Object.keys(entrevista.notasOperador).length > 0 && (
-        <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <GlassPanel className={cn("inset-card-compact")}>
           <Text variant="label" className="mb-2 text-muted-foreground">Notas do Operador</Text>
           {Object.entries(entrevista.notasOperador).map(([modulo, nota]) => (
             <div key={modulo} className="mb-2 last:mb-0">

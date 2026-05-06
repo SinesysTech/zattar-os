@@ -127,7 +127,7 @@ export function PostHearingFlow({
       {/* Subtle top accent */}
       <div className="h-px bg-linear-to-r from-transparent via-warning/20 to-transparent" />
 
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
+      <div className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className={cn("flex items-center inline-tight")}>

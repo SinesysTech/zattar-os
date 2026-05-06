@@ -52,7 +52,7 @@ export function DeadlineSidebar({ deadlines, className }: DeadlineSidebarProps) 
   if (deadlines.length === 0) return null;
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4", className)}>
+    <GlassPanel className={cn("inset-card-compact", className)}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <AlarmClock className="size-3.5 text-destructive" />
         <Text variant="caption" className="font-semibold text-foreground">Prazos Próximos</Text>

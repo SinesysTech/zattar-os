@@ -373,7 +373,7 @@ export function UsuarioEditDialog({
           </div>
 
           {/* Contato */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 grid inline-default")}>
+          <GlassPanel depth={1} className={cn("inset-card-compact grid inline-default")}>
             <small className="text-sm font-medium leading-none text-muted-foreground">Contato</small>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-default")}>
               <div className={cn("grid inline-tight")}>
@@ -427,7 +427,7 @@ export function UsuarioEditDialog({
           </GlassPanel>
 
           {/* Profissional */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 grid inline-default")}>
+          <GlassPanel depth={1} className={cn("inset-card-compact grid inline-default")}>
             <small className="text-sm font-medium leading-none text-muted-foreground">Profissional</small>
             <div className={cn("grid grid-cols-1 md:grid-cols-3 inline-default")}>
               <div className={cn("grid inline-tight")}>
@@ -483,7 +483,7 @@ export function UsuarioEditDialog({
           </GlassPanel>
 
           {/* Endereço */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 grid inline-default")}>
+          <GlassPanel depth={1} className={cn("inset-card-compact grid inline-default")}>
             <small className="text-sm font-medium leading-none text-muted-foreground">Endereço</small>
             <div className={cn("grid grid-cols-1 md:grid-cols-3 inline-default")}>
               <div className={cn("grid inline-tight")}>
@@ -613,7 +613,7 @@ export function UsuarioEditDialog({
           </GlassPanel>
 
           {/* Status */}
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 grid inline-default")}>
+          <GlassPanel depth={1} className={cn("inset-card-compact grid inline-default")}>
             <small className="text-sm font-medium leading-none text-muted-foreground">Status do Usuário</small>
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
               <div className={cn(/* design-system-escape: space-x-2 → migrar para <Inline gap="tight"> */ "flex items-center space-x-2")}>

@@ -48,7 +48,7 @@ export function HorasExtrasCalculator() {
                   type="number" 
                   value={salarioBase}
                   onChange={e => setSalarioBase(Number(e.target.value))}
-                  className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-full bg-surface-container-highest border border-foreground/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline")} 
+                  className={cn("w-full bg-surface-container-highest border border-foreground/5 rounded-lg inset-card-compact text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline")} 
                 />
               </div>
 
@@ -58,7 +58,7 @@ export function HorasExtrasCalculator() {
                   type="number" 
                   value={horasMensais}
                   onChange={e => setHorasMensais(Number(e.target.value))}
-                  className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-full bg-surface-container-highest border border-foreground/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline")} 
+                  className={cn("w-full bg-surface-container-highest border border-foreground/5 rounded-lg inset-card-compact text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline")} 
                 />
               </div>
 
@@ -68,7 +68,7 @@ export function HorasExtrasCalculator() {
                   type="number" 
                   value={horasExtras}
                   onChange={e => setHorasExtras(Number(e.target.value))}
-                  className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-full bg-surface-container-highest border border-foreground/5 rounded-lg p-4 text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline")} 
+                  className={cn("w-full bg-surface-container-highest border border-foreground/5 rounded-lg inset-card-compact text-on-surface focus:ring-1 focus:ring-primary/50 transition-all placeholder:text-outline")} 
                 />
               </div>
 

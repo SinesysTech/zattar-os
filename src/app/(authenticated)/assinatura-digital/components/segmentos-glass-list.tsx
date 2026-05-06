@@ -211,7 +211,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-full text-left rounded-2xl border border-border/40 p-4 cursor-pointer bg-card',
+        'w-full text-left rounded-2xl border border-border/40 inset-card-compact cursor-pointer bg-card',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:scale-[1.0025] hover:-translate-y-px hover:shadow-lg',
         isAlt && 'bg-muted/20',
@@ -323,7 +323,7 @@ function GlassCard({
         }
       }}
       className={cn(
-        /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card p-4 cursor-pointer',
+        /* design-system-escape: gap-3 gap sem token DS */ 'relative flex flex-col gap-3 rounded-2xl border border-border/40 bg-card inset-card-compact cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:bg-accent/40 hover:border-border/60 hover:-translate-y-px hover:shadow-lg',
       )}

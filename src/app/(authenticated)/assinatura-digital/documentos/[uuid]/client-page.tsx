@@ -324,7 +324,7 @@ export function DocumentoVerificacaoClient({
               ) : (
                 <div className="flex h-full items-center justify-center text-muted-foreground">
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col items-center gap-3 text-center")}>
-                    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full border border-border/60 bg-muted/40 p-4")}>
+                    <div className={cn("rounded-full border border-border/60 bg-muted/40 inset-card-compact")}>
                       <FileText className="h-8 w-8" />
                     </div>
                     <div>
@@ -410,7 +410,7 @@ export function DocumentoVerificacaoClient({
                       </Heading>
                     </div>
 
-                    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "rounded-lg border border-border/60 bg-muted/20 p-4 space-y-3")}>
+                    <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "rounded-lg border border-border/60 bg-muted/20 inset-card-compact space-y-3")}>
                       <HashDisplay
                         label="Hash Original (SHA-256)"
                         hash={data.hashOriginal}

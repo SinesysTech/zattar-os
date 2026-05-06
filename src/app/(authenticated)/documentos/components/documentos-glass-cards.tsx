@@ -166,7 +166,7 @@ function GlassCard({
       type="button"
       onClick={() => onItemClick(item)}
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group relative overflow-hidden rounded-2xl border border-border/40 bg-card p-4 text-left cursor-pointer',
+        'group relative overflow-hidden rounded-2xl border border-border/40 bg-card inset-card-compact text-left cursor-pointer',
         'transition-all duration-200 ease-out',
         'hover:border-border/70 hover:-translate-y-0.5 hover:shadow-lg',
         isSelected && 'border-primary/50 ring-1 ring-primary/25 bg-primary/[0.03]',
@@ -267,7 +267,7 @@ function CardsSkeleton() {
   return (
     <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3")}>
       {Array.from({ length: 10 }, (_, i) => (
-        <div key={i} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/40 bg-card p-4")}>
+        <div key={i} className={cn("rounded-2xl border border-border/40 bg-card inset-card-compact")}>
           <Skeleton className="size-10 rounded-2xl" />
           <Skeleton className="h-3.5 w-full mt-3.5" />
           <Skeleton className="h-3 w-20 mt-2" />

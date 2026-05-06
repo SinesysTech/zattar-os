@@ -421,7 +421,7 @@ export function ObrigacaoDetalhesDialog({
         </DialogHeader>
 
         {/* ══════════ BLOCO PRINCIPAL · Tipo, valor e vencimento ══════════ */}
-        <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS; p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 mx-6 mt-4 p-4 rounded-xl bg-primary/5 border border-primary/15")}>
+        <div className={cn(/* design-system-escape: mx-6 margin sem primitiva DS */ "shrink-0 mx-6 mt-4 inset-card-compact rounded-xl bg-primary/5 border border-primary/15")}>
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 mb-3.5")}>
             <div className="flex-1 min-w-0">
               <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; leading-tight sem token DS */ "text-[14.5px] font-semibold text-foreground leading-tight")}>

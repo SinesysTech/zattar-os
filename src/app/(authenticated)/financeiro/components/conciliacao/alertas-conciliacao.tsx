@@ -81,7 +81,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
       <div className={cn("grid grid-cols-2 md:grid-cols-4 inline-default")}>
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <Skeleton className="h-10 w-10 rounded-lg" />
                 <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
@@ -108,7 +108,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
             className={onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : undefined}
             onClick={onClick}
           >
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
                 <div className={`p-2 rounded-lg ${card.corFundo}`}>
                   <span className={card.corIcone}>{card.icon}</span>

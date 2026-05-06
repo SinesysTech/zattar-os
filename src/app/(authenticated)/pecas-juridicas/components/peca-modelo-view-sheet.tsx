@@ -169,7 +169,7 @@ export function PecaModeloViewSheet({
                   <Skeleton className="h-4 w-3/4" />
                 </div>
               ) : conteudoPreview ? (
-                <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/30")}>
+                <GlassPanel depth={1} className={cn("inset-card-compact bg-muted/30")}>
                   <pre className={cn("whitespace-pre-wrap font-mono text-body-sm text-foreground/80 max-h-80 overflow-auto")}>
                     {conteudoPreview}
                   </pre>

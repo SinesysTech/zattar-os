@@ -66,7 +66,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
   return (
     <div className="flex flex-col h-full border rounded-lg overflow-hidden bg-background">
       <Tabs defaultValue={resumo ? "resumo" : "transcricao"} className="flex flex-col h-full">
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b bg-muted/30")}>
+        <div className={cn("inset-card-compact border-b bg-muted/30")}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="resumo" className={cn("inline-tight")}>
               <ListVideo className="w-4 h-4" />
@@ -94,7 +94,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                 )}
               </ScrollArea>
               
-              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-t bg-muted/10 flex justify-end")}>
+              <div className={cn("inset-card-compact border-t bg-muted/10 flex justify-end")}>
                 <Button 
                   onClick={handleGerarResumo} 
                   disabled={isGenerating}
@@ -122,7 +122,7 @@ export function CallTranscriptViewer({ chamada }: CallTranscriptViewerProps) {
                     </Button>
                  </div>
               </div>
-              <ScrollArea className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; leading-relaxed sem token DS */ "flex-1 p-4 font-mono text-body-sm leading-relaxed")}>
+              <ScrollArea className={cn(/* design-system-escape: leading-relaxed sem token DS */ "flex-1 inset-card-compact font-mono text-body-sm leading-relaxed")}>
                 <div className="whitespace-pre-wrap text-foreground/90">
                   {chamada.transcricao}
                 </div>

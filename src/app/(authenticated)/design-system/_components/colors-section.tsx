@@ -20,7 +20,7 @@ function PalettePrimary() {
     >
       <div className={cn("grid grid-cols-1 inline-default md:grid-cols-[220px_1fr]")}>
         <div
-          className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex aspect-[1.3/1] flex-col justify-between rounded-2xl p-4 text-white")}
+          className={cn("flex aspect-[1.3/1] flex-col justify-between rounded-2xl inset-card-compact text-white")}
           style={{ background: "var(--primary)" }}
         >
           <Text variant="meta-label" className="text-white/80">

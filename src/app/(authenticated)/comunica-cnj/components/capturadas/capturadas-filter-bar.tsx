@@ -433,7 +433,7 @@ function PeriodoFilter({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className={cn(POPOVER_CLASSES, /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-72 p-4')}
+        className={cn(POPOVER_CLASSES, 'w-72 inset-card-compact')}
         align="start"
         side="bottom"
       >

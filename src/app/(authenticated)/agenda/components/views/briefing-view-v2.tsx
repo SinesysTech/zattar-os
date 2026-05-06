@@ -76,7 +76,7 @@ function BriefingEventCard({ event, onClick }: { event: AgendaEvent; onClick?: (
   const prepPct = event.meta?.prepStatus === "preparado" ? 100 : event.meta?.prepStatus === "parcial" ? 60 : event.meta?.prepStatus === "pendente" ? 20 : undefined;
 
   return (
-    <button onClick={onClick} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-full text-left rounded-xl p-4 bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/6r:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
+    <button onClick={onClick} className={cn("w-full text-left rounded-xl inset-card-compact bg-muted/[0.035] border border-border/8 transition-all hover:bg-muted/6r:border-border/15 cursor-pointer", isFatal && "border-destructive/15")}>
       <div className={cn("flex items-start inline-default")}>
         <div className="text-right shrink-0 w-14">
           <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-sm font-mono font-bold tabular-nums", isFatal ? "text-destructive" : "text-foreground")}>{fmtTime(event.start)}</div>
@@ -212,13 +212,13 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
       {/* Right Sidebar */}
       <div className={cn("w-64 shrink-0 stack-default hidden lg:flex lg:flex-col")}>
         {prepItems.length > 0 && (
-          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}><ShieldCheck className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Radar de Preparo</Text></div>
             <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
           </GlassPanel>
         )}
         {alerts.length > 0 && (
-          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}><Bell className="size-3.5 text-warning" /><Text variant="caption" className="font-semibold text-foreground">Alertas</Text></div>
             <div className={cn("stack-tight")}>
               {alerts.map((alert) => {
@@ -237,7 +237,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
             </div>
           </GlassPanel>
         )}
-        <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+        <GlassPanel className={cn("inset-card-compact")}>
           <div className={cn("flex items-center inline-tight mb-3")}><Zap className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Ações Rápidas</Text></div>
           <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
             {[

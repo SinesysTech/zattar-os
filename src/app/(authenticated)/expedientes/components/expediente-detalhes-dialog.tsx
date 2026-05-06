@@ -127,7 +127,7 @@ function ExpedienteListItem({
   const { logs, isLoading: loadingLogs } = useAuditLogs('expedientes', exp.id);
 
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border rounded-lg p-4 bg-card")}>
+    <div className={cn("border rounded-lg inset-card-compact bg-card")}>
       <Tabs defaultValue="detalhes" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="detalhes">Detalhes</TabsTrigger>

@@ -163,7 +163,7 @@ export function AudienciasMissaoContent({
       <div className={cn("grid grid-cols-1 lg:grid-cols-3 inline-default")}>
         {/* Timeline (2/3) */}
         <div className="lg:col-span-2">
-          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
+          <GlassPanel className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
             <div className="flex items-center justify-between mb-4">
               <div className={cn("flex items-center inline-tight")}>
                 <Clock className="size-3 text-muted-foreground/70" />

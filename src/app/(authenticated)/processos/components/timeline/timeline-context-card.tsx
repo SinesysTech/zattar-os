@@ -35,7 +35,7 @@ export function TimelineContextCard({
   orgao,
 }: TimelineContextCardProps) {
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "shrink-0 p-4 border-b flex flex-col justify-center bg-card sticky top-0 z-10")}>
+    <div className={cn("shrink-0 inset-card-compact border-b flex flex-col justify-center bg-card sticky top-0 z-10")}>
       {/* Número do processo em fonte mono */}
       <Text variant="caption" className="font-mono mb-1 tracking-wider truncate">
         Nº {numeroProcesso}

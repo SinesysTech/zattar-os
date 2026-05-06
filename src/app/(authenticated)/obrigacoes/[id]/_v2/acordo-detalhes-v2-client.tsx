@@ -272,7 +272,7 @@ export function AcordoDetalhesV2Client({
         )}
 
         {activeTab === 'parcelas' && (
-          <GlassPanel depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <GlassPanel depth={1} className={cn("inset-card-compact")}>
             <ParcelasTable
               parcelas={parcelas}
               direcao={acordo.direcao}
@@ -496,7 +496,7 @@ function RepassesTab({
             : 'bg-info/10 text-info border-info/20';
 
         return (
-          <GlassPanel key={parcela.id} depth={1} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <GlassPanel key={parcela.id} depth={1} className={cn("inset-card-compact")}>
             <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3 flex-wrap")}>
               <div className="min-w-0">
                 <div className={cn("flex items-center inline-tight")}>

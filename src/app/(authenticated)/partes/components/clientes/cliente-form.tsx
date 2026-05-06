@@ -895,7 +895,7 @@ export function ClienteFormDialog({
           />
         </div>
 
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
+        <div className={cn("mt-4 inset-card-compact rounded-lg bg-muted/50 border")}>
           <Heading level="subsection" className="mb-3">Resumo do cadastro</Heading>
           <dl className={cn("stack-tight text-body-sm")}>
             <div className="flex justify-between">

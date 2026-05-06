@@ -272,7 +272,7 @@ function CommandHeader({ events, currentDate }: { events: MockCalendarEvent[]; c
   }
 
   return (
-    <GlassPanel depth={2} className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
+    <GlassPanel depth={2} className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
       {/* Stats row */}
       <div className={cn(/* design-system-escape: sm:gap-5 sem equivalente DS; pb-3 padding direcional sem Inset equiv. */ "flex items-center inline-default sm:gap-5 overflow-x-auto pb-3 border-b border-border/10")}>
         {[
@@ -592,7 +592,7 @@ function AgendaListView({ events, currentDate, onEventClick }: { events: MockCal
   }, [events, currentDate]);
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
+    <GlassPanel className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
       <div className={cn(/* design-system-escape: space-y-0 sem token DS */ "space-y-0")}>
         {days.length === 0 && (
           <div className={cn(/* design-system-escape: py-16 padding direcional sem Inset equiv. */ "py-16 flex flex-col items-center text-center")}>
@@ -710,7 +710,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
       <div className={cn("grid grid-cols-1 lg:grid-cols-7 inline-default")}>
         {/* Timeline (5/7) */}
         <div className="lg:col-span-5">
-          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "p-4 sm:p-5")}>
+          <GlassPanel className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "inset-card-compact sm:p-5")}>
             <div className="flex items-center justify-between mb-3">
               <div className={cn("flex items-center inline-tight")}>
                 <Clock className="size-3 text-muted-foreground/50" />
@@ -770,7 +770,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
         {/* Sidebar (2/7) */}
         <div className={cn("lg:col-span-2 stack-default")}>
           {/* Prep Radar */}
-          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
               <Shield className="size-3 text-warning/40" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Preparação</span>
@@ -790,7 +790,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
 
           {/* Alerts */}
           {(alerts.length > 0 || needsPrep.length > 0) && (
-            <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <GlassPanel className={cn("inset-card-compact")}>
               <div className={cn("flex items-center inline-tight mb-3")}>
                 <AlertTriangle className="size-3 text-destructive/40" />
                 <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Alertas</span>
@@ -810,7 +810,7 @@ function BriefingView({ events, currentDate, onEventClick }: { events: MockCalen
           )}
 
           {/* Quick Actions */}
-          <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+          <GlassPanel className={cn("inset-card-compact")}>
             <div className={cn("flex items-center inline-tight mb-3")}>
               <Zap className="size-3 text-primary/40" />
               <span className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium text-muted-foreground/50")}>Ações</span>

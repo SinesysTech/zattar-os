@@ -509,7 +509,7 @@ export function RepresentanteFormDialog({
 
       <div className={cn("grid inline-tight")}>
         <Label>Inscrições OAB</Label>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "grid inline-tight border rounded-lg p-4")}>
+        <div className={cn("grid inline-tight border rounded-lg inset-card-compact")}>
           <div className={cn("grid grid-cols-1 md:grid-cols-3 inline-tight")}>
             <Input
               placeholder="Número OAB"
@@ -798,7 +798,7 @@ export function RepresentanteFormDialog({
   // Renderizar Step 4 - Informações Adicionais
   const renderStep4 = () => (
     <div className="grid gap-(--density-field-gap)">
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
+      <div className={cn("mt-4 inset-card-compact rounded-lg bg-muted/50 border")}>
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
         <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm")}>
           <dt className="text-muted-foreground">Nome:</dt>

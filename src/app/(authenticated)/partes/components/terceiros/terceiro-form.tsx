@@ -1036,7 +1036,7 @@ export function TerceiroFormDialog({
         </div>
       </div>
 
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "mt-4 p-4 rounded-lg bg-muted/50 border")}>
+      <div className={cn("mt-4 inset-card-compact rounded-lg bg-muted/50 border")}>
         <Heading level="subsection" className="mb-2">Resumo do cadastro</Heading>
         <dl className={cn("grid grid-cols-2 gap-x-4 gap-y-2 text-body-sm")}>
           <dt className="text-muted-foreground">Tipo:</dt>

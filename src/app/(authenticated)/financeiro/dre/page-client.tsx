@@ -232,7 +232,7 @@ function ResumoCards({
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid gap-3 md:grid-cols-2 lg:grid-cols-4")}>
         {Array.from({ length: 4 }).map((_, i) => (
           <Card key={i}>
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <Skeleton className="h-16" />
             </CardContent>
           </Card>
@@ -259,7 +259,7 @@ function ResumoCards({
 
         return (
           <Card key={kpi.key} className={`border-l-4 ${kpi.borderColor}`}>
-            <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+            <CardContent className={cn("inset-card-compact")}>
               <div className="flex items-start justify-between">
                 <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                   <Text variant="caption" className="font-medium">{kpi.label}</Text>
@@ -775,7 +775,7 @@ export default function DREClient() {
             <DataTableToolbar title="Demonstração de Resultado do Exercício" />
           }
         >
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
+          <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
             <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar DRE</p>
             <p>{error}</p>
           </div>

@@ -162,7 +162,7 @@ export function MissionCard({
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; sm:p-5 sem equivalente DS */ "relative p-4 sm:p-5")}>
+      <div className={cn(/* design-system-escape: sm:p-5 sem equivalente DS */ "relative inset-card-compact sm:p-5")}>
         {/* Header: Status + Countdown */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3 mb-4")}>
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>

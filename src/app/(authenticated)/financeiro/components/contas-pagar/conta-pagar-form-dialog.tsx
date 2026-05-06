@@ -571,7 +571,7 @@ export function ContaPagarFormDialog({
         </div>
 
         {/* Recorrência */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-default rounded-lg border p-4")}>
+        <div className={cn("stack-default rounded-lg border inset-card-compact")}>
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="recorrente" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>

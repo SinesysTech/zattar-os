@@ -221,7 +221,7 @@ export function ExpedientesCalendar() {
     return (
         <div className={cn("flex flex-col h-full stack-default")}>
             {/* Header / Week Navigation + Days Carousel (integrado) */}
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-card rounded-lg border shadow-sm")}>
+            <div className={cn("inset-card-compact bg-card rounded-lg border shadow-sm")}>
                 <WeekDaysCarousel
                     currentDate={currentDate}
                     selectedDate={selectedDate}
@@ -306,7 +306,7 @@ export function ExpedientesCalendar() {
                     </>
                 }
             >
-                <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 bg-muted/10 border-b")}>
+                <div className={cn("inset-card-compact bg-muted/10 border-b")}>
                     <div className="flex items-center justify-between">
                         <Heading level="card" className={cn("flex items-center inline-tight")}>
                             <CalendarIcon className="h-4 w-4" />

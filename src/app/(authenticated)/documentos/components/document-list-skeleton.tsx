@@ -9,7 +9,7 @@ export function DocumentListSkeleton() {
   return (
     <div className="flex flex-1 overflow-hidden">
       {/* Sidebar skeleton */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-64 border-r bg-muted/10 p-4")}>
+      <div className={cn("w-64 border-r bg-muted/10 inset-card-compact")}>
         <Skeleton className="mb-4 h-6 w-24" />
         <div className={cn("stack-tight")}>
           <Skeleton className="h-8 w-full" />
@@ -22,7 +22,7 @@ export function DocumentListSkeleton() {
       {/* Main content skeleton */}
       <div className="flex flex-1 flex-col">
         {/* Toolbar skeleton */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+        <div className={cn("border-b inset-card-compact")}>
           <div className={cn("flex items-center inline-default")}>
             <Skeleton className="h-10 flex-1 max-w-sm" />
             <Skeleton className="h-10 w-40" />
@@ -32,7 +32,7 @@ export function DocumentListSkeleton() {
         </div>
 
         {/* List skeleton */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 stack-default p-4")}>
+        <div className={cn("flex-1 stack-default inset-card-compact")}>
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />

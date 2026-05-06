@@ -227,7 +227,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
           signatario.rubricaUrl) && (
           <>
             <Separator />
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/60 bg-background/70 p-4")}>
+            <div className={cn("rounded-2xl border border-border/60 bg-background/70 inset-card-compact")}>
               <Heading level="subsection" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mb-3 flex items-center gap-1.5 text-body-sm")}>
                 <ImageIcon className="h-3.5 w-3.5" />
                 Evidências Visuais
@@ -257,7 +257,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
         {isConcluido && (
           <>
             <Separator />
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/60 bg-background/70 p-4")}>
+            <div className={cn("rounded-2xl border border-border/60 bg-background/70 inset-card-compact")}>
               <Heading level="subsection" className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "mb-3 flex items-center gap-1.5 text-body-sm")}>
                 <Shield className="h-3.5 w-3.5" />
                 Dados de Segurança

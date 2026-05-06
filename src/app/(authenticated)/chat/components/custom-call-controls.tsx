@@ -100,7 +100,7 @@ export function CustomCallControls({
   };
 
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "fixed bottom-0 left-0 right-0 z-40 bg-video-surface/95 backdrop-blur-md border-t border-video-border p-4 md:p-6")}>
+    <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "fixed bottom-0 left-0 right-0 z-40 bg-video-surface/95 backdrop-blur-md border-t border-video-border inset-card-compact md:p-6")}>
       <div className={cn(/* design-system-escape: md:gap-4 sem equivalente DS */ "relative flex items-center justify-center inline-tight md:gap-4 max-w-7xl mx-auto")}>
 
         {/* Network Indicator (Absolute Left) */}

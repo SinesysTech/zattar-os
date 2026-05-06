@@ -202,7 +202,7 @@ function StatCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 p-4 px-5")}>
+    <div className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv. */ "rounded-2xl border border-border/40 bg-muted/30 inset-card-compact px-5")}>
       <div className={cn("flex items-center inline-tight mb-2")}>
         <IconContainer size="sm" className={iconBg}>
           <Icon className={cn("size-3.5", iconColor)} />

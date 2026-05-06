@@ -73,10 +73,10 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
   if (loading || !sala) {
     return (
       <div className="flex flex-col h-full">
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+        <div className={cn("border-b inset-card-compact")}>
           <Skeleton className="h-5 w-32" />
         </div>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 stack-default")}>
+        <div className={cn("flex-1 inset-card-compact stack-default")}>
           <Skeleton className="h-12 w-3/4" />
           <Skeleton className="h-12 w-1/2 ml-auto" />
           <Skeleton className="h-12 w-2/3" />
@@ -91,7 +91,7 @@ export function DocumentChat({ documentoId, currentUserName, currentUserId }: Do
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+      <div className={cn("border-b inset-card-compact")}>
         <Heading level="card" className={cn("flex items-center inline-tight")}>
           <MessageSquare className="h-4 w-4" />
           Chat do Documento

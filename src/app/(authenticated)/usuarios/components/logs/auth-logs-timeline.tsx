@@ -118,7 +118,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
       <div className="mt-4">
         {error && (
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "text-body-sm text-destructive p-4 bg-destructive/10 rounded-lg")}>
+          <div className={cn("text-body-sm text-destructive inset-card-compact bg-destructive/10 rounded-lg")}>
             {error}
           </div>
         )}
@@ -159,7 +159,7 @@ export function AuthLogsTimeline({ usuarioId }: AuthLogsTimelineProps) {
 
                     {/* Conteúdo */}
                     <div className={cn(/* design-system-escape: pb-6 padding direcional sem Inset equiv. */ "flex-1 pb-6")}>
-                      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "bg-muted/4 border-border/15 rounded-xl p-4")}>
+                      <div className={cn("bg-muted/4 border-border/15 rounded-xl inset-card-compact")}>
                         <div className={cn("flex items-start justify-between inline-default")}>
                           <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
                             <p className={`font-medium ${colorClass}`}>{label}</p>

@@ -264,7 +264,7 @@ export function PagarContaDialog({
 
           <div className={cn(/* design-system-escape: py-4 padding direcional sem Inset equiv. */ "stack-default py-4")}>
             {/* Resumo da conta */}
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-lg border bg-muted/50 p-4 stack-tight")}>
+            <div className={cn("rounded-lg border bg-muted/50 inset-card-compact stack-tight")}>
               <div className="flex justify-between items-start">
                 <div>
                   <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-sm")}>{conta.descricao}</p>
@@ -423,7 +423,7 @@ export function PagarContaDialog({
                     disabled={comprovanteUploading}
                     aria-label="Selecionar comprovante de pagamento"
                   />
-                  <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex cursor-pointer items-center justify-center inline-tight rounded-md border border-dashed p-4 text-body-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
+                  <div className={cn("flex cursor-pointer items-center justify-center inline-tight rounded-md border border-dashed inset-card-compact text-body-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary")}>
                     {comprovanteUploading ? (
                       <>
                         <LoadingSpinner />

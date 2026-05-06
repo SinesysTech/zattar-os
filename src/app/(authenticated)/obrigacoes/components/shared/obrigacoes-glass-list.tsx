@@ -124,7 +124,7 @@ function GlassRow({
         }
       }}
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group w-full text-left rounded-2xl border border-border/60 bg-card p-4 cursor-pointer',
+        'group w-full text-left rounded-2xl border border-border/60 bg-card inset-card-compact cursor-pointer',
         'transition-all duration-180 ease-out',
         'hover:border-border hover:shadow-[0_4px_14px_rgba(0,0,0,0.06)] hover:-translate-y-px',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
@@ -295,7 +295,7 @@ function ListSkeleton() {
       {Array.from({ length: 6 }, (_, i) => (
         <div
           key={i}
-          className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border/40 bg-card p-4")}
+          className={cn("rounded-2xl border border-border/40 bg-card inset-card-compact")}
         >
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-[32px_2.5fr_1fr_1fr_1fr_96px_40px] gap-3 items-center")}>
             <Skeleton className="w-2 h-2 rounded-full" />

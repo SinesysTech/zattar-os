@@ -143,7 +143,7 @@ function OrcamentoSelector({
 
   return (
     <Card className="border-dashed">
-      <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <CardContent className={cn("inset-card-compact")}>
         <Select
           value={selectedId?.toString() || ''}
           onValueChange={(value) => onSelect(parseInt(value, 10))}
@@ -515,7 +515,7 @@ function CompararOrcamentosContent() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
+        <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamentos</p>
           <p>{error}</p>
         </div>
@@ -583,7 +583,7 @@ function CompararOrcamentosContent() {
             ))}
             {selectedIds.length < 5 && (
               <Card className="border-dashed">
-                <CardContent className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 flex items-center justify-center")}>
+                <CardContent className={cn("inset-card-compact flex items-center justify-center")}>
                   <Button variant="ghost" onClick={handleAddSlot}>
                     <Plus className="mr-2 h-4 w-4" />
                     Adicionar

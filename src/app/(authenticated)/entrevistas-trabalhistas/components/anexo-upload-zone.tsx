@@ -64,7 +64,7 @@ export function AnexoUploadZone({ entrevistaId, contratoId, modulo }: AnexoUploa
   };
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-default p-4")}>
+    <GlassPanel className={cn("stack-default inset-card-compact")}>
       <div className={cn("flex items-start inline-tight")}>
         <Paperclip className="mt-0.5 h-4 w-4 text-muted-foreground" />
         <div>

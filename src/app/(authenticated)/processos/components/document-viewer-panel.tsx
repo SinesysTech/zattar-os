@@ -120,7 +120,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   if (!item) {
     return (
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-3 p-8")}>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4")}>
+        <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <MousePointerClick className="h-8 w-8 text-muted-foreground" />
         </div>
         <p className={cn("text-body-sm text-muted-foreground")}>
@@ -134,7 +134,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   if (item.documentoSigiloso && !item.backblaze) {
     return (
       <div className={cn(/* design-system-escape: gap-3 gap sem token DS; p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center gap-3 p-8")}>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-destructive/10 p-4")}>
+        <div className={cn("rounded-full bg-destructive/10 inset-card-compact")}>
           <Lock className="h-8 w-8 text-destructive" />
         </div>
         <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
@@ -151,7 +151,7 @@ export function DocumentViewerPanel({ item, onRecapture, isCapturing }: Document
   if (!item.backblaze) {
     return (
       <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "flex flex-col items-center justify-center h-full text-center inline-default p-8")}>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-muted p-4")}>
+        <div className={cn("rounded-full bg-muted inset-card-compact")}>
           <FileText className="h-8 w-8 text-muted-foreground" />
         </div>
         <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>

@@ -205,7 +205,7 @@ function CardsSpecimen() {
   return (
     <SpecimenCard eyebrow="CARDS · PROCESSO + KPI">
       <div
-        className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-2xl border border-border p-4")}
+        className={cn("rounded-2xl border border-border inset-card-compact")}
         style={{
           background: `
             radial-gradient(600px at 100% 0%, oklch(0.48 0.26 281 / 0.10), transparent 60%),
@@ -215,7 +215,7 @@ function CardsSpecimen() {
       >
         <div className={cn(/* design-system-escape: gap-3.5 gap sem token DS */ "grid gap-3.5 lg:grid-cols-[1.4fr_1fr]")}>
           {/* Process card */}
-          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-col gap-2.5 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md")}>
+          <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col gap-2.5 rounded-2xl border border-border bg-card inset-card-compact shadow-sm transition-all hover:shadow-md")}>
             <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start justify-between gap-2.5")}>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
                 <Text variant="micro-caption" className="font-mono">
@@ -273,7 +273,7 @@ function CardsSpecimen() {
 
           {/* KPI cards */}
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex flex-col justify-between gap-2.5")}>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "glass-kpi flex flex-col gap-1.5 rounded-2xl border border-border/30 p-4")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "glass-kpi flex flex-col gap-1.5 rounded-2xl border border-border/30 inset-card-compact")}>
               <div className="flex items-center justify-between">
                 <Text variant="meta-label">Processos ativos</Text>
                 <IconContainer
@@ -289,7 +289,7 @@ function CardsSpecimen() {
                 desde a última semana
               </div>
             </div>
-            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "glass-kpi flex flex-col gap-1.5 rounded-2xl border border-border/30 p-4")}>
+            <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "glass-kpi flex flex-col gap-1.5 rounded-2xl border border-border/30 inset-card-compact")}>
               <Text variant="meta-label">Prazos em 7 dias</Text>
               <Text
                 variant="kpi-value"

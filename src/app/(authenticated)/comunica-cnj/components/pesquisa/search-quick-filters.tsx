@@ -200,7 +200,7 @@ export function SearchQuickFilters() {
             />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-64 p-4')} align="start">
+        <PopoverContent className={cn(POPOVER_CLASSES, 'w-64 inset-card-compact')} align="start">
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="pesquisa-oab-num">
@@ -309,7 +309,7 @@ export function SearchQuickFilters() {
             />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn(POPOVER_CLASSES, /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'w-72 p-4')} align="start">
+        <PopoverContent className={cn(POPOVER_CLASSES, 'w-72 inset-card-compact')} align="start">
           <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
             <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5")}>
               <Label htmlFor="pesquisa-data-inicio">

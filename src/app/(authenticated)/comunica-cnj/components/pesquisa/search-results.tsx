@@ -44,7 +44,7 @@ function ResultadoCard({
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
       )}
     >
-      <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "gap-3 p-4 group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
+      <GlassPanel className={cn(/* design-system-escape: gap-3 gap sem token DS */ "gap-3 inset-card-compact group-hover:border-primary/30 group-hover:shadow-[0_4px_24px_color-mix(in_oklch,var(--primary)_6%,transparent)]")}>
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start justify-between gap-3")}>
           <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex min-w-0 flex-1 flex-col gap-1.5")}>
             <div className={cn("flex flex-wrap items-center inline-tight")}>

@@ -53,7 +53,7 @@ export function RhythmStrip({ audiencias, className }: RhythmStripProps) {
   const hasOverload = maxInDay >= 4;
 
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4', className)}>
+    <GlassPanel className={cn('inset-card-compact', className)}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <Zap className="size-3 text-primary/65" />
         <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Ritmo de audiências</Text>

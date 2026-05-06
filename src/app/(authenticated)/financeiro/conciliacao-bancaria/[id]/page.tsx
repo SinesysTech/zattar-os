@@ -39,7 +39,7 @@ export default function TransacaoDetalhePage() {
   };
 
   if (isLoading || !transacao) {
-    return <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 text-body-sm text-muted-foreground")}>Carregando...</div>;
+    return <div className={cn("inset-card-compact text-body-sm text-muted-foreground")}>Carregando...</div>;
   }
 
   const status = transacao.conciliacao?.status || 'pendente';
@@ -67,7 +67,7 @@ export default function TransacaoDetalhePage() {
       </div>
 
       <div className={cn("grid inline-default md:grid-cols-2")}>
-        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
+        <Card className={cn("inset-card-compact stack-tight")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Dados da transação</p>
           <Separator />
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{transacao.descricao}</p>
@@ -76,7 +76,7 @@ export default function TransacaoDetalhePage() {
           <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento || '-'}</p>
         </Card>
 
-        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 stack-tight")}>
+        <Card className={cn("inset-card-compact stack-tight")}>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Conciliação</p>
           <Separator />
           <p className={cn("text-body-sm text-muted-foreground")}>Status: {status}</p>
@@ -99,7 +99,7 @@ export default function TransacaoDetalhePage() {
       </div>
 
       {status === 'pendente' && (
-        <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-3 sem token DS */ "p-4 space-y-3")}>
+        <Card className={cn(/* design-system-escape: space-y-3 sem token DS */ "inset-card-compact space-y-3")}>
           <div className="flex items-center justify-between">
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>Sugestões de conciliação</p>
           </div>

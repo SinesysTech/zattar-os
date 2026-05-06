@@ -461,7 +461,7 @@ export function PericiasGlassMonth({
                       </div>
                     </PopoverTrigger>
                     <PopoverContent
-                      className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "w-80 p-4 bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg")}
+                      className={cn("w-80 inset-card-compact bg-background/95 backdrop-blur-3xl border-border/50 rounded-2xl shadow-lg")}
                       side="bottom"
                       align="start"
                       sideOffset={6}

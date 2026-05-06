@@ -148,7 +148,7 @@ export function DocumentList() {
       {/* Sidebar - Árvore de pastas */}
       <div className="w-80 border-r bg-muted/10">
         <div className="flex h-full flex-col">
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+          <div className={cn("border-b inset-card-compact")}>
             <h2 className="text-sm font-semibold">Documentos</h2>
           </div>
           <div className={cn(/* design-system-escape: p-2 → usar <Inset> */ "flex-1 overflow-auto p-2")}>
@@ -183,7 +183,7 @@ export function DocumentList() {
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border-b p-4")}>
+        <div className={cn("border-b inset-card-compact")}>
           <div className={cn("flex items-center justify-between inline-default")}>
             <div className={cn("flex flex-1 items-center inline-tight")}>
               {/* Busca */}
@@ -276,7 +276,7 @@ export function DocumentList() {
         </div>
 
         {/* Lista/Grid de documentos */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 overflow-auto p-4")}>
+        <div className={cn("flex-1 overflow-auto inset-card-compact")}>
           {loading ? (
             <div className={cn("stack-default")}>
               <Skeleton className="h-20 w-full" />

@@ -146,7 +146,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
       </div>
 
       {/* Conteúdo do item */}
-      <Card className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex-1 p-4 mb-4")}>
+      <Card className={cn("flex-1 inset-card-compact mb-4")}>
         {/* Header do item */}
         <div className={cn("stack-tight")}>
           {/* Primeira linha: Instância (se disponível) + Título */}

@@ -130,7 +130,7 @@ function LixeiraEmptyState({ onVoltar }: { onVoltar: () => void }) {
 function AvisoExclusaoCard() {
   return (
     <Card className="border-warning/15 bg-warning/5">
-      <CardContent className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-center gap-3 p-4")}>
+      <CardContent className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3 inset-card-compact")}>
         <AlertTriangle className="h-5 w-5 text-warning" />
         <p className={cn("text-body-sm text-warning")}>
           Documentos na lixeira serão deletados permanentemente após 30 dias.

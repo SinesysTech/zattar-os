@@ -280,7 +280,7 @@ function GlassCard({
   return (
     <GlassPanel
       className={cn(
-        /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'group relative p-4 cursor-pointer transition-all duration-180',
+        'group relative inset-card-compact cursor-pointer transition-all duration-180',
         'hover:border-border/40 hover:shadow-[0_4px_14px_color-mix(in_oklch,var(--foreground)_6%,transparent)] hover:-translate-y-px',
         isSelected && 'border-primary/40 ring-1 ring-primary/20',
       )}
@@ -415,7 +415,7 @@ function GlassCard({
 
 function CardSkeleton() {
   return (
-    <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+    <GlassPanel className={cn("inset-card-compact")}>
       <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-start gap-2.5")}>
         <Skeleton className="size-3.5 rounded" />
         <Skeleton className="size-9 rounded-xl" />

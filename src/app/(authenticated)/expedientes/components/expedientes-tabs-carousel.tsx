@@ -109,7 +109,7 @@ export function ExpedientesTabsCarousel({
                 // Borders: left, right, bottom only (top integrates with tab)
                 'border-x border-b border-border',
                 'rounded-b-lg',
-                /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'p-4',
+                'inset-card-compact',
                 carouselClassName
               )}
             >

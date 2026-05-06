@@ -396,7 +396,7 @@ export default function OrcamentoDetalhesPage() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Voltar
         </Button>
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-md bg-destructive/15 p-4 text-body-sm text-destructive")}>
+        <div className={cn("rounded-md bg-destructive/15 inset-card-compact text-body-sm text-destructive")}>
           <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold")}>Erro ao carregar orçamento</p>
           <p>{error || 'Orçamento não encontrado'}</p>
         </div>

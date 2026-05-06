@@ -399,7 +399,7 @@ export function GazetteOrphanResolver() {
   return (
     <GlassPanel depth={1} className="flex h-full flex-col overflow-hidden">
       {/* ── Header ── */}
-      <div className={cn(/* design-system-escape: space-y-3 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-3 border-b border-border/40 p-4")}>
+      <div className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 border-b border-border/40 inset-card-compact")}>
         {/* Title row */}
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
           <div className={cn(/* design-system-escape: gap-2.5 gap sem token DS */ "flex items-center gap-2.5")}>
@@ -476,7 +476,7 @@ export function GazetteOrphanResolver() {
       {/* ── Split Panel ── */}
       <div className="flex flex-1 overflow-hidden">
         {/* Left — Publicacao Original */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-1 flex-col overflow-y-auto border-r border-border/30 p-4")}>
+        <div className={cn("flex flex-1 flex-col overflow-y-auto border-r border-border/30 inset-card-compact")}>
           <span className="text-overline text-muted-foreground/70">
             Publicacao Original
           </span>
@@ -561,7 +561,7 @@ export function GazetteOrphanResolver() {
         </div>
 
         {/* Right — Match Sugerido */}
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex flex-1 flex-col overflow-y-auto p-4")}>
+        <div className={cn("flex flex-1 flex-col overflow-y-auto inset-card-compact")}>
           {match ? (
             <>
               {/* Header with confidence */}
@@ -591,7 +591,7 @@ export function GazetteOrphanResolver() {
               </div>
 
               {/* Match card */}
-              <div className={cn(/* design-system-escape: space-y-2.5 sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 p-4")}>
+              <div className={cn(/* design-system-escape: space-y-2.5 sem token DS */ "mt-3 space-y-2.5 rounded-xl border border-success/20 bg-success/5 inset-card-compact")}>
                 <div>
                   <Text variant="micro-caption">Expediente</Text>
                   <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-sm font-semibold text-foreground")}>

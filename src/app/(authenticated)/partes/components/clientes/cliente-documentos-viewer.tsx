@@ -215,7 +215,7 @@ export function ClienteDocumentosViewer({
       {/* Dialog de Preview de PDF */}
       <Dialog open={!!selectedDoc} onOpenChange={() => setSelectedDoc(null)}>
         <DialogContent className={cn(/* design-system-escape: p-0 → usar <Inset>; gap-0 gap sem token DS */ "max-w-[90vw] h-[90vh] flex flex-col p-0 gap-0")}>
-          <DialogHeader className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b")}>
+          <DialogHeader className={cn("inset-card-compact border-b")}>
             <DialogTitle>{selectedDoc?.name}</DialogTitle>
             <DialogDescription className="sr-only">
               Visualização do documento selecionado em um iframe com ações para abrir ou fechar.

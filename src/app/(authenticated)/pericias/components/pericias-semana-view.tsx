@@ -244,7 +244,7 @@ export function PericiasSemanaView({
             <GlassPanel
               key={key}
               depth={today ? 2 : 1}
-              className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 min-h-40")}
+              className={cn("inset-card-compact min-h-40")}
             >
               {/* Day header */}
               <div className="flex items-center justify-between mb-3">

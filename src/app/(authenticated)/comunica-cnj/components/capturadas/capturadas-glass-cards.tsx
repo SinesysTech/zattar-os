@@ -68,7 +68,7 @@ export function CapturadasGlassCards({
           >
             <GlassPanel
               className={cn(
-                /* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ 'inline-tight p-4 transition-all duration-200',
+                'inline-tight inset-card-compact transition-all duration-200',
                 'hover:border-primary/30 hover:shadow-[0_4px_24px_rgba(85,35,235,0.06)]',
                 isSelected && 'border-primary/40 bg-primary/5',
               )}

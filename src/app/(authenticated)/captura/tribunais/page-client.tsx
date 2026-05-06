@@ -170,7 +170,7 @@ export default function TribunaisPage() {
               >
               <GlassPanel
                 depth={2}
-                className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 h-full")}
+                className={cn("inset-card-compact h-full")}
               >
                 {/* Header: Acronym + Name + Grau badge */}
                 <div className={cn("flex items-start justify-between inline-tight mb-3")}>

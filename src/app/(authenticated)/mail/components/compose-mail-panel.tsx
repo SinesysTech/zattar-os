@@ -186,7 +186,7 @@ export function ComposeMailPanel() {
       <Separator />
 
       {/* Footer */}
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex shrink-0 items-center justify-end inline-tight p-4")}>
+      <div className={cn("flex shrink-0 items-center justify-end inline-tight inset-card-compact")}>
         <Button
           variant="outline"
           size="sm"

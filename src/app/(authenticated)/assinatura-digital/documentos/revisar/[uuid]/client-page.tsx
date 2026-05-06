@@ -642,7 +642,7 @@ export function RevisarDocumentoClient({ uuid }: { uuid: string }) {
             </div>
 
             {/* Segurança */}
-            <GlassPanel depth={2} className={cn(/* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ "flex items-start gap-3 p-4 mt-2")}>
+            <GlassPanel depth={2} className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-start gap-3 inset-card-compact mt-2")}>
               <span className="inline-flex size-8 items-center justify-center rounded-lg bg-success/10 shrink-0">
                 <Shield className="size-4 text-success/70" />
               </span>

@@ -346,7 +346,7 @@ export function PangeaPageContent() {
         {/* Filtros avançados (painel) */}
         <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
           <CollapsibleContent id="pangea-advanced-filters" className="mt-2">
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; md:p-6 sem equivalente DS */ "rounded-xl border bg-card p-4 md:p-6 stack-loose")}>
+            <div className={cn(/* design-system-escape: md:p-6 sem equivalente DS */ "rounded-xl border bg-card inset-card-compact md:p-6 stack-loose")}>
               <div className="flex items-center justify-between">
                 <p className={cn("text-body-sm text-muted-foreground")}>Ajuste os filtros para refinar a busca</p>
                 <button

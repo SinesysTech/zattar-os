@@ -231,7 +231,7 @@ function DroppableSectionCard({
 
       <div className={cn(/* design-system-escape: px-3 padding direcional sem Inset equiv.; pb-3 padding direcional sem Inset equiv.; space-y-1 sem token DS */ "px-3 pb-3 space-y-1")}>
         {fields.length === 0 ? (
-          <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "border border-dashed rounded-lg p-4 text-center")}>
+          <div className={cn("border border-dashed rounded-lg inset-card-compact text-center")}>
             <AlertCircle className="size-5 text-muted-foreground/50 mx-auto mb-1" />
             <p className="text-[11px] text-muted-foreground">Arraste campos da paleta para adicionar</p>
           </div>

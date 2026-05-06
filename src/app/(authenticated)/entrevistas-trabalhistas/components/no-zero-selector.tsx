@@ -108,7 +108,7 @@ export function NoZeroSelector({ onSelect, isLoading }: NoZeroSelectorProps) {
       </div>
 
       {selected && (
-        <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "stack-default p-4")}>
+        <GlassPanel className={cn("stack-default inset-card-compact")}>
           <div className={cn("stack-tight")}>
             <Label htmlFor="perfil">Perfil do reclamante (opcional)</Label>
             <Select value={perfil ?? ''} onValueChange={(v) => setPerfil(v as PerfilReclamante)}>

@@ -82,7 +82,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
   return (
     <div className={cn("stack-default", className)}>
       {/* Type Distribution */}
-      <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <GlassPanel className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <BarChart3 className="size-3 text-primary/65" />
           <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Distribuição por tipo</Text>
@@ -111,7 +111,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
       </GlassPanel>
 
       {/* Responsavel Load */}
-      <GlassPanel className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4")}>
+      <GlassPanel className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <Users className="size-3 text-primary/65" />
           <Text variant="caption" as="span" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-muted-foreground/60")}>Carga por advogado</Text>

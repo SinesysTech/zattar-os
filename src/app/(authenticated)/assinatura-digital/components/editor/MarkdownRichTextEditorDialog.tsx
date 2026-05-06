@@ -84,7 +84,7 @@ export function MarkdownRichTextEditorDialog({
               />
             </TabsContent>
             <TabsContent value="preview" className="h-full mt-4 overflow-y-auto">
-              <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "prose prose-sm max-w-none p-4 border rounded-md bg-muted/50")}>
+              <div className={cn("prose prose-sm max-w-none inset-card-compact border rounded-md bg-muted/50")}>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeRaw, rehypeSanitize]}

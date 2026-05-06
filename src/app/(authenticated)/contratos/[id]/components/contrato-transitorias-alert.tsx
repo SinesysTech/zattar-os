@@ -83,7 +83,7 @@ export function ContratoTransitoriasAlert({
         role="alert"
         aria-live="polite"
         className={cn(
-          /* design-system-escape: gap-3 gap sem token DS; p-4 → migrar para <Inset variant="card-compact"> */ 'flex flex-col gap-3 rounded-2xl bg-warning/8 p-4 ring-1 ring-warning/25',
+          /* design-system-escape: gap-3 gap sem token DS */ 'flex flex-col gap-3 rounded-2xl bg-warning/8 inset-card-compact ring-1 ring-warning/25',
           /* design-system-escape: sm:gap-4 sem equivalente DS */ 'sm:flex-row sm:items-start sm:gap-4',
           className
         )}

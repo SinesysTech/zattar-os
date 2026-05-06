@@ -19,8 +19,8 @@ export default function ErrorBoundary({
     }, [error]);
 
     return (
-        <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "flex h-screen w-full flex-col items-center justify-center inline-default bg-background p-4")}>
-            <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "rounded-full bg-destructive/10 p-4")}>
+        <div className={cn("flex h-screen w-full flex-col items-center justify-center inline-default bg-background inset-card-compact")}>
+            <div className={cn("rounded-full bg-destructive/10 inset-card-compact")}>
                 <AlertCircle className="h-12 w-12 text-destructive" />
             </div>
 

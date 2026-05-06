@@ -42,7 +42,7 @@ export const CustomParticipantList = memo(function CustomParticipantList({ isVis
       "animate-in slide-in-from-right-10 duration-300",
       className
     )}>
-      <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact"> */ "p-4 border-b border-video-border flex justify-between items-center")}>
+      <div className={cn("inset-card-compact border-b border-video-border flex justify-between items-center")}>
         <Heading level="widget" className="text-video-text">Participantes ({allParticipants.length})</Heading>
         {/* Close button for mobile could go here */}
       </div>
