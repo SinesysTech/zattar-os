@@ -56,7 +56,7 @@ function MetricCardContent({
             <Text variant="kpi-value">
               {parts[0]}
             </Text>
-            <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold font-heading text-muted-foreground tabular-nums")}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold font-heading text-muted-foreground tabular-nums")}>
               ,{parts[1]}
             </span>
           </>

@@ -1224,11 +1224,11 @@ function InlineTipoEditor({
           )}
         >
           {current ? (
-            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-heading font-semibold text-lg text-foreground group-hover:text-primary transition-colors underline decoration-dotted decoration-primary/40 underline-offset-4")}>
+            <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading font-semibold text-body-lg text-foreground group-hover:text-primary transition-colors underline decoration-dotted decoration-primary/40 underline-offset-4")}>
               {current.tipo_expediente}
             </span>
           ) : (
-            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "font-heading italic text-lg text-muted-foreground/60 group-hover:text-foreground transition-colors")}>
+            <span className={cn("font-heading italic text-body-lg text-muted-foreground/60 group-hover:text-foreground transition-colors")}>
               Clique para atribuir tipo
             </span>
           )}

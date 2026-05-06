@@ -122,7 +122,7 @@ function OrcamentoSelector({
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <div className="flex items-center justify-between">
-              <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>{orcamento.nome}</CardTitle>
+              <CardTitle className={cn("text-body-lg")}>{orcamento.nome}</CardTitle>
               <Button variant="ghost" size="icon" aria-label="Fechar" onClick={onRemove}>
                 <X className="h-4 w-4" />
               </Button>

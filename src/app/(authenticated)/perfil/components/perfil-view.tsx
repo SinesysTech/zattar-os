@@ -152,14 +152,14 @@ export function PerfilView() {
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Nome Completo
               </div>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeCompleto}</div>
+              <div className={cn("text-body")}>{usuario.nomeCompleto}</div>
             </div>
             {usuario.cpf && (
               <div>
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   CPF
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarCpf(usuario.cpf)}</div>
+                <div className={cn("text-body")}>{formatarCpf(usuario.cpf)}</div>
               </div>
             )}
             {usuario.rg && (
@@ -167,7 +167,7 @@ export function PerfilView() {
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   RG
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.rg}</div>
+                <div className={cn("text-body")}>{usuario.rg}</div>
               </div>
             )}
             {usuario.dataNascimento && (
@@ -176,7 +176,7 @@ export function PerfilView() {
                   <Calendar className="h-4 w-4" />
                   Data de Nascimento
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <div className={cn("text-body")}>
                   {formatarData(usuario.dataNascimento)}
                 </div>
               </div>
@@ -186,7 +186,7 @@ export function PerfilView() {
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   Gênero
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarGenero(usuario.genero)}</div>
+                <div className={cn("text-body")}>{formatarGenero(usuario.genero)}</div>
               </div>
             )}
           </CardContent>
@@ -206,7 +206,7 @@ export function PerfilView() {
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Corporativo
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base break-all")}>{usuario.emailCorporativo}</div>
+                <div className={cn("text-body break-all")}>{usuario.emailCorporativo}</div>
               </div>
             )}
             {usuario.emailPessoal && (
@@ -214,7 +214,7 @@ export function PerfilView() {
                 <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                   E-mail Pessoal
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base break-all")}>{usuario.emailPessoal}</div>
+                <div className={cn("text-body break-all")}>{usuario.emailPessoal}</div>
               </div>
             )}
             {usuario.telefone && (
@@ -223,7 +223,7 @@ export function PerfilView() {
                   <Phone className="h-4 w-4" />
                   Telefone
                 </div>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <div className={cn("text-body")}>
                   {FORMAT.phone(usuario.telefone)}
                   {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
                 </div>
@@ -247,7 +247,7 @@ export function PerfilView() {
                   <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                     OAB
                   </div>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                  <div className={cn("text-body")}>
                     {formatarOab(usuario.oab, usuario.ufOab)}
                   </div>
                 </div>
@@ -266,7 +266,7 @@ export function PerfilView() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+              <div className={cn("text-body")}>
                 {formatarEnderecoCompleto(usuario.endereco)}
               </div>
             </CardContent>
@@ -285,13 +285,13 @@ export function PerfilView() {
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Data de Criação
               </div>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarData(usuario.createdAt)}</div>
+              <div className={cn("text-body")}>{formatarData(usuario.createdAt)}</div>
             </div>
             <div>
               <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium text-muted-foreground mb-1")}>
                 Última Atualização
               </div>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarData(usuario.updatedAt)}</div>
+              <div className={cn("text-body")}>{formatarData(usuario.updatedAt)}</div>
             </div>
           </div>
         </CardContent>

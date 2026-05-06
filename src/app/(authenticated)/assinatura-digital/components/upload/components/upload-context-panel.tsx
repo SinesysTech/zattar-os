@@ -60,7 +60,7 @@ export function UploadContextPanel({
       </h2>
 
       {/* Descrição */}
-      <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; leading-relaxed sem token DS */ "relative text-lg leading-relaxed text-muted-foreground")}>
+      <p className={cn(/* design-system-escape: leading-relaxed sem token DS */ "relative text-body-lg leading-relaxed text-muted-foreground")}>
         Suportamos arquivos <strong className="text-foreground">PDF</strong> com até{" "}
         <strong className="text-foreground">10MB</strong>.
       </p>

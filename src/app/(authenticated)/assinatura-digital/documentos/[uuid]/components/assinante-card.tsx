@@ -153,7 +153,7 @@ export function AssinanteCard({ signatario, index }: AssinanteCardProps) {
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between")}>
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex flex-wrap items-center gap-2")}>
-              <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+              <CardTitle className={cn("text-body")}>
               {signatario.nome || `Assinante ${index + 1}`}
               </CardTitle>
               <Badge variant="outline" className={cn("text-caption")}>

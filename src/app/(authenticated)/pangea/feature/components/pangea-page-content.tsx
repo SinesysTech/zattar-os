@@ -290,7 +290,7 @@ export function PangeaPageContent() {
                 placeholder="Pesquisar precedentes"
                 aria-label="Pesquisar precedentes"
                 className={cn(
-                  /* design-system-escape: pr-14 padding direcional sem Inset equiv.; md:pr-16 sem equivalente DS; text-base → migrar para <Text variant="body">; md:text-lg sem equivalente DS */ 'h-12 md:h-14 rounded-full pr-14 md:pr-16 text-base md:text-lg bg-card'
+                  /* design-system-escape: pr-14 padding direcional sem Inset equiv.; md:pr-16 sem equivalente DS; md:text-lg sem equivalente DS */ 'h-12 md:h-14 rounded-full pr-14 md:pr-16 text-body md:text-lg bg-card'
                 )}
               />
               <Button

@@ -622,7 +622,7 @@ export function ContaReceberFormDialog({
             <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default">; p-4 → migrar para <Inset variant="card-compact"> */ "space-y-4 rounded-lg border p-4")}>
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="recorrente" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>
+                  <Label htmlFor="recorrente" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>
                     Conta Recorrente
                   </Label>
                   <p className={cn("text-body-sm text-muted-foreground")}>

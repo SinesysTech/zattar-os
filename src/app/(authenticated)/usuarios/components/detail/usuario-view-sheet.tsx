@@ -61,20 +61,20 @@ export function UsuarioViewSheet({
                 <p className="text-sm text-muted-foreground font-medium mb-1">
                   Nome Completo
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeCompleto}</div>
+                <div className={cn("text-body")}>{usuario.nomeCompleto}</div>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground font-medium mb-1">
                   Nome de Exibição
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeExibicao}</div>
+                <div className={cn("text-body")}>{usuario.nomeExibicao}</div>
               </div>
               {usuario.cpf && (
                 <div>
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     CPF
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarCpf(usuario.cpf)}</div>
+                  <div className={cn("text-body")}>{formatarCpf(usuario.cpf)}</div>
                 </div>
               )}
               {usuario.rg && (
@@ -82,7 +82,7 @@ export function UsuarioViewSheet({
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     RG
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.rg}</div>
+                  <div className={cn("text-body")}>{usuario.rg}</div>
                 </div>
               )}
               {usuario.dataNascimento && (
@@ -90,7 +90,7 @@ export function UsuarioViewSheet({
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     Data de Nascimento
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                  <div className={cn("text-body")}>
                     {formatarData(usuario.dataNascimento)}
                   </div>
                 </div>
@@ -100,7 +100,7 @@ export function UsuarioViewSheet({
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     Gênero
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                  <div className={cn("text-body")}>
                     {formatarGenero(usuario.genero)}
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export function UsuarioViewSheet({
                       <p className="text-sm text-muted-foreground font-medium mb-1">
                         OAB
                       </p>
-                      <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                      <div className={cn("text-body")}>
                         {formatarOab(usuario.oab, usuario.ufOab)}
                       </div>
                     </div>
@@ -139,7 +139,7 @@ export function UsuarioViewSheet({
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     E-mail Corporativo
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.emailCorporativo}</div>
+                  <div className={cn("text-body")}>{usuario.emailCorporativo}</div>
                 </div>
               )}
               {usuario.emailPessoal && (
@@ -147,7 +147,7 @@ export function UsuarioViewSheet({
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     E-mail Pessoal
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.emailPessoal}</div>
+                  <div className={cn("text-body")}>{usuario.emailPessoal}</div>
                 </div>
               )}
               {usuario.telefone && (
@@ -155,7 +155,7 @@ export function UsuarioViewSheet({
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     Telefone
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                  <div className={cn("text-body")}>
                     {FORMAT.phone(usuario.telefone)}
                     {usuario.ramal && ` (Ramal: ${usuario.ramal})`}
                   </div>
@@ -170,7 +170,7 @@ export function UsuarioViewSheet({
               <div className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
                 <Heading level="subsection">Endereço</Heading>
                 <div>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                  <div className={cn("text-body")}>
                     {formatarEnderecoCompleto(usuario.endereco)}
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export function UsuarioViewSheet({
                 <p className="text-sm text-muted-foreground font-medium mb-1">
                   Data de Criação
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <div className={cn("text-body")}>
                   {formatarData(usuario.createdAt)}
                 </div>
               </div>
@@ -194,7 +194,7 @@ export function UsuarioViewSheet({
                 <p className="text-sm text-muted-foreground font-medium mb-1">
                   Última Atualização
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <div className={cn("text-body")}>
                   {formatarData(usuario.updatedAt)}
                 </div>
               </div>

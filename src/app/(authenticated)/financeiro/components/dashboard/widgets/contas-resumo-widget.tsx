@@ -73,7 +73,7 @@ function ContaSection({
         </Button>
       </div>
       <div>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
+        <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold font-heading tabular-nums")}>{formatarMoeda(valor)}</p>
         <Text variant="caption">
           {quantidade} conta{quantidade !== 1 ? 's' : ''} pendente{quantidade !== 1 ? 's' : ''}
         </Text>

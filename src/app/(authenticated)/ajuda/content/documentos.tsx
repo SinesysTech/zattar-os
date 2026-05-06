@@ -26,7 +26,7 @@ export default function DocumentosDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Documentos</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Editor de documentos com inteligência artificial integrada para criar, formatar e colaborar em textos jurídicos e administrativos.
         </p>
       </div>

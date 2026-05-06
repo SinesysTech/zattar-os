@@ -108,7 +108,7 @@ export function CaseIdentityBar({
         <ArrowLeft className="size-4" />
       </Button>
 
-      <Heading level="page" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; tracking-tight sem token DS */ "text-base tracking-tight truncate max-w-[35%] min-w-0")}>
+      <Heading level="page" className={cn(/* design-system-escape: tracking-tight sem token DS */ "text-body tracking-tight truncate max-w-[35%] min-w-0")}>
         {tituloPartes}
       </Heading>
 

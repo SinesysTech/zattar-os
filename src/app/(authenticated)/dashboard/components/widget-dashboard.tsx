@@ -281,7 +281,7 @@ function EmptyState({ onOpenPicker }: { onOpenPicker?: () => void }) {
           <LayoutGrid className="size-6 text-muted-foreground/55" />
         </div>
         <div>
-          <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "font-heading text-base font-semibold text-foreground/70")}>
+          <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body font-semibold text-foreground/70")}>
             Nenhum widget selecionado
           </p>
           <p className={cn("text-body-sm text-muted-foreground/50 mt-1 max-w-xs")}>

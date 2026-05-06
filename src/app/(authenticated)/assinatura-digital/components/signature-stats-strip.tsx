@@ -32,7 +32,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Total
             </p>
-            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
+            <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
               <AnimatedNumber value={stats.total} />
             </p>
           </div>
@@ -64,7 +64,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Tempo Médio
           </p>
-          <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-display text-base font-bold tabular-nums")}>
+          <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body font-bold tabular-nums")}>
             {stats.tempoMedio}d
           </p>
           <p className="text-[9px] text-muted-foreground/55">para conclusão</p>

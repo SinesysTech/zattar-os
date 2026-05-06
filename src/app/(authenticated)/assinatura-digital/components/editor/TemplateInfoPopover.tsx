@@ -305,7 +305,7 @@ export default function TemplateInfoPopover({
             <div className="flex items-center justify-between">
               <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
                 <FileText className="h-4 w-4 text-muted-foreground" />
-                <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold")}>
+                <SheetTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold")}>
                   {isCreating ? 'Novo Template' : 'Informações do Template'}
                 </SheetTitle>
               </div>

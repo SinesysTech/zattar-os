@@ -150,7 +150,7 @@ export default function PericiasDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Perícias</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Gestão de perícias judiciais, quesitos, peritos e laudos periciais.
         </p>
       </div>

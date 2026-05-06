@@ -134,7 +134,7 @@ export default function PropertiesPopover({
       <SheetContent side="right" className={cn(/* design-system-escape: p-5 → usar <Inset> */ "w-80 overflow-y-auto p-5")}>
         <SheetHeader className={cn(/* design-system-escape: p-0 → usar <Inset>; pb-1 padding direcional sem Inset equiv. */ "p-0 pb-1")}>
           <div className="flex items-center justify-between">
-            <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold")}>Propriedades do Campo</SheetTitle>
+            <SheetTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold")}>Propriedades do Campo</SheetTitle>
             {selectedFieldTypeLabel && (
               <Badge variant="outline" className={cn("text-caption")}>
                 {selectedFieldTypeLabel}

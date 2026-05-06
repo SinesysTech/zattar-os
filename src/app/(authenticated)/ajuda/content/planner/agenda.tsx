@@ -24,7 +24,7 @@ export default function AgendaDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Agenda</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Visualize e gerencie todos os seus compromissos, audiências, expedientes e prazos em um calendário centralizado.
         </p>
       </div>

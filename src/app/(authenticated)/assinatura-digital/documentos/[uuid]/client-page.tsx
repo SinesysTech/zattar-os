@@ -97,7 +97,7 @@ function SummaryMetric({
       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground")}>
         {label}
       </p>
-      <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-base font-semibold text-foreground")}>{value}</p>
+      <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body font-semibold text-foreground")}>{value}</p>
     </div>
   );
 }
@@ -345,7 +345,7 @@ export function DocumentoVerificacaoClient({
               viewportClassName=/* design-system-escape: px-5 padding direcional sem Inset equiv.; pb-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; lg:px-6 sem equivalente DS; lg:pb-6 sem equivalente DS; lg:pt-6 sem equivalente DS */ "px-5 pb-5 pt-6 lg:px-6 lg:pb-6 lg:pt-6"
             >
               <section className={cn(/* design-system-escape: space-y-4 → migrar para <Stack gap="default"> */ "space-y-4")}>
-                <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight">; text-lg → migrar para <Text variant="body-lg"> */ "flex items-center gap-2 text-lg")}>
+                <CardTitle className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2 text-body-lg")}>
                   <Info className="h-4 w-4" />
                   Resumo de verificação
                 </CardTitle>
@@ -437,7 +437,7 @@ export function DocumentoVerificacaoClient({
 
               <section className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3")}>
                 <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-between gap-3")}>
-                  <Heading level="section" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; gap-2 → migrar para <Inline gap="tight"> */ "text-lg flex items-center gap-2")}>
+                  <Heading level="section" className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "text-body-lg flex items-center gap-2")}>
                     <Users className="h-5 w-5" />
                     Assinantes ({data.signatarios.length})
                   </Heading>

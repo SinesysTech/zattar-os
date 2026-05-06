@@ -522,7 +522,7 @@ function RepassesTab({
                 </Text>
               </div>
               <div className="text-right">
-                <Text variant="kpi-value" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <Text variant="kpi-value" className={cn("text-body")}>
                   {formatCurrency(valorRepasse)}
                 </Text>
                 <Text variant="meta-label" className="tabular-nums">

@@ -175,7 +175,7 @@ export default function TribunaisPage() {
                 {/* Header: Acronym + Name + Grau badge */}
                 <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-start justify-between gap-2 mb-3")}>
                   <div className="min-w-0">
-                    <div className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "text-lg font-bold text-primary font-heading leading-none")}>
+                    <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "text-body-lg font-bold text-primary font-heading leading-none")}>
                       {tribunal.tribunal_codigo}
                     </div>
                     <Text variant="caption" className="text-muted-foreground/55 mt-1 truncate">

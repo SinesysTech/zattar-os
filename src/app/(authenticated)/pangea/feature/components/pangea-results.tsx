@@ -180,7 +180,7 @@ export function PangeaResults({ data }: { data: PangeaBuscaResponse }) {
                                   {r.alertaSituacao && <AppBadge variant="warning">{r.alertaSituacao}</AppBadge>}
                                 </div>
                                 <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-                                  <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; leading-6 sem token DS */ "text-base leading-6")}>{titulo}</Heading>
+                                  <Heading level="card" className={cn(/* design-system-escape: leading-6 sem token DS */ "text-body leading-6")}>{titulo}</Heading>
                                   {subtitulo && (
                                     <p className={cn(/* design-system-escape: leading-6 sem token DS */ "text-sm text-muted-foreground leading-6")}>{subtitulo}</p>
                                   )}

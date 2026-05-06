@@ -82,7 +82,7 @@ export function WidgetPicker({
         className={cn(/* design-system-escape: gap-0 gap sem token DS; p-0 → usar <Inset> */ "w-full sm:w-96 flex flex-col gap-0 p-0 bg-background/95 backdrop-blur-xl border-l border-border/20")}
       >
         <SheetHeader className={cn(/* design-system-escape: px-5 padding direcional sem Inset equiv.; pt-6 padding direcional sem Inset equiv.; pb-4 padding direcional sem Inset equiv. */ "px-5 pt-6 pb-4 border-b border-border/10")}>
-          <SheetTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "font-heading text-base font-semibold")}>
+          <SheetTitle className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body font-semibold")}>
             Personalizar Dashboard
           </SheetTitle>
           <SheetDescription className={cn("not-sr-only text-body-sm text-muted-foreground/60 mt-0.5")}>

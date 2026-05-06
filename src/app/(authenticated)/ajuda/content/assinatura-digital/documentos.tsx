@@ -26,7 +26,7 @@ export default function AssinaturaDigitalDocumentosDoc() {
         <Heading level="page">
           Assinatura Digital — Documentos
         </Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Envie documentos para coleta de assinaturas digitais, acompanhe o status em tempo real e acesse os documentos assinados.
         </p>
       </div>

@@ -73,7 +73,7 @@ export function HistoricoSalarios({ usuarioId }: HistoricoSalariosProps) {
             <Card key={salario.id}>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>{formatCurrency(salario.salarioBruto)}</CardTitle>
+                  <CardTitle className={cn("text-body-lg")}>{formatCurrency(salario.salarioBruto)}</CardTitle>
                   <p className={cn("text-body-sm text-muted-foreground")}>
                     Vigência: {new Date(salario.dataInicioVigencia).toLocaleDateString('pt-BR')} {' '}
                     {salario.dataFimVigencia

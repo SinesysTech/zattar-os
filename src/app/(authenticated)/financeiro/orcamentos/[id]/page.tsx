@@ -480,7 +480,7 @@ export default function OrcamentoDetalhesPage() {
         <Card>
           <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
             <CardDescription>Vigência</CardDescription>
-            <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>
+            <CardTitle className={cn("text-body-lg")}>
               {formatarData(orcamento.dataInicio)} - {formatarData(orcamento.dataFim)}
             </CardTitle>
           </CardHeader>

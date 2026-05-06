@@ -363,7 +363,7 @@ export function GerarPecaDialog({
           <div className={cn(/* design-system-escape: py-8 padding direcional sem Inset equiv.; space-y-4 → migrar para <Stack gap="default"> */ "py-8 space-y-4")}>
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "flex flex-col items-center gap-4")}>
               <CheckCircle2 className="h-12 w-12 text-success" />
-              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Peça gerada com sucesso!</p>
+              <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>Peça gerada com sucesso!</p>
             </div>
 
             <div className={cn(/* design-system-escape: p-4 → migrar para <Inset variant="card-compact">; space-y-2 → migrar para <Stack gap="tight"> */ "bg-muted p-4 rounded-lg space-y-2")}>

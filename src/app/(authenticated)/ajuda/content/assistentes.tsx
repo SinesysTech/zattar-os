@@ -24,7 +24,7 @@ export default function AssistentesDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Assistentes</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Assistentes de IA especializados em tarefas jurídicas específicas, cada um otimizado para um domínio diferente do trabalho advocatício.
         </p>
       </div>

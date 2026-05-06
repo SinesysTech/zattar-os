@@ -264,7 +264,7 @@ export function ExpedienteVisualizarDialog({
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/40">
                 <AlertTriangle className="h-6 w-6 text-muted-foreground/60" />
               </div>
-              <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+              <Heading level="card" className={cn("text-body")}>
                 Expediente não encontrado
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground max-w-sm")}>

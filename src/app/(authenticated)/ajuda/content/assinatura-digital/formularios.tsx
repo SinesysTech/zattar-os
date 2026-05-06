@@ -31,7 +31,7 @@ export default function AssinaturaDigitalFormulariosDoc() {
         <Heading level="page">
           Assinatura Digital — Formulários
         </Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Crie formulários públicos para coletar dados de clientes e, opcionalmente, coletar assinaturas digitais diretamente pelo link compartilhado.
         </p>
       </div>

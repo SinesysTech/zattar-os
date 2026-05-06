@@ -136,7 +136,7 @@ function ExpedienteListItem({
 
         <TabsContent value="detalhes" className={cn(/* design-system-escape: space-y-3 sem token DS */ "space-y-3 mt-0")}>
           <div className="flex items-center justify-between">
-            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg">; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-lg flex items-center gap-2")}>
+            <div className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; gap-2 → migrar para <Inline gap="tight"> */ "font-semibold text-body-lg flex items-center gap-2")}>
               {exp.classeJudicial && <span className={cn("text-muted-foreground text-body-sm uppercase")}>{exp.classeJudicial}</span>}
               {exp.numeroProcesso}
             </div>
@@ -229,7 +229,7 @@ function ExpedienteSingleDetails({
             <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-1 md:grid-cols-2 gap-4")}>
               <div>
                 <Text variant="caption">Número do Processo</Text>
-                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-medium text-lg")}>
+                <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "font-medium text-body-lg")}>
                   {expediente.numeroProcesso}
                 </div>
                 {expediente.classeJudicial && <div className={cn("text-body-sm text-muted-foreground")}>{expediente.classeJudicial}</div>}

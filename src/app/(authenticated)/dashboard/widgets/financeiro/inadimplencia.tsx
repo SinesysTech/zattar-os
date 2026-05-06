@@ -68,7 +68,7 @@ export function WidgetInadimplencia() {
               Em atraso
             </p>
             <p
-              className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold font-display tabular-nums")}
+              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold font-display tabular-nums")}
               style={{ color: ringColor }}
             >
               {valorVencido > 0 ? fmtMoeda(valorVencido) : '—'}

@@ -471,7 +471,7 @@ function RepassesTab({
                 </Text>
               </div>
               <div className="text-right">
-                <Text variant="kpi-value" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <Text variant="kpi-value" className={cn("text-body")}>
                   {formatCurrency(valorRepasse)}
                 </Text>
                 <Text variant="meta-label" className="tabular-nums">
@@ -589,7 +589,7 @@ function Field({
         variant={emphasis ? 'kpi-value' : 'caption'}
         className={cn(
           'wrap-break-word',
-          emphasis ? /* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ 'text-lg' : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-foreground/85',
+          emphasis ? 'text-body-lg' : /* design-system-escape: font-medium → className de <Text>/<Heading> */ 'font-medium text-foreground/85',
         )}
       >
         {value}

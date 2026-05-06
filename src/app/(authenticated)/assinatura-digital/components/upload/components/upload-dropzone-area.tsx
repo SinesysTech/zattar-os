@@ -158,7 +158,7 @@ function ErrorState({ message }: { message?: string }) {
         <AlertCircle className="size-7 text-destructive" />
       </div>
       <div className={cn(/* design-system-escape: space-y-1.5 sem token DS */ "space-y-1.5 max-w-sm")}>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "font-heading text-lg font-semibold text-destructive")}>
+        <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-heading text-body-lg font-semibold text-destructive")}>
           Erro no upload
         </p>
         <p className={cn("text-body-sm text-muted-foreground")}>

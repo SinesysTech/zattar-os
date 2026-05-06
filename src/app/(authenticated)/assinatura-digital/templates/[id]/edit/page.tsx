@@ -164,7 +164,7 @@ export default function EditTemplatePage({ params }: PageProps) {
               </div>
             </div>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Heading level="card" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-foreground")}>
+              <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Acesso negado
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>
@@ -191,7 +191,7 @@ export default function EditTemplatePage({ params }: PageProps) {
               </div>
             </div>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Heading level="card" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-foreground")}>
+              <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Erro ao carregar template
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>

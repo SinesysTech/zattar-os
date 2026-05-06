@@ -24,7 +24,7 @@ export default function PesquisaJuridicaDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Pesquisa Jurídica</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Ferramentas de pesquisa jurídica integradas ao sistema: Diário Oficial (Comunica CNJ) e Pangea para busca semântica em bases de dados jurídicas.
         </p>
       </div>
@@ -45,7 +45,7 @@ export default function PesquisaJuridicaDoc() {
           diretamente vinculadas aos processos cadastrados no sistema.
         </p>
 
-        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-base → migrar para <Text variant="body"> */ "font-semibold text-base mt-4 mb-3")}>O que é o Comunica CNJ</h3>
+        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body mt-4 mb-3")}>O que é o Comunica CNJ</h3>
         <p className="text-muted-foreground mb-4">
           O Comunica CNJ centraliza as comunicações processuais eletrônicas dos tribunais aderentes,
           substituindo a publicação em Diário Oficial físico para atos de comunicação endereçados
@@ -120,7 +120,7 @@ export default function PesquisaJuridicaDoc() {
           relevantes.
         </p>
 
-        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-base → migrar para <Text variant="body"> */ "font-semibold text-base mt-4 mb-3")}>Bases de Dados Disponíveis</h3>
+        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body mt-4 mb-3")}>Bases de Dados Disponíveis</h3>
         <DocActionList
           actions={[
             {
@@ -144,7 +144,7 @@ export default function PesquisaJuridicaDoc() {
           ]}
         />
 
-        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading>; text-base → migrar para <Text variant="body"> */ "font-semibold text-base mt-6 mb-3")}>Como Pesquisar no Pangea</h3>
+        <h3 className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "font-semibold text-body mt-6 mb-3")}>Como Pesquisar no Pangea</h3>
         <DocSteps
           steps={[
             {

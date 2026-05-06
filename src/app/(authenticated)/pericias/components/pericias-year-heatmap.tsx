@@ -363,7 +363,7 @@ export function PericiasYearHeatmap({
                 </Button>
               </div>
 
-              <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-base font-bold tracking-tight text-center tabular-nums")}>
+              <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center tabular-nums")}>
                 {year}
               </span>
 
@@ -462,7 +462,7 @@ export function PericiasYearHeatmap({
             >
               <Text variant="kpi-value">
                 {stats.taxaEntrega}
-                <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base text-muted-foreground/60 ml-0.5")}>
+                <span className={cn("text-body text-muted-foreground/60 ml-0.5")}>
                   %
                 </span>
               </Text>

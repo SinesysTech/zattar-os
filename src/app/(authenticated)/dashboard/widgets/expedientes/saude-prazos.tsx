@@ -77,7 +77,7 @@ export function SaudePrazos() {
             </span>
             <AnimatedNumber
               value={vencidos}
-              className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold text-destructive/80")}
+              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold text-destructive/80")}
             />
           </div>
 
@@ -87,7 +87,7 @@ export function SaudePrazos() {
             </span>
             <AnimatedNumber
               value={venceHoje}
-              className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold text-warning/80")}
+              className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold text-warning/80")}
             />
           </div>
 

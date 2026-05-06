@@ -29,7 +29,7 @@ export default function AssinaturaDigitalTemplatesDoc() {
         <Heading level="page">
           Assinatura Digital — Templates
         </Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Crie modelos reutilizáveis de documentos para assinatura digital, com campos de preenchimento posicionados e configurados para cada uso.
         </p>
       </div>

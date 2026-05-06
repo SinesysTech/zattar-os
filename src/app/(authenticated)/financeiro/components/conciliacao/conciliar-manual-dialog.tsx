@@ -156,7 +156,7 @@ export function ConciliarManualDialog({ open, onOpenChange, transacao, onSuccess
             <div className={cn(/* design-system-escape: p-3 → usar <Inset>; space-y-1 sem token DS */ "rounded-md border p-3 space-y-1")}>
               <Text variant="caption" className="uppercase">Transação importada</Text>
               <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium")}>{transacao.descricao}</p>
-              <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
+              <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{formatarValor(transacao.valor)} ({transacao.tipoTransacao === 'credito' ? 'Crédito' : 'Débito'})</p>
               <p className={cn("text-body-sm text-muted-foreground")}>Data: {transacao.dataTransacao}</p>
               {transacao.documento && (
                 <p className={cn("text-body-sm text-muted-foreground")}>Documento: {transacao.documento}</p>

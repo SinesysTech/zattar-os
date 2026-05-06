@@ -486,7 +486,7 @@ function CategoriaTab({
   return (
     <Card>
       <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-        <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{title}</CardTitle>
+        <CardTitle className={cn("text-body")}>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -878,7 +878,7 @@ export default function DREClient() {
               <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>Estrutura do DRE</CardTitle>
+                    <CardTitle className={cn("text-body")}>Estrutura do DRE</CardTitle>
                     <CardDescription>
                       {dre?.periodo.descricao || 'Selecione um período'}
                     </CardDescription>
@@ -926,7 +926,7 @@ export default function DREClient() {
           <TabsContent value="evolucao">
             <Card>
               <CardHeader className={cn(/* design-system-escape: pb-2 padding direcional sem Inset equiv. */ "pb-2")}>
-                <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>Evolução Anual</CardTitle>
+                <CardTitle className={cn("text-body")}>Evolução Anual</CardTitle>
                 <CardDescription>
                   Evolução mensal — {anoAtual}
                 </CardDescription>

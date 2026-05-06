@@ -149,7 +149,7 @@ function PaletteStatus() {
               <span>{t.title}</span>
               <span>{t.hue}</span>
             </div>
-            <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "font-heading text-base font-bold")}>{t.label}</div>
+            <div className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-heading text-body font-bold")}>{t.label}</div>
           </div>
         ))}
       </div>

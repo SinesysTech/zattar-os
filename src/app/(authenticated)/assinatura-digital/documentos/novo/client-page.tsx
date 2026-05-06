@@ -63,7 +63,7 @@ function ContextPanel() {
       <h3 className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-[10px] font-medium uppercase tracking-[0.08em] text-muted-foreground/60")}>
         Como funciona
       </h3>
-      <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-base font-bold mt-1 leading-tight text-foreground")}>
+      <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-tight sem token DS */ "font-heading text-body font-bold mt-1 leading-tight text-foreground")}>
         Envie, configure e compartilhe em 3 passos simples
       </p>
       <Text variant="caption" className="mt-1.5">

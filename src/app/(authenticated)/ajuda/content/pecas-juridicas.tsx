@@ -24,7 +24,7 @@ export default function PecasJuridicasDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div>
         <Heading level="page">Peças Jurídicas</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Gere petições, contestações, recursos e outros documentos jurídicos automaticamente a partir de modelos com placeholders inteligentes.
         </p>
       </div>

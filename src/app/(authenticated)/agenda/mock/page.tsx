@@ -514,7 +514,7 @@ function DayView({ events, currentDate, onEventClick }: { events: MockCalendarEv
           "size-10 rounded-xl flex items-center justify-center",
           isViewToday ? "bg-primary text-primary-foreground" : "bg-border/10 text-foreground/70",
         )}>
-          <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold tabular-nums")}>{currentDate.getDate()}</span>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold tabular-nums")}>{currentDate.getDate()}</span>
         </div>
         <div>
           <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-sm font-medium", isViewToday ? "text-primary" : "text-foreground/70")}>{weekdayFull(currentDate)}</p>

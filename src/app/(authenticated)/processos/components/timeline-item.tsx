@@ -156,7 +156,7 @@ export function TimelineItem({ item, index }: TimelineItemProps) {
                 {formatarGrauComOrdinal(grauOrigem)}
               </SemanticBadge>
             )}
-            <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base flex-1")}>{item.titulo}</Heading>
+            <Heading level="card" className={cn("text-body flex-1")}>{item.titulo}</Heading>
             {item.documentoSigiloso && (
               <TooltipProvider>
                 <Tooltip>

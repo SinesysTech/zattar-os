@@ -105,7 +105,7 @@ export function ProfileSidebar({
             style={{ width: 88, height: 88 }}
           >
             {avatarUrl && <AvatarImage src={avatarUrl} alt={usuario.nomeCompleto} />}
-            <AvatarFallback className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "text-lg font-semibold")}>{initials}</AvatarFallback>
+            <AvatarFallback className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body-lg font-semibold")}>{initials}</AvatarFallback>
           </Avatar>
           {/* Hover overlay */}
           <span className="absolute inset-1.5 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">

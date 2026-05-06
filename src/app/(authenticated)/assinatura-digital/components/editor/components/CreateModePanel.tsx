@@ -53,7 +53,7 @@ export function CreateModePanelUpload({ onFileUpload }: CreateModePanelUploadPro
           >
             <input {...getInputProps()} />
             <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-3" />
-            <Heading level="card" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base mb-1")}>
+            <Heading level="card" className={cn("text-body mb-1")}>
               {isDragActive ? 'Solte o arquivo aqui' : 'Faça upload do PDF do template'}
             </Heading>
             <p className={cn("text-body-sm text-muted-foreground mb-2")}>

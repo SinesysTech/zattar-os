@@ -282,7 +282,7 @@ export function ReceberContaDialog({
                   )}
                 </div>
                 <div className="text-right">
-                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; text-lg → migrar para <Text variant="body-lg"> */ "font-bold text-lg text-success")}>{formatarValor(conta.valor)}</p>
+                  <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-bold text-body-lg text-success")}>{formatarValor(conta.valor)}</p>
                   {conta.dataVencimento && (
                     <p className={cn('text-caption', isVencida ? 'text-destructive' : 'text-muted-foreground')}>
                       Venc: {format(new Date(conta.dataVencimento), 'dd/MM/yyyy')}

@@ -150,7 +150,7 @@ export function WidgetHeatmapProdutividade() {
           <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
             Melhor dia
           </p>
-          <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
             {melhorDiaValor}
           </span>
           <p className="text-[9px] text-muted-foreground/55">

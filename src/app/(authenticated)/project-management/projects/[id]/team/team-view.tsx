@@ -125,7 +125,7 @@ export function TeamView({ projeto, membros, usuarios }: TeamViewProps) {
         return (
           <Card key={papel}>
             <CardHeader>
-              <CardTitle className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg")}>
+              <CardTitle className={cn("text-body-lg")}>
                 {PAPEL_PROJETO_LABELS[papel]}s ({group.length})
               </CardTitle>
             </CardHeader>

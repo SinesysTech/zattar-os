@@ -90,7 +90,7 @@ export default function TerceirosDoc() {
     <div className={cn(/* design-system-escape: space-y-10 sem token DS */ "space-y-10")}>
       <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
         <Heading level="page">Terceiros</Heading>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-muted-foreground text-lg")}>
+        <p className={cn("text-muted-foreground text-body-lg")}>
           Cadastro de pessoas indiretamente envolvidas nos processos, como testemunhas, peritos e assistentes técnicos.
         </p>
       </div>

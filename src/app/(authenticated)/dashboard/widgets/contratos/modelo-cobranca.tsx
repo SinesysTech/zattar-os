@@ -73,7 +73,7 @@ export function WidgetModeloCobranca() {
             </p>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
-                <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>{fmtNum(proLabore.contratos)}</span>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmtNum(proLabore.contratos)}</span>
                 <span className="text-[9px] text-muted-foreground/50">contratos</span>
               </div>
               <div>
@@ -92,7 +92,7 @@ export function WidgetModeloCobranca() {
             </p>
             <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
-                <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>{fmtNum(proExito.contratos)}</span>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmtNum(proExito.contratos)}</span>
                 <span className="text-[9px] text-muted-foreground/50">contratos</span>
               </div>
               <div>

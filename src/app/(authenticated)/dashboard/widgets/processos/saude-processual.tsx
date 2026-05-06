@@ -125,7 +125,7 @@ export function WidgetSaudeProcessual() {
                 Taxa resolução
               </p>
               <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-baseline gap-1")}>
-                <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>
+                <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>
                   {stats.taxaResolucao}%
                 </span>
               </div>

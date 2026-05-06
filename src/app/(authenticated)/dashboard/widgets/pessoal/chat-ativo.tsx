@@ -47,11 +47,11 @@ export function WidgetChatAtivo() {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[10px] text-muted-foreground/50">Não lidas</p>
-          <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "text-lg font-bold tabular-nums")}>{naoLidas}</p>
+          <p className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body-lg font-bold tabular-nums")}>{naoLidas}</p>
         </div>
         <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-end gap-0.5")}>
           <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>salas</span>
-          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading> */ "text-base font-bold tabular-nums")}>{salasAtivas}</span>
+          <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "text-body font-bold tabular-nums")}>{salasAtivas}</span>
           <span className="text-[9px] text-muted-foreground/55">ativas</span>
         </div>
       </div>

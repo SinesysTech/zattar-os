@@ -115,7 +115,7 @@ export default function PlaygroundPage() {
               <CardContent className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
                 {/* Variants */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Variantes</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
                     <Button variant="default">Default</Button>
                     <Button variant="secondary">Secondary</Button>
@@ -128,7 +128,7 @@ export default function PlaygroundPage() {
 
                 {/* Sizes */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Tamanhos</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Tamanhos</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap items-center gap-3")}>
                     <Button size="sm">Small</Button>
                     <Button size="default">Default</Button>
@@ -141,7 +141,7 @@ export default function PlaygroundPage() {
 
                 {/* States */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Estados</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Estados</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
                     <Button>Normal</Button>
                     <Button disabled>Disabled</Button>
@@ -163,7 +163,7 @@ export default function PlaygroundPage() {
 
                 {/* With Icons */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Com Ícones</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Com Ícones</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
                     <Button variant="default">
                       <Check />
@@ -195,7 +195,7 @@ export default function PlaygroundPage() {
               <CardContent className={cn(/* design-system-escape: space-y-6 → migrar para <Stack gap="loose"> */ "space-y-6")}>
                 {/* Variants */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Variantes</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Variantes</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
                     <Badge variant="default">Default</Badge>
                     <Badge variant="secondary">Secondary</Badge>
@@ -211,7 +211,7 @@ export default function PlaygroundPage() {
 
                 {/* With Icons */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Com Ícones</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Com Ícones</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
                     <Badge variant="success">
                       <Check />
@@ -230,7 +230,7 @@ export default function PlaygroundPage() {
 
                 {/* Use Cases */}
                 <div>
-                  <Label className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold mb-3 block")}>Casos de Uso</Label>
+                  <Label className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold mb-3 block")}>Casos de Uso</Label>
                   <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex flex-wrap gap-3")}>
                     <Badge variant="outline">23 Processos</Badge>
                     <Badge variant="default">Urgente</Badge>

@@ -32,7 +32,7 @@ export function HorasExtrasCalculator() {
         <h1 className={cn(/* design-system-escape: tracking-tighter sem token DS */ "font-headline font-extrabold text-5xl md:text-6xl tracking-tighter text-on-surface mb-6 max-w-3xl")}>
           Calculadora de <span className="bg-linear-to-br from-primary to-primary-dim bg-clip-text text-transparent">Horas Extras</span>
         </h1>
-        <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; md:text-xl sem equivalente DS */ "text-on-surface-variant text-lg md:text-xl max-w-2xl font-body")}>
+        <p className={cn(/* design-system-escape: md:text-xl sem equivalente DS */ "text-on-surface-variant text-body-lg md:text-xl max-w-2xl font-body")}>
           Análise de precisão para acordos trabalhistas profissionais. Calcule &quot;Horas Extras&quot; com conformidade legal e validação instantânea.
         </p>
       </div>

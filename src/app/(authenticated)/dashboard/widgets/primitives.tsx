@@ -671,7 +671,7 @@ export function ComparisonStat({
     <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex flex-col gap-1")}>
       <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>{label}</p>
       <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-baseline gap-2")}>
-        <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold")}>{fmt(current)}</span>
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold")}>{fmt(current)}</span>
         <span className={`text-[10px] font-medium ${isPositive ? 'text-success/70' : 'text-destructive/70'}`}>
           {isPositive ? '+' : ''}{pctChange.toFixed(1)}%
         </span>

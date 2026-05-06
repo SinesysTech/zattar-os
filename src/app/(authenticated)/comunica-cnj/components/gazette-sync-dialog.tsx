@@ -108,7 +108,7 @@ function SyncResultGrid({ result }: { result: MockSyncResult }) {
     <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS; p-3 → usar <Inset> */ "grid grid-cols-5 gap-1.5 rounded-lg bg-muted/20 border border-border/30 p-3")}>
       {items.map(({ label, value, color }) => (
         <div key={label} className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
-          <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ 'text-base font-semibold tabular-nums', color)}>
+          <span className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ 'text-body font-semibold tabular-nums', color)}>
             {value}
           </span>
           <span className="text-[9px] text-muted-foreground">{label}</span>

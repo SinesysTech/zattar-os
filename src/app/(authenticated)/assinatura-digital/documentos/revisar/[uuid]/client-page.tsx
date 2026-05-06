@@ -224,7 +224,7 @@ function SectionHeader({
         <span className={cn("inline-flex size-8 items-center justify-center rounded-lg", tile)}>
           <Icon className="size-4" />
         </span>
-        <h2 className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-heading text-base font-bold leading-none")}>{title}</h2>
+        <h2 className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-heading text-body font-bold leading-none")}>{title}</h2>
       </div>
       {action}
     </div>

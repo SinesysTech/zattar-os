@@ -50,13 +50,13 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
               <p className="text-sm text-muted-foreground font-medium mb-1">
                 Nome Completo
               </p>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.nomeCompleto}</div>
+              <div className={cn("text-body")}>{usuario.nomeCompleto}</div>
             </div>
             <div>
               <p className="text-sm text-muted-foreground font-medium mb-1">
                 Nome de Exibição
               </p>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+              <div className={cn("text-body")}>
                 {formatarNomeExibicao(usuario.nomeExibicao)}
               </div>
             </div>
@@ -69,7 +69,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   <Calendar className="h-4 w-4" />
                   Nascimento
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+                <div className={cn("text-body")}>
                   {formatDate(usuario.dataNascimento)}
                 </div>
               </div>
@@ -81,7 +81,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   <UserCircle className="h-4 w-4" />
                   Gênero
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base capitalize")}>
+                <div className={cn("text-body capitalize")}>
                   {usuario.genero.replace('_', ' ')}
                 </div>
               </div>
@@ -92,7 +92,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                 <FileText className="h-4 w-4" />
                 CPF
               </p>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{formatarCpf(usuario.cpf)}</div>
+              <div className={cn("text-body")}>{formatarCpf(usuario.cpf)}</div>
             </div>
 
             {usuario.rg && (
@@ -101,7 +101,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   <FileText className="h-4 w-4" />
                   RG
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.rg}</div>
+                <div className={cn("text-body")}>{usuario.rg}</div>
               </div>
             )}
           </div>
@@ -122,7 +122,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <Phone className="h-4 w-4" />
                     Telefone
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{FORMAT.phone(usuario.telefone)}</div>
+                  <div className={cn("text-body")}>{FORMAT.phone(usuario.telefone)}</div>
                 </div>
               )}
 
@@ -132,7 +132,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <Phone className="h-4 w-4" />
                     Ramal
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.ramal}</div>
+                  <div className={cn("text-body")}>{usuario.ramal}</div>
                 </div>
               )}
             </div>
@@ -144,7 +144,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                 <Mail className="h-4 w-4" />
                 E-mail Corporativo
               </p>
-              <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.emailCorporativo}</div>
+              <div className={cn("text-body")}>{usuario.emailCorporativo}</div>
             </div>
 
             {usuario.emailPessoal && (
@@ -153,7 +153,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   <Mail className="h-4 w-4" />
                   E-mail Pessoal
                 </p>
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.emailPessoal}</div>
+                <div className={cn("text-body")}>{usuario.emailPessoal}</div>
               </div>
             )}
           </div>
@@ -173,13 +173,13 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     OAB
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.oab}</div>
+                  <div className={cn("text-body")}>{usuario.oab}</div>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground font-medium mb-1">
                     UF OAB
                   </p>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.ufOab}</div>
+                  <div className={cn("text-body")}>{usuario.ufOab}</div>
                 </div>
               </>
             )}
@@ -191,7 +191,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
               </p>
               {usuario.cargo ? (
                 <div>
-                  <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>{usuario.cargo.nome}</div>
+                  <div className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{usuario.cargo.nome}</div>
                   {usuario.cargo.descricao && (
                     <div className={cn("text-body-sm text-muted-foreground mt-0.5")}>
                       {usuario.cargo.descricao}
@@ -199,7 +199,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                   )}
                 </div>
               ) : (
-                <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base text-muted-foreground")}>
+                <div className={cn("text-body text-muted-foreground")}>
                   Não informado
                 </div>
               )}
@@ -222,7 +222,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       CEP
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.cep}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.cep}</div>
                   </div>
                 )}
 
@@ -231,7 +231,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       Logradouro
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.logradouro}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.logradouro}</div>
                   </div>
                 )}
 
@@ -240,7 +240,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       Número
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.numero}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.numero}</div>
                   </div>
                 )}
 
@@ -249,7 +249,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       Complemento
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.complemento}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.complemento}</div>
                   </div>
                 )}
 
@@ -258,7 +258,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       Bairro
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.bairro}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.bairro}</div>
                   </div>
                 )}
 
@@ -267,7 +267,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       Cidade
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.cidade}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.cidade}</div>
                   </div>
                 )}
 
@@ -276,7 +276,7 @@ export function UsuarioDadosBasicos({ usuario }: UsuarioDadosBasicosProps) {
                     <p className="text-sm text-muted-foreground font-medium mb-1">
                       UF
                     </p>
-                    <div className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>{usuario.endereco.estado}</div>
+                    <div className={cn("text-body")}>{usuario.endereco.estado}</div>
                   </div>
                 )}
               </div>

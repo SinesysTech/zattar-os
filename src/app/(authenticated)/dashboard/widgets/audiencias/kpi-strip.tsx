@@ -86,7 +86,7 @@ export function KpiStrip() {
         <div className={cn(/* design-system-escape: gap-0.5 gap sem token DS */ "flex flex-col items-center gap-0.5")}>
           <div className={cn(/* design-system-escape: gap-1 gap sem token DS */ "flex items-center gap-1")}>
             <Clock className="size-3 text-muted-foreground/50" />
-            <span className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-bold → className de <Text>/<Heading> */ "font-display text-lg font-bold tabular-nums")}>
+            <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading> */ "font-display text-body-lg font-bold tabular-nums")}>
               {duracaoMedia > 0 ? `${duracaoMedia}` : '--'}
             </span>
           </div>

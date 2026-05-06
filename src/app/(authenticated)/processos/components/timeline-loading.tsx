@@ -58,7 +58,7 @@ export function TimelineLoading({
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center justify-center gap-3")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
-              <Text variant="label" as="p" className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>{message}</Text>
+              <Text variant="label" as="p" className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{message}</Text>
               {isCapturing && (
                 <>
                   <Progress value={undefined} className="w-64 mx-auto" />
@@ -104,7 +104,7 @@ export function TimelineLoading({
         <div className={cn(/* design-system-escape: gap-3 gap sem token DS; py-8 padding direcional sem Inset equiv. */ "flex items-center justify-center gap-3 py-8")}>
           <LoadingSpinner className="size-6 text-primary" />
           <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "text-center space-y-2")}>
-            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-medium → className de <Text>/<Heading> */ "text-base font-medium")}>{message}</p>
+            <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body font-medium")}>{message}</p>
             {isCapturing && (
               <>
                 <Progress value={undefined} className="w-64 mx-auto" />

@@ -51,7 +51,7 @@ export function TemplateCard({
           <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center gap-2")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
             <div className={cn(/* design-system-escape: space-y-1 sem token DS */ "space-y-1")}>
-              <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base line-clamp-1")}>{template.titulo}</CardTitle>
+              <CardTitle className={cn("text-body line-clamp-1")}>{template.titulo}</CardTitle>
               {template.categoria && (
                 <Badge variant="secondary" className={cn("text-caption")}>
                   {template.categoria}

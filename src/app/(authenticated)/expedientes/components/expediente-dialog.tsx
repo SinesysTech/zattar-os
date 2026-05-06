@@ -695,7 +695,7 @@ export function ExpedienteDialog({
             icon={CheckCircle2}
             title="Processo vinculado"
           >
-            <p className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-semibold → className de <Text>/<Heading> */ "text-base font-semibold tabular-nums")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "text-body font-semibold tabular-nums")}>
               {processoSelecionado.numeroProcesso}
             </p>
             <dl className={cn(/* design-system-escape: gap-3 gap sem token DS */ "grid grid-cols-1 gap-3 sm:grid-cols-2")}>

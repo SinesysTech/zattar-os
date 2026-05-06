@@ -128,7 +128,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 gap-4")}>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
             <Text variant="caption">IOPS</Text>
-            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body-lg font-semibold")}>
               {disk_iops_consumption.toLocaleString('pt-BR')}
               <span className={cn("text-body-sm font-normal text-muted-foreground")}> / {disk_iops_limit.toLocaleString('pt-BR')}</span>
             </p>
@@ -137,7 +137,7 @@ export function DiskIOCard({ diskIO, diskIOStatus, diskIOMessage }: DiskIOCardPr
           {/* Throughput */}
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-md border p-3")}>
             <Text variant="caption">Throughput</Text>
-            <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-semibold → className de <Text>/<Heading> */ "mt-1 text-lg font-semibold")}>
+            <p className={cn(/* design-system-escape: font-semibold → className de <Text>/<Heading> */ "mt-1 text-body-lg font-semibold")}>
               {disk_io_consumption_mbps.toFixed(1)}
               <span className={cn("text-body-sm font-normal text-muted-foreground")}> / {disk_io_limit_mbps.toFixed(1)} MB/s</span>
             </p>

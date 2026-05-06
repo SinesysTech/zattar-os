@@ -220,7 +220,7 @@ export default function ContaPagarDetalhesPage() {
           Voltar
         </Button>
         <div className={cn(/* design-system-escape: p-8 → usar <Inset> */ "rounded-md bg-muted p-8 text-center")}>
-          <p className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg">; font-medium → className de <Text>/<Heading> */ "text-lg font-medium")}>Conta não encontrada</p>
+          <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading> */ "text-body-lg font-medium")}>Conta não encontrada</p>
           <p className={cn("text-body-sm text-muted-foreground")}>
             A conta solicitada não existe ou foi removida.
           </p>

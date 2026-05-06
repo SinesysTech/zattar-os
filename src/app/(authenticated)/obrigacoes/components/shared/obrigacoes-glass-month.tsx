@@ -377,7 +377,7 @@ export function ObrigacoesGlassMonth({
           </Button>
         </div>
 
-        <span className={cn(/* design-system-escape: text-base → migrar para <Text variant="body">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-base font-bold tracking-tight text-center")}>
+        <span className={cn(/* design-system-escape: font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ "text-body font-bold tracking-tight text-center")}>
           {format(currentMonth, 'MMMM yyyy', { locale: ptBR }).replace(
             /^\w/,
             (c) => c.toUpperCase(),

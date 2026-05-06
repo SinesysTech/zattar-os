@@ -169,7 +169,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
               <AlertCircle className="h-10 w-10 text-destructive" />
             </div>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Heading level="card" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-foreground")}>
+              <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Acesso negado
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>
@@ -196,7 +196,7 @@ export default function FormularioSchemaPage({ params }: PageProps) {
               </div>
             </div>
             <div className={cn(/* design-system-escape: space-y-2 → migrar para <Stack gap="tight"> */ "space-y-2")}>
-              <Heading level="card" className={cn(/* design-system-escape: text-lg → migrar para <Text variant="body-lg"> */ "text-lg text-foreground")}>
+              <Heading level="card" className={cn("text-body-lg text-foreground")}>
                 Erro ao carregar formulário
               </Heading>
               <p className={cn("text-body-sm text-muted-foreground")}>{error}</p>

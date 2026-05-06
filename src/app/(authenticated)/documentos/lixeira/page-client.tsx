@@ -160,7 +160,7 @@ function DocumentoCard({
           <div className={cn(/* design-system-escape: gap-3 gap sem token DS */ "flex items-center gap-3")}>
             <FileText className="h-5 w-5 text-muted-foreground" />
             <div>
-              <CardTitle className={cn(/* design-system-escape: text-base → migrar para <Text variant="body"> */ "text-base")}>
+              <CardTitle className={cn("text-body")}>
                 {documento.titulo || 'Documento sem título'}
               </CardTitle>
               <CardDescription>
