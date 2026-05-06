@@ -20,7 +20,7 @@ import {
 import { STATUS_FOLHA_CORES } from '../../utils';
 import { useFolhaPagamento, cancelarFolha } from '../../hooks';
 import { toast } from 'sonner';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 
 interface FolhaDetalhesProps {
   folhaId: number;
@@ -117,21 +117,21 @@ export function FolhaDetalhes({ folhaId }: FolhaDetalhesProps) {
         <CardContent className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid gap-4 md:grid-cols-3")}>
           <div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Funcionários</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>{folha.totalFuncionarios}</p>
+            <Text variant="kpi-value">{folha.totalFuncionarios}</Text>
           </div>
           <div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Valor Total</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold text-success")}>
+            <Text variant="kpi-value" className="text-success">
               {formatCurrency(folha.valorTotal ?? 0)}
-            </p>
+            </Text>
           </div>
           <div>
             <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>Data de Pagamento</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-semibold → className de <Text>/<Heading> */ "text-xl font-semibold")}>
+            <Text variant="kpi-value">
               {folha.dataPagamento
                 ? new Date(folha.dataPagamento).toLocaleDateString('pt-BR')
                 : '-'}
-            </p>
+            </Text>
           </div>
         </CardContent>
       </Card>

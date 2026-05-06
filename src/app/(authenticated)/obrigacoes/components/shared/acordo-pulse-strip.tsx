@@ -12,6 +12,7 @@ import * as React from 'react';
 import { parseISO, differenceInCalendarDays, format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AlertTriangle, CalendarClock, CheckCircle2, Wallet } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
@@ -67,9 +68,9 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
             <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/50 truncate")}>
               Saldo devedor
             </p>
-            <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight mt-1")}>
+            <Text variant="kpi-value" className="mt-1">
               {CURRENCY.format(saldoDevedor)}
-            </p>
+            </Text>
             <p className="text-[10px] text-muted-foreground/45 mt-0.5">
               de {CURRENCY.format(acordo.valorTotal)}
             </p>
@@ -88,9 +89,9 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
               Parcelas pagas
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={acordo.parcelasPagas} />
-              </p>
+              </Text>
               <span className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground/50 tabular-nums")}>
                 / {acordo.totalParcelas}
               </span>
@@ -163,20 +164,20 @@ export function AcordoPulseStrip({ acordo }: AcordoPulseStripProps) {
             </p>
             {proximaParcela ? (
               <>
-                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-xl font-bold tabular-nums leading-none tracking-tight mt-1")}>
+                <Text variant="kpi-value" className="mt-1">
                   {format(parseISO(proximaParcela.dataVencimento), "dd 'de' MMM", {
                     locale: ptBR,
                   })}
-                </p>
+                </Text>
                 <p className="text-[10px] text-muted-foreground/45 mt-0.5 tabular-nums">
                   {CURRENCY.format(proximaParcela.valorBrutoCreditoPrincipal)}
                 </p>
               </>
             ) : (
               <>
-                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-xl font-bold leading-none tracking-tight mt-1 text-muted-foreground/40")}>
+                <Text variant="kpi-value" className="mt-1 text-muted-foreground/40">
                   —
-                </p>
+                </Text>
                 <p className="text-[10px] text-muted-foreground/45 mt-0.5">
                   Sem pendências
                 </p>

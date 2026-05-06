@@ -6,6 +6,7 @@ import { Database, CheckCircle2, Loader2, AlertTriangle } from 'lucide-react';
 import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
 import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
+import { Text } from '@/components/ui/typography';
 
 export interface CapturaKpiData {
   total: number;
@@ -40,9 +41,9 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
               Total Capturas
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={data.total} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
@@ -68,9 +69,9 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
               Taxa de Sucesso
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={data.taxaSucesso} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/65">%</span>
             </div>
           </div>
@@ -99,9 +100,9 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
               Em Andamento
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={data.emAndamento} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-info/8">
@@ -129,9 +130,9 @@ export function CapturaKpiStrip({ data }: CapturaKpiStripProps) {
               Falhas (7d)
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={data.falhas} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-destructive/8">

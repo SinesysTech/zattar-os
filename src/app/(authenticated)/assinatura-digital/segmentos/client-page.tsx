@@ -30,6 +30,7 @@ import {
   SegmentoDeleteDialog,
   SegmentoDuplicateDialog,
 } from '../formularios/components';
+import { Text } from '@/components/ui/typography';
 
 // =============================================================================
 // HOOK
@@ -178,9 +179,9 @@ export function SegmentosClient() {
                 <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60")}>
                   {label}
                 </p>
-                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "mt-1 font-display text-xl font-bold tabular-nums leading-none")}>
+                <Text variant="kpi-value" className="mt-1">
                   {value}
-                </p>
+                </Text>
               </div>
               <IconContainer size="md" className={tint}>
                 <Icon className={`size-4 ${iconColor}`} />

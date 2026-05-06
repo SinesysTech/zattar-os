@@ -7,6 +7,7 @@ import { GlassPanel } from '@/components/shared/glass-panel';
 import { IconContainer } from '@/components/ui/icon-container';
 import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import type { ItemDocumento } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 export interface DocumentosKpiStripProps {
   items: ItemDocumento[];
@@ -87,9 +88,9 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
               Itens
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.total} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">neste nível</span>
             </div>
           </div>
@@ -114,9 +115,9 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
               Pastas
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.pastas} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">
                 {stats.pastas === 1 ? 'pasta' : 'pastas'}
               </span>
@@ -151,9 +152,9 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
               Documentos
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.documentos} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">
                 + {stats.arquivos} arquivo{stats.arquivos === 1 ? '' : 's'}
               </span>
@@ -193,9 +194,9 @@ export function DocumentosKpiStrip({ items, className }: DocumentosKpiStripProps
               Armazenamento
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {stats.storageValue}
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">{stats.storageUnit}</span>
             </div>
           </div>

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/shared/glass-panel";
+import { Text } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -70,9 +71,9 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
               Eventos
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {data.totalEventos}
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">total</span>
             </div>
           </div>
@@ -90,9 +91,9 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
               Audiências Hoje
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {data.audienciasHoje}
-              </p>
+              </Text>
             </div>
           </div>
           <div className="size-8 rounded-lg bg-info/8 flex items-center justify-center shrink-0">
@@ -109,9 +110,9 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
               Prazos 7d
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {data.prazos7d}
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">fatais</span>
             </div>
           </div>
@@ -129,9 +130,9 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
               Horas Ocupadas
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {data.horasOcupadas}
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">h</span>
             </div>
           </div>
@@ -161,9 +162,9 @@ export function AgendaKpiStrip({ data, className }: AgendaKpiStripProps) {
               Preparo
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {data.prepPercent}%
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/40">{prepLabel(data.prepPercent)}</span>
             </div>
           </div>

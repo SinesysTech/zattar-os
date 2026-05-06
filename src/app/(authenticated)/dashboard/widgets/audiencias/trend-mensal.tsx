@@ -18,6 +18,7 @@ import {
 } from '../primitives';
 import { WidgetSkeleton } from '../shared/widget-skeleton';
 import { useDashboard, isDashboardUsuario } from '../../hooks';
+import { Text } from '@/components/ui/typography';
 
 // ─── Inline TrendAreaChart ──────────────────────────────────────────────
 
@@ -142,9 +143,9 @@ export function TrendMensal() {
             <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] text-muted-foreground/50 uppercase tracking-wider")}>
               Mes Atual
             </p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold tabular-nums")}>
+            <Text variant="kpi-value">
               {currentMonth}
-            </p>
+            </Text>
           </div>
           <div>
             <span

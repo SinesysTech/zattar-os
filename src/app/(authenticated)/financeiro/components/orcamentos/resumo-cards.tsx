@@ -13,6 +13,7 @@ import {
   PlayCircle,
   Archive,
 } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 
 // ============================================================================
 // Tipos
@@ -122,7 +123,7 @@ export function ResumoCards({
               </div>
               <div>
                 <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{item.titulo}</p>
-                <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{item.valor}</p>
+                <Text variant="kpi-value">{item.valor}</Text>
               </div>
             </div>
           </CardContent>

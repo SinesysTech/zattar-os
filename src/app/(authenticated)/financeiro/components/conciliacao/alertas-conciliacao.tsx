@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Clock, CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { Text } from '@/components/ui/typography';
 
 interface ResumoProps {
   totalPendentes: number;
@@ -114,7 +115,7 @@ export function AlertasConciliacao({ resumo, isLoading, onFiltrarPendentes, onFi
                 </div>
                 <div>
                   <p className={cn(/* design-system-escape: text-sm → migrar para <Text variant="body-sm"> */ "text-sm text-muted-foreground")}>{card.title}</p>
-                  <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-2xl font-bold")}>{valor}</p>
+                  <Text variant="kpi-value">{valor}</Text>
                 </div>
               </div>
             </CardContent>

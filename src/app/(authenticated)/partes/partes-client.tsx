@@ -69,7 +69,7 @@ import { ClienteFormDialog } from './components/clientes/cliente-form';
 import { ParteContrariaFormDialog } from './components/partes-contrarias/parte-contraria-form';
 import { TerceiroFormDialog } from './components/terceiros/terceiro-form';
 import { RepresentanteFormDialog } from './components/representantes/representante-form';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { Button } from '@/components/ui/button';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -256,19 +256,19 @@ function EntityDetail({ data, onClose }: EntityDetailProps) {
       {/* Métricas */}
       <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default">; p-3 → usar <Inset> */ "flex gap-4 p-3 rounded-xl bg-foreground/3 border border-border/10 mb-5")}>
         <div className="flex-1 text-center">
-          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold")}>{data.metricas.ativos}</p>
+          <Text variant="kpi-value">{data.metricas.ativos}</Text>
           <p className="text-[9px] text-muted-foreground/60">Ativos</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
-          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-muted-foreground/70")}>
+          <Text variant="kpi-value" className="text-muted-foreground/70">
             {Math.max(0, data.metricas.total - data.metricas.ativos)}
-          </p>
+          </Text>
           <p className="text-[9px] text-muted-foreground/60">Encerrados</p>
         </div>
         <div className="w-px bg-border/10" />
         <div className="flex-1 text-center">
-          <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "font-display text-xl font-bold text-primary/70")}>{data.metricas.total}</p>
+          <Text variant="kpi-value" className="text-primary/70">{data.metricas.total}</Text>
           <p className="text-[9px] text-muted-foreground/60">Total</p>
         </div>
       </div>

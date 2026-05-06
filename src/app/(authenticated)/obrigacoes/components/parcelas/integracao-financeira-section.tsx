@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { AppBadge as Badge } from '@/components/ui/app-badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -139,19 +139,19 @@ export function IntegracaoFinanceiraSection({ acordoId, onSyncComplete }: Integr
         <div className={cn(/* design-system-escape: gap-4 → migrar para <Inline gap="default"> */ "grid grid-cols-2 md:grid-cols-4 gap-4 mb-4")}>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-muted/50 p-3")}>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Total</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold")}>{statusSync.totalParcelas}</p>
+            <Text variant="kpi-value">{statusSync.totalParcelas}</Text>
           </div>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-success/15 p-3")}>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Sincronizadas</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-success")}>{statusSync.parcelasSincronizadas}</p>
+            <Text variant="kpi-value" className="text-success">{statusSync.parcelasSincronizadas}</Text>
           </div>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-warning/15 p-3")}>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Pendentes</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-warning")}>{statusSync.parcelasPendentes}</p>
+            <Text variant="kpi-value" className="text-warning">{statusSync.parcelasPendentes}</Text>
           </div>
           <div className={cn(/* design-system-escape: p-3 → usar <Inset> */ "rounded-lg bg-destructive/15 p-3")}>
             <p className={cn(/* design-system-escape: text-xs → migrar para <Text variant="caption"> */ "text-xs text-muted-foreground")}>Inconsistentes</p>
-            <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading> */ "text-xl font-bold text-destructive")}>{statusSync.parcelasInconsistentes}</p>
+            <Text variant="kpi-value" className="text-destructive">{statusSync.parcelasInconsistentes}</Text>
           </div>
         </div>
       )}

@@ -30,7 +30,7 @@ import {
   InsightBanner,
 } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { AppBadge } from '@/components/ui/app-badge';
-import { Heading } from '@/components/ui/typography';
+import { Heading, Text } from '@/components/ui/typography';
 import { cn } from '@/lib/utils';
 import { ExpedienteVisualizarDialog } from './expediente-visualizar-dialog';
 
@@ -434,9 +434,9 @@ export function ExpedientesWeekMission({
             <div className={cn(/* design-system-escape: gap-2 → migrar para <Inline gap="tight"> */ "flex items-center justify-between gap-2")}>
               <div>
                 <p className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[10px] uppercase tracking-wider text-muted-foreground/65")}>{kpi.label}</p>
-                <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; tracking-tight sem token DS */ 'mt-1 text-xl font-bold tabular-nums tracking-tight', kpi.highlight && 'text-destructive/80')}>
+                <Text variant="kpi-value" className={cn('mt-1', kpi.highlight && 'text-destructive/80')}>
                   <AnimatedNumber value={kpi.value} />
-                </p>
+                </Text>
               </div>
               <kpi.icon className={cn('size-4', kpi.color)} />
             </div>

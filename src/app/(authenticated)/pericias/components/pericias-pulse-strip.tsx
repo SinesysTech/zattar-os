@@ -19,6 +19,7 @@ import {
 } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { cn } from '@/lib/utils';
 import type { PericiasPulseStats } from '../actions';
+import { Text } from '@/components/ui/typography';
 
 interface PericiasPulseStripProps {
   stats: PericiasPulseStats;
@@ -44,9 +45,9 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
               Perícias Ativas
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.ativas} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-primary/8">
@@ -74,9 +75,9 @@ export function PericiasPulseStrip({ stats }: PericiasPulseStripProps) {
               Aguardando Laudo
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-2xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS; tracking-tight sem token DS */ "font-display text-2xl font-bold tabular-nums leading-none tracking-tight")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.aguardandoLaudo} />
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-info/8">

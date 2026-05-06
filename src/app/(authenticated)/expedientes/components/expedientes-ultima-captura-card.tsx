@@ -8,6 +8,7 @@ import { IconContainer } from '@/components/ui/icon-container';
 import { AnimatedNumber } from '@/app/(authenticated)/dashboard/widgets/primitives';
 import { cn } from '@/lib/utils';
 import type { ResumoUltimaCaptura } from '../domain';
+import { Text } from '@/components/ui/typography';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,9 +36,9 @@ function MetricColumn({
       <p className={cn(/* design-system-escape: font-medium → className de <Text>/<Heading>; tracking-wider sem token DS */ "text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 truncate")}>
         {label}
       </p>
-      <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none mt-1 text-foreground")}>
+      <Text variant="kpi-value" className="mt-1 text-foreground">
         <AnimatedNumber value={value} />
-      </p>
+      </Text>
       <div className="mt-2 h-1 rounded-full bg-muted/30 overflow-hidden">
         <div
           className={cn('h-full rounded-full transition-all duration-700', barColor)}

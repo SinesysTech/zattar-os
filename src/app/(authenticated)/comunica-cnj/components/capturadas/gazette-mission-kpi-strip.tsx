@@ -13,6 +13,7 @@ import type {
   ComunicacaoCNJEnriquecida,
   GazetteMetrics,
 } from '@/app/(authenticated)/comunica-cnj/domain';
+import { Text } from '@/components/ui/typography';
 
 export interface GazetteMissionKpiStripProps {
   metricas: GazetteMetrics | null;
@@ -103,9 +104,9 @@ export function GazetteMissionKpiStrip({
               Publicações hoje
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.publicacoesHoje} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/65">
                 / {stats.total.toLocaleString('pt-BR')} total
               </span>
@@ -148,9 +149,9 @@ export function GazetteMissionKpiStrip({
               Próximo prazo
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 {stats.proximoLabel}
-              </p>
+              </Text>
             </div>
           </div>
           <IconContainer size="md" className="bg-warning/8">
@@ -172,9 +173,9 @@ export function GazetteMissionKpiStrip({
               Vinculadas
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.vinculados} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/65">
                 / {stats.total.toLocaleString('pt-BR')}
               </span>
@@ -206,9 +207,9 @@ export function GazetteMissionKpiStrip({
               Prazos críticos
             </p>
             <div className={cn(/* design-system-escape: gap-1.5 gap sem token DS */ "flex items-baseline gap-1.5 mt-1")}>
-              <p className={cn(/* design-system-escape: text-xl → migrar para <Heading level="...">; font-bold → className de <Text>/<Heading>; leading-none sem token DS */ "font-display text-xl font-bold tabular-nums leading-none")}>
+              <Text variant="kpi-value">
                 <AnimatedNumber value={stats.prazosCriticos} />
-              </p>
+              </Text>
               <span className="text-[10px] text-muted-foreground/65">
                 {stats.orfaos} órfã{stats.orfaos === 1 ? '' : 's'}
               </span>
