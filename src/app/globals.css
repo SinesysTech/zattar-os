@@ -1934,7 +1934,7 @@
   .inset-section       { @apply p-4 sm:p-6; }
 
   /* Variants DIMENSIONAIS (padding único, sem responsividade) — Wave 11.
-     Mesma escala dos tokens inline-*/stack-* para consistência mental.
+     Mesma escala dos tokens inline-* / stack-* para consistência mental.
      Use quando o caller quer padding específico sem matching semântico. */
   .inset-none          { @apply p-0; }    /* 0px  — desabilitar padding */
   .inset-nano          { @apply p-0.5; }  /* 2px */
