@@ -115,6 +115,7 @@
     "mcp:test-all": "tsx scripts/mcp/test-all-tools.ts",
     "mcp:docs": "tsx scripts/mcp/generate-docs.ts",
     "ai:reindex": "tsx scripts/ai/reindex-all.ts",
+    "rag:eval": "tsx scripts/rag-eval/run.ts",
     "db:check-bloat": "tsx scripts/db/check-bloat.ts",
     "db:types": "bash scripts/dev-tools/update-types.sh --write",
     "db:types:check": "bash scripts/dev-tools/update-types.sh --check",

@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "base": "jurisprudencia-e-legislacao-trabalhista",
+  "queries": [
+    {
+      "id": "q1",
+      "query": "terceirização",
+      "expected_chunk_ids": [677, 702, 874],
+      "notes": "Termo presente no conteúdo de 3 chunks indexados — BM25 deve dominar"
+    },
+    {
+      "id": "q2",
+      "query": "Súmula 331 sobre terceirização lícita",
+      "expected_chunk_ids": [874],
+      "notes": "Query semântica — testa se vetor capta a referência específica à SUM-331"
+    },
+    {
+      "id": "q3",
+      "query": "horas in itinere",
+      "expected_chunk_ids": [],
+      "notes": "Query genérica jurídica — qualquer chunk sobre tempo de deslocamento serve"
+    },
+    {
+      "id": "q4",
+      "query": "OJ-SDI1-381",
+      "expected_chunk_ids": [677],
+      "notes": "Citação exata de OJ — BM25 obrigatório"
+    },
+    {
+      "id": "q5",
+      "query": "responsabilidade subsidiária empresa tomadora de serviços",
+      "expected_chunk_ids": [677, 874],
+      "notes": "Query semântica longa — testa rerank em chunks similares"
+    },
+    {
+      "id": "q6",
+      "query": "intervalo intrajornada rurícola",
+      "expected_chunk_ids": [677],
+      "notes": "Termos exatos do conteúdo de OJ-SDI1-381"
+    },
+    {
+      "id": "q7",
+      "query": "telemar privatização incentivo rescisão",
+      "expected_chunk_ids": [702],
+      "notes": "Match exato no chunk 702 sobre OJ-SDI1T-67"
+    },
+    {
+      "id": "q8",
+      "query": "FGTS bancário",
+      "expected_chunk_ids": [],
+      "notes": "Query parcial — chunks com SUM-63 sobre FGTS devem ranquear alto"
+    }
+  ]
+}
