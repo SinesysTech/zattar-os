@@ -204,8 +204,8 @@ export function AcordoDetalhesV2Client({
               )}
               {processo?.numero_processo && (
                 <Text
-                  variant="caption"
-                  className={cn( "font-medium text-foreground/85 tabular-nums")}
+                  variant="caption" weight="medium"
+                  className={cn( "text-foreground/85 tabular-nums")}
                 >
                   {processo.numero_processo}
                 </Text>
@@ -436,8 +436,8 @@ function DetalhesAcordoCard({ acordo }: { acordo: AcordoComParcelas }) {
               {r.label}
             </Text>
             <Text
-              variant="caption"
-              className={cn( "font-medium text-foreground/85 tabular-nums block mt-0.5 truncate")}
+              variant="caption" weight="medium"
+              className={cn( "text-foreground/85 tabular-nums block mt-0.5 truncate")}
             >
               {r.value}
             </Text>
@@ -501,8 +501,8 @@ function RepassesTab({
               <div className="min-w-0">
                 <div className={cn("flex items-center inline-tight")}>
                   <Text
-                    variant="caption"
-                    className={cn( "font-medium text-foreground/85")}
+                    variant="caption" weight="medium"
+                    className={cn( "text-foreground/85")}
                   >
                     Parcela {parcela.numeroParcela}
                   </Text>
@@ -607,8 +607,8 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
               <div className={cn("flex items-center inline-tight")}>
                 <Icon className="w-3.5 h-3.5 text-muted-foreground/50" />
                 <Text
-                  variant="caption"
-                  className={cn( "font-medium text-foreground/85")}
+                  variant="caption" weight="medium"
+                  className={cn( "text-foreground/85")}
                 >
                   {event.label}
                 </Text>

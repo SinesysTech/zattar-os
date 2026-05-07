@@ -115,7 +115,7 @@ export function TimelineSidebar({
                 <div className="h-8 w-px bg-transparent" aria-hidden="true" />
               </div>
               <div className={cn("flex items-center border-b border-dashed border-border/70 pb-4")}>
-                <Text variant="caption" className="font-medium italic">
+                <Text variant="caption" weight="medium" className="italic">
                   Início do processo
                 </Text>
               </div>

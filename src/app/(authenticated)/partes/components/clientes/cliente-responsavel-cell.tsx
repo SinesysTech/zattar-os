@@ -112,12 +112,12 @@ export function ClienteResponsavelCell({
                                     {getInitials(responsavel.nomeExibicao)}
                                 </AvatarFallback>
                             </Avatar>
-                            <Text variant="caption" className="truncate max-w-30 font-normal text-foreground">
+                            <Text variant="caption" weight="normal" className="truncate max-w-30 text-foreground">
                                 {responsavel.nomeExibicao}
                             </Text>
                         </>
                     ) : (
-                        <Text variant="caption" as="span" className="font-normal">Não atribuído</Text>
+                        <Text variant="caption" weight="normal" as="span">Não atribuído</Text>
                     )}
                 </Button>
             </PopoverTrigger>

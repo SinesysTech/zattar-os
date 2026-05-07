@@ -255,7 +255,7 @@ function PericiaItem({ pericia }: { pericia: Pericia }) {
           ) : (
             <Clock className="w-3 h-3 text-foreground/40 shrink-0" />
           )}
-          <Text variant="caption" className="font-semibold text-foreground/85 truncate">
+          <Text variant="caption" weight="semibold" className="text-foreground/85 truncate">
             {pericia.especialidade?.descricao || 'Perícia técnica'}
           </Text>
         </div>

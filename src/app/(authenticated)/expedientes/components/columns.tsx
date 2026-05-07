@@ -83,7 +83,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
+    <Text variant="caption" weight="medium" className="inline-flex items-center shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className={cn("bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}
@@ -213,7 +213,7 @@ export function TipoDescricaoCell({
             </PopoverTrigger>
             <PopoverContent className={cn("w-64 inset-tight")} align="start" onInteractOutside={(e) => e.preventDefault()}>
               <div className={cn("flex flex-col stack-tight")}>
-                <Text variant="caption" className="font-medium">Tipo de Expediente</Text>
+                <Text variant="caption" weight="medium">Tipo de Expediente</Text>
                 <Select
                   value={expediente.tipoExpedienteId?.toString() || 'null'}
                   onValueChange={handleSaveTipo}

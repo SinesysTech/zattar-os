@@ -736,7 +736,7 @@ export function PartesClient({ initialStats }: PartesClientProps) {
             >
               <ChevronLeft className="size-4 text-muted-foreground/60" />
             </button>
-            <Text variant="caption" className="font-medium tabular-nums px-2">
+            <Text variant="caption" weight="medium" className="tabular-nums px-2">
               {pagina} / {totalPages}
             </Text>
             <button

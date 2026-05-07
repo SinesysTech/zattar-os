@@ -90,7 +90,7 @@ export function AttentionStrip({
                   {countdown.label}
                 </span>
               </div>
-              <Text variant="caption" className="font-medium truncate">
+              <Text variant="caption" weight="medium" className="truncate">
                 {proximaAudiencia.tipoDescricao || 'Audiência'}
               </Text>
               <p className="text-[10px] text-muted-foreground/70 mt-0.5">

@@ -63,7 +63,7 @@ function TribunalGrauBadge({ trt, grau }: { trt: string; grau: GrauTribunal }) {
   };
 
   return (
-    <Text variant="caption" className="inline-flex items-center font-medium shrink-0">
+    <Text variant="caption" weight="medium" className="inline-flex items-center shrink-0">
       {/* Tribunal (lado esquerdo - azul, arredondado à esquerda) */}
       <span className={cn("bg-info/15 text-info px-2 py-0.5 rounded-l-full")}>
         {trt}

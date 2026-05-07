@@ -273,7 +273,11 @@ const PATTERNS = {
   cssVarDef: /^\s*(--[a-zA-Z0-9-]+)\s*:/gm,
   toolbarWrongSize: /\btext-(caption|sm|base)\b/g,
   // Novas KPIs de Violations
-  typographyRaw: /\b(text-(xs|sm|base|lg|xl|2xl|3xl)|font-(semibold|bold|medium)|leading-|tracking-)\b/g,
+  // Wave 12a: split context-free (sizes) vs context-aware (weights/leading/tracking).
+  // Sizes (Categoria C) contam em qualquer lugar.
+  typographySizesRaw: /\btext-(xs|sm|base|lg|xl|2xl|3xl)\b/g,
+  // Weights/leading/tracking (Categoria B) só contam dentro de <Text>/<Heading>.
+  typographyWeightsRaw: /\b(font-(semibold|bold|medium)|leading-|tracking-)\b/g,
   spacingRaw: /\b(p|px|py|pt|pb|pl|pr|m|mx|my|gap|space-(x|y))-[0-9.]+\b/g,
 };
 
@@ -368,10 +372,34 @@ function isDerivedAlias(token: string): boolean {
   return DERIVED_ALIASES_PATTERNS.some((re) => re.test(token));
 }
 
+/**
+ * Extrai os intervalos de caracteres ocupados por aberturas <Text ...> e <Heading ...>
+ * num arquivo TSX. Usado pelo detector context-aware: violações font-*, leading-*,
+ * tracking-* só contam quando caem dentro destes intervalos.
+ *
+ * Diretiva da Wave 9 (commit 8a69ac9c3): font-* em wrapper bruto (span/div/p/...) é
+ * uso legítimo de Tailwind. Só conta como violação quando o wrapper é tipado.
+ *
+ * Limitação conhecida: regex lazy `[\s\S]*?>` para no primeiro `>` encontrado,
+ * incluindo `>` dentro de expressões `{...}` (arrow functions `=>`, comparações
+ * `x > 0`). Em JSX desse codebase, `<Text>`/`<Heading>` raramente carregam essas
+ * construções; falsos negativos pontuais são aceitáveis para o propósito do audit.
+ */
+function extractTypedJsxRanges(content: string): Array<[number, number]> {
+  const ranges: Array<[number, number]> = [];
+  const re = /<(Text|Heading)\b[\s\S]*?>/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(content)) !== null) {
+    ranges.push([m.index, m.index + m[0].length]);
+  }
+  return ranges;
+}
+
 async function findViolations(
   files: string[],
   pattern: RegExp,
   ruleName: string,
+  shouldCount?: (file: string, content: string, matchIndex: number) => boolean,
 ): Promise<Violation[]> {
   const violations: Violation[] = [];
   for (const file of files) {
@@ -380,13 +408,18 @@ async function findViolations(
 
     const content = await fs.readFile(file, 'utf-8');
     const lines = content.split('\n');
-    lines.forEach((line, idx) => {
+    let lineStart = 0;
+    for (let idx = 0; idx < lines.length; idx++) {
+      const line = lines[idx];
       pattern.lastIndex = 0;
       let m;
       while ((m = pattern.exec(line)) !== null) {
+        const absIndex = lineStart + m.index;
+        if (shouldCount && !shouldCount(rel, content, absIndex)) continue;
         violations.push({ file: rel, line: idx + 1, match: m[0], rule: ruleName });
       }
-    });
+      lineStart += line.length + 1;
+    }
   }
   return violations;
 }
@@ -558,7 +591,7 @@ async function auditAdoption(files: string[]): Promise<AdoptionMetrics> {
 }
 
 async function auditViolations(files: string[]): Promise<ViolationsReport> {
-  const [bg, text, border, hex, oklch, shadow, composition, white, typographyRaw, spacingRaw] = await Promise.all([
+  const [bg, text, border, hex, oklch, shadow, composition, white, typographySizes, typographyWeights, spacingRaw] = await Promise.all([
     findViolations(files, PATTERNS.bgColor, 'hardcoded-bg-color'),
     findViolations(files, PATTERNS.textColor, 'hardcoded-text-color'),
     findViolations(files, PATTERNS.borderColor, 'hardcoded-border-color'),
@@ -567,9 +600,27 @@ async function auditViolations(files: string[]): Promise<ViolationsReport> {
     findViolations(files, PATTERNS.shadowXl, 'shadow-xl'),
     findViolations(files, PATTERNS.manualComposition, 'manual-composition'),
     findViolations(files, PATTERNS.whiteLowOpacity, 'white-low-opacity'),
-    findViolations(files, PATTERNS.typographyRaw, 'typography-raw'),
+    findViolations(files, PATTERNS.typographySizesRaw, 'typography-raw'),
+    findViolations(
+      files,
+      PATTERNS.typographyWeightsRaw,
+      'typography-raw',
+      (() => {
+        // Cache per-file ranges para evitar re-scan a cada match.
+        let cachedFile = '';
+        let cachedRanges: Array<[number, number]> = [];
+        return (file, content, matchIndex) => {
+          if (file !== cachedFile) {
+            cachedFile = file;
+            cachedRanges = extractTypedJsxRanges(content);
+          }
+          return cachedRanges.some(([s, e]) => matchIndex >= s && matchIndex < e);
+        };
+      })(),
+    ),
     findViolations(files, PATTERNS.spacingRaw, 'spacing-raw'),
   ]);
+  const typographyRaw = [...typographySizes, ...typographyWeights];
 
   const toolbarFiles = files.filter(isToolbarFile);
   const toolbarWrongSize = await findViolations(

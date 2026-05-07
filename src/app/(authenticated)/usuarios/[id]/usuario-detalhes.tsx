@@ -392,7 +392,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                 <Heading level="card" className="mb-4">Credenciais de Acesso</Heading>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="space-y-1">
-                    <Text variant="label" className="font-medium">Redefinir Senha</Text>
+                    <Text variant="label" weight="medium">Redefinir Senha</Text>
                     <Text variant="body-sm" className="text-muted-foreground">
                       Define uma nova senha para o usuário selecionado.
                     </Text>
@@ -419,7 +419,7 @@ export function UsuarioDetalhes({ id }: UsuarioDetalhesProps) {
                   </div>
                   <div className="flex items-center justify-between p-4 border border-border/20 rounded-xl">
                     <div className="space-y-0.5">
-                      <Text variant="label" className="font-medium">Super Administrador</Text>
+                      <Text variant="label" weight="medium">Super Administrador</Text>
                       <Text variant="body-sm" className="text-muted-foreground">
                         Super Admins possuem acesso total ao sistema e bypassam todas as permissões.
                       </Text>

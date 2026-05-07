@@ -67,7 +67,7 @@ export function ViewerToolbar({
       {/* Título do documento atual */}
       {title && (
         <div className={cn("pointer-events-auto flex items-center inline-tight rounded-full bg-card/90 backdrop-blur-sm border shadow-sm px-3 py-1.5 min-w-0 max-w-xs lg:max-w-sm")}>
-          <Text variant="caption" className="truncate font-medium text-foreground">{title}</Text>
+          <Text variant="caption" weight="medium" className="truncate text-foreground">{title}</Text>
           {date && (
             <>
               <span className="text-muted-foreground/50 shrink-0" aria-hidden="true">&middot;</span>

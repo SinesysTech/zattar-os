@@ -332,10 +332,10 @@ function TimelineCard({ audiencia, onClick }: { audiencia: Audiencia; onClick: (
 
         {(audiencia.poloAtivoNome || audiencia.poloPassivoNome) && (
           <div className={cn("flex flex-col mt-1 stack-nano")}>
-            <Text variant="caption" className="truncate font-semibold text-foreground">
+            <Text variant="caption" weight="semibold" className="truncate text-foreground">
               {audiencia.poloAtivoNome || '—'}
             </Text>
-            <Text variant="caption" className="truncate font-semibold text-foreground">
+            <Text variant="caption" weight="semibold" className="truncate text-foreground">
               <span className="mr-1 text-[9px] font-normal text-muted-foreground/70">vs</span>
               {audiencia.poloPassivoNome || '—'}
             </Text>

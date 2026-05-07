@@ -57,7 +57,7 @@ export function AchievementByYear({ data }: AchievementByYearProps) {
           <div key={item.ano} className={cn("grid auto-rows-min inline-tight")}>
             <Text variant="kpi-value" className="flex items-baseline gap-1">
               {item.totalConcluidos}
-              <Text variant="caption" className="font-normal">
+              <Text variant="caption" weight="normal">
                 projetos
               </Text>
             </Text>

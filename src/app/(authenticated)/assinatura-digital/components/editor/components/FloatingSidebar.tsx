@@ -99,7 +99,7 @@ function FieldPaletteCard({
       >
         <Icon className="size-4" />
       </span>
-      <Text variant="caption" className="font-medium text-foreground">{label}</Text>
+      <Text variant="caption" weight="medium" className="text-foreground">{label}</Text>
     </div>
   );
 }
@@ -177,7 +177,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                   <Camera className="size-3.5 text-info/70" />
                 </span>
                 <div className="min-w-0">
-                  <Text variant="caption" className="font-medium">Selfie de verificação</Text>
+                  <Text variant="caption" weight="medium">Selfie de verificação</Text>
                   <p className="text-[11px] text-muted-foreground mt-0.5">
                     Exigir foto do assinante
                   </p>
@@ -215,7 +215,7 @@ function SidebarContent(props: FloatingSidebarProps) {
                 <span className="inline-flex size-9 items-center justify-center rounded-lg bg-foreground/5">
                   <Settings className="size-4 text-muted-foreground" />
                 </span>
-                <Text variant="caption" className="font-medium text-foreground">
+                <Text variant="caption" weight="medium" className="text-foreground">
                   Nenhum assinante
                 </Text>
                 <p className={cn("text-[11px] text-muted-foreground max-w-45 leading-relaxed")}>

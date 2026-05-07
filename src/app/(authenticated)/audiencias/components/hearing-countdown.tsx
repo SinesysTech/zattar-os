@@ -61,7 +61,7 @@ export function HearingCountdown({ targetDate, className, compact = false }: Hea
 
   if (timeLeft.total <= 0) {
     return (
-      <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/60", className)}>
+      <Text variant="caption" weight="medium" as="span" className={cn( "text-muted-foreground/60", className)}>
         Agora
       </Text>
     );

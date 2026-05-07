@@ -153,7 +153,7 @@ export function AllDetailsSheet({
                 <div className={cn("flex flex-col stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {expedientes.map((exp) => (
                     <GlassPanel key={exp.id} depth={1} className={cn("px-3 py-2.5")}>
-                      <Text variant="caption" className="font-medium">Expediente</Text>
+                      <Text variant="caption" weight="medium">Expediente</Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">
                         {exp.dataCriacaoExpediente
                           ? new Date(exp.dataCriacaoExpediente).toLocaleDateString('pt-BR')
@@ -176,7 +176,7 @@ export function AllDetailsSheet({
                 <div className={cn("flex flex-col stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {audiencias.map((aud) => (
                     <GlassPanel key={aud.id} depth={1} className={cn("px-3 py-2.5")}>
-                      <Text variant="caption" className="font-medium">
+                      <Text variant="caption" weight="medium">
                         {aud.tipoDescricao || 'Audiência'}
                       </Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">
@@ -198,7 +198,7 @@ export function AllDetailsSheet({
                 <div className={cn("flex flex-col stack-tight max-h-[60vh] overflow-y-auto pr-1")}>
                   {pericias.map((per) => (
                     <GlassPanel key={per.id} depth={1} className={cn("px-3 py-2.5")}>
-                      <Text variant="caption" className="font-medium">
+                      <Text variant="caption" weight="medium">
                         {per.especialidade?.descricao || 'Perícia'}
                       </Text>
                       <p className="text-[11px] text-muted-foreground/60 mt-0.5">

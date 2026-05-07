@@ -131,7 +131,7 @@ function MatchCriteriaList({ criterios }: { criterios: MatchCriterio[] }) {
             <Circle className="mt-0.5 size-3.5 shrink-0 text-muted-foreground/65" />
           )}
           <div className={cn(!c.match && 'opacity-50')}>
-            <Text variant="caption" className="font-medium">{c.campo}</Text>
+            <Text variant="caption" weight="medium">{c.campo}</Text>
             <Text variant="micro-caption" className="ml-1.5">
               {c.detalhe}
             </Text>

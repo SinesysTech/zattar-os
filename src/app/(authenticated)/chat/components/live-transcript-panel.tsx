@@ -52,7 +52,7 @@ export function LiveTranscriptPanel({ transcripts, isVisible, onClose }: LiveTra
             transcripts.map((segment) => (
               <div key={segment.id} className={cn("flex flex-col inline-micro")}>
                 <div className={cn("flex items-center justify-between inline-tight")}>
-                  <Text variant="caption" className="font-bold text-info truncate max-w-37.5">
+                  <Text variant="caption" weight="bold" className="text-info truncate max-w-37.5">
                     {segment.participantName}
                   </Text>
                   <span className="text-[10px] text-video-muted">

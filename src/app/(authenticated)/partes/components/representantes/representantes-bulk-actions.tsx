@@ -40,7 +40,7 @@ export function RepresentantesBulkActionsBar({
 
   return (
     <div className={cn("flex items-center inline-tight rounded-md border bg-muted/50 px-3 py-2")}>
-      <Text variant="caption" as="span" className={cn( "font-medium whitespace-nowrap")}>
+      <Text variant="caption" weight="medium" as="span" className={cn( "whitespace-nowrap")}>
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>
       <div className={cn("flex items-center inline-micro ml-2")}>

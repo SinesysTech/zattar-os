@@ -105,7 +105,7 @@ export function MiniCalendar({
     <GlassPanel className={cn("inset-card-compact", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <Text variant="caption" className="font-semibold text-foreground">
+        <Text variant="caption" weight="semibold" className="text-foreground">
           {MONTH_NAMES[month]} {year}
         </Text>
         <div className={cn("flex inline-micro")}>

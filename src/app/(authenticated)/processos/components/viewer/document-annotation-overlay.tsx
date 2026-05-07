@@ -63,7 +63,7 @@ export function DocumentAnnotationOverlay({
             <StickyNote className="size-3.5" />
           </div>
           <div>
-            <Text variant="label" as="p" className={cn( "font-semibold text-foreground")}>Anotações</Text>
+            <Text variant="label" weight="semibold" as="p" className={cn( "text-foreground")}>Anotações</Text>
             <Text variant="caption" className="text-muted-foreground">Painel flutuante da leitura</Text>
           </div>
         </div>
@@ -71,7 +71,7 @@ export function DocumentAnnotationOverlay({
 
       <div className={cn("flex flex-col border-b px-3 py-2.5 stack-tight")}>
         <div className={cn("rounded-xl border bg-muted/25 px-3 py-2")}>
-          <Text variant="caption" className="truncate font-medium text-foreground">
+          <Text variant="caption" weight="medium" className="truncate text-foreground">
             {itemTitle || 'Nenhum evento selecionado'}
           </Text>
           {itemDate && <p className="mt-0.5 text-[11px] text-muted-foreground">{itemDate}</p>}

@@ -205,8 +205,8 @@ export function AcordoDetalhesClient({
               )}
               {processo?.numero_processo && (
                 <Text
-                  variant="caption"
-                  className={cn( "font-medium text-foreground/85 tabular-nums")}
+                  variant="caption" weight="medium"
+                  className={cn( "text-foreground/85 tabular-nums")}
                 >
                   {processo.numero_processo}
                 </Text>
@@ -453,7 +453,7 @@ function RepassesTab({
             <div className={cn("flex items-center justify-between inline-medium flex-wrap")}>
               <div className="min-w-0">
                 <div className={cn("flex items-center inline-tight")}>
-                  <Text variant="caption" className={cn( "font-medium text-foreground/85")}>Parcela {parcela.numeroParcela}</Text>
+                  <Text variant="caption" weight="medium" className={cn( "text-foreground/85")}>Parcela {parcela.numeroParcela}</Text>
                   <span
                     className={cn(
                       /* design-system-escape: px-1.5 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv.; */ 'inline-flex items-center rounded px-1.5 py-0.5 border text-[9px] font-semibold',
@@ -550,7 +550,7 @@ function TimelineTab({ acordo }: { acordo: AcordoComParcelas }) {
               />
               <div className={cn("flex items-center inline-tight")}>
                 <Icon className="w-3.5 h-3.5 text-muted-foreground/50" />
-                <Text variant="caption" className={cn( "font-medium text-foreground/85")}>{event.label}</Text>
+                <Text variant="caption" weight="medium" className={cn( "text-foreground/85")}>{event.label}</Text>
               </div>
               <Text variant="meta-label" className="mt-0.5">
                 {format(parseISO(event.date), "dd 'de' MMM 'de' yyyy", {

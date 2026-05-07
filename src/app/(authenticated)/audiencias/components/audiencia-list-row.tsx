@@ -134,7 +134,7 @@ export function AudienciaListRow({ audiencia, onClick, selected, className }: Au
 
       {/* Main info */}
       <div className="flex-1 min-w-0">
-        <Text variant="caption" as="p" className={cn( "font-medium truncate text-foreground/80")}>{audiencia.tipoDescricao || 'Audiência'}</Text>
+        <Text variant="caption" weight="medium" as="p" className={cn( "truncate text-foreground/80")}>{audiencia.tipoDescricao || 'Audiência'}</Text>
         <p className="text-micro-caption text-muted-foreground/65 truncate">
           {audiencia.poloAtivoNome || '—'} vs {audiencia.poloPassivoNome || '—'}
         </p>

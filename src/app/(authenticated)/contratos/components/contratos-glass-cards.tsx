@@ -345,8 +345,8 @@ function GlassCard({
         </div>
         {segmentoNome && (
           <Text
-            variant="micro-badge"
-            className="inline-flex items-center font-medium text-muted-foreground/65 bg-muted/50 border border-border/50 rounded px-1.5 py-0.5 mt-0.5"
+            variant="micro-badge" weight="medium"
+            className="inline-flex items-center text-muted-foreground/65 bg-muted/50 border border-border/50 rounded px-1.5 py-0.5 mt-0.5"
           >
             {segmentoNome}
           </Text>
@@ -357,7 +357,7 @@ function GlassCard({
       <div className={cn("relative mt-3 pt-3 border-t border-border/20")}>
         <div className={cn("flex items-center inline-snug mb-1.5")}>
           <Scale className="size-3 text-muted-foreground/70" />
-          <Text variant="micro-caption" className={cn( "font-medium text-muted-foreground/70")}>
+          <Text variant="micro-caption" weight="medium" className={cn( "text-muted-foreground/70")}>
             {processos.length === 0
               ? 'Sem processos vinculados'
               : `${processos.length} ${processos.length === 1 ? 'processo' : 'processos'}`}

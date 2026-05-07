@@ -128,8 +128,8 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
           <div className={cn("flex flex-col inline-micro")}>
             <Text variant="meta-label">Recebido</Text>
             <Text
-              variant="label"
-              className={cn( "font-heading font-bold text-success tabular-nums text-[15px]")}
+              variant="label" weight="bold"
+              className={cn( "font-heading text-success tabular-nums text-[15px]")}
             >
               {formatCurrency(totalReceitas)}
             </Text>
@@ -137,8 +137,8 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
           <div className={cn("flex flex-col inline-micro")}>
             <Text variant="meta-label">Pendente</Text>
             <Text
-              variant="label"
-              className={cn( "font-heading font-bold text-warning tabular-nums text-[15px]")}
+              variant="label" weight="bold"
+              className={cn( "font-heading text-warning tabular-nums text-[15px]")}
             >
               {formatCurrency(totalPendente)}
             </Text>
@@ -146,10 +146,10 @@ function FinanceiroResumoSection({ lancamentos }: { lancamentos: Lancamento[] })
         </div>
         <div>
           <div className="flex justify-between mb-1.5">
-            <Text variant="caption" className={cn( "font-medium")}>
+            <Text variant="caption" weight="medium">
               Progresso de recebimento
             </Text>
-            <Text variant="caption" className={cn( "text-primary font-bold tabular-nums")}>
+            <Text variant="caption" weight="bold" className={cn( "text-primary tabular-nums")}>
               {pctRecebido}%
             </Text>
           </div>

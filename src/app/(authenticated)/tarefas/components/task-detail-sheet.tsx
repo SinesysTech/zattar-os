@@ -325,21 +325,21 @@ export function TaskDetailSheet() {
                                 {/* Status & Details Grid */}
                                 <div className={cn("grid grid-cols-2 inline-loose sm:grid-cols-3")}>
                                     <div className={cn("flex flex-col stack-micro")}>
-                                        <Text variant="caption" className="font-medium uppercase tracking-wider">Status</Text>
+                                        <Text variant="caption" weight="medium" className="uppercase tracking-wider">Status</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {statusInfo?.icon && <statusInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn( "text-body-sm font-medium")}>{statusInfo?.label || tarefa.status}</span>
                                         </div>
                                     </div>
                                     <div className={cn("flex flex-col stack-micro")}>
-                                        <Text variant="caption" className="font-medium uppercase tracking-wider">Prioridade</Text>
+                                        <Text variant="caption" weight="medium" className="uppercase tracking-wider">Prioridade</Text>
                                         <div className={cn("flex items-center inline-tight")}>
                                             {priorityInfo?.icon && <priorityInfo.icon className="h-4 w-4 text-muted-foreground" />}
                                             <span className={cn( "text-body-sm font-medium")}>{priorityInfo?.label || tarefa.priority}</span>
                                         </div>
                                     </div>
                                     <div className={cn("flex flex-col stack-micro col-span-2 sm:col-span-1")}>
-                                        <Text variant="caption" className="font-medium uppercase tracking-wider">Prazo</Text>
+                                        <Text variant="caption" weight="medium" className="uppercase tracking-wider">Prazo</Text>
                                         <div className={cn("flex items-center inline-tight text-body-sm")}>
                                             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
                                             <span>{tarefa.dueDate ? format(new Date(tarefa.dueDate), "dd/MM/yyyy", { locale: ptBR }) : "Sem prazo"}</span>
@@ -351,7 +351,7 @@ export function TaskDetailSheet() {
                                     <>
                                         <Separator className={cn("my-6")} />
                                         <div className={cn("flex flex-col stack-tight")}>
-                                            <Text variant="caption" className="font-medium uppercase tracking-wider">Descrição</Text>
+                                            <Text variant="caption" weight="medium" className="uppercase tracking-wider">Descrição</Text>
                                             <p className={cn("text-body-sm text-foreground whitespace-pre-wrap leading-relaxed")}>
                                                 {tarefa.description}
                                             </p>
@@ -366,7 +366,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn("flex items-center inline-tight")}>
                                             <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                                            <Heading level="card" className={cn( "text-body-sm font-semibold")}>Subtarefas</Heading>
+                                            <Heading level="card" weight="semibold" className={cn( "text-body-sm")}>Subtarefas</Heading>
                                         </div>
                                         {tarefa.subTasks && tarefa.subTasks.length > 0 && (
                                             <Text variant="caption">
@@ -419,7 +419,7 @@ export function TaskDetailSheet() {
                                     <div className="flex items-center justify-between">
                                         <div className={cn("flex items-center inline-tight")}>
                                             <Paperclip className="h-4 w-4 text-muted-foreground" />
-                                            <Heading level="card" className={cn( "text-body-sm font-semibold")}>Anexos</Heading>
+                                            <Heading level="card" weight="semibold" className={cn( "text-body-sm")}>Anexos</Heading>
                                         </div>
                                         <Button
                                             variant="ghost"
@@ -455,7 +455,7 @@ export function TaskDetailSheet() {
                                                         <Paperclip className="h-4 w-4 text-primary" />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <Text variant="caption" className="font-medium truncate">{file.name}</Text>
+                                                        <Text variant="caption" weight="medium" className="truncate">{file.name}</Text>
                                                         <p className="text-[10px] text-muted-foreground">
                                                             {file.size ? `${(file.size / 1024).toFixed(1)} KB` : "Arquivo"}
                                                         </p>
@@ -483,7 +483,7 @@ export function TaskDetailSheet() {
                                 <div className={cn("flex flex-col stack-default")}>
                                     <div className={cn("flex items-center inline-tight")}>
                                         <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                                        <Heading level="card" className={cn( "text-body-sm font-semibold")}>Comentários</Heading>
+                                        <Heading level="card" weight="semibold" className={cn( "text-body-sm")}>Comentários</Heading>
                                     </div>
 
                                     <div className={cn("flex flex-col stack-default pb-4")}>
@@ -509,7 +509,7 @@ export function TaskDetailSheet() {
                                                     </div>
                                                     <div className={cn("flex flex-col flex-1 stack-micro")}>
                                                         <div className="flex items-center justify-between">
-                                                            <Text variant="caption" className="font-semibold">Você</Text>
+                                                            <Text variant="caption" weight="semibold">Você</Text>
                                                             <span className="text-[10px] text-muted-foreground">
                                                                 {format(new Date(comment.createdAt), "dd/MM/yyyy HH:mm", { locale: ptBR })}
                                                             </span>

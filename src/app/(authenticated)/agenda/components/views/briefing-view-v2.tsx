@@ -189,7 +189,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           <>
             <div className={cn("flex items-center inline-medium mt-6 mb-3")}>
               <Sun className="size-4 text-warning" />
-              <Text variant="caption" className="font-semibold text-muted-foreground/50 uppercase tracking-wider">Manhã</Text>
+              <Text variant="caption" weight="semibold" className="text-muted-foreground/50 uppercase tracking-wider">Manhã</Text>
               <div className="flex-1 h-px bg-border/8" />
             </div>
             {morning.map((evt) => <BriefingEventCard key={evt.id} event={evt} onClick={() => onEventClick?.(evt)} />)}
@@ -201,7 +201,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           <>
             <div className={cn("flex items-center inline-medium mt-6 mb-3")}>
               <Sunset className="size-4 text-warning/70" />
-              <Text variant="caption" className="font-semibold text-muted-foreground/50 uppercase tracking-wider">Tarde</Text>
+              <Text variant="caption" weight="semibold" className="text-muted-foreground/50 uppercase tracking-wider">Tarde</Text>
               <div className="flex-1 h-px bg-border/8" />
             </div>
             {afternoon.map((evt) => <BriefingEventCard key={evt.id} event={evt} onClick={() => onEventClick?.(evt)} />)}
@@ -213,13 +213,13 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
       <div className={cn("flex flex-col w-64 shrink-0 stack-default hidden lg:flex lg:flex-col")}>
         {prepItems.length > 0 && (
           <GlassPanel className={cn("inset-card-compact")}>
-            <div className={cn("flex items-center inline-tight mb-3")}><ShieldCheck className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Radar de Preparo</Text></div>
+            <div className={cn("flex items-center inline-tight mb-3")}><ShieldCheck className="size-3.5 text-primary" /><Text variant="caption" weight="semibold" className="text-foreground">Radar de Preparo</Text></div>
             <div className={cn("flex flex-col stack-medium")}>{prepItems.map((item) => <PrepProgress key={item.id} label={item.label} percent={item.percent} size="md" />)}</div>
           </GlassPanel>
         )}
         {alerts.length > 0 && (
           <GlassPanel className={cn("inset-card-compact")}>
-            <div className={cn("flex items-center inline-tight mb-3")}><Bell className="size-3.5 text-warning" /><Text variant="caption" className="font-semibold text-foreground">Alertas</Text></div>
+            <div className={cn("flex items-center inline-tight mb-3")}><Bell className="size-3.5 text-warning" /><Text variant="caption" weight="semibold" className="text-foreground">Alertas</Text></div>
             <div className={cn("flex flex-col stack-tight")}>
               {alerts.map((alert) => {
                 const Icon = alert.severity === "critical" ? AlertCircle : alert.severity === "warning" ? TriangleAlert : Clock;
@@ -238,7 +238,7 @@ export function BriefingViewV2({ currentDate, events, userName = "Jordan", onEve
           </GlassPanel>
         )}
         <GlassPanel className={cn("inset-card-compact")}>
-          <div className={cn("flex items-center inline-tight mb-3")}><Zap className="size-3.5 text-primary" /><Text variant="caption" className="font-semibold text-foreground">Ações Rápidas</Text></div>
+          <div className={cn("flex items-center inline-tight mb-3")}><Zap className="size-3.5 text-primary" /><Text variant="caption" weight="semibold" className="text-foreground">Ações Rápidas</Text></div>
           <div className={cn("flex flex-col stack-snug")}>
             {[
               { icon: ExternalLink, label: "Abrir PJe" },

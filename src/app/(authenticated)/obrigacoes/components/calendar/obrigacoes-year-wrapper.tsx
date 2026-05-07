@@ -145,7 +145,7 @@ export function ObrigacoesYearWrapper({
                 >
                   <div className={cn("flex items-center justify-between inline-medium")}>
                     <div className="flex-1 min-w-0">
-                      <Text variant="caption" className="font-medium truncate">
+                      <Text variant="caption" weight="medium" className="truncate">
                         Parcela {item.parcela.numeroParcela} ·{' '}
                         {item.acordo.processo?.numero_processo ||
                           `Acordo #${item.acordo.id}`}
@@ -163,7 +163,7 @@ export function ObrigacoesYearWrapper({
                         </span>
                       </div>
                     </div>
-                    <Text variant="caption" className="shrink-0 font-medium tabular-nums">
+                    <Text variant="caption" weight="medium" className="shrink-0 tabular-nums">
                       {CURRENCY.format(item.parcela.valorBrutoCreditoPrincipal)}
                     </Text>
                   </div>

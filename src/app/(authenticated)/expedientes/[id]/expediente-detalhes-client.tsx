@@ -720,9 +720,9 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
             Arquivos vinculados
           </Text>
           <Heading
-            level="card"
+            level="card" weight="bold"
             as="h3"
-            className={cn( "font-bold text-foreground mt-1 tabular-nums")}
+            className={cn( "text-foreground mt-1 tabular-nums")}
           >
             {arquivos.length.toString().padStart(2, '0')}{' '}
             <span className="text-muted-foreground/70 font-normal">documentos</span>
@@ -742,8 +742,8 @@ function ArquivosTab({ arquivos }: { arquivos: DetalheArquivo[] }) {
               className={cn("w-full group flex items-center inline-default-plus py-5 text-left transition-colors hover:bg-muted/20 rounded-xl px-3 -mx-3")}
             >
               <Text
-                variant="micro-caption"
-                className={cn( "font-semibold text-muted-foreground/65 tabular-nums w-6")}
+                variant="micro-caption" weight="semibold"
+                className={cn( "text-muted-foreground/65 tabular-nums w-6")}
               >
                 {(idx + 1).toString().padStart(2, '0')}
               </Text>
@@ -963,9 +963,9 @@ function MetaPill({ label, value }: { label: string; value: string }) {
         {label}
       </Text>
       <Text
-        variant="caption"
+        variant="caption" weight="medium"
         as="span"
-        className={cn( "font-medium text-foreground/85 tabular-nums")}
+        className={cn( "text-foreground/85 tabular-nums")}
       >
         {value}
       </Text>
@@ -976,9 +976,9 @@ function MetaPill({ label, value }: { label: string; value: string }) {
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
     <Text
-      variant="micro-badge"
+      variant="micro-badge" weight="semibold"
       as="p"
-      className={cn( "font-semibold uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5")}
+      className={cn( "uppercase tracking-[0.22em] text-muted-foreground/55 mb-1.5")}
     >
       {children}
     </Text>
@@ -1239,9 +1239,9 @@ function InlineTipoEditor({
         <Command className="bg-transparent">
           <div className={cn("px-3 pt-3 pb-1.5")}>
             <Text
-              variant="micro-badge"
+              variant="micro-badge" weight="medium"
               as="p"
-              className={cn( "font-medium text-muted-foreground/70 uppercase tracking-[0.2em] mb-2")}
+              className={cn( "text-muted-foreground/70 uppercase tracking-[0.2em] mb-2")}
             >
               Escolher tipo
             </Text>

@@ -118,7 +118,7 @@ export function ConflictAlert({ audiencias, dailyAverage = 2.5, className }: Con
       <div className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <AlertTriangle className="size-3 text-destructive/50" />
-          <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/75")}>
+          <Text variant="caption" weight="medium" as="span" className={cn( "text-muted-foreground/75")}>
             {conflicts.length} {conflicts.length === 1 ? "alerta" : "alertas"}
           </Text>
         </div>

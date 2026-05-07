@@ -58,7 +58,7 @@ export function TimelineLoading({
           <div className={cn("flex items-center justify-center inline-medium")}>
             <LoadingSpinner size="lg" className="text-primary" />
             <div className={cn("flex flex-col text-center stack-tight")}>
-              <Text variant="label" as="p" className={cn( "text-body font-medium")}>{message}</Text>
+              <Text variant="label" weight="medium" as="p" className={cn( "text-body")}>{message}</Text>
               {isCapturing && (
                 <>
                   <Progress value={undefined} className="w-64 mx-auto" />

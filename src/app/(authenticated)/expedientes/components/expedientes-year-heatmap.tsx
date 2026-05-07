@@ -241,7 +241,7 @@ function ExpedientesDayDialog({
                   <IconContainer size="sm" className="bg-primary/15">
                     <FileText className="size-3.5 text-primary" />
                   </IconContainer>
-                  <Text variant="caption" className="font-medium tabular-nums truncate">
+                  <Text variant="caption" weight="medium" className="tabular-nums truncate">
                     {exp.numeroProcesso}
                   </Text>
                 </div>

@@ -583,7 +583,7 @@ export function AudienciaDetailDialog({
                   <FileText className="size-3.5 text-success" />
                   Ata{' '}
                   {dataInicio && (
-                    <Text variant="caption" as="span" className={cn( "font-medium")}>
+                    <Text variant="caption" weight="medium" as="span">
                       · {format(dataInicio, 'dd MMM yyyy', { locale: ptBR })}
                     </Text>
                   )}

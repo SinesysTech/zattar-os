@@ -381,7 +381,7 @@ function PdfPreviewSection({
           <ChevronLeft className="size-3.5" />
           Anterior
         </Button>
-        <Text variant="caption" className="font-medium tabular-nums">
+        <Text variant="caption" weight="medium" className="tabular-nums">
           Página {currentPage} de {numPages}
         </Text>
         <Button

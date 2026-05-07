@@ -39,11 +39,11 @@ export function MobileProgress({
     <div className={cn('flex flex-col inline-snug animate-fade-in animate-duration-300', className)}>
       {/* Label */}
       <div className="flex items-center justify-between">
-        <Text variant="caption" className="font-medium">
+        <Text variant="caption" weight="medium">
           Etapa {currentStep + 1} de {totalSteps}
         </Text>
         {currentStepLabel && (
-          <Text variant="caption" className="font-semibold text-primary">
+          <Text variant="caption" weight="semibold" className="text-primary">
             {currentStepLabel}
           </Text>
         )}

@@ -29,7 +29,7 @@ export function TimelinePhaseMarker({ phase, className }: TimelinePhaseMarkerPro
     >
       <div className="h-px flex-1 bg-border/8" />
       <Icon className="size-3 text-muted-foreground/55 shrink-0" />
-      <Text variant="overline" as="span" className={cn( "text-muted-foreground/55 font-bold whitespace-nowrap shrink-0")}>
+      <Text variant="overline" weight="bold" as="span" className={cn( "text-muted-foreground/55 whitespace-nowrap shrink-0")}>
         Fase: {config.label}
       </Text>
       <div className="h-px flex-1 bg-border/8" />

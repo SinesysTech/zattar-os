@@ -44,8 +44,8 @@ export function ProcessoVinculadoCard({ processo }: ProcessoVinculadoCardProps) 
             Processo vinculado
           </Text>
           <Text
-            variant="caption"
-            className={cn( "font-semibold text-foreground/90 tabular-nums mt-1 block truncate")}
+            variant="caption" weight="semibold"
+            className={cn( "text-foreground/90 tabular-nums mt-1 block truncate")}
           >
             {processo.numero_processo}
           </Text>
@@ -129,8 +129,8 @@ function PartesRow({ polo, nome }: { polo: string; nome: string }) {
         {polo}
       </Text>
       <Text
-        variant="caption"
-        className={cn( "font-medium text-foreground/85 truncate flex-1 min-w-0")}
+        variant="caption" weight="medium"
+        className={cn( "text-foreground/85 truncate flex-1 min-w-0")}
       >
         {nome}
       </Text>

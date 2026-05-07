@@ -218,7 +218,7 @@ export function AgendaEventDetail({
               <div className="mb-5">
                 <div className={cn("flex items-center inline-tight mb-3")}>
                   <FileText className="size-3.5 text-muted-foreground/40" />
-                  <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Processo Vinculado</Text>
+                  <Text variant="caption" weight="semibold" className="text-muted-foreground/40 uppercase tracking-wider">Processo Vinculado</Text>
                 </div>
                 <div className={cn("rounded-xl border border-border/15 bg-muted/4 inset-card-compact")}>
                   <div className="flex items-center justify-between">
@@ -264,7 +264,7 @@ export function AgendaEventDetail({
               <div className="mb-5">
                 <div className={cn("flex items-center inline-tight mb-3")}>
                   <ShieldCheck className="size-3.5 text-muted-foreground/40" />
-                  <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Checklist de Preparo</Text>
+                  <Text variant="caption" weight="semibold" className="text-muted-foreground/40 uppercase tracking-wider">Checklist de Preparo</Text>
                   <span className={cn(
                     /* design-system-escape: px-2 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold px-2 py-0.5 rounded-full",
                     prepPct >= 80 ? "bg-success/15 text-success" : prepPct >= 40 ? "bg-warning/15 text-warning" : "bg-destructive/15 text-destructive",
@@ -300,7 +300,7 @@ export function AgendaEventDetail({
               <div>
                 <div className={cn("flex items-center inline-tight mb-3")}>
                   <MessageSquare className="size-3.5 text-muted-foreground/40" />
-                  <Text variant="caption" className="font-semibold text-muted-foreground/40 uppercase tracking-wider">Observações</Text>
+                  <Text variant="caption" weight="semibold" className="text-muted-foreground/40 uppercase tracking-wider">Observações</Text>
                 </div>
                 <div className={cn("rounded-xl border border-border/15 bg-muted/4 inset-card-compact")}>
                   <p className={cn("text-[13px] text-muted-foreground/60 leading-relaxed")}>

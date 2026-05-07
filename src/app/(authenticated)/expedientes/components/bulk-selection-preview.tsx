@@ -24,7 +24,7 @@ export function BulkSelectionPreview({ expedientes }: BulkSelectionPreviewProps)
 
   return (
     <div className={cn("flex flex-col stack-tight")}>
-      <Text variant="caption" className="font-medium uppercase tracking-wide">
+      <Text variant="caption" weight="medium" className="uppercase tracking-wide">
         {expedientes.length === 1
           ? 'Expediente afetado'
           : `${expedientes.length} expedientes afetados`}

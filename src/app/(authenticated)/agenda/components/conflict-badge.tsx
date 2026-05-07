@@ -25,7 +25,7 @@ export function ConflictBadge({ className }: ConflictBadgeProps) {
       aria-label="Conflito de horario detectado"
     >
       <TriangleAlert className="size-2.5 text-warning" />
-      <Text variant="overline" as="span" className={cn( "text-[8px] font-bold text-warning")}>
+      <Text variant="overline" weight="bold" as="span" className={cn( "text-[8px] text-warning")}>
         Conflito
       </Text>
     </div>

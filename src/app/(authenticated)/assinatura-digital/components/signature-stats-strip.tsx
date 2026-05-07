@@ -51,7 +51,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
               size={32}
               color="var(--success)"
             />
-            <Text variant="caption" className="font-bold text-success/70">
+            <Text variant="caption" weight="bold" className="text-success/70">
               {stats.taxaConclusao}%
             </Text>
           </div>
@@ -78,7 +78,7 @@ export function SignatureStatsStrip({ stats }: SignatureStatsStripProps) {
             <p className={cn("text-[9px] text-muted-foreground/60 uppercase tracking-wider")}>
               Tendência 6m
             </p>
-            <Text variant="caption" className="font-semibold text-success/60">
+            <Text variant="caption" weight="semibold" className="text-success/60">
               {trendDelta >= 0 ? "+" : ""}
               {trendDelta} este mês
             </Text>

@@ -108,7 +108,7 @@ function OabSituacaoBadge({
   };
 
   return (
-    <Text variant="caption" className="inline-flex items-center font-medium rounded-full overflow-hidden shrink-0">
+    <Text variant="caption" weight="medium" className="inline-flex items-center rounded-full overflow-hidden shrink-0">
       {/* Lado esquerdo: OAB (azul/info) */}
       <span className={cn("bg-info/15 text-info px-2 py-0.5")}>
         {numeroFormatado} OAB-{uf}

@@ -233,7 +233,7 @@ function FilePreviewCard({
           {isCompleted && (
             <div className={cn("mt-2 flex items-center inline-snug text-success")}>
               <CheckCircle2 className="size-4" strokeWidth={2.5} />
-              <Text variant="caption" className="font-medium">Upload concluído</Text>
+              <Text variant="caption" weight="medium">Upload concluído</Text>
             </div>
           )}
         </div>

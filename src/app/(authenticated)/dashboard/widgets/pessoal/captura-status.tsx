@@ -138,7 +138,7 @@ export function WidgetCapturaStatus() {
               <div className={`size-2.5 rounded-full shrink-0 ${dotClass}`} />
 
               {/* Sigla do tribunal */}
-              <Text variant="caption" className="font-medium truncate min-w-0 flex-1">
+              <Text variant="caption" weight="medium" className="truncate min-w-0 flex-1">
                 {sigla}
               </Text>
 

@@ -36,7 +36,7 @@ export function DocumentListRow({ doc, onSelect, selected }: DocumentListRowProp
       </IconContainer>
 
       <div className="flex-1 min-w-0">
-        <Text variant="caption" className="font-medium truncate">{doc.titulo}</Text>
+        <Text variant="caption" weight="medium" className="truncate">{doc.titulo}</Text>
         <p className="text-[10px] text-muted-foreground/55">
           {doc.criadoPor} &middot; {timeAgo(doc.criadoEm)}
         </p>

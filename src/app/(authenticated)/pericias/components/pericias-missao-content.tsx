@@ -286,7 +286,7 @@ function PericiaMissionCard({
               <span className={cn(/* design-system-escape: tracking-wider sem token DS */ "text-[9px] font-medium text-muted-foreground/55 uppercase tracking-wider")}>
                 Processo
               </span>
-              <Text variant="caption" className="font-medium text-foreground/90 tabular-nums truncate">
+              <Text variant="caption" weight="medium" className="text-foreground/90 tabular-nums truncate">
                 {pericia.numeroProcesso}
               </Text>
             </div>

@@ -184,7 +184,7 @@ function ExpedienteItem({ expediente }: { expediente: Expediente }) {
     >
       {/* Linha principal: tempo + tipo */}
       <div className={cn("flex items-center justify-between inline-tight")}>
-        <Text variant="caption" className="font-semibold text-foreground/85 truncate">
+        <Text variant="caption" weight="semibold" className="text-foreground/85 truncate">
           {tipoExpediente}
         </Text>
         <span className={cn(/* design-system-escape: px-1.75 padding direcional sem Inset equiv.; py-0.5 padding direcional sem Inset equiv. */ "text-[10px] font-semibold tracking-[0.03em] px-1.75 py-0.5 rounded-full border border-border/50 bg-muted/20 text-foreground/60 shrink-0")}>

@@ -135,7 +135,7 @@ function FlowMobileProgress({ currentStep }: { currentStep: number }) {
           Etapa {currentStep + 1} de {FLOW_STEPS.length}
         </span>
         {stepLabel && (
-          <Text variant="caption" className="font-semibold text-foreground">
+          <Text variant="caption" weight="semibold" className="text-foreground">
             {stepLabel}
           </Text>
         )}

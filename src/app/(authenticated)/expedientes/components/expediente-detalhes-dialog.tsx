@@ -213,7 +213,7 @@ function ExpedienteSingleDetails({
         <TabsContent value="detalhes" className={cn("flex flex-col stack-default mt-0")}>
           <div className="flex items-center justify-between">
             <div>
-              <Text variant="caption" className="uppercase font-bold tracking-wider mb-1">Status</Text>
+              <Text variant="caption" weight="bold" className="uppercase tracking-wider mb-1">Status</Text>
               <div className={cn("flex inline-tight")}>
                 <SemanticBadge category="expediente_status" value={getStatusTexto(expediente.baixadoEm)}>
                   {getStatusTexto(expediente.baixadoEm)}

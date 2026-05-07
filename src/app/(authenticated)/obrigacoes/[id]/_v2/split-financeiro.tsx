@@ -40,7 +40,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
           <Text variant="meta-label" className="text-muted-foreground/60">
             Split financeiro
           </Text>
-          <Text variant="caption" className={cn( "text-foreground/85 font-medium mt-0.5")}>
+          <Text variant="caption" weight="medium" className={cn( "text-foreground/85 mt-0.5")}>
             Distribuição sobre {formatCurrency(valorTotal)}
           </Text>
         </div>
@@ -104,7 +104,7 @@ export function SplitFinanceiro({ acordo }: SplitFinanceiroProps) {
           <Text variant="meta-label" className="text-muted-foreground/60">
             Total escritório
           </Text>
-          <Text variant="caption" className={cn( "font-semibold tabular-nums")}>
+          <Text variant="caption" weight="semibold" className={cn( "tabular-nums")}>
             {formatCurrency(totalEscritorio)}
           </Text>
         </div>
@@ -132,7 +132,7 @@ function SplitRow({
       <span className={cn('size-2 rounded-full shrink-0', dotClass)} />
       <div className={cn("flex-1 min-w-0 flex items-baseline justify-between inline-medium")}>
         <div className="min-w-0">
-          <Text variant="caption" className={cn( "font-medium text-foreground/85")}>
+          <Text variant="caption" weight="medium" className={cn( "text-foreground/85")}>
             {label}
           </Text>
           <Text variant="meta-label" className="text-muted-foreground/55 block">
@@ -140,7 +140,7 @@ function SplitRow({
           </Text>
         </div>
         <div className="text-right shrink-0">
-          <Text variant="caption" className={cn( "font-semibold tabular-nums")}>
+          <Text variant="caption" weight="semibold" className={cn( "tabular-nums")}>
             {formatCurrency(valor)}
           </Text>
           <Text

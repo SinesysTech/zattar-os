@@ -220,7 +220,7 @@ function GlassRow({
       <div className={cn("grid grid-cols-[90px_1fr_200px_120px_80px_56px] inline-medium items-center")}>
         {/* Data + hora (ancoragem temporal) */}
         <div className={cn("flex flex-col leading-tight")}>
-          <Text variant="caption" className="font-medium text-foreground/80 tabular-nums">{data}</Text>
+          <Text variant="caption" weight="medium" className="text-foreground/80 tabular-nums">{data}</Text>
           <span className="text-[11px] text-muted-foreground/75 tabular-nums">{hora}</span>
         </div>
 

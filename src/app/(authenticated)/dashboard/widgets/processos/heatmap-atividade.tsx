@@ -108,11 +108,11 @@ export function WidgetHeatmapAtividade() {
           </div>
           <div className={cn("flex items-center inline-default")}>
             <div className={cn("flex items-baseline inline-micro")}>
-              <Text variant="caption" className="font-semibold tabular-nums">{mediaFmt}</Text>
+              <Text variant="caption" weight="semibold" className="tabular-nums">{mediaFmt}</Text>
               <span className="text-[8px] text-muted-foreground/50">média/dia</span>
             </div>
             <div className={cn("flex items-baseline inline-micro")}>
-              <Text variant="caption" className="font-semibold tabular-nums">{fmtNum(pico)}</Text>
+              <Text variant="caption" weight="semibold" className="tabular-nums">{fmtNum(pico)}</Text>
               <span className="text-[8px] text-muted-foreground/50">pico</span>
             </div>
           </div>

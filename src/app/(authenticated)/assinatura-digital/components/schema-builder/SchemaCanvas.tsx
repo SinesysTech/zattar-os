@@ -88,7 +88,7 @@ function SortableFieldItem({ field, sectionId, isSelected, onSelect, onDuplicate
       {React.createElement(getFieldIcon(field.type), { className: "size-3.5 text-muted-foreground shrink-0" })}
 
       <div className="flex-1 min-w-0">
-        <Text variant="caption" className="font-medium truncate">{field.label}</Text>
+        <Text variant="caption" weight="medium" className="truncate">{field.label}</Text>
         {(field.validation?.required || field.conditional || (field.options && field.options.length > 0)) && (
           <div className={cn("flex inline-micro mt-1 flex-wrap")}>
             {field.validation?.required && (
@@ -273,7 +273,7 @@ export default function SchemaCanvas({
         <div className={cn("flex flex-col items-center justify-center rounded-xl border border-dashed py-12 inline-medium")}>
           <AlertCircle className="size-8 text-muted-foreground/60" />
           <div className={cn("flex flex-col text-center stack-micro")}>
-            <Text variant="caption" className="font-medium">Nenhuma seção criada</Text>
+            <Text variant="caption" weight="medium">Nenhuma seção criada</Text>
             <p className="text-[11px] text-muted-foreground/70">
               Clique abaixo para começar a construir o formulário
             </p>

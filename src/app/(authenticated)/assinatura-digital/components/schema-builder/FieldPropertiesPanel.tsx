@@ -270,7 +270,7 @@ export default function FieldPropertiesPanel({
       <div className="h-full flex items-center justify-center border rounded-lg bg-card">
         <div className={cn("flex flex-col text-center stack-tight px-6")}>
           <Info className="size-8 text-muted-foreground/60 mx-auto" />
-          <Text variant="caption" className="font-medium">Nenhum campo selecionado</Text>
+          <Text variant="caption" weight="medium">Nenhum campo selecionado</Text>
           <p className="text-[11px] text-muted-foreground/70">
             Selecione um campo no canvas para editar suas propriedades
           </p>
@@ -289,7 +289,7 @@ export default function FieldPropertiesPanel({
     <div className="h-full flex flex-col border rounded-lg bg-card overflow-hidden">
       <div className={cn("shrink-0 px-3 pt-3 pb-2 border-b")}>
         <Heading level="card" className={cn("text-caption uppercase tracking-wider text-muted-foreground")}>Propriedades do Campo</Heading>
-        <Text variant="caption" className="text-foreground mt-0.5 truncate font-medium">{field.label}</Text>
+        <Text variant="caption" weight="medium" className="text-foreground mt-0.5 truncate">{field.label}</Text>
       </div>
 
       <Form {...form}>
@@ -302,7 +302,7 @@ export default function FieldPropertiesPanel({
               onOpenChange={() => toggleSection('basico')}
             >
               <CollapsibleTrigger className={cn("flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
-                <Text variant="caption" className="font-semibold flex-1 text-left">Básico</Text>
+                <Text variant="caption" weight="semibold" className="flex-1 text-left">Básico</Text>
                 <ChevronDown
                   className={cn(
                     "size-3.5 transition-transform text-muted-foreground",
@@ -508,7 +508,7 @@ export default function FieldPropertiesPanel({
               onOpenChange={() => toggleSection('validacao')}
             >
               <CollapsibleTrigger className={cn("flex items-center inline-tight w-full px-1 py-1.5 rounded-md hover:bg-muted/50 transition-colors")}>
-                <Text variant="caption" className="font-semibold flex-1 text-left">Validação</Text>
+                <Text variant="caption" weight="semibold" className="flex-1 text-left">Validação</Text>
                 <ChevronDown
                   className={cn(
                     "size-3.5 transition-transform text-muted-foreground",

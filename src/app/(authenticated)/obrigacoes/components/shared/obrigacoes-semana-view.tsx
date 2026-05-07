@@ -347,7 +347,7 @@ function WeekDayCard({
     >
       {/* Row 1: Valor + urgency */}
       <div className={cn("flex items-center justify-between inline-micro")}>
-        <Text variant="caption" className="tabular-nums font-semibold text-foreground/90">
+        <Text variant="caption" weight="semibold" className="tabular-nums text-foreground/90">
           {CURRENCY.format(parcela.valorBrutoCreditoPrincipal)}
         </Text>
         <div className={cn("flex items-center inline-snug")}>

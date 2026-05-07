@@ -289,7 +289,7 @@ export function ShareDocumentDialog({
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <Text variant="label" as="p" className={cn( "font-medium truncate")}>
+                          <Text variant="label" weight="medium" as="p" className={cn( "truncate")}>
                             {usuario.nomeExibicao || usuario.nomeCompleto}
                           </Text>
                           {usuario.emailCorporativo && (

@@ -132,7 +132,7 @@ export function OrcamentoRealizadoWidget({ data, isLoading }: OrcamentoRealizado
         {/* Top itens com maior desvio */}
         {topItens.length > 0 && (
           <div className={cn("flex flex-col stack-tight-plus")}>
-            <Text variant="caption" className="font-medium">Maiores Desvios</Text>
+            <Text variant="caption" weight="medium">Maiores Desvios</Text>
             {topItens.map((item) => {
               const percentExec = item.valorPrevisto > 0
                 ? Math.min((item.valorRealizado / item.valorPrevisto) * 100, 150)

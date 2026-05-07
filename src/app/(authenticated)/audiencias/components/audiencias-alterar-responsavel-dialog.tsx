@@ -132,7 +132,7 @@ export function AudienciasAlterarResponsavelDialog({
                 </SelectContent>
               </Select>
               {generalError && (
-                <Text variant="caption" className={cn( "font-medium text-destructive")}>{generalError}</Text>
+                <Text variant="caption" weight="medium" className={cn( "text-destructive")}>{generalError}</Text>
               )}
             </div>
           </form>

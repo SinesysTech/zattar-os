@@ -22,7 +22,7 @@ function MetadataRow({
 }) {
   return (
     <div className={cn("flex justify-between items-start inline-default")}>
-      <Text variant="label" as="span" className={cn( "text-muted-foreground font-medium shrink-0")}>
+      <Text variant="label" weight="medium" as="span" className={cn( "text-muted-foreground shrink-0")}>
         {label}
       </Text>
       <span className="text-[13px] text-foreground text-right min-w-0">

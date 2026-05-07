@@ -120,7 +120,7 @@ export function ProfileSidebar({
         </div>
 
         {/* 3. Name + Role */}
-        <Heading level="section" className="text-lg font-bold mt-3 text-center">{usuario.nomeCompleto}</Heading>
+        <Heading level="section" weight="bold" className="text-lg mt-3 text-center">{usuario.nomeCompleto}</Heading>
         {usuario.cargo?.nome && (
           <Text variant="caption" className="text-muted-foreground/40 mt-0.5 text-center">{usuario.cargo.nome}</Text>
         )}
@@ -166,7 +166,7 @@ export function ProfileSidebar({
       <div className={cn("px-5 py-3 border-t border-border/10")}>
         <div className="flex justify-between items-center mb-1.5">
           <Text variant="meta-label" className="text-muted-foreground/40 uppercase">Perfil</Text>
-          <Text variant="meta-label" className={cn('font-semibold', colorCss.text)}>
+          <Text variant="meta-label" weight="semibold" className={cn(colorCss.text)}>
             {completeness.score}%
           </Text>
         </div>

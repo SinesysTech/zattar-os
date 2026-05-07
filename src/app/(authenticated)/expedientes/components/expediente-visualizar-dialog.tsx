@@ -113,9 +113,9 @@ function Section({
       <header className={cn("flex items-center inline-tight")}>
         <span className="text-muted-foreground/70">{icon}</span>
         <Text
-          variant="overline"
+          variant="overline" weight="semibold"
           as="h3"
-          className={cn( "font-semibold text-muted-foreground/70")}
+          className={cn( "text-muted-foreground/70")}
         >
           {title}
         </Text>

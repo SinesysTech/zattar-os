@@ -89,7 +89,7 @@ function BoolDisplay({ value }: { value: boolean | undefined }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className={cn("flex flex-col stack-micro")}>
-      <Text variant="caption" className="font-medium">{label}</Text>
+      <Text variant="caption" weight="medium">{label}</Text>
       <div className={cn("text-body-sm")}>{children}</div>
     </div>
   );
@@ -101,7 +101,7 @@ function AnexosList({ anexos, modulo }: { anexos: EntrevistaAnexo[]; modulo: str
 
   return (
     <div className={cn("flex flex-col mt-4 stack-tight")}>
-      <Text variant="caption" className="font-medium">Anexos</Text>
+      <Text variant="caption" weight="medium">Anexos</Text>
       {filtrados.map((anexo) => (
         <a
           key={anexo.id}

@@ -139,7 +139,7 @@ export function TemplateTextoEditor({
         <div className={cn("flex flex-col stack-tight")}>
           {Array.from(variablesByCategory.entries()).map(([category, variables]) => (
             <div key={category}>
-              <Text variant="caption" className="font-medium">
+              <Text variant="caption" weight="medium">
                 {CATEGORY_LABELS[category]}:
               </Text>
               <div className={cn("ml-2 flex flex-wrap inline-micro")}>

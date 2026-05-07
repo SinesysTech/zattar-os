@@ -78,7 +78,7 @@ export function ContratosBulkActionsBar({
 
   return (
     <div className={cn("flex flex-wrap items-center inline-tight rounded-xl border border-primary/15 bg-primary/5 px-3 py-1.5")}>
-      <Text variant="caption" as="div" className={cn( "inline-flex items-center inline-snug font-semibold text-primary whitespace-nowrap")}>
+      <Text variant="caption" weight="semibold" as="div" className={cn( "inline-flex items-center inline-snug text-primary whitespace-nowrap")}>
         <CheckSquare className="size-3.5" aria-hidden="true" />
         {selectedCount} selecionado{selectedCount > 1 ? 's' : ''}
       </Text>

@@ -767,7 +767,7 @@ export function ObrigacaoDetalhesDialog({
                       sincConfig.tone === 'muted' && 'text-muted-foreground/60',
                     )}
                   />
-                  <Text variant="caption" className={cn( "text-foreground/90 font-medium")}>
+                  <Text variant="caption" weight="medium" className={cn( "text-foreground/90")}>
                     {sincConfig.label}
                   </Text>
                 </div>

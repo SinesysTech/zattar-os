@@ -487,7 +487,7 @@ export default function TemplateInfoPopover({
               >
                 <div className="min-w-0 flex-1">
                   <div className={cn("flex items-center inline-tight flex-wrap")}>
-                    <Text variant="caption" className="font-medium text-foreground truncate">
+                    <Text variant="caption" weight="medium" className="text-foreground truncate">
                       {f.nome}
                     </Text>
                     <Badge

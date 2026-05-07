@@ -192,7 +192,7 @@ function HearingItem({ audiencia }: { audiencia: Audiencia }) {
       <div className={cn("flex items-center justify-between inline-tight")}>
         <div className={cn("flex items-center inline-snug min-w-0")}>
           <Clock className="w-3 h-3 text-foreground/60 shrink-0" />
-          <Text variant="caption" className="font-semibold text-foreground/85 truncate">
+          <Text variant="caption" weight="semibold" className="text-foreground/85 truncate">
             {audiencia.horaInicio || '—'} · {audiencia.tipoDescricao || 'Audiência'}
           </Text>
         </div>

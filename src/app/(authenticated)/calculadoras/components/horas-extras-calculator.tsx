@@ -43,7 +43,7 @@ export function HorasExtrasCalculator() {
           <div className={cn("bg-surface-container-high/60 backdrop-blur-xl rounded-2xl inset-extra-loose border border-foreground/5 shadow-lg")}>
             <div className={cn("grid grid-cols-1 md:grid-cols-2 inline-extra-loose")}>
               <div className={cn("flex flex-col stack-tight")}>
-                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Salário Bruto (R$)</Text>
+                <Text variant="caption" weight="bold" className="uppercase tracking-widest text-on-surface-variant">Salário Bruto (R$)</Text>
                 <input 
                   type="number" 
                   value={salarioBase}
@@ -53,7 +53,7 @@ export function HorasExtrasCalculator() {
               </div>
 
               <div className={cn("flex flex-col stack-tight")}>
-                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Jornada Mensal</Text>
+                <Text variant="caption" weight="bold" className="uppercase tracking-widest text-on-surface-variant">Jornada Mensal</Text>
                 <input 
                   type="number" 
                   value={horasMensais}
@@ -63,7 +63,7 @@ export function HorasExtrasCalculator() {
               </div>
 
               <div className={cn("flex flex-col stack-tight")}>
-                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Qtd. Horas Extras</Text>
+                <Text variant="caption" weight="bold" className="uppercase tracking-widest text-on-surface-variant">Qtd. Horas Extras</Text>
                 <input 
                   type="number" 
                   value={horasExtras}
@@ -73,7 +73,7 @@ export function HorasExtrasCalculator() {
               </div>
 
               <div className={cn("flex flex-col stack-tight")}>
-                <Text variant="caption" className="uppercase tracking-widest text-on-surface-variant font-bold">Adicional</Text>
+                <Text variant="caption" weight="bold" className="uppercase tracking-widest text-on-surface-variant">Adicional</Text>
                 <div className={cn("flex inline-tight")}>
                   <button 
                     onClick={() => setPercentual(50)}
@@ -114,7 +114,7 @@ export function HorasExtrasCalculator() {
         <div className="lg:col-span-5">
           <div className="bg-surface-container-lowest/40 backdrop-blur-[20px] border border-foreground/10 rounded-2xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.6)]">
             <div className={cn("inset-extra-loose pb-4")}>
-              <Text variant="caption" className="uppercase tracking-widest text-primary font-bold">Resultado da Análise</Text>
+              <Text variant="caption" weight="bold" className="uppercase tracking-widest text-primary">Resultado da Análise</Text>
               <div className={cn("mt-4 flex items-baseline inline-tight")}>
                 <span className="text-5xl font-black font-headline text-on-surface">R$ {totalBruto.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                 <span className={cn( "text-on-surface-variant text-body-sm font-medium")}>TOTAL LÍQUIDO</span>

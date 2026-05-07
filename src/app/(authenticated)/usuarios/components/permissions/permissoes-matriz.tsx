@@ -225,7 +225,7 @@ export function PermissoesMatriz({
                         return (
                           <div key={item.recurso} className={cn("flex flex-col stack-snug")}>
                             <div className={cn("flex items-center inline-tight")}>
-                              <Text variant="caption" className="font-medium">
+                              <Text variant="caption" weight="medium">
                                 {formatarNomeRecurso(item.recurso)}
                               </Text>
                               <span

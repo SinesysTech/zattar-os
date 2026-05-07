@@ -54,7 +54,7 @@ export function SourceLegend({
     <GlassPanel className={cn("inset-card-compact", className)}>
       <div className={cn("flex items-center inline-tight mb-3")}>
         <Layers className="size-3.5 text-muted-foreground/55" />
-        <Text variant="caption" className="font-semibold text-foreground">Calendários</Text>
+        <Text variant="caption" weight="semibold" className="text-foreground">Calendários</Text>
       </div>
       <div className={cn("flex flex-col stack-snug")}>
         {SOURCE_ORDER.map((source) => {

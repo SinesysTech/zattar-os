@@ -85,7 +85,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
       <GlassPanel className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <BarChart3 className="size-3 text-primary/65" />
-          <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/60")}>Distribuição por tipo</Text>
+          <Text variant="caption" weight="medium" as="span" className={cn( "text-muted-foreground/60")}>Distribuição por tipo</Text>
           <span className="text-micro-caption tabular-nums text-muted-foreground/60 ml-auto">{audiencias.length} total</span>
         </div>
 
@@ -114,7 +114,7 @@ export function LoadHeatmap({ audiencias, responsavelNomes, className }: LoadHea
       <GlassPanel className={cn("inset-card-compact")}>
         <div className={cn("flex items-center inline-tight mb-3")}>
           <Users className="size-3 text-primary/65" />
-          <Text variant="caption" as="span" className={cn( "font-medium text-muted-foreground/60")}>Carga por advogado</Text>
+          <Text variant="caption" weight="medium" as="span" className={cn( "text-muted-foreground/60")}>Carga por advogado</Text>
         </div>
 
         <div className={cn("flex flex-col stack-tight")}>

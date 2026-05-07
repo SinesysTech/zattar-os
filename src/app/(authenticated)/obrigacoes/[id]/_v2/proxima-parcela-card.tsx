@@ -97,7 +97,7 @@ export function ProximaParcelaCard({
           <Icon className={cn('size-4', accentClass)} />
         </div>
         <div className={cn("flex items-center inline-tight text-body-sm")}>
-          <Text variant="caption" className={cn( "font-medium text-foreground/85")}>
+          <Text variant="caption" weight="medium" className={cn( "text-foreground/85")}>
             {format(venc, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </Text>
           <span

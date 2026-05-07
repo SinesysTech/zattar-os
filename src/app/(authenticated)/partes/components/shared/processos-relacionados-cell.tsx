@@ -76,7 +76,7 @@ export function ProcessosRelacionadosCell({
           </PopoverTrigger>
           <PopoverContent className={cn("w-80 inset-tight")} align="start">
             <div className={cn("flex flex-col stack-snug max-h-60 overflow-y-auto")}>
-              <Text variant="caption" className="font-medium mb-2">
+              <Text variant="caption" weight="medium" className="mb-2">
                 Todos os processos ({processos.length})
               </Text>
               {processos.map((processo) => (

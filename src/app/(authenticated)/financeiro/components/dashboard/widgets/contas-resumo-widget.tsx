@@ -64,7 +64,7 @@ function ContaSection({
           <div className={cn('rounded-md inset-snug', colorClass)}>
             <Icon className={cn('h-3.5 w-3.5', iconColorClass)} />
           </div>
-          <Text variant="caption" className="font-medium">{title}</Text>
+          <Text variant="caption" weight="medium">{title}</Text>
         </div>
         <Button variant="ghost" size="sm" asChild className={cn("h-6 px-2 text-caption")}>
           <Link href={href}>

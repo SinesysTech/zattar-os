@@ -103,7 +103,7 @@ function ImagePreview({
         ) : (
           <Icon className="h-8 w-8 text-muted-foreground" />
         )}
-        <Text variant="caption" className="font-medium">{label}</Text>
+        <Text variant="caption" weight="medium">{label}</Text>
       </button>
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>

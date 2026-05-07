@@ -262,7 +262,7 @@ function ResumoCards({
             <CardContent className={cn("inset-card-compact")}>
               <div className="flex items-start justify-between">
                 <div className={cn("flex flex-col stack-micro")}>
-                  <Text variant="caption" className="font-medium">{kpi.label}</Text>
+                  <Text variant="caption" weight="medium">{kpi.label}</Text>
                   <p className={`text-xl font-semibold font-mono tracking-tight ${showColor ? getLucroColor(valor) : ''}`}>
                     {formatarValor(valor)}
                   </p>
@@ -496,7 +496,7 @@ function CategoriaTab({
           <div className={cn("grid inline-default lg:grid-cols-2")}>
             <CategoriaPieChart categorias={categorias} />
             <div className={cn("flex flex-col stack-snug")}>
-              <Text variant="caption" className="font-medium uppercase tracking-wider mb-2">Detalhamento</Text>
+              <Text variant="caption" weight="medium" className="uppercase tracking-wider mb-2">Detalhamento</Text>
               {categorias.map((cat: CategoriaDRE, i: number) => (
                 <div key={cat.categoria} className={cn("flex items-center justify-between py-1.5 px-2 rounded transition-colors hover:bg-muted/50")}>
                   <div className={cn("flex items-center inline-tight")}>

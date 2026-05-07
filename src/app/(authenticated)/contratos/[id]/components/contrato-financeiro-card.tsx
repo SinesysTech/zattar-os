@@ -85,10 +85,10 @@ function ProgressBar({ pct }: { pct: number }) {
   return (
     <div>
       <div className="flex justify-between mb-1.5">
-        <Text variant="caption" className={cn( "font-medium")}>
+        <Text variant="caption" weight="medium">
           Progresso de recebimento
         </Text>
-        <Text variant="caption" className={cn( "text-primary font-bold tabular-nums")}>
+        <Text variant="caption" weight="bold" className={cn( "text-primary tabular-nums")}>
           {pct}%
         </Text>
       </div>
@@ -114,7 +114,7 @@ function LancamentoRow({ lancamento }: { lancamento: Lancamento }) {
       <Text variant="label" className="truncate block">
         {lancamento.descricao}
       </Text>
-      <Text variant="label" className={cn( "tabular-nums font-semibold")}>
+      <Text variant="label" weight="semibold" className={cn( "tabular-nums")}>
         {formatCurrency(lancamento.valor)}
       </Text>
       <Text variant="caption" className="tabular-nums">
